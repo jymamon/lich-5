@@ -641,7 +641,7 @@ required_modules = [
         return(
           ((RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)) or
           ENV['DISPLAY'] or
-          (ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and ARGV.empty? or ARGV.any? { |arg| arg =~ /^--gui$/ } or not $stdout.isatty)
+          (ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and (ARGV.empty? or ARGV.any? { |arg| arg =~ /^--gui$/ }) or not $stdout.isatty)
       },
     :postinstall => lambda { HAVE_GTK = true },
   }

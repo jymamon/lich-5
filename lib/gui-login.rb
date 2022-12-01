@@ -1,20 +1,19 @@
 # Lich5 Carve out - GTK3 lich-login code stuff
 
-def gui_login
-
+def gui_login(entry_data_file)
   @autosort_state = Lich.track_autosort_state
   @tab_layout_state = Lich.track_layout_state
   @theme_state = Lich.track_dark_mode
-
   @launch_data = nil
-  if File.exists?("#{DATA_DIR}/entry.dat")
-    @entry_data = File.open("#{DATA_DIR}/entry.dat", 'r') { |file|
+
+  if File.exists?(entry_data_file)
+    @entry_data = File.open(entry_data_file, 'r') { |file|
       begin
         if @autosort_state == true
-        # Sort in list by instance name, account name, and then character name
-        Marshal.load(file.read.unpack('m').first).sort do |a, b|
-          [a[:game_name], a[:user_id], a[:char_name]] <=> [b[:game_name], b[:user_id], b[:char_name]]
-        end
+          # Sort in list by instance name, account name, and then character name
+          Marshal.load(file.read.unpack('m').first).sort do |a, b|
+            [a[:game_name], a[:user_id], a[:char_name]] <=> [b[:game_name], b[:user_id], b[:char_name]]
+          end
         else
         # Sort in list by account name, and then character name (old Lich 4)
           Marshal.load(file.read.unpack('m').first).sort do |a,b|
@@ -28,6 +27,7 @@ def gui_login
   else
     @entry_data = Array.new
   end
+
   @save_entry_data = false
   done = false
 
@@ -38,7 +38,7 @@ def gui_login
 
     @msgbox = proc { |msg|
       dialog = Gtk::MessageDialog.new(:parent => @window, :flags => Gtk::DialogFlags::DESTROY_WITH_PARENT, :type => Gtk::MessageType::ERROR, :buttons => Gtk::ButtonsType::CLOSE, :message => msg)
-      #			dialog.set_icon(default_icon)
+      #         dialog.set_icon(default_icon)
       dialog.run
       dialog.destroy
     }
@@ -88,7 +88,7 @@ def gui_login
   wait_until { @done }
 
   if @save_entry_data
-    File.open("#{DATA_DIR}/entry.dat", 'w') { |file|
+    File.open(entry_data_file, 'w') { |file|
       file.write([Marshal.dump(@entry_data)].pack('m'))
     }
   end
