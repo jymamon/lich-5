@@ -637,16 +637,12 @@ required_modules = [
     :name => 'gtk3',
     :version => '4.0.3',
     :reason => 'to create windows',
-    :condition => lambda { return
-            # from line 656 - must be true
-            (((RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)) or ENV['DISPLAY'])
-            and
-            # Previously, GTK3 was considered optional under these conditions. The code would attempt to 'require' it,
-            # then succeed (but not set HAVE_GTK = false) if the original 'require' failed.  (No attempt was made to
-            # install it).
-            ((ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and ARGV.empty? or ARGV.any? { |arg| arg =~ /^--gui$/ } or not $stdout.isatty)
-        }
-
+    :condition => lambda {
+        return(
+          ((RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)) or
+          ENV['DISPLAY'] or
+          (ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and ARGV.empty? or ARGV.any? { |arg| arg =~ /^--gui$/ } or not $stdout.isatty)
+      },
     :postinstall => lambda { HAVE_GTK = true },
   }
 ]
