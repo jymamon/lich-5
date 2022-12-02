@@ -51,6 +51,23 @@ require 'json'
 require_relative('./lib/constants')
 require 'lib/version'
 
+require 'lib/options'
+
+# Ugly hack to preserve the behavior of force_gui being
+# false if there are any other options and true if there
+# are not.
+if ARGV.empty?
+    ARGV.push("--gui")
+else
+    # Must be first so subsequent --gui options will undo
+    # this parameter.
+    ARGV.unshift("--no-gui")    
+end
+
+options = Parser.parse(ARGV)
+puts "Options: #{options}"
+exit
+
 require 'lib/lich'
 require 'lib/init'
 require 'lib/front-end'
@@ -2360,11 +2377,10 @@ module Games
                 end
 
                 if @@autostarted and $_SERVERSTRING_ =~ /roomDesc/ and !@@cli_scripts
-                  if arg = ARGV.find { |a| a =~ /^\-\-start\-scripts=/ }
-                    for script_name in arg.sub('--start-scripts=', '').split(',')
-                      Script.start(script_name)
-                    end
+                  for script_name in options.start_scripts
+                    Script.start(script_name)
                   end
+
                   @@cli_scripts = true
                 end
 
@@ -4090,15 +4106,10 @@ ICONMAP = {
 XMLData = XMLParser.new
 
 reconnect_if_wanted = proc {
-  if ARGV.include?('--reconnect') and ARGV.include?('--login') and not $_CLIENTBUFFER_.any? { |cmd| cmd =~ /^(?:\[.*?\])?(?:<c>)?(?:quit|exit)/i }
-    if reconnect_arg = ARGV.find { |arg| arg =~ /^\-\-reconnect\-delay=[0-9]+(?:\+[0-9]+)?$/ }
-      reconnect_arg =~ /^\-\-reconnect\-delay=([0-9]+)(\+[0-9]+)?/
-      reconnect_delay = $1.to_i
-      reconnect_step = $2.to_i
-    else
-      reconnect_delay = 60
-      reconnect_step = 0
-    end
+  if options.reconnect and options.login_character and not $_CLIENTBUFFER_.any? { |cmd| cmd =~ /^(?:\[.*?\])?(?:<c>)?(?:quit|exit)/i }
+    reconnect_delay =  options.reconnect_delay.delay
+    reconnect_step = options.reconnect_delay.step
+
     Lich.log "info: waiting #{reconnect_delay} seconds to reconnect..."
     sleep reconnect_delay
     Lich.log 'info: reconnecting...'
@@ -4110,6 +4121,8 @@ reconnect_if_wanted = proc {
     else
       args = ['ruby']
     end
+    
+    #TODO: [Jymamon] This wants to access the orginal arguments. OptParse shouldn't be breaking this?
     args.push $PROGRAM_NAME.slice(/[^\\\/]+$/)
     args.concat ARGV
     args.push '--reconnected' unless args.include?('--reconnected')
@@ -4443,6 +4456,7 @@ module Setting
     Settings.to_hash
   end
 end
+
 module GameSetting
   def GameSetting.[](name)
     GameSettings[name]
@@ -4456,6 +4470,7 @@ module GameSetting
     GameSettings.to_hash
   end
 end
+
 module CharSetting
   def CharSetting.[](name)
     CharSettings[name]
@@ -4469,11 +4484,13 @@ module CharSetting
     CharSettings.to_hash
   end
 end
+
 class StringProc
   def StringProc._load(string)
     StringProc.new(string)
   end
 end
+
 class String
   def to_a # for compatibility with Ruby 1.8
     [self]
@@ -4553,121 +4570,12 @@ alias :bounty? :checkbounty
 # Program start
 #
 
-ARGV.delete_if { |arg| arg =~ /launcher\.exe/i } # added by Simutronics Game Entry
-
 argv_options = Hash.new
 bad_args = Array.new
 
 for arg in ARGV
-  if (arg == '-h') or (arg == '--help')
-    puts 'Usage:  lich [OPTION]'
-    puts ''
-    puts 'Options are:'
-    puts '  -h, --help          Display this list.'
-    puts '  -V, --version       Display the program version number and credits.'
-    puts ''
-    puts '  -d, --directory     Set the main Lich program directory.'
-    puts '      --script-dir    Set the directoy where Lich looks for scripts.'
-    puts '      --data-dir      Set the directory where Lich will store script data.'
-    puts '      --temp-dir      Set the directory where Lich will store temporary files.'
-    puts ''
-    puts '  -w, --wizard        Run in Wizard mode (default)'
-    puts '  -s, --stormfront    Run in StormFront mode.'
-    puts '      --avalon        Run in Avalon mode.'
-    puts '      --frostbite     Run in Frosbite mode.'
-    puts ''
-    puts '      --gemstone      Connect to the Gemstone IV Prime server (default).'
-    puts '      --dragonrealms  Connect to the DragonRealms server.'
-    puts '      --platinum      Connect to the Gemstone IV/DragonRealms Platinum server.'
-    puts '      --test          Connect to the test instance of the selected game server.'
-    puts '  -g, --game          Set the IP address and port of the game.  See example below.'
-    puts ''
-    puts '      --install       Edits the Windows/WINE registry so that Lich is started when logging in using the website or SGE.'
-    puts '      --uninstall     Removes Lich from the registry.'
-    puts ''
-    puts 'The majority of Lich\'s built-in functionality was designed and implemented with Simutronics MUDs in mind (primarily Gemstone IV): as such, many options/features provided by Lich may not be applicable when it is used with a non-Simutronics MUD.  In nearly every aspect of the program, users who are not playing a Simutronics game should be aware that if the description of a feature/option does not sound applicable and/or compatible with the current game, it should be assumed that the feature/option is not.  This particularly applies to in-script methods (commands) that depend heavily on the data received from the game conforming to specific patterns (for instance, it\'s extremely unlikely Lich will know how much "health" your character has left in a non-Simutronics game, and so the "health" script command will most likely return a value of 0).'
-    puts ''
-    puts 'The level of increase in efficiency when Lich is run in "bare-bones mode" (i.e. started with the --bare argument) depends on the data stream received from a given game, but on average results in a moderate improvement and it\'s recommended that Lich be run this way for any game that does not send "status information" in a format consistent with Simutronics\' GSL or XML encoding schemas.'
-    puts ''
-    puts ''
-    puts 'Examples:'
-    puts '  lich -w -d /usr/bin/lich/          (run Lich in Wizard mode using the dir \'/usr/bin/lich/\' as the program\'s home)'
-    puts '  lich -g gs3.simutronics.net:4000   (run Lich using the IP address \'gs3.simutronics.net\' and the port number \'4000\')'
-    puts '  lich --dragonrealms --test --genie (run Lich connected to DragonRealms Test server for the Genie frontend)'
-    puts '  lich --script-dir /mydir/scripts   (run Lich with its script directory set to \'/mydir/scripts\')'
-    puts '  lich --bare -g skotos.net:5555     (run in bare-bones mode with the IP address and port of the game set to \'skotos.net:5555\')'
-    puts ''
-    exit
-  elsif (arg == '-v') or (arg == '--version')
-    puts "The Lich, version #{LICH_VERSION}"
-    puts ' (an implementation of the Ruby interpreter by Yukihiro Matsumoto designed to be a \'script engine\' for text-based MUDs)'
-    puts ''
-    puts '- The Lich program and all material collectively referred to as "The Lich project" is copyright (C) 2005-2006 Murray Miron.'
-    puts '- The Gemstone IV and DragonRealms games are copyright (C) Simutronics Corporation.'
-    puts '- The Wizard front-end and the StormFront front-end are also copyrighted by the Simutronics Corporation.'
-    puts '- Ruby is (C) Yukihiro \'Matz\' Matsumoto.'
-    puts ''
-    puts 'Thanks to all those who\'ve reported bugs and helped me track down problems on both Windows and Linux.'
-    exit
-  elsif arg == '--link-to-sge'
-    result = Lich.link_to_sge
-    if $stdout.isatty
-      if result
-        $stdout.puts "Successfully linked to SGE."
-      else
-        $stdout.puts "Failed to link to SGE."
-      end
-    end
-    exit
-  elsif arg == '--unlink-from-sge'
-    result = Lich.unlink_from_sge
-    if $stdout.isatty
-      if result
-        $stdout.puts "Successfully unlinked from SGE."
-      else
-        $stdout.puts "Failed to unlink from SGE."
-      end
-    end
-    exit
-  elsif arg == '--link-to-sal'
-    result = Lich.link_to_sal
-    if $stdout.isatty
-      if result
-        $stdout.puts "Successfully linked to SAL files."
-      else
-        $stdout.puts "Failed to link to SAL files."
-      end
-    end
-    exit
-  elsif arg == '--unlink-from-sal'
-    result = Lich.unlink_from_sal
-    if $stdout.isatty
-      if result
-        $stdout.puts "Successfully unlinked from SAL files."
-      else
-        $stdout.puts "Failed to unlink from SAL files."
-      end
-    end
-    exit
-  elsif arg == '--install' # deprecated
-    if Lich.link_to_sge and Lich.link_to_sal
-      $stdout.puts 'Install was successful.'
-      Lich.log 'Install was successful.'
-    else
-      $stdout.puts 'Install failed.'
-      Lich.log 'Install failed.'
-    end
-    exit
-  elsif arg == '--uninstall' # deprecated
-    if Lich.unlink_from_sge and Lich.unlink_from_sal
-      $stdout.puts 'Uninstall was successful.'
-      Lich.log 'Uninstall was successful.'
-    else
-      $stdout.puts 'Uninstall failed.'
-      Lich.log 'Uninstall failed.'
-    end
-    exit
-  elsif arg =~ /^--(?:home)=(.+)$/i
+  # TODO: [Jymamon] These need to be handled by option parsing.
+  if arg =~ /^--(?:home)=(.+)$/i
     LICH_DIR = $1.sub(/[\\\/]$/, '')
   elsif arg =~ /^--temp=(.+)$/i
     TEMP_DIR = $1.sub(/[\\\/]$/, '')
@@ -4681,34 +4589,6 @@ for arg in ARGV
     BACKUP_DIR = $1.sub(/[\\\/]$/, '')
   elsif arg =~ /^--data=(.+)$/i
     DATA_DIR = $1.sub(/[\\\/]$/, '')
-  elsif arg =~ /^--start-scripts=(.+)$/i
-    argv_options[:start_scripts] = $1
-  elsif arg =~ /^--reconnect$/i
-    argv_options[:reconnect] = true
-  elsif arg =~ /^--reconnect-delay=(.+)$/i
-    argv_options[:reconnect_delay] = $1
-  elsif arg =~ /^--host=(.+):(.+)$/
-    argv_options[:host] = { :domain => $1, :port => $2.to_i }
-  elsif arg =~ /^--hosts-file=(.+)$/i
-    argv_options[:hosts_file] = $1
-  elsif arg =~ /^--gui$/i
-    argv_options[:gui] = true
-  elsif arg =~ /^--game=(.+)$/i
-    argv_options[:game] = $1
-  elsif arg =~ /^--account=(.+)$/i
-    argv_options[:account] = $1
-  elsif arg =~ /^--password=(.+)$/i
-    argv_options[:password] = $1
-  elsif arg =~ /^--character=(.+)$/i
-    argv_options[:character] = $1
-  elsif arg =~ /^--frontend=(.+)$/i
-    argv_options[:frontend] = $1
-  elsif arg =~ /^--frontend-command=(.+)$/i
-    argv_options[:frontend_command] = $1
-  elsif arg =~ /^--save$/i
-    argv_options[:save] = true
-  elsif arg =~ /^--wine(?:\-prefix)?=.+$/i
-    nil # already used when defining the Wine module
   elsif arg =~ /\.sal$|Gse\.~xt$/i
     argv_options[:sal] = arg
     unless File.exists?(argv_options[:sal])
@@ -4725,27 +4605,6 @@ for arg in ARGV
   else
     bad_args.push(arg)
   end
-end
-
-if arg = ARGV.find { |a| a == '--hosts-dir' }
-  i = ARGV.index(arg)
-  ARGV.delete_at(i)
-  hosts_dir = ARGV[i]
-  ARGV.delete_at(i)
-  if hosts_dir and File.exists?(hosts_dir)
-    hosts_dir = hosts_dir.tr('\\', '/')
-    hosts_dir += '/' unless hosts_dir[-1..-1] == '/'
-  else
-    $stdout.puts "warning: given hosts directory does not exist: #{hosts_dir}"
-    hosts_dir = nil
-  end
-else
-  hosts_dir = nil
-end
-
-detachable_client_port = nil
-if arg = ARGV.find { |a| a =~ /^\-\-detachable\-client=[0-9]+$/ }
-  detachable_client_port = /^\-\-detachable\-client=([0-9]+)$/.match(arg).captures.first
 end
 
 if argv_options[:sal]
@@ -4782,31 +4641,32 @@ if argv_options[:sal]
   end
 end
 
-if arg = ARGV.find { |a| (a == '-g') or (a == '--game') }
-  game_host, game_port = ARGV[ARGV.index(arg) + 1].split(':')
-  game_port = game_port.to_i
-  if ARGV.any? { |arg| (arg == '-s') or (arg == '--stormfront') }
+# TODO: [Jymamon] The entirety of this block could be moved to the options parser which
+#       could also provide a simplified interface by containing it.
+if options.game
+  game_host, game_port = options.game.host, options.game.port
+  if options.stormfront
     $frontend = 'stormfront'
-  elsif ARGV.any? { |arg| (arg == '-w') or (arg == '--wizard') }
+  elsif options.wizard
     $frontend = 'wizard'
-  elsif ARGV.any? { |arg| arg == '--avalon' }
+  elsif options.avalon
     $frontend = 'avalon'
-  elsif ARGV.any? { |arg| arg == '--frostbite' }
+  elsif options.frostbite
     $frontend = 'frostbite'
   else
     $frontend = 'unknown'
   end
-elsif ARGV.include?('--gemstone')
-  if ARGV.include?('--platinum')
+elsif options.gemstone
+  if options.platinum
     $platinum = true
-    if ARGV.any? { |arg| (arg == '-s') or (arg == '--stormfront') }
+    if options.stormfront
       game_host = 'storm.gs4.game.play.net'
       game_port = 10124
       $frontend = 'stormfront'
     else
       game_host = 'gs-plat.simutronics.net'
       game_port = 10121
-      if ARGV.any? { |arg| arg == '--avalon' }
+      if options.avalon
         $frontend = 'avalon'
       else
         $frontend = 'wizard'
@@ -4814,44 +4674,44 @@ elsif ARGV.include?('--gemstone')
     end
   else
     $platinum = false
-    if ARGV.any? { |arg| (arg == '-s') or (arg == '--stormfront') }
+    if options.stormfront
       game_host = 'storm.gs4.game.play.net'
       game_port = 10024
       $frontend = 'stormfront'
     else
       game_host = 'gs3.simutronics.net'
       game_port = 4900
-      if ARGV.any? { |arg| arg == '--avalon' }
+      if options.avalon
         $frontend = 'avalon'
       else
         $frontend = 'wizard'
       end
     end
   end
-elsif ARGV.include?('--shattered')
+elsif options.shattered
   $platinum = false
-  if ARGV.any? { |arg| (arg == '-s') or (arg == '--stormfront') }
+  if options.stormfront
     game_host = 'storm.gs4.game.play.net'
     game_port = 10324
     $frontend = 'stormfront'
   else
     game_host = 'gs4.simutronics.net'
     game_port = 10321
-    if ARGV.any? { |arg| arg == '--avalon' }
+    if options.avalon
       $frontend = 'avalon'
     else
       $frontend = 'wizard'
     end
   end
-elsif ARGV.include?('--fallen')
+elsif options.fallen
   $platinum = false
   # Not sure what the port info is for anything else but Genie :(
-  if ARGV.any? { |arg| (arg == '-s') or (arg == '--stormfront') }
+  if options.stormfront
     $frontend = 'stormfront'
     $stdout.puts "fixme"
     Lich.log "fixme"
     exit
-  elsif ARGV.grep(/--genie/).any?
+  elsif options.genie
     game_host = 'dr.simutronics.net'
     game_port = 11324
     $frontend = 'genie'
@@ -4860,19 +4720,19 @@ elsif ARGV.include?('--fallen')
     Lich.log "fixme"
     exit
   end
-elsif ARGV.include?('--dragonrealms')
-  if ARGV.include?('--platinum')
+elsif options.dragonrealms
+  if options.platinum
     $platinum = true
-    if ARGV.any? { |arg| (arg == '-s') or (arg == '--stormfront') }
+    if options.stormfront
       $stdout.puts "fixme"
       Lich.log "fixme"
       exit
       $frontend = 'stormfront'
-    elsif ARGV.grep(/--genie/).any?
+    elsif options.genie
       game_host = 'dr.simutronics.net'
       game_port = 11124
       $frontend = 'genie'
-    elsif ARGV.grep(/--frostbite/).any?
+    elsif options.frostbite
       game_host = 'dr.simutronics.net'
       game_port = 11124
       $frontend = 'frostbite'
@@ -4884,21 +4744,21 @@ elsif ARGV.include?('--dragonrealms')
     end
   else
     $platinum = false
-    if ARGV.any? { |arg| (arg == '-s') or (arg == '--stormfront') }
+    if options.stormfront
       $frontend = 'stormfront'
       $stdout.puts "fixme"
       Lich.log "fixme"
       exit
-    elsif ARGV.grep(/--genie/).any?
+    elsif options.genie
       game_host = 'dr.simutronics.net'
-      game_port = ARGV.include?('--test') ? 11624 : 11024
+      game_port = options.test ? 11624 : 11024
       $frontend = 'genie'
     else
       game_host = 'dr.simutronics.net'
-      game_port = ARGV.include?('--test') ? 11624 : 11024
-      if ARGV.any? { |arg| arg == '--avalon' }
+      game_port = options.test ? 11624 : 11024
+      if options.avalon
         $frontend = 'avalon'
-      elsif ARGV.any? { |arg| arg == '--frostbite' }
+      elsif options.frostbite
         $frontend = 'frostbite'
       else
         $frontend = 'wizard'
@@ -4911,8 +4771,6 @@ else
 end
 
 main_thread = Thread.new {
-  entry_data_file = "#{DATA_DIR}/entry.dat"
-  
   test_mode = false
   $SEND_CHARACTER = '>'
   $cmd_prefix = '<c>'
@@ -4923,21 +4781,9 @@ main_thread = Thread.new {
   @launch_data = nil
   require_relative("./lib/eaccess.rb")
   
-  switch_index = ARGV.index("--entrydat")
-
-  if ( !switch_index.nil? )
-    # init.rb sees the unmodified ARGV breaking its logic
-    # on whether or not to use a GUI though the intention
-    # here is clearly for this to not affect the decision
-    # on whether the GUI is in use or not.
-    entry_data_file = ARGV[switch_index + 1]
-    ARGV.delete("--entrydat")
-    ARGV.delete(entry_data_file)
-  end
-  
-  if ARGV.include?('--login')
-    if File.exists?(entry_data_file)
-      entry_data = File.open(entry_data_file, 'r') { |file|
+  if options.login_character
+    if File.exists?(options.entryfile)
+      entry_data = File.open(options.entryfile, 'r') { |file|
         begin
           Marshal.load(file.read.unpack('m').first)
         rescue
@@ -4947,36 +4793,37 @@ main_thread = Thread.new {
     else
       entry_data = Array.new
     end
-    char_name = ARGV[ARGV.index('--login') + 1].capitalize
-    if ARGV.include?('--gemstone')
-      if ARGV.include?('--platinum')
-        data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'GSX') }
-      elsif ARGV.include?('--shattered')
-        data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'GSF') }
-      elsif ARGV.include?('--test')
-        data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'GST') }
+
+    if options.gemstone
+      if options.platinum
+        data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'GSX') }
+      elsif options.shattered
+        data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'GSF') }
+      elsif options.test
+        data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'GST') }
       else
-        data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'GS3') }
+        data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'GS3') }
       end
-    elsif ARGV.include?('--shattered')
-      data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'GSF') }
-    elsif ARGV.include?('--dragonrealms')
-      if ARGV.include?('--platinum')
-        data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'DRX') }
-      elsif ARGV.include?('--fallen')
-        data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'DRF') }
-      elsif ARGV.include?('--test')
-        data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'DRT') }
+    elsif options.shattered
+      data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'GSF') }
+    elsif options.dragonrealms
+      if options.platinum
+        data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'DRX') }
+      elsif options.fallen
+        data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'DRF') }
+      elsif options.test
+        data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'DRT') }
       else
-        data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'DR') }
+        data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'DR') }
       end
-    elsif ARGV.include?('--fallen')
-      data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'DRF') }
+    elsif options.fallen
+      data = entry_data.find { |d| (d[:char_name] == options.login_character) and (d[:game_code] == 'DRF') }
     else
-      data = entry_data.find { |d| (d[:char_name] == char_name) }
+      data = entry_data.find { |d| (d[:char_name] == options.login_character) }
     end
+
     if data
-      Lich.log "info: using quick game entry settings for #{char_name}"
+      Lich.log "info: using quick game entry settings for #{options.login_character}"
       msgbox = proc { |msg|
         if defined?(Gtk)
           done = false
@@ -5018,9 +4865,12 @@ main_thread = Thread.new {
     end
 
   ## GUI starts here
-
-  elsif defined?(Gtk) and (ARGV.empty? or argv_options[:gui])
-    gui_login(entry_data_file)
+  #TODO: [Jymamon] Sublte change here because optiosn.force_gui defaults to true
+  #                but before it only defaulted to true if ARGV.empty?
+  # I think this is now addressed by pushing --gui into ARGV if is is empty
+  # before calling the options parser.
+  elsif defined?(Gtk) and options.force_gui
+    gui_login(options.entryfile)
   end
 
   #
@@ -5034,6 +4884,7 @@ main_thread = Thread.new {
 
   Socket.do_not_reverse_lookup = true
 
+  # TODO: [Jymamon] Still needs moved to options parser.
   if argv_options[:sal]
     begin
       @launch_data = File.open(argv_options[:sal]) { |file| file.readlines }.collect { |line| line.chomp }
@@ -5113,6 +4964,7 @@ main_thread = Thread.new {
       end
       Lich.log "info: Current WINE working directory is #{custom_launch_dir}"
     end
+    # TODO: [Jymamon] Still needs moved to options parser.    
     if ARGV.include?('--without-frontend')
       $frontend = 'unknown'
       unless (game_key = @launch_data.find { |opt| opt =~ /KEY=/ }) && (game_key = game_key.split('=').last.chomp)
@@ -5155,6 +5007,7 @@ main_thread = Thread.new {
     Lich.log "info: gamehost: #{gamehost}"
     Lich.log "info: gameport: #{gameport}"
     Lich.log "info: game: #{game}"
+    # TODO: [Jymamon] Still needs moved to options parser.    
     if ARGV.include?('--without-frontend')
       $_CLIENT_ = nil
     elsif $frontend == 'suks'
@@ -5374,6 +5227,7 @@ main_thread = Thread.new {
 
   undef :exit!
 
+  # TODO: [Jymamon] Still needs moved to options parser.    
   if ARGV.include?('--without-frontend')
     Thread.new {
       client_thread = nil
@@ -5573,6 +5427,7 @@ main_thread = Thread.new {
       loop {
         begin
           server = TCPServer.new('127.0.0.1', detachable_client_port)
+          # TODO: [Jymamon] Still needs moved to options parser.
           char_name = ARGV[ARGV.index('--login')+1].capitalize
           Frontend.create_session_file(char_name, server.addr[2], server.addr[1])
 
@@ -5591,6 +5446,7 @@ main_thread = Thread.new {
         end
         if $_DETACHABLE_CLIENT_
           begin
+            # TODO: [Jymamon] Still needs moved to options parser.
             unless ARGV.include?('--genie')
               $frontend = 'profanity'
               Thread.new {
