@@ -47,27 +47,40 @@ require 'resolv'
 require 'digest/md5'
 require 'json'
 
+# Required before /lib/options because help text references the current lich version.
+require_relative('./lib/version')
 # TODO: Move all local requires to top of file
-require_relative('./lib/constants')
-require 'lib/version'
+require_relative('./lib/options')
 
-require 'lib/options'
-
-# Ugly hack to preserve the behavior of force_gui being
-# false if there are any other options and true if there
-# are not.
+# Ugly hack to preserve the behavior of force_gui being false if there are any other options and true if
+# there are not.
 if ARGV.empty?
-    ARGV.push("--gui")
+  ARGV.push("--gui")
 else
-    # Must be first so subsequent --gui options will undo
-    # this parameter.
-    ARGV.unshift("--no-gui")    
+  # Must be first so subsequent --gui options will undo this parameter.
+  ARGV.unshift("--no-gui")    
 end
 
 options = Parser.parse(ARGV)
-puts "Options: #{options}"
-exit
 
+# Moved from lib/constants.rb. These are all configurable, but setting a custom
+# lich dir doesn't necessarily change the others relative to that. It probably should.
+# LIB_DIR can't practically be reconfigured - we just loaded the options from there -
+# but we define it in the options class to be consistent with everything else.
+BACKUP_DIR = options.backupdir
+DATA_DIR = options.datadir
+LIB_DIR = options.libdir
+LICH_DIR = options.lichdir
+LOG_DIR = options.mapdir
+MAP_DIR = options.mapdir
+SCRIPT_DIR = options.scriptdir
+TEMP_DIR = options.tempdir
+
+# TODO: [Jymamon] Remove these lines - they're just for a faster dev loop around the option parser.
+#puts "Options: #{options}"
+#exit
+
+require_relative('./lib/constants')
 require 'lib/lich'
 require 'lib/init'
 require 'lib/front-end'
@@ -714,6 +727,7 @@ class Scripting
     Proc.new {}.binding
   end
 end
+
 def _script
   Proc.new {}.binding
 end
@@ -4040,6 +4054,7 @@ include Games::Gemstone
 JUMP = Exception.exception('JUMP')
 JUMP_ERROR = Exception.exception('JUMP_ERROR')
 
+# TODO: This is only used by xmlparser?  Move it there.
 DIRMAP = {
   'out' => 'K',
   'ne' => 'B',
@@ -4053,6 +4068,7 @@ DIRMAP = {
   's' => 'E',
   'w' => 'G',
 }
+# TODO: This is used by xmlparser and global_defs. Can we consolidate?
 SHORTDIR = {
   'out' => 'out',
   'northeast' => 'ne',
@@ -4066,6 +4082,7 @@ SHORTDIR = {
   'south' => 's',
   'west' => 'w',
 }
+# TODO: This is only used by xmlparser?  Move it there.
 LONGDIR = {
   'out' => 'out',
   'ne' => 'northeast',
@@ -4079,6 +4096,7 @@ LONGDIR = {
   's' => 'south',
   'w' => 'west',
 }
+# TODO: This is only used by xmlparser?  Move it there.
 MINDMAP = {
   'clear as a bell' => 'A',
   'fresh and clear' => 'B',
@@ -4089,6 +4107,7 @@ MINDMAP = {
   'must rest' => 'G',
   'saturated' => 'H',
 }
+# TODO: This is only used by xmlparser?  Move it there.
 ICONMAP = {
   'IconKNEELING' => 'GH',
   'IconPRONE' => 'G',
@@ -4571,42 +4590,8 @@ alias :bounty? :checkbounty
 #
 
 argv_options = Hash.new
-bad_args = Array.new
 
-for arg in ARGV
-  # TODO: [Jymamon] These need to be handled by option parsing.
-  if arg =~ /^--(?:home)=(.+)$/i
-    LICH_DIR = $1.sub(/[\\\/]$/, '')
-  elsif arg =~ /^--temp=(.+)$/i
-    TEMP_DIR = $1.sub(/[\\\/]$/, '')
-  elsif arg =~ /^--scripts=(.+)$/i
-    SCRIPT_DIR = $1.sub(/[\\\/]$/, '')
-  elsif arg =~ /^--maps=(.+)$/i
-    MAP_DIR = $1.sub(/[\\\/]$/, '')
-  elsif arg =~ /^--logs=(.+)$/i
-    LOG_DIR = $1.sub(/[\\\/]$/, '')
-  elsif arg =~ /^--backup=(.+)$/i
-    BACKUP_DIR = $1.sub(/[\\\/]$/, '')
-  elsif arg =~ /^--data=(.+)$/i
-    DATA_DIR = $1.sub(/[\\\/]$/, '')
-  elsif arg =~ /\.sal$|Gse\.~xt$/i
-    argv_options[:sal] = arg
-    unless File.exists?(argv_options[:sal])
-      if ARGV.join(' ') =~ /([A-Z]:\\.+?\.(?:sal|~xt))/i
-        argv_options[:sal] = $1
-      end
-    end
-    unless File.exists?(argv_options[:sal])
-      if defined?(Wine)
-        argv_options[:sal] = "#{Wine::PREFIX}/drive_c/#{argv_options[:sal][3..-1].split('\\').join('/')}"
-      end
-    end
-    bad_args.clear
-  else
-    bad_args.push(arg)
-  end
-end
-
+# TODO: [Jymamon] This still needs converted to optparse
 if argv_options[:sal]
   unless File.exists?(argv_options[:sal])
     Lich.log "error: launch file does not exist: #{argv_options[:sal]}"
@@ -4865,11 +4850,8 @@ main_thread = Thread.new {
     end
 
   ## GUI starts here
-  #TODO: [Jymamon] Sublte change here because optiosn.force_gui defaults to true
-  #                but before it only defaulted to true if ARGV.empty?
-  # I think this is now addressed by pushing --gui into ARGV if is is empty
-  # before calling the options parser.
-  elsif defined?(Gtk) and options.force_gui
+
+  elsif defined?(Gtk) and options.gui
     gui_login(options.entryfile)
   end
 
@@ -5427,8 +5409,7 @@ main_thread = Thread.new {
       loop {
         begin
           server = TCPServer.new('127.0.0.1', detachable_client_port)
-          # TODO: [Jymamon] Still needs moved to options parser.
-          char_name = ARGV[ARGV.index('--login')+1].capitalize
+          char_name = options.login_character
           Frontend.create_session_file(char_name, server.addr[2], server.addr[1])
 
           $_DETACHABLE_CLIENT_ = SynchronizedSocket.new(server.accept)
@@ -5446,8 +5427,7 @@ main_thread = Thread.new {
         end
         if $_DETACHABLE_CLIENT_
           begin
-            # TODO: [Jymamon] Still needs moved to options parser.
-            unless ARGV.include?('--genie')
+            unless options.genie
               $frontend = 'profanity'
               Thread.new {
                 100.times { sleep 0.1; break if XMLData.indicator['IconJOINED'] }
