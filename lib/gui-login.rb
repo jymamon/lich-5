@@ -82,7 +82,6 @@ def gui_login(entry_data_file)
     @slider_box.visible = false
 
     @notebook.set_page(1) if @entry_data.empty?
-
   }
 
   wait_until { @done }
