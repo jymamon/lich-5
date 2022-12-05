@@ -4575,7 +4575,7 @@ alias :bounty? :checkbounty
 
 if @options.hostsdirectory
   hosts_dir = @options.hostsdirectory
-  #TODO: Extra logic here can move to when the option is being set
+  # TODO: Extra logic here can move to when the option is being set
   if hosts_dir and File.exists?(hosts_dir)
     hosts_dir = hosts_dir.tr('\\', '/')
     hosts_dir += '/' unless hosts_dir[-1..-1] == '/'
@@ -5396,7 +5396,7 @@ main_thread = Thread.new {
           elsif $frontend =~ /^(?:frostbite)$/
             client_string = fb_to_sf(client_string)
           end
-          #Lich.log(client_string)
+          # Lich.log(client_string)
           begin
             $_IDLETIMESTAMP_ = Time.now
             do_client(client_string)

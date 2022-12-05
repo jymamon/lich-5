@@ -24,7 +24,7 @@ module EAccess
   end
 
   def self.verify_pem(conn)
-    #return if conn.peer_cert.to_s = File.read(EAccess::PEM)
+    # return if conn.peer_cert.to_s = File.read(EAccess::PEM)
     if !(conn.peer_cert.to_s == File.read(EAccess::PEM))
       Lich.log "Exception, \nssl peer certificate did not match #{EAccess::PEM}\nwas:\n#{conn.peer_cert}"
       download_pem
@@ -55,7 +55,7 @@ module EAccess
     EAccess.verify_pem(conn)
     conn.puts "K\n"
     hashkey = EAccess.read(conn)
-    #pp "hash=%s" % hashkey
+    # pp "hash=%s" % hashkey
     password = password.split('').map { |c| c.getbyte(0) }
     hashkey = hashkey.split('').map { |c| c.getbyte(0) }
     password.each_index { |i| password[i] = ((password[i] - 32) ^ hashkey[i]) + 32 }
@@ -66,28 +66,28 @@ module EAccess
       eaccess_error = "Error(%s)" % response.split(/\s+/).last
       return eaccess_error
     end
-    #pp "A:response=%s" % response
+    # pp "A:response=%s" % response
     conn.puts "M\n"
     response = EAccess.read(conn)
     fail Exception, response unless response =~ /^M\t/
 
-    #pp "M:response=%s" % response
+    # pp "M:response=%s" % response
 
     unless legacy
       conn.puts "F\t#{game_code}\n"
       response = EAccess.read(conn)
       fail Exception, response unless response =~ /NORMAL|PREMIUM|TRIAL|INTERNAL|FREE/
 
-      #pp "F:response=%s" % response
+      # pp "F:response=%s" % response
       conn.puts "G\t#{game_code}\n"
       EAccess.read(conn)
-      #pp "G:response=%s" % response
+      # pp "G:response=%s" % response
       conn.puts "P\t#{game_code}\n"
       EAccess.read(conn)
-      #pp "P:response=%s" % response
+      # pp "P:response=%s" % response
       conn.puts "C\n"
       response = EAccess.read(conn)
-      #pp "C:response=%s" % response
+      # pp "C:response=%s" % response
       char_code = response.sub(/^C\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+[\t\n]/, '')
         .scan(/[^\t]+\t[^\t^\n]+/)
         .find { |c| c.split("\t")[1] == character }
@@ -96,7 +96,7 @@ module EAccess
       response = EAccess.read(conn)
       fail Exception, response unless response =~ /^L\t/
 
-      #pp "L:response=%s" % response
+      # pp "L:response=%s" % response
       conn.close unless conn.closed?
       login_info = Hash[response.sub(/^L\tOK\t/, '')
         .split("\t")
@@ -108,7 +108,7 @@ module EAccess
       login_info = Array.new
       for game in response.sub(/^M\t/, '').scan(/[^\t]+\t[^\t^\n]+/)
         game_code, game_name = game.split("\t")
-        #pp "M:response = %s" % response
+        # pp "M:response = %s" % response
         conn.puts "N\t#{game_code}\n"
         response = EAccess.read(conn)
         if response =~ /STORM/

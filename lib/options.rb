@@ -523,7 +523,7 @@ class Parser
     end
 
     # TODO: Check for invalid combinations. For example, '-s -w' doesn't make sense.
-    #if gamecode.gemstone
+    # if gamecode.gemstone
     #  if gamecode.platinum
     #    args.gamecode = "GSX"
     #  elsif gamecode.shattered
@@ -533,9 +533,9 @@ class Parser
     #  else
     #    args.gamecode = "GS3"
     #  end
-    #elsif gamecode.shattered
+    # elsif gamecode.shattered
     #  args.gamecode = "GSF"
-    #elsif gamecode.dragonrealms
+    # elsif gamecode.dragonrealms
     #  if gamecode.platinum
     #    args.gamecode = "DRX"
     #  elsif gamecode.fallen
@@ -545,11 +545,11 @@ class Parser
     #  else
     #    args.gamecode = "DR"
     #  end
-    #elsif gamecode.fallen
+    # elsif gamecode.fallen
     #    args.gamecode = "DRF"
-    #else
+    # else
     #    args.gamecode = ".*"
-    #end
+    # end
 
     # Hack-ish but sufficient for catching unused parameters
     opt_parser.parse('--help') if options.any?

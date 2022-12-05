@@ -88,9 +88,9 @@ end
 if $wine_bin and File.exists?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exists?($wine_prefix) and File.directory?($wine_prefix)
   require 'lib/platform/wine'
 end
-#$wine_bin = nil
-#$wine_prefix = nil
-#end
+# $wine_bin = nil
+# $wine_prefix = nil
+# end
 
 # find the FE locations for Win and for Linux | WINE
 

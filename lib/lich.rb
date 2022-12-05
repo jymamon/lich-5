@@ -31,11 +31,11 @@ module Lich
 
   def Lich.db
     @@lich_db ||= SQLite3::Database.new(@@lich_db_file)
-    #if $SAFE == 0
+    # if $SAFE == 0
     #  @@lich_db ||= SQLite3::Database.new(@@lich_db_file)
-    #else
+    # else
     #  nil
-    #end
+    # end
   end
 
   def Lich.init_db(database_file)

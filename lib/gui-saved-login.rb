@@ -380,4 +380,4 @@ else
     Lich.track_autosort_state = sort_select.active? ? true : false
   }
 
-end #if
+end # if

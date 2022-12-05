@@ -448,14 +448,14 @@ class Map
         else
           if filename
             file_list = [ filename ]
-            #respond "--- loading #{filename}" #if error
+            # respond "--- loading #{filename}" #if error
           else
             file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename|
               filename =~ /^map\-[0-9]+\.json$/i
             }.collect { |filename|
               "#{DATA_DIR}/#{XMLData.game}/#{filename}"
             }.sort.reverse
-            #respond "--- loading #{filename}" #if error
+            # respond "--- loading #{filename}" #if error
           end
           if file_list.empty?
             respond "--- Lich: error: no map database found"
@@ -482,7 +482,7 @@ class Map
                 }
               }
               @@tags.clear
-              respond "--- Map loaded #{filename}" #if error
+              respond "--- Map loaded #{filename}" # if error
               @@loaded = true
               Map.load_uids
               return true
@@ -515,7 +515,7 @@ class Map
           while filename = file_list.shift
             begin
               @@list = File.open(filename, 'rb') { |f| Marshal.load(f.read) }
-              respond "--- Map loaded #{filename}" #if error
+              respond "--- Map loaded #{filename}" # if error
 
               @@loaded = true
               Map.load_uids

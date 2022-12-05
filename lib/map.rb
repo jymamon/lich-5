@@ -1,5 +1,5 @@
-#Preliminary fix (4.10.2022) for DR/GS class declare separation
-#this area will see significant change / improvement
+# Preliminary fix (4.10.2022) for DR/GS class declare separation
+# this area will see significant change / improvement
 
 sleep 0.2 while XMLData.game.nil? or XMLData.game.empty?
 
