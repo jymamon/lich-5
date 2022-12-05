@@ -49,12 +49,6 @@ Layout/ConditionPosition:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Layout/ElseAlignment:
-  Exclude:
-    - 'lich.rbw'
-
 # Offense count: 30
 # This cop supports safe autocorrection (--autocorrect).
 Layout/EmptyLineAfterGuardClause:

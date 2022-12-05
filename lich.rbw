@@ -172,7 +172,7 @@ class SynchronizedSocket
       if yield
          @delegate.puts *args
          return true
-       else
+      else
           return false
        end
       }
