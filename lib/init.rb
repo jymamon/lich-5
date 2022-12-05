@@ -203,7 +203,7 @@ required_modules = [
         ENV['DISPLAY'] or
         ((ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and @options.force_gui) or
         (!$stdout.isatty)
-        )
+      )
     },
   }
 ]
