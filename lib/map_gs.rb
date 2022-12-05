@@ -53,7 +53,7 @@ class Map
 
   def Map.get_free_id
     Map.load unless @@loaded
-    return @@list.compact.max_by{ |r| r.id}.id + 1
+    return @@list.compact.max_by { |r| r.id}.id + 1
   end
 
   def Map.list
