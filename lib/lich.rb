@@ -2,7 +2,8 @@ module Lich
   @@hosts_file           = nil
   @@lich_db              = nil
   @@last_warn_deprecated = 0
-
+  @@lich_db_file         = nil
+  
   # settings
   @@display_lichid       = nil # boolean
   @@display_uid          = nil # boolean
@@ -28,15 +29,17 @@ module Lich
   end
 
   def Lich.db
-    @@lich_db ||= SQLite3::Database.new("#{DATA_DIR}/lich.db3")
+    @@lich_db ||= SQLite3::Database.new(@@lich_db_file)
     #if $SAFE == 0
-    #  @@lich_db ||= SQLite3::Database.new("#{DATA_DIR}/lich.db3")
+    #  @@lich_db ||= SQLite3::Database.new(@@lich_db_file)
     #else
     #  nil
     #end
   end
 
-  def Lich.init_db
+  def Lich.init_db(database_file)
+    # TODO: Parameter validation
+    @@lich_db_file = database_file
     begin
       Lich.db.execute("CREATE TABLE IF NOT EXISTS script_setting (script TEXT NOT NULL, name TEXT NOT NULL, value BLOB, PRIMARY KEY(script, name));")
       Lich.db.execute("CREATE TABLE IF NOT EXISTS script_auto_settings (script TEXT NOT NULL, scope TEXT, hash BLOB, PRIMARY KEY(script, scope));")
@@ -193,13 +196,13 @@ module Lich
           r = Win32.GetModuleFileName
           file = ((r[:return] > 0) ? r[:lpFilename] : 'rubyw.exe')
           params = "#{$PROGRAM_NAME.split(/\/|\\/).last} --link-to-sge"
-          r = Win32.ShellExecuteEx(:lpVerb => 'runas', :lpFile => file, :lpDirectory => LICH_DIR.tr("/", "\\"), :lpParameters => params, :fMask => Win32::SEE_MASK_NOCLOSEPROCESS)
+          r = Win32.ShellExecuteEx(:lpFile => file, :lpParameters => params)
           if r[:return] > 0
             process_id = r[:hProcess]
             sleep 0.2 while Win32.GetExitCodeProcess(:hProcess => process_id)[:lpExitCode] == Win32::STILL_ACTIVE
             sleep 3
           else
-            Win32.ShellExecute(:lpOperation => 'runas', :lpFile => file, :lpDirectory => LICH_DIR.tr("/", "\\"), :lpParameters => params)
+            Win32.ShellExecute(:lpFile => file, :lpParameters => params)
             sleep 6
           end
         rescue
@@ -252,13 +255,13 @@ module Lich
           r = Win32.GetModuleFileName
           file = ((r[:return] > 0) ? r[:lpFilename] : 'rubyw.exe')
           params = "#{$PROGRAM_NAME.split(/\/|\\/).last} --unlink-from-sge"
-          r = Win32.ShellExecuteEx(:lpVerb => 'runas', :lpFile => file, :lpDirectory => LICH_DIR.tr("/", "\\"), :lpParameters => params, :fMask => Win32::SEE_MASK_NOCLOSEPROCESS)
+          r = Win32.ShellExecuteEx(:lpFile => file, :lpParameters => params)
           if r[:return] > 0
             process_id = r[:hProcess]
             sleep 0.2 while Win32.GetExitCodeProcess(:hProcess => process_id)[:lpExitCode] == Win32::STILL_ACTIVE
             sleep 3
           else
-            Win32.ShellExecute(:lpOperation => 'runas', :lpFile => file, :lpDirectory => LICH_DIR.tr("/", "\\"), :lpParameters => params)
+            Win32.ShellExecute(:lpFile => file, :lpParameters => params)
             sleep 6
           end
         rescue
@@ -312,13 +315,13 @@ module Lich
           r = Win32.GetModuleFileName
           file = ((r[:return] > 0) ? r[:lpFilename] : 'rubyw.exe')
           params = "#{$PROGRAM_NAME.split(/\/|\\/).last} --link-to-sal"
-          r = Win32.ShellExecuteEx(:lpVerb => 'runas', :lpFile => file, :lpDirectory => LICH_DIR.tr("/", "\\"), :lpParameters => params, :fMask => Win32::SEE_MASK_NOCLOSEPROCESS)
+          r = Win32.ShellExecuteEx(:lpFile => file, :lpParameters => params)
           if r[:return] > 0
             process_id = r[:hProcess]
             sleep 0.2 while Win32.GetExitCodeProcess(:hProcess => process_id)[:lpExitCode] == Win32::STILL_ACTIVE
             sleep 3
           else
-            Win32.ShellExecute(:lpOperation => 'runas', :lpFile => file, :lpDirectory => LICH_DIR.tr("/", "\\"), :lpParameters => params)
+            Win32.ShellExecute(:lpFile => file, :lpParameters => params)
             sleep 6
           end
         rescue
@@ -371,13 +374,13 @@ module Lich
           r = Win32.GetModuleFileName
           file = ((r[:return] > 0) ? r[:lpFilename] : 'rubyw.exe')
           params = "#{$PROGRAM_NAME.split(/\/|\\/).last} --unlink-from-sal"
-          r = Win32.ShellExecuteEx(:lpVerb => 'runas', :lpFile => file, :lpDirectory => LICH_DIR.tr("/", "\\"), :lpParameters => params, :fMask => Win32::SEE_MASK_NOCLOSEPROCESS)
+          r = Win32.ShellExecuteEx(:lpFile => file, :lpParameters => params)
           if r[:return] > 0
             process_id = r[:hProcess]
             sleep 0.2 while Win32.GetExitCodeProcess(:hProcess => process_id)[:lpExitCode] == Win32::STILL_ACTIVE
             sleep 3
           else
-            Win32.ShellExecute(:lpOperation => 'runas', :lpFile => file, :lpDirectory => LICH_DIR.tr("/", "\\"), :lpParameters => params)
+            Win32.ShellExecute(:lpFile => file, :lpParameters => params)
             sleep 6
           end
         rescue
@@ -410,6 +413,7 @@ module Lich
       ensure
         Win32.RegCloseKey(:hKey => key) rescue nil
       end
+
       if hosts_path
         windir = (ENV['windir'] || ENV['SYSTEMROOT'] || 'c:\windows')
         hosts_path.gsub('%SystemRoot%', windir)
@@ -418,6 +422,7 @@ module Lich
           return (@@hosts_file = hosts_file)
         end
       end
+
       if (windir = (ENV['windir'] || ENV['SYSTEMROOT'])) and File.exists?("#{windir}\\system32\\drivers\\etc\\hosts")
         return (@@hosts_file = "#{windir}\\system32\\drivers\\etc\\hosts")
       end
@@ -429,6 +434,7 @@ module Lich
           end
         end
       end
+
     else # Linux/Mac
       if File.exists?('/etc/hosts')
         return (@@hosts_file = '/etc/hosts')

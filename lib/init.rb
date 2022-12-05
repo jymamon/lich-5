@@ -1,5 +1,40 @@
 # Lich5 carveout for init_db
 
+# Ugly hack to preserve the behavior of force_gui being false if there are any other options and true if
+# there are not.
+if ARGV.empty?
+  ARGV.push("--gui")
+else
+  # Must be first so subsequent --gui options will undo this parameter.
+  ARGV.unshift("--no-gui")    
+end
+
+# instance variable syntax necessarry until this can be further refactored for init to only
+# expose methods the application invokes instead of running code upon inclusion.
+@options = Parser.parse(ARGV)
+
+# Moved from lib/constants.rb. These are all configurable, but setting a custom
+# lich dir doesn't necessarily change the others relative to that. It probably should.
+# LIB_DIR can't practically be reconfigured - we just loaded the options from there -
+# but we define it in the options class to be consistent with everything else.
+BACKUP_DIR = @options.backupdir
+DATA_DIR = @options.datadir
+LIB_DIR = @options.libdir
+LICH_DIR = @options.lichdir
+LOG_DIR = @options.mapdir
+MAP_DIR = @options.mapdir
+SCRIPT_DIR = @options.scriptdir
+TEMP_DIR = @options.tempdir
+
+# add this so that require statements can take the form 'lib/file'
+$LOAD_PATH << "#{LICH_DIR}"
+
+# deprecated
+$lich_dir = "#{LICH_DIR}/"
+$temp_dir = "#{TEMP_DIR}/"
+$script_dir = "#{SCRIPT_DIR}/"
+$data_dir = "#{DATA_DIR}/"
+
 #
 # Report an error if Lich 4.4 data is found
 #
@@ -32,8 +67,8 @@ end
 
 # check for Linux | WINE (and maybe in future MacOS | WINE) first due to low population
 # segment of code unmodified from Lich4 (Tillmen)
-if arg = ARGV.find { |a| a =~ /^--wine=.+$/i }
-  $wine_bin = arg.sub(/^--wine=/, '')
+if @options.wine
+  $wine_bin = @options.wine
 else
   begin
     $wine_bin = `which wine`.strip
@@ -41,8 +76,8 @@ else
     $wine_bin = nil
   end
 end
-if arg = ARGV.find { |a| a =~ /^--wine-prefix=.+$/i }
-  $wine_prefix = arg.sub(/^--wine-prefix=/, '')
+if arg =@options.wineprefix
+  $wine_prefix = @options.wineprefix
 elsif ENV['WINEPREFIX']
   $wine_prefix = ENV['WINEPREFIX']
 elsif ENV['HOME']
@@ -115,8 +150,8 @@ end
 if (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
   require 'lib/platform/win32'
 else
-  if arg = ARGV.find { |a| a =~ /^--wine=.+$/i }
-    $wine_bin = arg.sub(/^--wine=/, '')
+  if @options.wine
+    $wine_bin = @options.wine
   else
     begin
       $wine_bin = `which wine`.strip
@@ -124,8 +159,8 @@ else
       $wine_bin = nil
     end
   end
-  if arg = ARGV.find { |a| a =~ /^--wine-prefix=.+$/i }
-    $wine_prefix = arg.sub(/^--wine-prefix=/, '')
+  if @options.wineprefix
+    $wine_prefix = @options.wineprefix
   elsif ENV['WINEPREFIX']
     $wine_prefix = ENV['WINEPREFIX']
   elsif ENV['HOME']
@@ -140,8 +175,8 @@ else
   $wine_prefix = nil
 end
 
-if ARGV[0] == 'shellexecute'
-  args = Marshal.load(ARGV[1].unpack('m')[0])
+if @options.shellexecute
+  args = Marshal.load(@options.shellexecute)
   Win32.ShellExecute(:lpOperation => args[:op], :lpFile => args[:file], :lpDirectory => args[:dir], :lpParameters => args[:params])
   exit
 end
@@ -166,7 +201,7 @@ required_modules = [
       return(
         ((RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)) or
         ENV['DISPLAY'] or 
-        ((ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and ARGV.empty? or ARGV.any? { |arg| arg =~ /^--gui$/ }) or
+        ((ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and @options.force_gui) or
         (!$stdout.isatty)
         )
     },
@@ -188,7 +223,7 @@ required_modules.each { |required_module|
       if result == Win32::IDIYES
         if gem_file
           # fixme: using --source http://rubygems.org to avoid https because it has been failing to validate the certificate on Windows
-          result = Win32.ShellExecuteEx(:fMask => Win32::SEE_MASK_NOCLOSEPROCESS, :lpVerb => gem_verb, :lpFile => gem_file, :lpParameters => "install #{required_module[:name]} --version #{required_module[:version]} #{gem_default_parameters}")
+          result = Win32.ShellExecuteEx(:lpVerb => gem_verb, :lpFile => gem_file, :lpParameters => "install #{required_module[:name]} --version #{required_module[:version]} #{gem_default_parameters}")
 
           if result[:return] > 0
             pid = result[:hProcess]
@@ -300,7 +335,7 @@ Lich.log "info: Ruby #{RUBY_VERSION}"
 Lich.log "info: #{RUBY_PLATFORM}"
 required_modules.each { |required_module|
   if required_module.key?(:result)
-    Lich.log "info: #{required_module[:name]} install result: #{required_module[:result]}"
+    Lich.log "info: #{required_module[:name]} install result: #{required_module[:result]}."
   else
     Lich.log "info: #{required_module[:name]} was already availble."
   end
@@ -317,7 +352,8 @@ required_modules.each { |required_module|
     end
   end
 }
-Lich.init_db
+
+Lich.init_db("#{@options.datadir}/lich.db3")
 
 #
 # only keep the last 20 debug files
