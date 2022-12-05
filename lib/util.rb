@@ -96,7 +96,7 @@ module Lich
       end
       return result
     end
-    
+
     def self.quiet_command(command, start_pattern, end_pattern, include_end = true, timeout = 5, silent = true)
       result = []
       name = self.anon_hook

@@ -4,7 +4,7 @@
 # be used early has some of the options have impact on how other modules load or behave.
 class Parser
   require 'optparse'
-  
+
   def self.defaults
     # TODO: This could be broken up into a number of chained parsers in order to reduce
     # complexity of this class. Maybe one for directory options, one for client options,
@@ -51,13 +51,13 @@ class Parser
       :character,
       # Game instance
       :dragonrealms,
-      :fallen,      
+      :fallen,
       :gemstone,
       :platinum,
       :shattered,
       :test,
     ).new
-    
+
     args.lichdir = File.dirname(File.expand_path($PROGRAM_NAME))
 
     args.backupdir = "#{args.lichdir}/backup"
@@ -231,7 +231,7 @@ class Parser
               'Login to DragonRealms. Defaults to the Prime instance. Only needed if the same CHARACTER exists for mutliple games.') do
         args.dragonrealms = true
       end
-      
+
       opts.on('--fallen',
               'Login to the Fallen instance of DragonRealms. Only needed if the same CHARACTER exists for mutliple games.') do
         args.dragonrealms = true
@@ -257,7 +257,7 @@ class Parser
               'Login to Test instance of the game. Default to GemStone IV. Only needed if the same CHARACTER exists for mutliple games.') do
         args.test = true
       end
-      
+
       # -----------------------------------------------------------------
       # Client selection commands
       # -----------------------------------------------------------------
@@ -525,7 +525,7 @@ class Parser
     # TODO: Check for invalid combinations. For example, '-s -w' doesn't make sense.
     #if gamecode.gemstone
     #  if gamecode.platinum
-    #    args.gamecode = "GSX" 
+    #    args.gamecode = "GSX"
     #  elsif gamecode.shattered
     #    args.gamecode = "GSF"
     #  elsif gamecode.test
@@ -550,7 +550,7 @@ class Parser
     #else
     #    args.gamecode = ".*"
     #end
-    
+
     # Hack-ish but sufficient for catching unused parameters
     opt_parser.parse('--help') if options.any?
 

@@ -6,7 +6,7 @@ if ARGV.empty?
   ARGV.push("--gui")
 else
   # Must be first so subsequent --gui options will undo this parameter.
-  ARGV.unshift("--no-gui")    
+  ARGV.unshift("--no-gui")
 end
 
 # instance variable syntax necessarry until this can be further refactored for init to only
@@ -86,7 +86,7 @@ else
   $wine_prefix = nil
 end
 if $wine_bin and File.exists?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exists?($wine_prefix) and File.directory?($wine_prefix)
-  require 'lib/platform/wine'  
+  require 'lib/platform/wine'
 end
 #$wine_bin = nil
 #$wine_prefix = nil
@@ -200,7 +200,7 @@ required_modules = [
     :condition => lambda {
       return(
         ((RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)) or
-        ENV['DISPLAY'] or 
+        ENV['DISPLAY'] or
         ((ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and @options.force_gui) or
         (!$stdout.isatty)
         )

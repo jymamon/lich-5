@@ -38,7 +38,7 @@ module Games
     @@after_stance = nil
     attr_reader :num, :name, :timestamp, :msgup, :msgdn, :circle, :active, :type, :cast_proc, :real_time, :persist_on_death, :availability, :no_incant
     attr_accessor :stance, :channel
-    
+
     @@prepare_regex = /^You already have a spell readied!  You must RELEASE it if you wish to prepare another!$|^Your spell(?:song)? is ready\.|^You can't think clearly enough to prepare a spell!$|^You are concentrating too intently .*?to prepare a spell\.$|^You are too injured to make that dextrous of a movement|^The searing pain in your throat makes that impossible|^But you don't have any mana!\.$|^You can't make that dextrous of a move!$|^As you begin to prepare the spell the wind blows small objects at you thwarting your attempt\.$|^You do not know that spell!$|^All you manage to do is cough up some blood\.$|The incantations of countless spells swirl through your mind as a golden light flashes before your eyes\./
     @@results_regex = /^(?:Cast|Sing) Roundtime [0-9]+ Seconds?\.$|^Cast at what\?$|^But you don't have any mana!$|^\[Spell Hindrance for|^You don't have a spell prepared!$|keeps? the spell from working\.|^Be at peace my child, there is no need for spells of war in here\.$|Spells of War cannot be cast|^As you focus on your magic, your vision swims with a swirling haze of crimson\.$|^Your magic fizzles ineffectually\.$|^All you manage to do is cough up some blood\.$|^And give yourself away!  Never!$|^You are unable to do that right now\.$|^You feel a sudden rush of power as you absorb [0-9]+ mana!$|^You are unable to drain it!$|leaving you casting at nothing but thin air!$|^You don't seem to be able to move to do that\.$|^Provoking a GameMaster is not such a good idea\.$|^You can't think clearly enough to prepare a spell!$|^You do not currently have a target\.$|The incantations of countless spells swirl through your mind as a golden light flashes before your eyes\.|You can only evoke certain spells\.|You can only channel certain spells for extra power\.|That is not something you can prepare\./
 
@@ -579,7 +579,7 @@ module Games
               arg_options = arg_options.join(" ") unless arg_options.empty?
             end
           end
-          
+
           if (((target.nil? || target.to_s.empty?) && !(@no_incant)) && (cast_cmd == "cast" && arg_options.nil?) || cast_cmd == "incant") && cast_cmd !~ /^(?:channel|evoke)/
             cast_cmd = "incant #{@num}"
           elsif (target.nil? or target.to_s.empty?) and (@type =~ /attack/i) and not [410,435,525,912,909,609].include?(@num)
@@ -591,13 +591,11 @@ module Games
           elsif cast_cmd !~ /^incant/
             cast_cmd += " #{target}"
           end
-          
+
           unless (arg_options.nil? || arg_options.empty?)
             cast_cmd += " #{arg_options}"
           end
-          
-          
-          
+
           cast_result = nil
           loop {
             waitrt?
@@ -720,7 +718,7 @@ module Games
       end
       cast(target, results_of_interest, arg_options)
     end
-    
+
     def force_incant(arg_options=nil, results_of_interest=nil)
       unless arg_options.nil? || arg_options.empty?
         arg_options = "incant #{arg_options}"
@@ -729,7 +727,7 @@ module Games
       end
       cast(nil, results_of_interest, arg_options)
     end
-   
+
     def _bonus
       @bonus.dup
     end

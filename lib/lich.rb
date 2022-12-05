@@ -3,7 +3,7 @@ module Lich
   @@lich_db              = nil
   @@last_warn_deprecated = 0
   @@lich_db_file         = nil
-  
+
   # settings
   @@display_lichid       = nil # boolean
   @@display_uid          = nil # boolean

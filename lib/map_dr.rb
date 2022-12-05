@@ -179,9 +179,9 @@ class Map
             1.times {
               @@current_room_count = XMLData.room_count
               foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
-              if room = @@list.find { |r| r.title.include?(XMLData.room_title) and 
-                  r.description.include?(XMLData.room_description.strip) and 
-                  (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and 
+              if room = @@list.find { |r| r.title.include?(XMLData.room_title) and
+                  r.description.include?(XMLData.room_description.strip) and
+                  (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                   (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                   (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r) and
                   (r.room_objects.nil? || r.room_objects.all?{|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
@@ -194,9 +194,9 @@ class Map
                 redo unless @@current_room_count == XMLData.room_count
                 desc_regex = /#{Regexp.escape(XMLData.room_description.strip.sub(/\.+$/, '')).gsub(/\\\.(?:\\\.\\\.)?/, '|')}/
                 if room = @@list.find { |r| r.title.include?(XMLData.room_title) and
-                    (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and 
-                    (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and 
-                    (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and 
+                    (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
+                    (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
+                    (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                     (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r) and
                     (r.room_objects.nil? || r.room_objects.all?{|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
                   }
@@ -235,10 +235,10 @@ class Map
           @@fuzzy_room_count = XMLData.room_count
           1.times {
             foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
-            if (room = @@list.find { |r| r.title.include?(XMLData.room_title) and 
-                r.description.include?(XMLData.room_description.strip) and 
-                (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and 
-                (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and 
+            if (room = @@list.find { |r| r.title.include?(XMLData.room_title) and
+                r.description.include?(XMLData.room_description.strip) and
+                (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+                (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                 (not r.check_location or r.location == Map.get_location) and
                 (r.room_objects.nil? || r.room_objects.all?{|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
               })
@@ -253,10 +253,10 @@ class Map
             else
               redo unless @@fuzzy_room_count == XMLData.room_count
               desc_regex = /#{Regexp.escape(XMLData.room_description.strip.sub(/\.+$/, '')).gsub(/\\\.(?:\\\.\\\.)?/, '|')}/
-              if room = @@list.find { |r| r.title.include?(XMLData.room_title) and 
-                  (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and 
-                  (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and 
-                  (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and 
+              if room = @@list.find { |r| r.title.include?(XMLData.room_title) and
+                  (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
+                  (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
+                  (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                   (not r.check_location or r.location == Map.get_location) and
                   (r.room_objects.nil? || r.room_objects.all?{|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
                 }
@@ -335,17 +335,17 @@ class Map
       current_location = Map.get_location
       foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
       if room = @@list.find { |r| (r.location == current_location) and r.title.include?(XMLData.room_title) and
-          r.description.include?(XMLData.room_description.strip) and 
-          (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and 
-          (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and 
-          check_peer_tag.call(r) 
+          r.description.include?(XMLData.room_description.strip) and
+          (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+          (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
+          check_peer_tag.call(r)
         }
         return room
-      elsif room = @@list.find { |r| r.location.nil? and r.title.include?(XMLData.room_title) and 
-          r.description.include?(XMLData.room_description.strip) and 
-          (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and 
-          (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and 
-          check_peer_tag.call(r) 
+      elsif room = @@list.find { |r| r.location.nil? and r.title.include?(XMLData.room_title) and
+          r.description.include?(XMLData.room_description.strip) and
+          (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+          (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
+          check_peer_tag.call(r)
         }
         room.location = current_location
         return room
@@ -353,15 +353,15 @@ class Map
         title       = [ XMLData.room_title ]
         description = [ XMLData.room_description.strip ]
         paths       = [ XMLData.room_exits_string.strip ]
-        uid         = [ XMLData.room_id ] 
+        uid         = [ XMLData.room_id ]
         room        = Map.new(Map.get_free_id, title, description, paths, uid, current_location)
-        identical_rooms = @@list.find_all { |r| (r.location != current_location) and 
-            r.title.include?(XMLData.room_title) and 
-            r.description.include?(XMLData.room_description.strip) and 
-            (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and 
-            (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and 
+        identical_rooms = @@list.find_all { |r| (r.location != current_location) and
+            r.title.include?(XMLData.room_title) and
+            r.description.include?(XMLData.room_description.strip) and
+            (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+            (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
             !r.uid.include?(XMLData.room_id)
-          }       
+          }
         if identical_rooms.length > 0
           room.check_location = true
           identical_rooms.each { |r| r.check_location = true }
@@ -373,10 +373,10 @@ class Map
   def Map.tags
     Map.load unless @@loaded
     if @@tags.empty?
-      @@list.each { |r| 
-        r.tags.each { |t| 
-          @@tags.push(t) unless @@tags.include?(t) 
-        } 
+      @@list.each { |r|
+        r.tags.each { |t|
+          @@tags.push(t) unless @@tags.include?(t)
+        }
       }
     end
     @@tags.dup
@@ -384,8 +384,8 @@ class Map
   def Map.load_uids()
     Map.load unless @@loaded
     @@uids.clear
-    @@list.each { |r| 
-        r.uid.each { |u| 
+    @@list.each { |r|
+        r.uid.each { |u|
         if @@uids[u].nil?
           @@uids[u] = [ r.id ]
         else
@@ -410,7 +410,7 @@ class Map
     Map.clear
     Map.load
   end
-  
+
   def Map.load(filename=nil)
     if filename.nil?
       file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map\-[0-9]+\.(?:dat|xml|json)$/i }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
@@ -514,7 +514,7 @@ class Map
             begin
               @@list = File.open(filename, 'rb') { |f| Marshal.load(f.read) }
               respond "--- Map loaded #{filename}" #if error
-              
+
               @@loaded = true
               Map.load_uids
               return true
@@ -854,7 +854,7 @@ class Map
           visited[v] = true
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
-            unless visited[adj_room_i] 
+            unless visited[adj_room_i]
               if @@list[v].timeto[adj_room].class == Proc
                 nd = @@list[v].timeto[adj_room].call
               else
@@ -878,7 +878,7 @@ class Map
           visited[v] = true
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
-            unless visited[adj_room_i] 
+            unless visited[adj_room_i]
               if @@list[v].timeto[adj_room].class == Proc
                 nd = @@list[v].timeto[adj_room].call
               else
@@ -903,7 +903,7 @@ class Map
           visited[v] = true
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
-            unless visited[adj_room_i] 
+            unless visited[adj_room_i]
               if @@list[v].timeto[adj_room].class == Proc
                 nd = @@list[v].timeto[adj_room].call
               else

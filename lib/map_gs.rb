@@ -95,7 +95,7 @@ class Map
     Map.load unless @@loaded
     if script = Script.current
       return @@list[@@current_room_id] if XMLData.room_count == @@current_room_count and !@@current_room_id.nil?;
-    else 
+    else
       return @@list[@@current_room_id] if XMLData.room_count == @@fuzzy_room_count and !@@current_room_id.nil?;
     end
     ids = Map.ids_from_uid(XMLData.room_id);
