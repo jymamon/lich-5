@@ -13,12 +13,6 @@ Layout/EndOfLine:
   Exclude:
     - 'lib/front-end.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Layout/LeadingEmptyLines:
-  Exclude:
-    - 'lib/front-end.rb'
-
 # Offense count: 12
 # This cop supports safe autocorrection (--autocorrect).
 Layout/MultilineBlockLayout:
