@@ -233,7 +233,7 @@ class Map
               (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
               (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
               (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r)
-            }
+          }
             redo unless @@current_room_count == XMLData.room_count
             return room.id
           else
@@ -244,7 +244,7 @@ class Map
                 (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
                 (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                 (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r)
-              }
+            }
               redo unless @@current_room_count == XMLData.room_count
               return room.id
             else
@@ -269,7 +269,7 @@ class Map
             (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
             (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
             (not r.check_location or r.location == Map.get_location)
-          })
+        })
           redo unless @@fuzzy_room_count == XMLData.room_count
           if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }
             return nil
@@ -284,7 +284,7 @@ class Map
               (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
               (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
               (not r.check_location or r.location == Map.get_location)
-            }
+          }
             redo unless @@fuzzy_room_count == XMLData.room_count
             if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }
               return nil
@@ -352,7 +352,7 @@ class Map
         (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
         (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
         !r.uid.include?(XMLData.room_id)
-      }
+    }
     if identical_rooms.length > 0
       room.check_location = true
       identical_rooms.each { |r| r.check_location = true }

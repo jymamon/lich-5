@@ -200,7 +200,7 @@ class Map
                   (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                   (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r) and
                   (r.room_objects.nil? || r.room_objects.all?{|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
-                }
+              }
                 redo unless @@current_room_count == XMLData.room_count
                 @@previous_room_id = @@current_room_id
                 @@current_room_id = room.id
@@ -214,7 +214,7 @@ class Map
                     (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                     (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r) and
                     (r.room_objects.nil? || r.room_objects.all?{|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
-                  }
+                }
                   redo unless @@current_room_count == XMLData.room_count
                   @@previous_room_id = @@current_room_id
                   @@current_room_id = room.id
@@ -256,7 +256,7 @@ class Map
                 (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                 (not r.check_location or r.location == Map.get_location) and
                 (r.room_objects.nil? || r.room_objects.all?{|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
-              })
+            })
               redo unless @@fuzzy_room_count == XMLData.room_count
               if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }
                 @@fuzzy_room_id = nil
@@ -274,7 +274,7 @@ class Map
                   (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                   (not r.check_location or r.location == Map.get_location) and
                   (r.room_objects.nil? || r.room_objects.all?{|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
-                }
+              }
                 redo unless @@fuzzy_room_count == XMLData.room_count
                 if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }
                   @@fuzzy_room_id = nil
@@ -356,14 +356,14 @@ class Map
           (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
           (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
           check_peer_tag.call(r)
-        }
+      }
         return room
       elsif room = @@list.find { |r| r.location.nil? and r.title.include?(XMLData.room_title) and
           r.description.include?(XMLData.room_description.strip) and
           (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
           (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
           check_peer_tag.call(r)
-        }
+      }
         room.location = current_location
         return room
       else
@@ -378,7 +378,7 @@ class Map
             (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
             (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
             !r.uid.include?(XMLData.room_id)
-          }
+        }
         if identical_rooms.length > 0
           room.check_location = true
           identical_rooms.each { |r| r.check_location = true }
@@ -404,14 +404,14 @@ class Map
     Map.load unless @@loaded
     @@uids.clear
     @@list.each { |r|
-         r.uid.each { |u|
-           if @@uids[u].nil?
-             @@uids[u] = [ r.id ]
-           else
-             @@uids[u] << r.id if !@@uids[u].include?(r.id)
-           end
-         }
-       }
+      r.uid.each { |u|
+        if @@uids[u].nil?
+          @@uids[u] = [ r.id ]
+        else
+          @@uids[u] << r.id if !@@uids[u].include?(r.id)
+        end
+      }
+    }
   end
 
   def Map.ids_from_uid(n)

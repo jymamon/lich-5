@@ -6,18 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 17
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleAlignWith.
-# SupportedStylesAlignWith: either, start_of_block, start_of_line
-Layout/BlockAlignment:
-  Exclude:
-    - 'lib/gui-saved-login.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/options.rb'
-    - 'lich.rbw'
-
 # Offense count: 1
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: native, lf, crlf

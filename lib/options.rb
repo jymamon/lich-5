@@ -120,11 +120,11 @@ class Parser
             .to_s
             .split("\n")
             .delete_if { |line|
-                  do_not_document_options
-                      .find do |option|
-                        line =~ /#{option}/
-                      end
-                }
+              do_not_document_options
+                  .find do |option|
+                    line =~ /#{option}/
+                  end
+            }
             .join("\n")
 
         puts <<-ADDITIONALUSAGETEXT
@@ -183,22 +183,22 @@ class Parser
       # -----------------------------------------------------------------
       opts.on('--entrydat ENTRYFILE',
               'Override the default saved logins file with the file specified.') do |entryfile|
-        args.entryfile = entryfile
-      end
+                args.entryfile = entryfile
+              end
 
       # Using entry.dat, --character is used for manual login. Those can be consolidated.
       opts.on('--login CHARACTER',
               'Login the named CHARACTER using information from the saved logins file.') do |character|
-        args.login_character = character.capitalize
-      end
+                args.login_character = character.capitalize
+              end
 
       # -----------------------------------------------------------------
       # Manual game Login commands
       # -----------------------------------------------------------------
       opts.on('--account ACCOUNT',
               'Login using the named ACCOUNT. Requires --password to also be used.') do |account|
-        args.account = account
-      end
+                args.account = account
+              end
 
       opts.on('--character CHARACTER', 'Login the named CHARACTER.') do |character|
         args.character = character
@@ -206,8 +206,8 @@ class Parser
 
       opts.on('--password PASSWORD',
               'Login using the specified PASSSWORD. Requires --account to also be used.') do |password|
-        args.password = password
-      end
+                args.password = password
+              end
 
       # -----------------------------------------------------------------
       # Game selection commands
@@ -229,34 +229,34 @@ class Parser
 
       opts.on('--dragonrealms',
               'Login to DragonRealms. Defaults to the Prime instance. Only needed if the same CHARACTER exists for mutliple games.') do
-        args.dragonrealms = true
-      end
+                args.dragonrealms = true
+              end
 
       opts.on('--fallen',
               'Login to the Fallen instance of DragonRealms. Only needed if the same CHARACTER exists for mutliple games.') do
-        args.dragonrealms = true
-        args.fallen = true
-      end
+                args.dragonrealms = true
+                args.fallen = true
+              end
 
       opts.on('--gemstone',
               'Login to GemStone IV. Only needed if the same CHARACTER exists for mutliple games.') do
-        args.gemstone = true
-      end
+                args.gemstone = true
+              end
 
       opts.on('--platinum',
               'Login to Platinum instance of the game. Default to GemStone IV. Only needed if the same CHARACTER exists for mutliple games.') do
-        args.platinum = true
-      end
+                args.platinum = true
+              end
 
       opts.on('--shattered',
               'Login to Shattered instance of the game. Default to GemStone IV. Only needed if the same CHARACTER exists for mutliple games.') do
-        args.shattered = true
-      end
+                args.shattered = true
+              end
 
       opts.on('--test',
               'Login to Test instance of the game. Default to GemStone IV. Only needed if the same CHARACTER exists for mutliple games.') do
-        args.test = true
-      end
+                args.test = true
+              end
 
       # -----------------------------------------------------------------
       # Client selection commands
@@ -276,13 +276,13 @@ class Parser
 
       opts.on('--frontend FRONTEND',
               'Login to the game using the specified front end. Only needed if saved login entries exist for the multiple front ends.') do |frontend|
-        args.frontend = frontend
-      end
+                args.frontend = frontend
+              end
 
       opts.on('--frontend-command COMMAND',
               'Use the specified COMMAND to start a custom front end client.') do |command|
-        args.frontend_command = command
-      end
+                args.frontend_command = command
+              end
 
       opts.on('--frostbite', 'Start the game using the FrostBite client.') do
         args.frostbite = true
@@ -400,16 +400,16 @@ class Parser
 
       opts.on('--unlink-to-sge',
               'Remove lich from being the default program for game entry using Stormfront.') do |_value|
-        result = Lich.unlink_from_sge
-        if $stdout.isatty
-          if result
-            $stdout.puts 'Successfully unlinked from SGE.'
-          else
-            $stdout.puts 'Failed to unlink from SGE.'
-          end
-        end
-        exit
-      end
+                result = Lich.unlink_from_sge
+                if $stdout.isatty
+                  if result
+                    $stdout.puts 'Successfully unlinked from SGE.'
+                  else
+                    $stdout.puts 'Failed to unlink from SGE.'
+                  end
+                end
+                exit
+              end
 
       # -----------------------------------------------------------------
       # Automation commands
@@ -420,15 +420,15 @@ class Parser
 
       opts.on('--reconnect_delay DELAY[:STEP]',
               'Configures the delay to be used when automatically reconnecting after a disconnect.') do |delay|
-        delay =~ /([0-9]+)(\+[0-9]+)?/
-        args.reconnect_delay.delay = ::Regexp.last_match(1).to_i
-        args.reconnect_delay.step = ::Regexp.last_match(2).to_i
-      end
+                delay =~ /([0-9]+)(\+[0-9]+)?/
+                args.reconnect_delay.delay = ::Regexp.last_match(1).to_i
+                args.reconnect_delay.step = ::Regexp.last_match(2).to_i
+              end
 
       opts.on('--start-scripts SCRIPT[,SCRIPT[,...]]',
               'Start the comma delimited list of scripts upon login.') do |scripts|
-        args.start_scripts += scripts.split(/,/)
-      end
+                args.start_scripts += scripts.split(/,/)
+              end
 
       # -----------------------------------------------------------------
       # UI commands
@@ -447,9 +447,9 @@ class Parser
 
       opts.on('--wine-prefix DIRECTORY',
               'Use the provided DIRECTORY as the PREFIX when configuring WINE.') do |prefix|
-        # TODO: Verify it exists
-        args.wineprefix = prefix
-      end
+                # TODO: Verify it exists
+                args.wineprefix = prefix
+              end
 
       opts.on('--host SERVER:PORT', 'Deprecated(?).') do |serverport|
         if serverport =~ /(.+):(.+)/
@@ -468,13 +468,13 @@ class Parser
 
       opts.on('--hosts-dir HOSTSDIRECTORY',
               'Override the default directory to be used for the hosts file.') do |hostfiledirectory|
-        if File.exist?(hostfiledirectory)
-          args.hostsdirectory = hostfiledirectory.tr('\\', '/')
-          args.hostsdirectory += '/' unless args.hostsdirectory[-1..] == '/'
-        else
-          $stdout.puts "warning: given hosts directory does not exist: #{hosts_dir}."
-        end
-      end
+                if File.exist?(hostfiledirectory)
+                  args.hostsdirectory = hostfiledirectory.tr('\\', '/')
+                  args.hostsdirectory += '/' unless args.hostsdirectory[-1..] == '/'
+                else
+                  $stdout.puts "warning: given hosts directory does not exist: #{hosts_dir}."
+                end
+              end
 
       opts.on('--[no-]save', 'Save the specified login information for future use.') do |value|
         args.save = value

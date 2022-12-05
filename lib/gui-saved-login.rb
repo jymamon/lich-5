@@ -33,125 +33,125 @@ else
 
     account_array = @entry_data.map { |x| x.values[3] }.uniq
     account_array.each { |account|
-        last_game_name = nil
-        account_box = Gtk::Box.new(:vertical, 0)
-        @entry_data.each { |login_info|
-            next if login_info[:user_id] != account
+      last_game_name = nil
+      account_box = Gtk::Box.new(:vertical, 0)
+      @entry_data.each { |login_info|
+        next if login_info[:user_id] != account
 
-            if login_info[:game_name] != last_game_name
-              horizontal_separator = Gtk::Separator.new(:horizontal)
-              account_box.pack_start(horizontal_separator, :expand => false, :fill => false, :padding => 3)
-            end
-            last_game_name = login_info[:game_name]
+        if login_info[:game_name] != last_game_name
+          horizontal_separator = Gtk::Separator.new(:horizontal)
+          account_box.pack_start(horizontal_separator, :expand => false, :fill => false, :padding => 3)
+        end
+        last_game_name = login_info[:game_name]
 
-            realm = ''
+        realm = ''
 
-            if login_info[:game_code] =~ /GSX/
-              realm = 'Platinum'
-            elsif login_info[:game_code] =~ /GST/
-              realm = 'Test'
-            elsif login_info[:game_code] =~ /GSF/
-              realm = 'Shattered'
-            else
-              realm = 'Prime'
-            end
+        if login_info[:game_code] =~ /GSX/
+          realm = 'Platinum'
+        elsif login_info[:game_code] =~ /GST/
+          realm = 'Test'
+        elsif login_info[:game_code] =~ /GSF/
+          realm = 'Shattered'
+        else
+          realm = 'Prime'
+        end
 
-            @button_provider = Gtk::CssProvider.new
-            @button_provider.load(data:
-                "button { font-size: 14px; padding-top: 0px; \
+        @button_provider = Gtk::CssProvider.new
+        @button_provider.load(data:
+            "button { font-size: 14px; padding-top: 0px; \
                   padding-bottom: 0px; margin-top: 0px; margin-bottom: 0px; \
                   background-image: none; }\
                   button:hover { background-color: darkgrey; } ")
 
-            @play_button = Gtk::Button.new()
-            char_label = Gtk::Label.new("#{realm} - #{login_info[:char_name]}")
-            char_label = Gtk::Label.new("#{login_info[:char_name]}")
-            char_label.set_width_chars(15)
-            fe_label = Gtk::Label.new("(#{login_info[:frontend].capitalize})")
-            fe_label.set_width_chars(10)
-            instance_label = Gtk::Label.new("#{realm}")
-            instance_label.set_width_chars(10)
-            char_label.set_alignment(0, 0.5)
-            button_row = Gtk::Paned.new(:horizontal)
-            button_inset = Gtk::Paned.new(:horizontal)
-            button_inset.pack1(instance_label, :shrink => false)
-            button_inset.pack2(fe_label, :shrink => false)
-            button_row.pack1(char_label, :shrink => false)
-            button_row.pack2(button_inset, :shrink => false)
+        @play_button = Gtk::Button.new()
+        char_label = Gtk::Label.new("#{realm} - #{login_info[:char_name]}")
+        char_label = Gtk::Label.new("#{login_info[:char_name]}")
+        char_label.set_width_chars(15)
+        fe_label = Gtk::Label.new("(#{login_info[:frontend].capitalize})")
+        fe_label.set_width_chars(10)
+        instance_label = Gtk::Label.new("#{realm}")
+        instance_label.set_width_chars(10)
+        char_label.set_alignment(0, 0.5)
+        button_row = Gtk::Paned.new(:horizontal)
+        button_inset = Gtk::Paned.new(:horizontal)
+        button_inset.pack1(instance_label, :shrink => false)
+        button_inset.pack2(fe_label, :shrink => false)
+        button_row.pack1(char_label, :shrink => false)
+        button_row.pack2(button_inset, :shrink => false)
 
-            @play_button.add(button_row)
-            @play_button.set_alignment(0.0, 0.5)
-            @remove_button = Gtk::Button.new()
-            remove_label = Gtk::Label.new('<span foreground="red"><b>Remove</b></span>')
-            remove_label.use_markup = true
-            remove_label.set_width_chars(10)
-            @remove_button.add(remove_label)
+        @play_button.add(button_row)
+        @play_button.set_alignment(0.0, 0.5)
+        @remove_button = Gtk::Button.new()
+        remove_label = Gtk::Label.new('<span foreground="red"><b>Remove</b></span>')
+        remove_label.use_markup = true
+        remove_label.set_width_chars(10)
+        @remove_button.add(remove_label)
 
-            @remove_button.style_context.add_provider(@button_provider, Gtk::StyleProvider::PRIORITY_USER)
-            @play_button.style_context.add_provider(@button_provider, Gtk::StyleProvider::PRIORITY_USER)
-            @account_book.style_context.add_provider(@tab_provider, Gtk::StyleProvider::PRIORITY_USER) unless @theme_state == true
+        @remove_button.style_context.add_provider(@button_provider, Gtk::StyleProvider::PRIORITY_USER)
+        @play_button.style_context.add_provider(@button_provider, Gtk::StyleProvider::PRIORITY_USER)
+        @account_book.style_context.add_provider(@tab_provider, Gtk::StyleProvider::PRIORITY_USER) unless @theme_state == true
 
-            char_box = Gtk::Box.new(:horizontal)
-            char_box.pack_end(@remove_button, :expand => true, :fill => false, :padding => 0)
-            char_box.pack_start(@play_button, :expand => true, :fill => true, :padding => 0)
-            account_box.pack_start(char_box, :expand => false, :fill => false, :padding => 0)
+        char_box = Gtk::Box.new(:horizontal)
+        char_box.pack_end(@remove_button, :expand => true, :fill => false, :padding => 0)
+        char_box.pack_start(@play_button, :expand => true, :fill => true, :padding => 0)
+        account_box.pack_start(char_box, :expand => false, :fill => false, :padding => 0)
 
-            @play_button.signal_connect('button-release-event') { |owner, ev|
-              if (ev.event_type == Gdk::EventType::BUTTON_RELEASE)
-                if (ev.button == 1)
-                  @play_button.sensitive = false
-                  launch_data_hash = EAccess.auth(
-                    account: login_info[:user_id],
-                    password: login_info[:password],
-                    character: login_info[:char_name],
-                    game_code: login_info[:game_code]
-                  )
-                  launch_data = launch_data_hash.map { |k, v| "#{k.upcase}=#{v}" }
-                  if login_info[:frontend] == 'wizard'
-                    launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, 'GAMEFILE=WIZARD.EXE').sub(/GAME=.+/, 'GAME=WIZ').sub(/FULLGAMENAME=.+/, 'FULLGAMENAME=Wizard Front End') }
-                  elsif login_info[:frontend] == 'avalon'
-                    launch_data.collect! { |line| line.sub(/GAME=.+/, 'GAME=AVALON') }
-                  end
-                  if login_info[:custom_launch]
-                    launch_data.push "CUSTOMLAUNCH=#{login_info[:custom_launch]}"
-                    if login_info[:custom_launch_dir]
-                      launch_data.push "CUSTOMLAUNCHDIR=#{login_info[:custom_launch_dir]}"
-                    end
-                  end
-                  @launch_data = launch_data
-                  @window.destroy
-                  @done = true
-                elsif (ev.button == 3)
-                  pp "I would be adding to a team tab"
+        @play_button.signal_connect('button-release-event') { |owner, ev|
+          if (ev.event_type == Gdk::EventType::BUTTON_RELEASE)
+            if (ev.button == 1)
+              @play_button.sensitive = false
+              launch_data_hash = EAccess.auth(
+                account: login_info[:user_id],
+                password: login_info[:password],
+                character: login_info[:char_name],
+                game_code: login_info[:game_code]
+              )
+              launch_data = launch_data_hash.map { |k, v| "#{k.upcase}=#{v}" }
+              if login_info[:frontend] == 'wizard'
+                launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, 'GAMEFILE=WIZARD.EXE').sub(/GAME=.+/, 'GAME=WIZ').sub(/FULLGAMENAME=.+/, 'FULLGAMENAME=Wizard Front End') }
+              elsif login_info[:frontend] == 'avalon'
+                launch_data.collect! { |line| line.sub(/GAME=.+/, 'GAME=AVALON') }
+              end
+              if login_info[:custom_launch]
+                launch_data.push "CUSTOMLAUNCH=#{login_info[:custom_launch]}"
+                if login_info[:custom_launch_dir]
+                  launch_data.push "CUSTOMLAUNCHDIR=#{login_info[:custom_launch_dir]}"
                 end
               end
-            }
+              @launch_data = launch_data
+              @window.destroy
+              @done = true
+            elsif (ev.button == 3)
+              pp "I would be adding to a team tab"
+            end
+          end
+        }
 
-            @remove_button.signal_connect('button-release-event') { |owner, ev|
-              if (ev.event_type == Gdk::EventType::BUTTON_RELEASE) and (ev.button == 1)
-                if (ev.state.inspect =~ /shift-mask/)
-                  @entry_data.delete(login_info)
-                  @save_entry_data = true
-                  char_box.visible = false
-                else
-                  dialog = Gtk::MessageDialog.new(:parent => nil, :flags => :modal, :type => :question, :buttons => :yes_no, :message => "Delete record?")
-                  dialog.title = "Confirm"
-                  dialog.set_icon(@default_icon)
-                  response = nil
-                  response = dialog.run
-                  dialog.destroy
-                  if response == Gtk::ResponseType::YES
-                    @entry_data.delete(login_info)
-                    @save_entry_data = true
-                    char_box.visible = false
-                  end
-                end
+        @remove_button.signal_connect('button-release-event') { |owner, ev|
+          if (ev.event_type == Gdk::EventType::BUTTON_RELEASE) and (ev.button == 1)
+            if (ev.state.inspect =~ /shift-mask/)
+              @entry_data.delete(login_info)
+              @save_entry_data = true
+              char_box.visible = false
+            else
+              dialog = Gtk::MessageDialog.new(:parent => nil, :flags => :modal, :type => :question, :buttons => :yes_no, :message => "Delete record?")
+              dialog.title = "Confirm"
+              dialog.set_icon(@default_icon)
+              response = nil
+              response = dialog.run
+              dialog.destroy
+              if response == Gtk::ResponseType::YES
+                @entry_data.delete(login_info)
+                @save_entry_data = true
+                char_box.visible = false
               end
-            }
-          }
-        @account_book.append_page(account_box, Gtk::Label.new(account.upcase))
-        @account_book.set_tab_reorderable(account_box, true)
+            end
+          end
+        }
       }
+      @account_book.append_page(account_box, Gtk::Label.new(account.upcase))
+      @account_book.set_tab_reorderable(account_box, true)
+    }
     quick_sw = Gtk::ScrolledWindow.new
     quick_sw.set_policy(:automatic, :automatic)
     quick_sw.add(@account_book)
