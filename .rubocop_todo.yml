@@ -20,12 +20,6 @@ Layout/BlockAlignment:
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLinesAroundExceptionHandlingKeywords:
-  Exclude:
-    - 'lib/util.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
 Layout/EmptyLinesAroundMethodBody:
   Exclude:
     - 'lib/gui-login.rb'

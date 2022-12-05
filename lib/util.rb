@@ -187,7 +187,6 @@ module Lich
 
           sleep 0.1 # prevent a tight-loop
         }
-
       ensure
         DownstreamHook.remove(name)
         silence_me if undo_silence
