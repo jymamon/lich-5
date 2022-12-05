@@ -661,7 +661,7 @@ module Lich
     rescue SQLite3::BusyException
       sleep 0.1
       retry
-end
+    end
       @@track_autosort_state = (val.to_s =~ /on|true|yes/ ? true : false)
   end
     return @@track_autosort_state
