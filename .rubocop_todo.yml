@@ -176,16 +176,6 @@ Layout/HashAlignment:
     - 'lib/messaging.rb'
     - 'lib/shield.rb'
 
-# Offense count: 82
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: normal, indented_internal_methods
-Layout/IndentationConsistency:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/gui-saved-login.rb'
-    - 'lib/lich.rb'
-
 # Offense count: 26
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: Width, AllowedPatterns, IgnoredPatterns.

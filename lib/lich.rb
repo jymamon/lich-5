@@ -587,8 +587,8 @@ module Lich
       sleep 0.1
       retry
     end
-      @@debug_messaging = (val.to_s =~ /on|true|yes/ ? true : false)
-      Lich.debug_messaging = @@debug_messaging
+    @@debug_messaging = (val.to_s =~ /on|true|yes/ ? true : false)
+    Lich.debug_messaging = @@debug_messaging
     end
     return @@debug_messaging
   end
@@ -612,8 +612,8 @@ module Lich
       sleep 0.1
       retry
     end
-      val = (XMLData.game =~ /^GS/ ? true : false) if val.nil? and XMLData.game != ""; # default false if DR, otherwise default true
-      @@display_lichid = (val.to_s =~ /on|true|yes/ ? true : false) if !val.nil?;
+    val = (XMLData.game =~ /^GS/ ? true : false) if val.nil? and XMLData.game != ""; # default false if DR, otherwise default true
+    @@display_lichid = (val.to_s =~ /on|true|yes/ ? true : false) if !val.nil?;
     end
     return @@display_lichid
   end
@@ -637,8 +637,8 @@ module Lich
       sleep 0.1
       retry
     end
-      val = (XMLData.game =~ /^GS/ ? true : false) if val.nil? and XMLData.game != ""; # default false if DR, otherwise default true
-      @@display_uid = (val.to_s =~ /on|true|yes/ ? true : false) if !val.nil?;
+    val = (XMLData.game =~ /^GS/ ? true : false) if val.nil? and XMLData.game != ""; # default false if DR, otherwise default true
+    @@display_uid = (val.to_s =~ /on|true|yes/ ? true : false) if !val.nil?;
     end
     return @@display_uid
   end
@@ -662,7 +662,7 @@ module Lich
       sleep 0.1
       retry
     end
-      @@track_autosort_state = (val.to_s =~ /on|true|yes/ ? true : false)
+    @@track_autosort_state = (val.to_s =~ /on|true|yes/ ? true : false)
     end
     return @@track_autosort_state
   end
@@ -686,7 +686,7 @@ module Lich
       sleep 0.1
       retry
     end
-      @@track_dark_mode = (val.to_s =~ /on|true|yes/ ? true : false)
+    @@track_dark_mode = (val.to_s =~ /on|true|yes/ ? true : false)
     end
     return @@track_dark_mode
   end
@@ -710,7 +710,7 @@ module Lich
       sleep 0.1
       retry
     end
-      @@track_layout_state = (val.to_s =~ /on|true|yes/ ? true : false)
+    @@track_layout_state = (val.to_s =~ /on|true|yes/ ? true : false)
     end
     return @@track_layout_state
   end

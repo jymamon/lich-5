@@ -31,30 +31,30 @@ else
                           tab:hover { background-color: darkgrey; }")
     end
 
-  account_array = @entry_data.map { |x| x.values[3] }.uniq
-  account_array.each { |account|
-    last_game_name = nil
-    account_box = Gtk::Box.new(:vertical, 0)
-    @entry_data.each { |login_info|
-      next if login_info[:user_id] != account
+    account_array = @entry_data.map { |x| x.values[3] }.uniq
+    account_array.each { |account|
+      last_game_name = nil
+      account_box = Gtk::Box.new(:vertical, 0)
+      @entry_data.each { |login_info|
+        next if login_info[:user_id] != account
 
-      if login_info[:game_name] != last_game_name
-        horizontal_separator = Gtk::Separator.new(:horizontal)
-        account_box.pack_start(horizontal_separator, :expand => false, :fill => false, :padding => 3)
-      end
-      last_game_name = login_info[:game_name]
+        if login_info[:game_name] != last_game_name
+          horizontal_separator = Gtk::Separator.new(:horizontal)
+          account_box.pack_start(horizontal_separator, :expand => false, :fill => false, :padding => 3)
+        end
+        last_game_name = login_info[:game_name]
 
-      realm = ''
+        realm = ''
 
-      if login_info[:game_code] =~ /GSX/
-        realm = 'Platinum'
-      elsif login_info[:game_code] =~ /GST/
-        realm = 'Test'
-      elsif login_info[:game_code] =~ /GSF/
-        realm = 'Shattered'
-      else
-        realm = 'Prime'
-      end
+        if login_info[:game_code] =~ /GSX/
+          realm = 'Platinum'
+        elsif login_info[:game_code] =~ /GST/
+          realm = 'Test'
+        elsif login_info[:game_code] =~ /GSF/
+          realm = 'Shattered'
+        else
+          realm = 'Prime'
+        end
 
         @button_provider = Gtk::CssProvider.new
         @button_provider.load(data:
@@ -148,11 +148,11 @@ else
             end
           end
         }
-      }
+        }
       @account_book.append_page(account_box, Gtk::Label.new(account.upcase))
       @account_book.set_tab_reorderable(account_box, true)
 
-    }
+      }
     quick_sw = Gtk::ScrolledWindow.new
     quick_sw.set_policy(:automatic, :automatic)
     quick_sw.add(@account_book)
@@ -238,13 +238,13 @@ else
       }
     }
 
-     adjustment = Gtk::Adjustment.new(0, 0, 1000, 5, 20, 500)
-     quick_vp = Gtk::Viewport.new(adjustment, adjustment)
-     quick_vp.add(quick_box)
+    adjustment = Gtk::Adjustment.new(0, 0, 1000, 5, 20, 500)
+    quick_vp = Gtk::Viewport.new(adjustment, adjustment)
+    quick_vp.add(quick_box)
 
-     quick_sw = Gtk::ScrolledWindow.new
-     quick_sw.set_policy(:automatic, :automatic)
-     quick_sw.add(quick_vp)
+    quick_sw = Gtk::ScrolledWindow.new
+    quick_sw.set_policy(:automatic, :automatic)
+    quick_sw.add(quick_vp)
 
   end
 
@@ -327,58 +327,58 @@ else
 =end
   # Global settings stuff
 
-    @slider_box = Gtk::Box.new(:horizontal, 5)
-    theme_select = Gtk::Switch.new
-    tab_select = Gtk::Switch.new
-    sort_select = Gtk::Switch.new
-    theme_select_label = Gtk::Label.new('Dark Theme')
-    tab_select_label = Gtk::Label.new('Tab Layout')
-    sort_select_label = Gtk::Label.new(' AutoSort   ')
-    theme_select.set_active(true) if @theme_state == true
-    tab_select.set_active(true) if @tab_layout_state == true
-    sort_select.set_active(true) if @autosort_state == true
+  @slider_box = Gtk::Box.new(:horizontal, 5)
+  theme_select = Gtk::Switch.new
+  tab_select = Gtk::Switch.new
+  sort_select = Gtk::Switch.new
+  theme_select_label = Gtk::Label.new('Dark Theme')
+  tab_select_label = Gtk::Label.new('Tab Layout')
+  sort_select_label = Gtk::Label.new(' AutoSort   ')
+  theme_select.set_active(true) if @theme_state == true
+  tab_select.set_active(true) if @tab_layout_state == true
+  sort_select.set_active(true) if @autosort_state == true
 
-    @slider_box.pack_start(theme_select, :expand => true, :fill => false, :padding => 0)
-    @slider_box.pack_start(theme_select_label, :expand => true, :fill => false, :padding => 0)
-    @slider_box.pack_start(tab_select, :expand => true, :fill => false, :padding => 0)
-    @slider_box.pack_start(tab_select_label, :expand => true, :fill => false, :padding => 0)
-    @slider_box.pack_start(sort_select, :expand => true, :fill => false, :padding => 0)
-    @slider_box.pack_start(sort_select_label, :expand => true, :fill => false, :padding => 0)
+  @slider_box.pack_start(theme_select, :expand => true, :fill => false, :padding => 0)
+  @slider_box.pack_start(theme_select_label, :expand => true, :fill => false, :padding => 0)
+  @slider_box.pack_start(tab_select, :expand => true, :fill => false, :padding => 0)
+  @slider_box.pack_start(tab_select_label, :expand => true, :fill => false, :padding => 0)
+  @slider_box.pack_start(sort_select, :expand => true, :fill => false, :padding => 0)
+  @slider_box.pack_start(sort_select_label, :expand => true, :fill => false, :padding => 0)
 
-    @settings_option = Gtk::ToggleButton.new(:label => 'Change global GUI settings')
-    @settings_option.style_context.add_provider(@togglebutton_provider, Gtk::StyleProvider::PRIORITY_USER)
-    @quick_game_entry_tab.pack_start(@settings_option, :expand => false, :fill => false, :padding => 5)
-    @quick_game_entry_tab.pack_start(@slider_box, :expand => false, :fill => false, :padding => 5)
+  @settings_option = Gtk::ToggleButton.new(:label => 'Change global GUI settings')
+  @settings_option.style_context.add_provider(@togglebutton_provider, Gtk::StyleProvider::PRIORITY_USER)
+  @quick_game_entry_tab.pack_start(@settings_option, :expand => false, :fill => false, :padding => 5)
+  @quick_game_entry_tab.pack_start(@slider_box, :expand => false, :fill => false, :padding => 5)
 
-    @slider_box.visible = false
+  @slider_box.visible = false
 
-    @settings_option.signal_connect('toggled') {
-      @slider_box.visible = @settings_option.active?
-    }
+  @settings_option.signal_connect('toggled') {
+    @slider_box.visible = @settings_option.active?
+  }
 
-    theme_select.signal_connect('notify::active') { |s|
-      if theme_select.active?
-        Gtk::Settings.default.gtk_application_prefer_dark_theme = true
-        @play_button.style_context.remove_provider(@button_provider) if defined?(@button_provider)
-        @account_book.style_context.remove_provider(@tab_provider) if defined?(@tab_provider)
-        @account_book.override_background_color(:normal, Gdk::RGBA::parse("rgba(0,0,0,0)"))
-        @notebook.override_background_color(:normal, Gdk::RGBA::parse("rgba(0,0,0,0)"))
-        Lich.track_dark_mode = true
-      else
-        Gtk::Settings.default.gtk_application_prefer_dark_theme = false
-        lightgrey = Gdk::RGBA::parse("#d3d3d3")
-        @account_book.override_background_color(:normal, lightgrey)
-        @notebook.override_background_color(:normal, lightgrey)
-        Lich.track_dark_mode = false
-      end
-    }
+  theme_select.signal_connect('notify::active') { |s|
+    if theme_select.active?
+      Gtk::Settings.default.gtk_application_prefer_dark_theme = true
+      @play_button.style_context.remove_provider(@button_provider) if defined?(@button_provider)
+      @account_book.style_context.remove_provider(@tab_provider) if defined?(@tab_provider)
+      @account_book.override_background_color(:normal, Gdk::RGBA::parse("rgba(0,0,0,0)"))
+      @notebook.override_background_color(:normal, Gdk::RGBA::parse("rgba(0,0,0,0)"))
+      Lich.track_dark_mode = true
+    else
+      Gtk::Settings.default.gtk_application_prefer_dark_theme = false
+      lightgrey = Gdk::RGBA::parse("#d3d3d3")
+      @account_book.override_background_color(:normal, lightgrey)
+      @notebook.override_background_color(:normal, lightgrey)
+      Lich.track_dark_mode = false
+    end
+  }
 
-    tab_select.signal_connect('notify::active') { |s|
-      Lich.track_layout_state = tab_select.active? ? true : false
-    }
+  tab_select.signal_connect('notify::active') { |s|
+    Lich.track_layout_state = tab_select.active? ? true : false
+  }
 
-    sort_select.signal_connect('notify::active') { |s|
-      Lich.track_autosort_state = sort_select.active? ? true : false
-    }
+  sort_select.signal_connect('notify::active') { |s|
+    Lich.track_autosort_state = sort_select.active? ? true : false
+  }
 
 end #if

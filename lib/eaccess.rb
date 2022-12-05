@@ -106,26 +106,26 @@ module EAccess
       for game in response.sub(/^M\t/, '').scan(/[^\t]+\t[^\t^\n]+/)
           game_code, game_name = game.split("\t")
         #pp "M:response = %s" % response
-        conn.puts "N\t#{game_code}\n"
-        response = EAccess.read(conn)
-        if response =~ /STORM/
-          conn.puts "F\t#{game_code}\n"
+          conn.puts "N\t#{game_code}\n"
           response = EAccess.read(conn)
-          if response =~ /NORMAL|PREMIUM|TRIAL|INTERNAL|FREE/
-            conn.puts "G\t#{game_code}\n"
-            EAccess.read(conn)
-            conn.puts "P\t#{game_code}\n"
-            EAccess.read(conn)
-            conn.puts "C\n"
+          if response =~ /STORM/
+            conn.puts "F\t#{game_code}\n"
             response = EAccess.read(conn)
-            for code_name in response.sub(/^C\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+[\t\n]/, '').scan(/[^\t]+\t[^\t^\n]+/)
-                char_code, char_name = code_name.split("\t")
-              hash = {:game_code => "#{game_code}", :game_name => "#{game_name}",
-                      :char_code => "#{char_code}", :char_name => "#{char_name}"}
-              login_info.push(hash)
+            if response =~ /NORMAL|PREMIUM|TRIAL|INTERNAL|FREE/
+              conn.puts "G\t#{game_code}\n"
+              EAccess.read(conn)
+              conn.puts "P\t#{game_code}\n"
+              EAccess.read(conn)
+              conn.puts "C\n"
+              response = EAccess.read(conn)
+              for code_name in response.sub(/^C\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+[\t\n]/, '').scan(/[^\t]+\t[^\t^\n]+/)
+                  char_code, char_name = code_name.split("\t")
+                  hash = {:game_code => "#{game_code}", :game_name => "#{game_name}",
+                          :char_code => "#{char_code}", :char_name => "#{char_name}"}
+                  login_info.push(hash)
+              end
             end
           end
-        end
       end
     end
     conn.close unless conn.closed?
