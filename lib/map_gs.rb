@@ -129,7 +129,7 @@ class Map
     return @@list[id]
   end
 
-  def Map.set_fuzzy(id)  # returns Map/Room
+  def Map.set_fuzzy(id) # returns Map/Room
     @@previous_room_id = @@current_room_id if !id.nil? and id != @@current_room_id;
     @@current_room_id  = id
     return nil if id.nil?

@@ -221,8 +221,8 @@ module Lich
 
           ## And we clen up after ourselves
 
-          FileUtils.remove_dir(File.join(TEMP_DIR, filename))   # we know these exist because
-          FileUtils.rm(File.join(TEMP_DIR, "#{filename}.tar.gz"))       # we just processed them
+          FileUtils.remove_dir(File.join(TEMP_DIR, filename)) # we know these exist because
+          FileUtils.rm(File.join(TEMP_DIR, "#{filename}.tar.gz")) # we just processed them
 
           _respond; _respond "Lich5 has been updated to Lich5 version #{@update_to}"
           _respond "You should exit the game, then log back in.  This will start the game"

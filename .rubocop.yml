@@ -15,6 +15,10 @@ Layout/EmptyLineBetweenDefs:
   Enabled: true
   AllowAdjacentOneLineDefs: true
 
+Layout/ExtraSpacing:
+  Enabled: true
+  AllowForAlignment: true
+
 Layout/SpaceAroundOperators:
   Enabled: true
   AllowForAlignment: true
