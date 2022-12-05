@@ -578,7 +578,7 @@ module Lich
     [gamehost, gameport]
   end
 
-# new feature GUI / internal settings states
+  # new feature GUI / internal settings states
 
   def Lich.debug_messaging
     if @@debug_messaging.nil?

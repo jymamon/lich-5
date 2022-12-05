@@ -7,6 +7,10 @@ Layout/BlockAlignment:
   Enabled: true
   EnforcedStyleAlignWith: start_of_block
 
+Layout/CommentIndentation:
+  Enabled: true
+  AllowForAlignment: true
+
 Layout/EndAlignment:
   Enabled: true
   EnforcedStyleAlignWith: start_of_line

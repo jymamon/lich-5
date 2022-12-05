@@ -11,12 +11,12 @@ def gui_login(entry_data_file)
     @entry_data = File.open(entry_data_file, 'r') { |file|
       begin
         if @autosort_state == true
-        # Sort in list by instance name, account name, and then character name
+          # Sort in list by instance name, account name, and then character name
           Marshal.load(file.read.unpack('m').first).sort do |a, b|
             [a[:game_name], a[:user_id], a[:char_name]] <=> [b[:game_name], b[:user_id], b[:char_name]]
           end
         else
-        # Sort in list by account name, and then character name (old Lich 4)
+          # Sort in list by account name, and then character name (old Lich 4)
           Marshal.load(file.read.unpack('m').first).sort do |a,b|
             [a[:user_id].downcase, a[:char_name]] <=> [b[:user_id].downcase, b[:char_name]]
           end

@@ -255,7 +255,7 @@ else
               background-image: none; }\
               button:hover { background-color: darkgrey; } ")
 
-# Tabbed character management stuff
+  # Tabbed character management stuff
 
   add_character_pane = Gtk::Paned.new(:horizontal)
   add_instance_pane = Gtk::Paned.new(:horizontal)

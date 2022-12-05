@@ -425,8 +425,8 @@ module Games
         elsif (circle_num == 96)
           return false
 
-  #          deprecate CMan from Spell class .known?
-  #          See CMan, CMan.known? and CMan.available? methods in CMan class
+        #          deprecate CMan from Spell class .known?
+        #          See CMan, CMan.known? and CMan.available? methods in CMan class
 
         else
           return false

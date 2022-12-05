@@ -3,7 +3,7 @@ require "socket"
 
 module EAccess
   PEM = File.join("#{DATA_DIR}/", "simu.pem")
-#  pp PEM
+  #  pp PEM
   PACKET_SIZE = 8192
 
   def self.pem_exist?
@@ -31,7 +31,7 @@ module EAccess
     else
       return true
     end
-#     fail Exception, "\nssl peer certificate did not match #{EAccess::PEM}\nwas:\n#{conn.peer_cert}"
+    #     fail Exception, "\nssl peer certificate did not match #{EAccess::PEM}\nwas:\n#{conn.peer_cert}"
   end
 
   def self.socket(hostname = "eaccess.play.net", port = 7910)
