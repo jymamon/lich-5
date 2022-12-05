@@ -212,7 +212,7 @@ module Games
       def time_per_formula(options = {})
         activator_modifier = { 'tap' => 0.5, 'rub' => 1, 'wave' => 1, 'raise' => 1.33, 'drink' => 0, 'bite' => 0, 'eat' => 0, 'gobble' => 0 }
         can_haz_spell_ranks = /Spells\.(?:minorelemental|majorelemental|minorspiritual|majorspiritual|wizard|sorcerer|ranger|paladin|empath|cleric|bard|minormental)/
-        skills = [ 'Spells.minorelemental', 'Spells.majorelemental', 'Spells.minorspiritual', 'Spells.majorspiritual', 'Spells.wizard', 'Spells.sorcerer', 'Spells.ranger', 'Spells.paladin', 'Spells.empath', 'Spells.cleric', 'Spells.bard', 'Spells.minormental', 'Skills.magicitemuse', 'Skills.arcanesymbols' ]
+        skills = ['Spells.minorelemental', 'Spells.majorelemental', 'Spells.minorspiritual', 'Spells.majorspiritual', 'Spells.wizard', 'Spells.sorcerer', 'Spells.ranger', 'Spells.paladin', 'Spells.empath', 'Spells.cleric', 'Spells.bard', 'Spells.minormental', 'Skills.magicitemuse', 'Skills.arcanesymbols']
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
           if options[:target] and (options[:target].downcase == options[:caster].downcase)
             formula = @duration['self'][:duration].to_s.dup
@@ -386,29 +386,29 @@ module Games
           return false
         end
         if circle_num == 1
-          ranks = [ Spells.minorspiritual, XMLData.level ].min
+          ranks = [Spells.minorspiritual, XMLData.level].min
         elsif circle_num == 2
-          ranks = [ Spells.majorspiritual, XMLData.level ].min
+          ranks = [Spells.majorspiritual, XMLData.level].min
         elsif circle_num == 3
-          ranks = [ Spells.cleric, XMLData.level ].min
+          ranks = [Spells.cleric, XMLData.level].min
         elsif circle_num == 4
-          ranks = [ Spells.minorelemental, XMLData.level ].min
+          ranks = [Spells.minorelemental, XMLData.level].min
         elsif circle_num == 5
-          ranks = [ Spells.majorelemental, XMLData.level ].min
+          ranks = [Spells.majorelemental, XMLData.level].min
         elsif circle_num == 6
-          ranks = [ Spells.ranger, XMLData.level ].min
+          ranks = [Spells.ranger, XMLData.level].min
         elsif circle_num == 7
-          ranks = [ Spells.sorcerer, XMLData.level ].min
+          ranks = [Spells.sorcerer, XMLData.level].min
         elsif circle_num == 9
-          ranks = [ Spells.wizard, XMLData.level ].min
+          ranks = [Spells.wizard, XMLData.level].min
         elsif circle_num == 10
-          ranks = [ Spells.bard, XMLData.level ].min
+          ranks = [Spells.bard, XMLData.level].min
         elsif circle_num == 11
-          ranks = [ Spells.empath, XMLData.level ].min
+          ranks = [Spells.empath, XMLData.level].min
         elsif circle_num == 12
-          ranks = [ Spells.minormental, XMLData.level ].min
+          ranks = [Spells.minormental, XMLData.level].min
         elsif circle_num == 16
-          ranks = [ Spells.paladin, XMLData.level ].min
+          ranks = [Spells.paladin, XMLData.level].min
         elsif circle_num == 17
           if (@num == 1700) and (Char.prof =~ /^(?:Wizard|Cleric|Empath|Sorcerer|Savant)$/)
             return true
@@ -487,9 +487,9 @@ module Games
 
       def putup(options = {})
         if stackable?(options)
-          self.timeleft = [ self.timeleft + self.time_per(options), self.max_duration(options) ].min
+          self.timeleft = [self.timeleft + self.time_per(options), self.max_duration(options)].min
         else
-          self.timeleft = [ self.time_per(options), self.max_duration(options) ].min
+          self.timeleft = [self.time_per(options), self.max_duration(options)].min
         end
         @active = true
       end
@@ -509,7 +509,7 @@ module Games
         release_options[:multicast] = nil
         if (self.stamina_cost(options) > 0) and (Spell[9699].active? or not checkstamina(self.stamina_cost(options)))
           false
-        elsif (self.spirit_cost(options) > 0) and not checkspirit(self.spirit_cost(options) + 1 + [ 9912, 9913, 9914, 9916, 9916, 9916 ].delete_if { |num| !Spell[num].active? }.length)
+        elsif (self.spirit_cost(options) > 0) and not checkspirit(self.spirit_cost(options) + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
           false
         elsif (self.mana_cost(options) > 0)
           ## convert Spell[9699].active? to Effects::Debuffs test (if Debuffs is where it shows)
@@ -555,7 +555,7 @@ module Games
               return false
             end
           end
-          unless (self.spirit_cost > 0) or checkspirit(self.spirit_cost + 1 + [ 9912, 9913, 9914, 9916, 9916, 9916 ].delete_if { |num| !Spell[num].active? }.length)
+          unless (self.spirit_cost > 0) or checkspirit(self.spirit_cost + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
             echo 'cast: not enough spirit'
             sleep 0.1
             return false

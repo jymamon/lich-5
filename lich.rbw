@@ -1245,7 +1245,7 @@ class Script
       end
     elsif args[:args].class == Array
       unless (args[:args].nil? || args[:args].empty?)
-        @vars = [ args[:args].join(" ") ]
+        @vars = [args[:args].join(" ")]
         @vars.concat args[:args]
       else
         @vars = Array.new
@@ -2275,7 +2275,7 @@ module Games
           begin
             atmospherics = false
             combat_count = 0
-            end_combat_tags = [ "<prompt", "<clearStream", "<component", "<pushStream id=\"percWindow" ]
+            end_combat_tags = ["<prompt", "<clearStream", "<component", "<pushStream id=\"percWindow"]
             while $_SERVERSTRING_ = @@socket.gets
               @@last_recv = Time.now
               @@_buffer.update($_SERVERSTRING_) if TESTING
@@ -5331,7 +5331,7 @@ main_thread = Thread.new {
         #
         # set up some stuff
         #
-        for client_string in [ "#{$cmd_prefix}_injury 2", "#{$cmd_prefix}_flag Display Inventory Boxes 1", "#{$cmd_prefix}_flag Display Dialog Boxes 0" ]
+        for client_string in ["#{$cmd_prefix}_injury 2", "#{$cmd_prefix}_flag Display Inventory Boxes 1", "#{$cmd_prefix}_flag Display Dialog Boxes 0"]
           $_CLIENTBUFFER_.push(client_string)
           Game._puts(client_string)
         end

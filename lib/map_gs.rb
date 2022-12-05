@@ -339,10 +339,10 @@ class Map
     current_location = Map.get_location
     foggy_exits      = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
     id               = Map.get_free_id
-    title            = [ XMLData.room_title ]
-    description      = [ XMLData.room_description.strip ]
-    paths            = [ XMLData.room_exits_string.strip ]
-    uid              = [ XMLData.room_id ]
+    title            = [XMLData.room_title]
+    description      = [XMLData.room_description.strip]
+    paths            = [XMLData.room_exits_string.strip]
+    uid              = [XMLData.room_id]
     room             = Map.new(Map.get_free_id, title, description, paths, uid, current_location)
     Map.uids_add(XMLData.room_id, room.id)
     # flag identical rooms with different locations
@@ -375,7 +375,7 @@ class Map
 
   def Map.uids_add(uid, id)
     if @@uids[uid].nil?
-      @@uids[uid] = [ id ]
+      @@uids[uid] = [id]
     else
       @@uids[uid] << id if !@@uids[uid].include?(id)
     end
@@ -416,7 +416,7 @@ class Map
     if filename.nil?
       file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map\-[0-9]+\.(?:dat|xml|json)$/i }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
     else
-      file_list = [ filename ]
+      file_list = [filename]
     end
     if file_list.empty?
       respond "--- Lich: error: no map database found"
@@ -447,7 +447,7 @@ class Map
           return true
         else
           if filename
-            file_list = [ filename ]
+            file_list = [filename]
             # respond "--- loading #{filename}" #if error
           else
             file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename|
@@ -504,7 +504,7 @@ class Map
           if filename.nil?
             file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map\-[0-9]+\.dat$/ }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
           else
-            file_list = [ filename ]
+            file_list = [filename]
             respond "--- file_list = #{filename.inspect}"
           end
           if file_list.empty?
@@ -572,7 +572,7 @@ class Map
               room['uid'] = Array.new
             elsif element =~ /^(?:image|tsoran)$/ and attributes['name'] and attributes['x'] and attributes['y'] and attributes['size']
               room['image'] = attributes['name']
-              room['image_coords'] = [ (attributes['x'].to_i - (attributes['size'] / 2.0).round), (attributes['y'].to_i - (attributes['size'] / 2.0).round), (attributes['x'].to_i + (attributes['size'] / 2.0).round), (attributes['y'].to_i + (attributes['size'] / 2.0).round) ]
+              room['image_coords'] = [(attributes['x'].to_i - (attributes['size'] / 2.0).round), (attributes['y'].to_i - (attributes['size'] / 2.0).round), (attributes['x'].to_i + (attributes['size'] / 2.0).round), (attributes['y'].to_i + (attributes['size'] / 2.0).round)]
             elsif (element == 'image') and attributes['name'] and attributes['coords'] and (attributes['coords'] =~ /[0-9]+,[0-9]+,[0-9]+,[0-9]+/)
               room['image'] = attributes['name']
               room['image_coords'] = attributes['coords'].split(',').collect { |num| num.to_i }
@@ -846,7 +846,7 @@ class Map
       visited = Array.new
       shortest_distances = Array.new
       previous = Array.new
-      pq = [ source ]
+      pq = [source]
       pq_push = proc { |val|
         for i in 0...pq.size
           if shortest_distances[val] <= shortest_distances[pq[i]]
@@ -958,7 +958,7 @@ class Map
     previous, shortest_distances = dijkstra(destination)
     return nil unless previous[destination]
 
-    path = [ destination ]
+    path = [destination]
     path.push(previous[path[-1]]) until previous[path[-1]] == @id
     path.reverse!
     path.pop
