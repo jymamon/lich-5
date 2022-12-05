@@ -20,14 +20,6 @@ Layout/MultilineBlockLayout:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleInsidePipes.
-# SupportedStylesInsidePipes: space, no_space
-Layout/SpaceAroundBlockParameters:
-  Exclude:
-    - 'lich.rbw'
-
 # Offense count: 68
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.

@@ -2328,7 +2328,7 @@ module Games
                 end
 
                 if combat_count > 0
-                  end_combat_tags.each do | tag |
+                  end_combat_tags.each do |tag|
                     # $_SERVERSTRING_ = "<!-- looking for tag: #{tag}" + $_SERVERSTRING_
                     if $_SERVERSTRING_.include?(tag)
                       $_SERVERSTRING_ = $_SERVERSTRING_.gsub(tag, "<popStream id=\"combat\" />" + tag) unless $_SERVERSTRING_.include?("<popStream id=\"combat\" />")
