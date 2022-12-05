@@ -174,7 +174,7 @@ class SynchronizedSocket
          return true
       else
           return false
-       end
+      end
       }
   end
   def write(*args, &block)
@@ -2382,8 +2382,8 @@ module Games
                       alt_string.sub!(']') {" - #{Map.current.id}]"}
                     elsif Lich.display_uid == true
                       alt_string.sub!(']') {"] (u#{XMLData.room_id})"}
-                      end
                     end
+                  end
                   if $frontend =~ /^(?:wizard|avalon)$/
                     alt_string = sf_to_wiz(alt_string)
                   end

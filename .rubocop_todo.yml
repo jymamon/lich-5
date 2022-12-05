@@ -131,17 +131,6 @@ Layout/EmptyLinesAroundModuleBody:
     - 'lib/spell.rb'
     - 'lib/util.rb'
 
-# Offense count: 11
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleAlignWith, Severity.
-# SupportedStylesAlignWith: keyword, variable, start_of_line
-Layout/EndAlignment:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/lich.rb'
-    - 'lib/spell.rb'
-    - 'lich.rbw'
-
 # Offense count: 1
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: native, lf, crlf

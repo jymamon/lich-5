@@ -3,6 +3,10 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   NewCops: disable
 
+Layout/EndAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: start_of_line
+
 Style/TrailingCommaInHashLiteral:
   Enabled: true
   EnforcedStyleForMultiline: comma

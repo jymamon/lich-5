@@ -30,7 +30,7 @@ module EAccess
       download_pem
     else
       return true
-  end
+    end
 #     fail Exception, "\nssl peer certificate did not match #{EAccess::PEM}\nwas:\n#{conn.peer_cert}"
   end
 
