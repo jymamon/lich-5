@@ -19,8 +19,6 @@ Entries added here should always be accessible from Lich::Util.feature namespace
 
 =end
 
-
-
 module Lich
   module Util
     include Enumerable

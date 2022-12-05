@@ -152,7 +152,6 @@ else
       @account_book.append_page(account_box, Gtk::Label.new(account.upcase))
       @account_book.set_tab_reorderable(account_box, true)
 
-
     }
     quick_sw = Gtk::ScrolledWindow.new
     quick_sw.set_policy(:automatic, :automatic)

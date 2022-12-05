@@ -36,7 +36,6 @@ class Shield
   @@tortoise_stance               ||= 0
   @@tower_shield_focus            ||= 0
 
-
   def Shield.adamantine_bulwark;        @@aadamantine_bulwark;          end
   def Shield.block_the_elements;        @@block_the_elements;           end
   def Shield.deflect_magic;             @@deflect_magic;                end
