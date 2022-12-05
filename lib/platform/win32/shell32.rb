@@ -26,7 +26,7 @@ module Win32
       :dwHotKey => 12,
       :hIcon => 13,
       :hMonitor => 13,
-      :hProcess => 14
+      :hProcess => 14,
     }
 
     args[:fMask] ||= Win32::SEE_MASK_NOCLOSEPROCESS

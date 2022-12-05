@@ -82,7 +82,7 @@ module Win32
       :wShowWindow => 12,
       :hStdInput => 15,
       :hStdOutput => 16,
-      :hStdError => 17
+      :hStdError => 17,
     }
 
     for sym in [:lpDesktop, :lpTitle]

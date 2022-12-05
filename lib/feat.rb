@@ -94,7 +94,7 @@ class Feat
     "shadow_dance" => 30,
     "silent_strike" => 20,
     "vanish" => 30,
-    "weapon_bonding" => 0
+    "weapon_bonding" => 0,
   }
 
   def Feat.method_missing(arg1, arg2 = nil)

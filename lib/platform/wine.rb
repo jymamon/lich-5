@@ -56,6 +56,6 @@ module Wine
     end
   end
 end
-end
+
 $wine_bin = nil
 $wine_prefix = nil

@@ -1749,7 +1749,7 @@ class WizardScript < Script
       'subtract' => '-',
       'multiply' => '*',
       'divide' => '/',
-      'set' => ''
+      'set' => '',
     }
 
     setvars = Array.new
