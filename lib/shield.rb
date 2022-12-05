@@ -273,7 +273,7 @@ class Shield
     Shield.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)
   end
 
-  def Shield.[]=(name,val)
+  def Shield.[]=(name, val)
     Shield.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
   end
 

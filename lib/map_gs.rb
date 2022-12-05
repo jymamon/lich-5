@@ -313,7 +313,7 @@ class Map
       room = Map[id]
       if !room.uid.include?(XMLData.room_id)
         room.uid << XMLData.room_id
-        Map.uids_add(XMLData.room_id,room.id)
+        Map.uids_add(XMLData.room_id, room.id)
         echo "Map: Adding new uid for #{room.id}: #{XMLData.room_id}"
       end
       if !room.title.include?(XMLData.room_title)
@@ -373,7 +373,7 @@ class Map
     @@tags.dup
   end
 
-  def Map.uids_add(uid,id)
+  def Map.uids_add(uid, id)
     if @@uids[uid].nil?
       @@uids[uid] = [ id ]
     else
@@ -385,7 +385,7 @@ class Map
     Map.load unless @@loaded
     @@uids.clear
     @@list.each { |r|
-      r.uid.each { |u| Map.uids_add(u,r.id) }
+      r.uid.each { |u| Map.uids_add(u, r.id) }
     }
   end
 
@@ -553,7 +553,7 @@ class Map
           room = nil
           buffer = String.new
           unescape = { 'lt' => '<', 'gt' => '>', 'quot' => '"', 'apos' => "'", 'amp' => '&' }
-          tag_start = proc { |element,attributes|
+          tag_start = proc { |element, attributes|
             current_tag = element
             current_attributes = attributes
             if element == 'room'
@@ -616,8 +616,8 @@ class Map
                 buffer.concat(line)
                 # fixme: remove   (?=<)   ?
                 while str = buffer.slice!(/^<([^>]+)><\/\1>|^[^<]+(?=<)|^<[^<]+>/)
-                  if str[0,1] == '<'
-                    if str[1,1] == '/'
+                  if str[0, 1] == '<'
+                    if str[1, 1] == '/'
                       element = /^<\/([^\s>\/]+)/.match(str).captures.first
                       tag_end.call(element)
                     else
@@ -631,7 +631,7 @@ class Map
                         attributes = Hash.new
                         str.scan(/([A-z][A-z0-9_\-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2].gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] } }
                         tag_start.call(element, attributes)
-                        tag_end.call(element) if str[-2,1] == '/'
+                        tag_end.call(element) if str[-2, 1] == '/'
                       end
                     end
                   else
@@ -708,7 +708,7 @@ class Map
       :check_location => @check_location,
       :unique_loot => @unique_loot,
       :uid => @uid,
-    }).delete_if { |a,b| b.nil? or (b.class == Array and b.empty?) };
+    }).delete_if { |a, b| b.nil? or (b.class == Array and b.empty?) };
     JSON.pretty_generate(mapjson);
   end
 
@@ -973,7 +973,7 @@ class Map
       @id
     else
       target_list.delete_if { |room_num| shortest_distances[room_num].nil? }
-      target_list.sort { |a,b| shortest_distances[a] <=> shortest_distances[b] }.first
+      target_list.sort { |a, b| shortest_distances[a] <=> shortest_distances[b] }.first
     end
   end
 
@@ -982,7 +982,7 @@ class Map
     @@list.each { |room| target_list.push(room.id) if room.tags.include?(tag_name) }
     previous, shortest_distances = Map.dijkstra(@id)
     target_list.delete_if { |room_num| shortest_distances[room_num].nil? }
-    target_list.sort { |a,b| shortest_distances[a] <=> shortest_distances[b] }
+    target_list.sort { |a, b| shortest_distances[a] <=> shortest_distances[b] }
   end
 
   def find_nearest(target_list)
@@ -992,7 +992,7 @@ class Map
     else
       previous, shortest_distances = Map.dijkstra(@id, target_list)
       target_list.delete_if { |room_num| shortest_distances[room_num].nil? }
-      target_list.sort { |a,b| shortest_distances[a] <=> shortest_distances[b] }.first
+      target_list.sort { |a, b| shortest_distances[a] <=> shortest_distances[b] }.first
     end
   end
 end

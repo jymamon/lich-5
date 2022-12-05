@@ -101,7 +101,7 @@ module EAccess
       login_info = Hash[response.sub(/^L\tOK\t/, '')
         .split("\t")
         .map {|kv|
-          k,v = kv.split("=")
+          k, v = kv.split("=")
           [k.downcase, v]
         }]
     else

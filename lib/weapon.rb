@@ -88,7 +88,7 @@ class Weapon
     Weapon.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)
   end
 
-  def Weapon.[]=(name,val)
+  def Weapon.[]=(name, val)
     Weapon.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
   end
 

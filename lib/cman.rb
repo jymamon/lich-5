@@ -256,7 +256,7 @@ class CMan
     CMan.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)
   end
 
-  def CMan.[]=(name,val)
+  def CMan.[]=(name, val)
     CMan.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
   end
 

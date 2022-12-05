@@ -20,23 +20,6 @@ Layout/MultilineBlockLayout:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 38
-# This cop supports safe autocorrection (--autocorrect).
-Layout/SpaceAfterComma:
-  Exclude:
-    - 'lib/armor.rb'
-    - 'lib/cman.rb'
-    - 'lib/eaccess.rb'
-    - 'lib/feat.rb'
-    - 'lib/gui-login.rb'
-    - 'lib/gui-saved-login.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/shield.rb'
-    - 'lib/spell.rb'
-    - 'lib/weapon.rb'
-    - 'lich.rbw'
-
 # Offense count: 6
 # This cop supports safe autocorrection (--autocorrect).
 Layout/SpaceAfterSemicolon:

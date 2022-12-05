@@ -181,7 +181,7 @@ else
       char_box = Gtk::Box.new(:horizontal)
       char_box.pack_start(label, :expand => false, :fill => false, :padding => 0)
       char_box.pack_end(remove_button, :expand => false, :fill => false, :padding => 0)
-      char_box.pack_end(play_button,:expand => false, :fill => false, :padding => 0)
+      char_box.pack_end(play_button, :expand => false, :fill => false, :padding => 0)
       quick_box.pack_start(char_box, :expand => false, :fill => false, :padding => 0)
       play_button.signal_connect('button-release-event') { |owner, ev|
         if (ev.event_type == Gdk::EventType::BUTTON_RELEASE)
