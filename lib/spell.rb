@@ -485,9 +485,9 @@ module Games
         false
       elsif (self.mana_cost(options) > 0)
         ## convert Spell[9699].active? to Effects::Debuffs test (if Debuffs is where it shows)
-        if Feat.known?(:mental_acuity) and (Spell[9699].active? or not checkstamina(self.mana_cost(options)*2))
+        if Feat.known?(:mental_acuity) and (Spell[9699].active? or not checkstamina(self.mana_cost(options) * 2))
           false
-        elsif ( !Feat.known?(:mental_acuity) ) && ( !checkmana(self.mana_cost(options)) or (Spell[515].active? and !checkmana(self.mana_cost(options) + [self.mana_cost(release_options)/4, 1].max))  )
+        elsif ( !Feat.known?(:mental_acuity) ) && ( !checkmana(self.mana_cost(options)) or (Spell[515].active? and !checkmana(self.mana_cost(options) + [self.mana_cost(release_options) / 4, 1].max))  )
           false
         else
           true
@@ -513,7 +513,7 @@ module Games
       # fixme: find multicast in target and check mana for it
       check_energy = proc {
         if Feat.known?(:mental_acuity)
-          unless (self.mana_cost <= 0) or checkstamina(self.mana_cost*2)
+          unless (self.mana_cost <= 0) or checkstamina(self.mana_cost * 2)
             echo 'cast: not enough stamina there, Monk!'
             sleep 0.1
             return false

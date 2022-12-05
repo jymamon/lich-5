@@ -61,9 +61,9 @@ module Lich
       preset_color_before = ""
       preset_color_after = ""
 
-      wizard_color = {"white"=>128, "black"=>129, "dark blue"=>130, "dark green"=>131, "dark teal"=>132,
-        "dark red"=>133, "purple"=>134, "gold"=>135, "light grey"=>136, "blue"=>137,
-        "bright green"=>138, "teal"=>139, "red"=>140, "pink"=>141, "yellow"=>142}
+      wizard_color = {"white" => 128, "black" => 129, "dark blue" => 130, "dark green" => 131, "dark teal" => 132,
+        "dark red" => 133, "purple" => 134, "gold" => 135, "light grey" => 136, "blue" => 137,
+        "bright green" => 138, "teal" => 139, "red" => 140, "pink" => 141, "yellow" => 142}
 
       if $frontend =~ /^(?:stormfront|frostbite|profanity)$/
         case type

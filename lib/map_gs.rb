@@ -533,7 +533,7 @@ class Map
               room['uid'] = Array.new
             elsif element =~ /^(?:image|tsoran)$/ and attributes['name'] and attributes['x'] and attributes['y'] and attributes['size']
               room['image'] = attributes['name']
-              room['image_coords'] = [ (attributes['x'].to_i - (attributes['size']/2.0).round), (attributes['y'].to_i - (attributes['size']/2.0).round), (attributes['x'].to_i + (attributes['size']/2.0).round), (attributes['y'].to_i + (attributes['size']/2.0).round) ]
+              room['image_coords'] = [ (attributes['x'].to_i - (attributes['size'] / 2.0).round), (attributes['y'].to_i - (attributes['size'] / 2.0).round), (attributes['x'].to_i + (attributes['size'] / 2.0).round), (attributes['y'].to_i + (attributes['size'] / 2.0).round) ]
             elsif (element == 'image') and attributes['name'] and attributes['coords'] and (attributes['coords'] =~ /[0-9]+,[0-9]+,[0-9]+,[0-9]+/)
               room['image'] = attributes['name']
               room['image_coords'] = attributes['coords'].split(',').collect { |num| num.to_i }
@@ -806,7 +806,7 @@ class Map
             break
           end
         end
-        pq.push(val) if i.nil? or (i == pq.size-1)
+        pq.push(val) if i.nil? or (i == pq.size - 1)
       }
       visited[source] = true
       shortest_distances[source] = 0
@@ -959,14 +959,14 @@ class Map
     if @image_coords.nil?
       nil
     else
-      ((image_coords[0] + image_coords[2])/2.0).round
+      ((image_coords[0] + image_coords[2]) / 2.0).round
     end
   end
   def map_y
     if @image_coords.nil?
       nil
     else
-      ((image_coords[1] + image_coords[3])/2.0).round
+      ((image_coords[1] + image_coords[3]) / 2.0).round
     end
   end
   def map_roomsize

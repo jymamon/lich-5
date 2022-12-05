@@ -27,17 +27,17 @@ class Armor
   def Armor.puncture_protection;         @@puncture_protection;        end
   def Armor.slash_protection;            @@slash_protection;           end
 
-  def Armor.armor_blessing=(val);        @@armor_blessing=val;         end
-  def Armor.armor_reinforcement=(val);   @@armor_reinforcement=val;    end
-  def Armor.armor_spike_mastery=(val);   @@armor_spike_mastery=val;    end
-  def Armor.armor_support=(val);         @@armor_support=val;          end
-  def Armor.armored_casting=(val);       @@armored_casting=val;        end
-  def Armor.armored_evasion=(val);       @@armored_evasion=val;        end
-  def Armor.armored_fluidity=(val);      @@armored_fluidity=val;       end
-  def Armor.armored_stealth=(val);       @@armored_stealth=val;        end
-  def Armor.crush_protection=(val);      @@crush_protection=val;       end
-  def Armor.puncture_protection=(val);   @@puncture_protection=val;    end
-  def Armor.slash_protection=(val);      @@slash_protection=val;       end
+  def Armor.armor_blessing=(val);        @@armor_blessing = val;         end
+  def Armor.armor_reinforcement=(val);   @@armor_reinforcement = val;    end
+  def Armor.armor_spike_mastery=(val);   @@armor_spike_mastery = val;    end
+  def Armor.armor_support=(val);         @@armor_support = val;          end
+  def Armor.armored_casting=(val);       @@armored_casting = val;        end
+  def Armor.armored_evasion=(val);       @@armored_evasion = val;        end
+  def Armor.armored_fluidity=(val);      @@armored_fluidity = val;       end
+  def Armor.armored_stealth=(val);       @@armored_stealth = val;        end
+  def Armor.crush_protection=(val);      @@crush_protection = val;       end
+  def Armor.puncture_protection=(val);   @@puncture_protection = val;    end
+  def Armor.slash_protection=(val);      @@slash_protection = val;       end
 
   def Armor.method_missing(arg1, arg2=nil)
     echo "#{arg1} is not a defined Armor type.  Is it another Ability type?"

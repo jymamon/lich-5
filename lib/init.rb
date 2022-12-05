@@ -76,7 +76,7 @@ else
     $wine_bin = nil
   end
 end
-if arg =@options.wineprefix
+if @options.wineprefix
   $wine_prefix = @options.wineprefix
 elsif ENV['WINEPREFIX']
   $wine_prefix = ENV['WINEPREFIX']

@@ -49,28 +49,28 @@ class Feat
   def Feat.vanish;                    @@vanish;                   end
   def Feat.weapon_bonding;            @@weapon_bonding;           end
 
-  def Feat.absorb_magic=(val);              @@absorb_magic=val;             end
-  def Feat.chain_armor_proficiency=(val);   @@chain_armor_proficiency=val;  end
-  def Feat.combat_mastery=(val);            @@combat_mastery=val;           end
-  def Feat.critical_counter=(val);          @@critical_counter=val;         end
-  def Feat.dispel_magic=(val);              @@dispel_magic=val;             end
-  def Feat.dragonscale_skin=(val);          @@dragonscale_skin=val;         end
-  def Feat.guard=(val);                     @@guard=val;                    end
-  def Feat.kroderine_soul=(val);            @@kroderine_soul=val;           end
-  def Feat.light_armor_proficiency=(val);   @@light_armor_proficiency=val;  end
-  def Feat.martial_arts_mastery=(val);      @@martial_arts_mastery=val;     end
-  def Feat.martial_mastery=(val);           @@martial_mastery=val;          end
-  def Feat.mental_acuity=(val);             @@mental_acuity=val;            end
-  def Feat.mystic_strike=(val);             @@mystic_strike=val;            end
-  def Feat.mystic_tattoo=(val);             @@mystic_tattoo=val;            end
-  def Feat.perfect_self=(val);              @@perfect_self=val;             end
-  def Feat.plate_armor_proficiency=(val);   @@plate_armor_proficiency=val;  end
-  def Feat.protect=(val);                   @@protect=val;                  end
-  def Feat.scale_armor_proficiency=(val);   @@scale_armor_proficiency=val;  end
-  def Feat.shadow_dance=(val);              @@shadow_dance=val;             end
-  def Feat.silent_strike=(val);             @@silent_strike=val;            end
-  def Feat.vanish=(val);                    @@vanish=val;                   end
-  def Feat.weapon_bonding=(val);            @@weapon_bonding=val;           end
+  def Feat.absorb_magic=(val);              @@absorb_magic = val;             end
+  def Feat.chain_armor_proficiency=(val);   @@chain_armor_proficiency = val;  end
+  def Feat.combat_mastery=(val);            @@combat_mastery = val;           end
+  def Feat.critical_counter=(val);          @@critical_counter = val;         end
+  def Feat.dispel_magic=(val);              @@dispel_magic = val;             end
+  def Feat.dragonscale_skin=(val);          @@dragonscale_skin = val;         end
+  def Feat.guard=(val);                     @@guard = val;                    end
+  def Feat.kroderine_soul=(val);            @@kroderine_soul = val;           end
+  def Feat.light_armor_proficiency=(val);   @@light_armor_proficiency = val;  end
+  def Feat.martial_arts_mastery=(val);      @@martial_arts_mastery = val;     end
+  def Feat.martial_mastery=(val);           @@martial_mastery = val;          end
+  def Feat.mental_acuity=(val);             @@mental_acuity = val;            end
+  def Feat.mystic_strike=(val);             @@mystic_strike = val;            end
+  def Feat.mystic_tattoo=(val);             @@mystic_tattoo = val;            end
+  def Feat.perfect_self=(val);              @@perfect_self = val;             end
+  def Feat.plate_armor_proficiency=(val);   @@plate_armor_proficiency = val;  end
+  def Feat.protect=(val);                   @@protect = val;                  end
+  def Feat.scale_armor_proficiency=(val);   @@scale_armor_proficiency = val;  end
+  def Feat.shadow_dance=(val);              @@shadow_dance = val;             end
+  def Feat.silent_strike=(val);             @@silent_strike = val;            end
+  def Feat.vanish=(val);                    @@vanish = val;                   end
+  def Feat.weapon_bonding=(val);            @@weapon_bonding = val;           end
 
   @@cost_hash = {
     "absorb_magic" => 0,

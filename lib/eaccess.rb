@@ -58,7 +58,7 @@ module EAccess
     #pp "hash=%s" % hashkey
     password = password.split('').map { |c| c.getbyte(0) }
     hashkey = hashkey.split('').map { |c| c.getbyte(0) }
-    password.each_index { |i| password[i] = ((password[i]-32)^hashkey[i])+32 }
+    password.each_index { |i| password[i] = ((password[i] - 32) ^ hashkey[i]) + 32 }
     password = password.map { |c| c.chr }.join
     conn.puts "A\t#{account}\t#{password}\n"
     response = EAccess.read(conn)
