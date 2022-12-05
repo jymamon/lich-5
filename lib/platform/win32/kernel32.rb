@@ -101,16 +101,16 @@ module Win32
     lpStartupInfo = lpStartupInfo.pack('LLLLLLLLLLLLSSLLLL')
     lpProcessInformation = [0, 0, 0, 0,].pack('LLLL')
     r = Kernel32.CreateProcess(
-        args[:lpApplicationName],
-        lpCommandLine,
-        args[:lpProcessAttributes],
-        args[:lpThreadAttributes],
-        bInheritHandles,
-        args[:dwCreationFlags].to_i,
-        args[:lpEnvironment],
-        args[:lpCurrentDirectory],
-        lpStartupInfo,
-        lpProcessInformation)
+      args[:lpApplicationName],
+      lpCommandLine,
+      args[:lpProcessAttributes],
+      args[:lpThreadAttributes],
+      bInheritHandles,
+      args[:dwCreationFlags].to_i,
+      args[:lpEnvironment],
+      args[:lpCurrentDirectory],
+      lpStartupInfo,
+      lpProcessInformation)
 
     lpProcessInformation = lpProcessInformation.unpack('LLLL')
     return :return => (r > 0 ? true : false), :hProcess => lpProcessInformation[0], :hThread => lpProcessInformation[1], :dwProcessId => lpProcessInformation[2], :dwThreadId => lpProcessInformation[3]
