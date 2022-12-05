@@ -1,1 +1,8 @@
 inherit_from: .rubocop_todo.yml
+
+AllCops:
+  NewCops: disable
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: comma
