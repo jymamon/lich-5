@@ -123,6 +123,7 @@ module Lich
 
     def self.msg(type = "info", msg = "")
       return if type == "debug" && (Lich.debug_messaging.nil? || Lich.debug_messaging == "false")
+
       _respond msg_format(type, msg)
     end
   end

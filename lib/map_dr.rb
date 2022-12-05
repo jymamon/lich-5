@@ -281,6 +281,7 @@ class Map
   end
   def Map.current_or_new
     return nil unless Script.current
+
     if XMLData.game =~ /^DR/
       @@current_room_count = -1
       @@fuzzy_room_count = -1
@@ -543,6 +544,7 @@ class Map
           unless File.exists?(filename)
             raise Exception.exception("MapDatabaseError"), "Fatal error: file `#{filename}' does not exist!"
           end
+
           missing_end = false
           current_tag = nil
           current_attributes = nil
@@ -746,6 +748,7 @@ class Map
           file.write "<map>\n"
           @@list.each { |room|
             next if room == nil
+
             if room.location
               location = " location=#{(room.location.gsub(/(<|>|"|'|&)/) { escape[$1] }).inspect}"
             else
@@ -803,6 +806,7 @@ class Map
     unless array.class == Array
       raise Exception.exception("MapError"), "Map.estimate_time was given something not an array!"
     end
+
     time = 0.to_f
     until array.length < 2
       room = array.shift
@@ -874,6 +878,7 @@ class Map
         until pq.size == 0
           v = pq.shift
           break if v == destination
+
           visited[v] = true
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
@@ -899,6 +904,7 @@ class Map
         until pq.size == 0
           v = pq.shift
           break if dest_list.include?(v) and (shortest_distances[v] < 20)
+
           visited[v] = true
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
@@ -942,6 +948,7 @@ class Map
     destination = destination.to_i
     previous, shortest_distances = dijkstra(destination)
     return nil unless previous[destination]
+
     path = [ destination ]
     path.push(previous[path[-1]]) until previous[path[-1]] == @id
     path.reverse!

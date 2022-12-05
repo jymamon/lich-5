@@ -184,6 +184,7 @@ module Lich
           line = get?
           break if line && line =~ start_pattern
           break if Time.now > ttl
+
           sleep 0.1 # prevent a tight-loop
         }
 

@@ -132,6 +132,7 @@ module Games
         script = Script.current
         @@load_mutex.synchronize {
           return true if @loaded
+
           begin
             spell_times = Hash.new
             # reloading spell data should not reset spell tracking...

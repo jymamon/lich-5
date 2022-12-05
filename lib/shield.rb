@@ -290,6 +290,7 @@ class Shield
 
   def Shield.use(name, target = "")
     return unless Shield.available?(name)
+
     usage = @@shield_techniques.fetch(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)[:usage]
     return if usage.nil?
 

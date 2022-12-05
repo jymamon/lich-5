@@ -86,6 +86,7 @@ class Map
   end
   def Map.previous
     return nil if @@previous_room_id.nil?
+
     return @@list[@@previous_room_id]
   end
   def Map.previous_uid
@@ -103,23 +104,27 @@ class Map
     if ids.size > 1 and !@@current_room_id.nil? and id = Map.match_multi_ids(ids)
       return Map.set_current(id)
     end
+
     return Map.match_no_uid()
   end
   def Map.set_current(id) # returns Map/Room
     @@previous_room_id = @@current_room_id if id != @@current_room_id;
     @@current_room_id  = id
     return nil if id.nil?
+
     return @@list[id]
   end
   def Map.set_fuzzy(id)  # returns Map/Room
     @@previous_room_id = @@current_room_id if !id.nil? and id != @@current_room_id;
     @@current_room_id  = id
     return nil if id.nil?
+
     return @@list[id]
   end
   def Map.match_multi_ids(ids) # returns id
     matches = ids.find_all { |s| @@list[@@current_room_id].wayto.keys.include?(s.to_s)}
     return matches[0] if matches.size == 1;
+
     return nil;
   end
   def Map.match_no_uid() # returns Map/Room
@@ -276,6 +281,7 @@ class Map
   end
   def Map.current_or_new # returns Map/Room
     return nil unless Script.current
+
     Map.load unless @@loaded
     ids = Map.ids_from_uid(XMLData.room_id);
     room = nil
@@ -508,6 +514,7 @@ class Map
           unless File.exists?(filename)
             raise Exception.exception("MapDatabaseError"), "Fatal error: file `#{filename}' does not exist!"
           end
+
           missing_end = false
           current_tag = nil
           current_attributes = nil
@@ -709,6 +716,7 @@ class Map
           file.write "<map>\n"
           @@list.each { |room|
             next if room == nil
+
             if room.location
               location = " location=#{(room.location.gsub(/(<|>|"|'|&)/) { escape[$1] }).inspect}"
             else
@@ -765,6 +773,7 @@ class Map
     unless array.class == Array
       raise Exception.exception("MapError"), "Map.estimate_time was given something not an array!"
     end
+
     time = 0.to_f
     until array.length < 2
       room = array.shift
@@ -836,6 +845,7 @@ class Map
         until pq.size == 0
           v = pq.shift
           break if v == destination
+
           visited[v] = true
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
@@ -861,6 +871,7 @@ class Map
         until pq.size == 0
           v = pq.shift
           break if dest_list.include?(v) and (shortest_distances[v] < 20)
+
           visited[v] = true
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
@@ -904,6 +915,7 @@ class Map
     destination = destination.to_i
     previous, shortest_distances = dijkstra(destination)
     return nil unless previous[destination]
+
     path = [ destination ]
     path.push(previous[path[-1]]) until previous[path[-1]] == @id
     path.reverse!

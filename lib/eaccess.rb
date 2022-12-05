@@ -70,12 +70,14 @@ module EAccess
     conn.puts "M\n"
     response = EAccess.read(conn)
     fail Exception, response unless response =~ /^M\t/
+
     #pp "M:response=%s" % response
 
     unless legacy
       conn.puts "F\t#{game_code}\n"
       response = EAccess.read(conn)
       fail Exception, response unless response =~ /NORMAL|PREMIUM|TRIAL|INTERNAL|FREE/
+
       #pp "F:response=%s" % response
       conn.puts "G\t#{game_code}\n"
       EAccess.read(conn)
@@ -93,6 +95,7 @@ module EAccess
       conn.puts "L\t#{char_code}\tSTORM\n"
       response = EAccess.read(conn)
       fail Exception, response unless response =~ /^L\t/
+
       #pp "L:response=%s" % response
       conn.close unless conn.closed?
       login_info = Hash[response.sub(/^L\tOK\t/, '')

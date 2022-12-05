@@ -25,6 +25,7 @@ module Lich
     elsif fe =~ /stormfront/
       return $sf_fe_loc
     end
+
     pp "Landed in get_simu_launcher method"
   end
 
