@@ -136,13 +136,13 @@ connect_button.signal_connect('clicked') {
             a[:char_name] <=> b[:char_name]
           end
         }
-      .each{ |row|
-        iter = liststore.append
-        iter[0] = row[:game_code]
-        iter[1] = row[:game_name]
-        iter[2] = row[:char_code]
-        iter[3] = row[:char_name]
-      }
+        .each{ |row|
+          iter = liststore.append
+          iter[0] = row[:game_code]
+          iter[1] = row[:game_name]
+          iter[2] = row[:char_code]
+          iter[3] = row[:char_name]
+        }
 
       disconnect_button.sensitive = true
     end

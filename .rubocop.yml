@@ -32,6 +32,11 @@ Layout/LeadingCommentSpace:
   AllowDoxygenCommentStyle: true
   AllowGemfileRubyComment: true
 
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+  IndentationWidth: 2
+
 Layout/SpaceAroundOperators:
   Enabled: true
   AllowForAlignment: true

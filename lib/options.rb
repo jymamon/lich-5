@@ -117,15 +117,15 @@ class Parser
         ]
 
         puts opts
-            .to_s
-            .split("\n")
-            .delete_if { |line|
-              do_not_document_options
-                  .find do |option|
-                    line =~ /#{option}/
-                  end
-            }
-            .join("\n")
+          .to_s
+          .split("\n")
+          .delete_if { |line|
+            do_not_document_options
+              .find do |option|
+                line =~ /#{option}/
+              end
+          }
+          .join("\n")
 
         puts <<-ADDITIONALUSAGETEXT
 
