@@ -58,6 +58,10 @@ Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: true
   EnforcedStyle: no_space
 
+Layout/SpaceInsideBlockBraces:
+  Enabled: true
+  EnforcedStyle: space
+
 Style/TrailingCommaInHashLiteral:
   Enabled: true
   EnforcedStyleForMultiline: comma

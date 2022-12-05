@@ -53,7 +53,7 @@ class Map
 
   def Map.get_free_id
     Map.load unless @@loaded
-    return @@list.compact.max_by { |r| r.id}.id + 1
+    return @@list.compact.max_by { |r| r.id }.id + 1
   end
 
   def Map.list
@@ -139,7 +139,7 @@ class Map
   end
 
   def Map.match_multi_ids(ids) # returns id
-    matches = ids.find_all { |s| @@list[@@current_room_id].wayto.keys.include?(s.to_s)}
+    matches = ids.find_all { |s| @@list[@@current_room_id].wayto.keys.include?(s.to_s) }
     return matches[0] if matches.size == 1;
 
     return nil;

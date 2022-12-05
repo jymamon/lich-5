@@ -100,7 +100,7 @@ module EAccess
       conn.close unless conn.closed?
       login_info = Hash[response.sub(/^L\tOK\t/, '')
         .split("\t")
-        .map {|kv|
+        .map { |kv|
           k, v = kv.split("=")
           [k.downcase, v]
         }]

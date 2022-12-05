@@ -59,7 +59,7 @@ class Map
 
   def Map.get_free_id
     Map.load unless @@loaded
-    return @@list.compact.max_by { |r| r.id}.id + 1
+    return @@list.compact.max_by { |r| r.id }.id + 1
   end
 
   def Map.list
@@ -199,7 +199,7 @@ class Map
                   (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                   (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                   (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r) and
-                  (r.room_objects.nil? || r.room_objects.all? {|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
+                  (r.room_objects.nil? || r.room_objects.all? { |obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
               }
                 redo unless @@current_room_count == XMLData.room_count
                 @@previous_room_id = @@current_room_id
@@ -213,7 +213,7 @@ class Map
                     (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
                     (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                     (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r) and
-                    (r.room_objects.nil? || r.room_objects.all? {|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
+                    (r.room_objects.nil? || r.room_objects.all? { |obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
                 }
                   redo unless @@current_room_count == XMLData.room_count
                   @@previous_room_id = @@current_room_id
@@ -255,7 +255,7 @@ class Map
                 (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                 (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                 (not r.check_location or r.location == Map.get_location) and
-                (r.room_objects.nil? || r.room_objects.all? {|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
+                (r.room_objects.nil? || r.room_objects.all? { |obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
             })
               redo unless @@fuzzy_room_count == XMLData.room_count
               if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }
@@ -273,7 +273,7 @@ class Map
                   (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
                   (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                   (not r.check_location or r.location == Map.get_location) and
-                  (r.room_objects.nil? || r.room_objects.all? {|obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
+                  (r.room_objects.nil? || r.room_objects.all? { |obj| /\b#{obj}\b/ =~ Map.last_seen_objects } )
               }
                 redo unless @@fuzzy_room_count == XMLData.room_count
                 if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }

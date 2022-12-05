@@ -753,7 +753,7 @@ class Script
 
     # fixme: look in wizard script directory
     # fixme: allow subdirectories?
-    file_list = Dir.children(File.join(SCRIPT_DIR, "custom")).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend("/custom/") } + Dir.children(SCRIPT_DIR).sort_by {|fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '')}
+    file_list = Dir.children(File.join(SCRIPT_DIR, "custom")).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend("/custom/") } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
     if file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i })
       script_name = file_name.sub(/\..{1,3}$/, '')
     end
@@ -989,7 +989,7 @@ class Script
 
   def Script.version(script_name, script_version_required = nil)
     script_name = script_name.sub(/[.](lic|rb|cmd|wiz)$/, '')
-    file_list = Dir.children(File.join(SCRIPT_DIR, "custom")).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend("/custom/") } + Dir.children(SCRIPT_DIR).sort_by {|fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '')}
+    file_list = Dir.children(File.join(SCRIPT_DIR, "custom")).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend("/custom/") } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
     if file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i })
       script_name = file_name.sub(/\..{1,3}$/, '')
     end
@@ -1005,7 +1005,7 @@ class Script
       comments = $1.split("\n")
     else
       comments = []
-      script_data.split("\n").each {|line|
+      script_data.split("\n").each { |line|
         if line =~ /^[\t\s]*#/
           comments.push(line)
         elsif line !~ /^[\t\s]*$/
@@ -2382,11 +2382,11 @@ module Games
                   #                           Buffer.update(alt_string, Buffer::DOWNSTREAM_MOD)
                   if (Lich.display_lichid == true or Lich.display_uid == true) and XMLData.game =~ /^GS/ and alt_string =~ /<resource picture=.*roomName/
                     if (Lich.display_lichid == true and Lich.display_uid == true)
-                      alt_string.sub!(']') {" - #{Map.current.id}] (u#{XMLData.room_id})"}
+                      alt_string.sub!(']') { " - #{Map.current.id}] (u#{XMLData.room_id})" }
                     elsif Lich.display_lichid == true
-                      alt_string.sub!(']') {" - #{Map.current.id}]"}
+                      alt_string.sub!(']') { " - #{Map.current.id}]" }
                     elsif Lich.display_uid == true
-                      alt_string.sub!(']') {"] (u#{XMLData.room_id})"}
+                      alt_string.sub!(']') { "] (u#{XMLData.room_id})" }
                     end
                   end
                   if $frontend =~ /^(?:wizard|avalon)$/
