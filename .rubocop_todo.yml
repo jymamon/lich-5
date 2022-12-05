@@ -30,13 +30,6 @@ Layout/CommentIndentation:
     - 'lib/lich.rb'
     - 'lib/spell.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Layout/ConditionPosition:
-  Exclude:
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-
 # Offense count: 30
 # This cop supports safe autocorrection (--autocorrect).
 Layout/EmptyLineAfterGuardClause:
