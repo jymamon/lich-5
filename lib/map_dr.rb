@@ -27,35 +27,45 @@ class Map
     @id, @title, @description, @paths, @uid, @location, @climate, @terrain, @wayto, @timeto, @image, @image_coords, @tags, @check_location, @unique_loot = id, title, description, paths, uid, location, climate, terrain, wayto, timeto, image, image_coords, tags, check_location, unique_loot
     @@list[@id] = self
   end
+
   def outside?
     @paths.first =~ /Obvious paths:/
   end
+
   def Map.last_seen_objects=(val)
     @@last_seen_objects = val
   end
+
   def Map.last_seen_objects
     @@last_seen_objects
   end
+
   def to_i
     @id
   end
+
   def to_s
     "##{@id} (#{@uid[-1]}):\n#{@title[-1]}\n#{@description[-1]}\n#{@paths[-1]}"
   end
+
   def inspect
     self.instance_variables.collect { |var| var.to_s + "=" + self.instance_variable_get(var).inspect }.join("\n")
   end
+
   def Map.fuzzy_room_id()
     return @@fuzzy_room_id
   end
+
   def Map.get_free_id
     Map.load unless @@loaded
     return @@list.compact.max_by{ |r| r.id}.id + 1
   end
+
   def Map.list
     Map.load unless @@loaded
     @@list
   end
+
   def Map.[](val)
     Map.load unless @@loaded
     if (val.class == Integer) or (val.class == Bignum) or val =~ /^[0-9]+$/
@@ -69,6 +79,7 @@ class Map
       @@list.find { |room| room.title.find { |title| title =~ chk } } || @@list.find { |room| room.description.find { |desc| desc =~ chk } } || @@list.find { |room| room.description.find { |desc| desc =~ chkre } }
     end
   end
+
   def Map.get_location
     unless XMLData.room_count == @@current_location_count
       if script = Script.current
@@ -89,12 +100,15 @@ class Map
     end
     @@current_location
   end
+
   def Map.previous
     return @@list[@@previous_room_id]
   end
+
   def Map.previous_uid
     return XMLData.previous_nav_rm
   end
+
   def Map.current
     Map.load unless @@loaded
     if script = Script.current
@@ -279,6 +293,7 @@ class Map
       }
     end
   end
+
   def Map.current_or_new
     return nil unless Script.current
 
@@ -371,6 +386,7 @@ class Map
       end
     end
   end
+
   def Map.tags
     Map.load unless @@loaded
     if @@tags.empty?
@@ -382,6 +398,7 @@ class Map
     end
     @@tags.dup
   end
+
   def Map.load_uids()
     Map.load unless @@loaded
     @@uids.clear
@@ -395,9 +412,11 @@ class Map
         }
        }
   end
+
   def Map.ids_from_uid(n)
     return (@@uids[n].nil? ? [] : @@uids[n])
   end
+
   def Map.clear
     @@load_mutex.synchronize {
       @@list.clear
@@ -407,6 +426,7 @@ class Map
     }
     true
   end
+
   def Map.reload
     Map.clear
     Map.load
@@ -494,6 +514,7 @@ class Map
       @@elevated_load_json.call
     end
   end
+
   def Map.load_dat(filename=nil)
     if $SAFE == 0
       @@load_mutex.synchronize {
@@ -535,6 +556,7 @@ class Map
       @@elevated_load_dat.call
     end
   end
+
   def Map.load_xml(filename="#{DATA_DIR}/#{XMLData.game}/map.xml")
     if $SAFE == 0
       @@load_mutex.synchronize {
@@ -658,6 +680,7 @@ class Map
       @@elevated_load_xml.call
     end
   end
+
   def Map.save(filename="#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.dat")
     if $SAFE == 0
       if File.exists?(filename)
@@ -684,10 +707,12 @@ class Map
       @@elevated_save.call
     end
   end
+
   def Map.to_json(*args)
     @@list.delete_if { |r| r.nil? }
     @@list.to_json(args)
   end
+
   def to_json(*args)
     mapjson = ({
       :id => @id,
@@ -708,6 +733,7 @@ class Map
     }).delete_if { |a,b| b.nil? or (b.class == Array and b.empty?) };
     JSON.pretty_generate(mapjson);
   end
+
   def Map.save_json(filename="#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")
     if File.exists?(filename)
       respond "File exists!  Backing it up before proceeding..."
@@ -727,6 +753,7 @@ class Map
     }
     respond "#{filename} saved"
   end
+
   def Map.save_xml(filename="#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.xml")
     if $SAFE == 0
       if File.exists?(filename)
@@ -801,6 +828,7 @@ class Map
       @@elevated_save_xml.call
     end
   end
+
   def Map.estimate_time(array)
     Map.load unless @@loaded
     unless array.class == Array
@@ -822,6 +850,7 @@ class Map
     end
     time
   end
+
   def Map.dijkstra(source, destination=nil)
     if source.class == Map
       source.dijkstra(destination)
@@ -832,6 +861,7 @@ class Map
       nil
     end
   end
+
   def dijkstra(destination=nil)
     begin
       Map.load unless @@loaded
@@ -933,6 +963,7 @@ class Map
       nil
     end
   end
+
   def Map.findpath(source, destination)
     if source.class == Map
       source.path_to(destination)
@@ -943,6 +974,7 @@ class Map
       nil
     end
   end
+
   def path_to(destination)
     Map.load unless @@loaded
     destination = destination.to_i
@@ -955,6 +987,7 @@ class Map
     path.pop
     return path
   end
+
   def find_nearest_by_tag(tag_name)
     target_list = Array.new
     @@list.each { |room| target_list.push(room.id) if room.tags.include?(tag_name) }
@@ -966,6 +999,7 @@ class Map
       target_list.sort { |a,b| shortest_distances[a] <=> shortest_distances[b] }.first
     end
   end
+
   def find_all_nearest_by_tag(tag_name)
     target_list = Array.new
     @@list.each { |room| target_list.push(room.id) if room.tags.include?(tag_name) }
@@ -973,6 +1007,7 @@ class Map
     target_list.delete_if { |room_num| shortest_distances[room_num].nil? }
     target_list.sort { |a,b| shortest_distances[a] <=> shortest_distances[b] }
   end
+
   def find_nearest(target_list)
     target_list = target_list.collect { |num| num.to_i }
     if target_list.include?(@id)
@@ -996,9 +1031,11 @@ class Map
   def desc
     @description
   end
+
   def map_name
     @image
   end
+
   def map_x
     if @image_coords.nil?
       nil
@@ -1006,6 +1043,7 @@ class Map
       ((image_coords[0] + image_coords[2]) / 2.0).round
     end
   end
+
   def map_y
     if @image_coords.nil?
       nil
@@ -1013,6 +1051,7 @@ class Map
       ((image_coords[1] + image_coords[3]) / 2.0).round
     end
   end
+
   def map_roomsize
     if @image_coords.nil?
       nil
@@ -1020,6 +1059,7 @@ class Map
       image_coords[2] - image_coords[0]
     end
   end
+
   def geo
     nil
   end

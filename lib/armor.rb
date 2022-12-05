@@ -42,9 +42,11 @@ class Armor
   def Armor.method_missing(arg1, arg2=nil)
     echo "#{arg1} is not a defined Armor type.  Is it another Ability type?"
   end
+
   def Armor.[](name)
     Armor.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)
   end
+
   def Armor.[]=(name,val)
     Armor.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
   end

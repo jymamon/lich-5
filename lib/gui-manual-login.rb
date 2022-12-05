@@ -130,12 +130,12 @@ connect_button.signal_connect('clicked') {
 
       login_info
         .sort{ |a, b|
-        if a[:game_code] != b[:game_code]
-          a[:game_code] <=> b[:game_code]
-        else
-          a[:char_name] <=> b[:char_name]
-        end
-      }
+          if a[:game_code] != b[:game_code]
+            a[:game_code] <=> b[:game_code]
+          else
+            a[:char_name] <=> b[:char_name]
+          end
+        }
       .each{ |row|
         iter = liststore.append
         iter[0] = row[:game_code]

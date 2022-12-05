@@ -30,21 +30,6 @@ Layout/CommentIndentation:
     - 'lib/lich.rb'
     - 'lib/spell.rb'
 
-# Offense count: 146
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'lib/armor.rb'
-    - 'lib/cman.rb'
-    - 'lib/feat.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/shield.rb'
-    - 'lib/spell.rb'
-    - 'lib/weapon.rb'
-    - 'lich.rbw'
-
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowAliasSyntax, AllowedMethods.

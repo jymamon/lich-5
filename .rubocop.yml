@@ -3,9 +3,17 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   NewCops: disable
 
+Layout/BlockAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: start_of_block
+
 Layout/EndAlignment:
   Enabled: true
   EnforcedStyleAlignWith: start_of_line
+
+Layout/EmptyLineBetweenDefs:
+  Enabled: true
+  AllowAdjacentOneLineDefs: true
 
 Layout/SpaceAroundOperators:
   Enabled: true

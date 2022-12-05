@@ -115,9 +115,11 @@ module Games
       @@list.push(self) unless @@list.find { |spell| spell.num == @num }
       self
     end
+
     def Spell.after_stance=(val)
       @@after_stance = val
     end
+
     def Spell.load(filename=nil)
       if $SAFE == 0
         if filename.nil?
@@ -168,6 +170,7 @@ module Games
         @@elevated_load.call
       end
     end
+
     def Spell.[](val)
       Spell.load unless @@loaded
       if val.class == Spell
@@ -179,28 +182,34 @@ module Games
         (@@list.find { |s| s.name =~ /^#{val}$/i } || @@list.find { |s| s.name =~ /^#{val}/i } || @@list.find { |s| s.msgup =~ /#{val}/i or s.msgdn =~ /#{val}/i })
       end
     end
+
     def Spell.active
       Spell.load unless @@loaded
       active = Array.new
       @@list.each { |spell| active.push(spell) if spell.active? }
       active
     end
+
     def Spell.active?(val)
       Spell.load unless @@loaded
       Spell[val].active?
     end
+
     def Spell.list
       Spell.load unless @@loaded
       @@list
     end
+
     def Spell.upmsgs
       Spell.load unless @@loaded
       @@list.collect { |spell| spell.msgup }.compact
     end
+
     def Spell.dnmsgs
       Spell.load unless @@loaded
       @@list.collect { |spell| spell.msgdn }.compact
     end
+
     def time_per_formula(options={})
       activator_modifier = { 'tap' => 0.5, 'rub' => 1, 'wave' => 1, 'raise' => 1.33, 'drink' => 0, 'bite' => 0, 'eat' => 0, 'gobble' => 0 }
       can_haz_spell_ranks = /Spells\.(?:minorelemental|majorelemental|minorspiritual|majorspiritual|wizard|sorcerer|ranger|paladin|empath|cleric|bard|minormental)/
@@ -253,6 +262,7 @@ module Games
       formula.untaint
       formula
     end
+
     def time_per(options={})
       formula = self.time_per_formula(options)
       if options[:line]
@@ -260,10 +270,12 @@ module Games
       end
       proc { begin; $SAFE = 3; rescue; nil; end; eval(formula) }.call.to_f
     end
+
     def timeleft=(val)
       @timeleft = val
       @timestamp = Time.now
     end
+
     def timeleft
       if self.time_per_formula.to_s == 'Spellsong.timeleft'
         @timeleft = Spellsong.timeleft
@@ -277,18 +289,23 @@ module Games
       @timestamp = Time.now
       @timeleft
     end
+
     def minsleft
       self.timeleft
     end
+
     def secsleft
       self.timeleft * 60
     end
+
     def active=(val)
       @active = val
     end
+
     def active?
       (self.timeleft > 0) and @active
     end
+
     def stackable?(options={})
       if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
         if options[:target] and (options[:target].downcase == options[:caster].downcase)
@@ -312,6 +329,7 @@ module Games
         end
       end
     end
+
     def refreshable?(options={})
       if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
         if options[:target] and (options[:target].downcase == options[:caster].downcase)
@@ -335,6 +353,7 @@ module Games
         end
       end
     end
+
     def multicastable?(options={})
       if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
         if options[:target] and (options[:target].downcase == options[:caster].downcase)
@@ -358,6 +377,7 @@ module Games
         end
       end
     end
+
     def known?
       if @num.to_s.length == 3
         circle_num = @num.to_s[0..0].to_i
@@ -417,6 +437,7 @@ module Games
         return false
       end
     end
+
     def available?(options={})
       if self.known?
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
@@ -436,15 +457,19 @@ module Games
         false
       end
     end
+
     def incant?
       !@no_incant
     end
+
     def incant=(val)
       @no_incant = !val
     end
+
     def to_s
       @name.to_s
     end
+
     def max_duration(options={})
       if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
         if options[:target] and (options[:target].downcase == options[:caster].downcase)
@@ -460,6 +485,7 @@ module Games
         end
       end
     end
+
     def putup(options={})
       if stackable?(options)
         self.timeleft = [ self.timeleft + self.time_per(options), self.max_duration(options) ].min
@@ -468,10 +494,12 @@ module Games
       end
       @active = true
     end
+
     def putdown
       self.timeleft = 0
       @active = false
     end
+
     def remaining
       self.timeleft.as_time
     end
@@ -507,9 +535,11 @@ module Games
         @@cast_lock.delete_if { |s| s.paused or not Script.list.include?(s) }
       end
     end
+
     def Spell.unlock_cast
       @@cast_lock.delete(Script.current)
     end
+
     def cast(target=nil, results_of_interest=nil, arg_options=nil)
       # fixme: find multicast in target and check mana for it
       check_energy = proc {
@@ -732,9 +762,11 @@ module Games
     def _bonus
       @bonus.dup
     end
+
     def _cost
       @cost.dup
     end
+
     def method_missing(*args)
       if @@bonus_list.include?(args[0].to_s.gsub('_', '-'))
         if @bonus[args[0].to_s.gsub('_', '-')]
@@ -782,12 +814,15 @@ module Games
         raise NoMethodError
       end
     end
+
     def circle_name
       Spells.get_circle_name(@circle)
     end
+
     def clear_on_death
       !@persist_on_death
     end
+
     # for backwards compatiblity
     def duration;      self.time_per_formula;            end
     def cost;          self.mana_cost_formula    || '0'; end

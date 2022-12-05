@@ -100,9 +100,11 @@ class Feat
   def Feat.method_missing(arg1, arg2=nil)
     echo "#{arg1} is not a defined Feat type.  Is it another Ability type?"
   end
+
   def Feat.[](name)
     Feat.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)
   end
+
   def Feat.[]=(name,val)
     Feat.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
   end

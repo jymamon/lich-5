@@ -167,6 +167,7 @@ class SynchronizedSocket
       @delegate.puts *args, &block
     }
   end
+
   def puts_if(*args)
     @mutex.synchronize {
       if yield
@@ -177,6 +178,7 @@ class SynchronizedSocket
       end
       }
   end
+
   def write(*args, &block)
     @mutex.synchronize {
       @delegate.write *args, &block
@@ -703,6 +705,7 @@ class Scripting
     Proc.new {}.binding
   end
 end
+
 def _script
   Proc.new {}.binding
 end
@@ -2245,6 +2248,7 @@ module Games
     module Game
     end
   end
+
   module Gemstone
     module Game
       @@socket    = nil
@@ -2530,6 +2534,7 @@ module Games
         @@_buffer
       end
     end
+
     class Char
       @@name ||= nil
       @@citizenship ||= nil
@@ -3622,6 +3627,7 @@ module Games
         nil
       end
     end
+
     class GameObj
       @@loot          = Array.new
       @@npcs          = Array.new
@@ -4011,6 +4017,7 @@ module Games
         @@sellable_data
       end
     end
+
     #
     # start deprecated stuff
     #
@@ -4020,6 +4027,7 @@ module Games
     # end deprecated stuff
     #
   end
+
   module DragonRealms
     # fixme
   end
@@ -4451,6 +4459,7 @@ module Setting
     Settings.to_hash
   end
 end
+
 module GameSetting
   def GameSetting.[](name)
     GameSettings[name]
@@ -4464,6 +4473,7 @@ module GameSetting
     GameSettings.to_hash
   end
 end
+
 module CharSetting
   def CharSetting.[](name)
     CharSettings[name]
@@ -4477,11 +4487,13 @@ module CharSetting
     CharSettings.to_hash
   end
 end
+
 class StringProc
   def StringProc._load(string)
     StringProc.new(string)
   end
 end
+
 class String
   def to_a # for compatibility with Ruby 1.8
     [self]

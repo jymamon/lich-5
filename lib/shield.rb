@@ -268,9 +268,11 @@ class Shield
   def Shield.method_missing(arg1, arg2=nil)
     echo "#{arg1} is not a defined Shield type.  Is it another Ability type?"
   end
+
   def Shield.[](name)
     Shield.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)
   end
+
   def Shield.[]=(name,val)
     Shield.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
   end

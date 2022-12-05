@@ -251,9 +251,11 @@ class CMan
   def CMan.method_missing(arg1, arg2=nil)
     echo "#{arg1} is not a defined CMan.  Was it moved to another Ability?"
   end
+
   def CMan.[](name)
     CMan.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)
   end
+
   def CMan.[]=(name,val)
     CMan.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
   end
