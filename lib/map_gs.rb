@@ -27,9 +27,9 @@ class Map
     @@list[@id] = self
   end
 
-  def Map.current_room_id;return @@current_room_id;end
-  def Map.current_room_id=(id);return @@current_room_id = id;end
-  def fuzzy_room_id;return @@current_room_id;end
+  def Map.current_room_id; return @@current_room_id; end
+  def Map.current_room_id=(id); return @@current_room_id = id; end
+  def fuzzy_room_id; return @@current_room_id; end
 
   def outside?
     @paths.first =~ /^Obvious paths:/ ? true : false
