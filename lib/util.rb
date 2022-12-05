@@ -193,6 +193,5 @@ module Lich
       end
       return result.gsub(',', '').to_i
     end
-
   end
 end

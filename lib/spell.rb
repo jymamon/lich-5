@@ -26,7 +26,6 @@ Further modifications are to support the retirement of spell-list.xml.
 
 module Games
   module Gemstone
-
     class Spell
       @@list ||= Array.new
       @@loaded ||= false
