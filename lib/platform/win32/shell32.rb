@@ -65,6 +65,7 @@ module Win32
       args[:lpFile],
       args[:lpParameters],
       args[:lpDirectory],
-      args[:nShowCmd])
+      args[:nShowCmd]
+    )
   end
 end

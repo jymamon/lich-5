@@ -110,7 +110,8 @@ module Win32
       args[:lpEnvironment],
       args[:lpCurrentDirectory],
       lpStartupInfo,
-      lpProcessInformation)
+      lpProcessInformation
+    )
 
     lpProcessInformation = lpProcessInformation.unpack('LLLL')
     return :return => (r > 0 ? true : false), :hProcess => lpProcessInformation[0], :hThread => lpProcessInformation[1], :dwProcessId => lpProcessInformation[2], :dwThreadId => lpProcessInformation[3]

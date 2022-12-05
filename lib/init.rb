@@ -218,7 +218,8 @@ required_modules.each { |required_module|
   rescue LoadError
     if defined?(Win32)
       result = Win32.MessageBox(
-        :lpText => "Lich needs #{required_module[:name]} #{required_module[:reason]}, but it is not installed.\n\nWould you like to install #{required_module[:name]} now?", :lpCaption => "Lich v#{LICH_VERSION}", :uType => (Win32::MB_YESNO | Win32::MB_ICONQUESTION))
+        :lpText => "Lich needs #{required_module[:name]} #{required_module[:reason]}, but it is not installed.\n\nWould you like to install #{required_module[:name]} now?", :lpCaption => "Lich v#{LICH_VERSION}", :uType => (Win32::MB_YESNO | Win32::MB_ICONQUESTION)
+      )
 
       if result == Win32::IDIYES
         if gem_file
