@@ -119,7 +119,7 @@ module Games
         @@after_stance = val
       end
 
-      def Spell.load(filename=nil)
+      def Spell.load(filename = nil)
         if $SAFE == 0
           if filename.nil?
             if File.exists?("#{DATA_DIR}/spell-list.xml")
@@ -209,7 +209,7 @@ module Games
         @@list.collect { |spell| spell.msgdn }.compact
       end
 
-      def time_per_formula(options={})
+      def time_per_formula(options = {})
         activator_modifier = { 'tap' => 0.5, 'rub' => 1, 'wave' => 1, 'raise' => 1.33, 'drink' => 0, 'bite' => 0, 'eat' => 0, 'gobble' => 0 }
         can_haz_spell_ranks = /Spells\.(?:minorelemental|majorelemental|minorspiritual|majorspiritual|wizard|sorcerer|ranger|paladin|empath|cleric|bard|minormental)/
         skills = [ 'Spells.minorelemental', 'Spells.majorelemental', 'Spells.minorspiritual', 'Spells.majorspiritual', 'Spells.wizard', 'Spells.sorcerer', 'Spells.ranger', 'Spells.paladin', 'Spells.empath', 'Spells.cleric', 'Spells.bard', 'Spells.minormental', 'Skills.magicitemuse', 'Skills.arcanesymbols' ]
@@ -262,7 +262,7 @@ module Games
         formula
       end
 
-      def time_per(options={})
+      def time_per(options = {})
         formula = self.time_per_formula(options)
         if options[:line]
           line = options[:line]
@@ -305,7 +305,7 @@ module Games
         (self.timeleft > 0) and @active
       end
 
-      def stackable?(options={})
+      def stackable?(options = {})
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
           if options[:target] and (options[:target].downcase == options[:caster].downcase)
             @duration['self'][:stackable]
@@ -329,7 +329,7 @@ module Games
         end
       end
 
-      def refreshable?(options={})
+      def refreshable?(options = {})
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
           if options[:target] and (options[:target].downcase == options[:caster].downcase)
             @duration['self'][:refreshable]
@@ -353,7 +353,7 @@ module Games
         end
       end
 
-      def multicastable?(options={})
+      def multicastable?(options = {})
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
           if options[:target] and (options[:target].downcase == options[:caster].downcase)
             @duration['self'][:multicastable]
@@ -437,7 +437,7 @@ module Games
         end
       end
 
-      def available?(options={})
+      def available?(options = {})
         if self.known?
           if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
             if options[:target] and (options[:target].downcase == options[:caster].downcase)
@@ -469,7 +469,7 @@ module Games
         @name.to_s
       end
 
-      def max_duration(options={})
+      def max_duration(options = {})
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
           if options[:target] and (options[:target].downcase == options[:caster].downcase)
             @duration['self'][:max_duration]
@@ -485,7 +485,7 @@ module Games
         end
       end
 
-      def putup(options={})
+      def putup(options = {})
         if stackable?(options)
           self.timeleft = [ self.timeleft + self.time_per(options), self.max_duration(options) ].min
         else
@@ -503,7 +503,7 @@ module Games
         self.timeleft.as_time
       end
 
-      def affordable?(options={})
+      def affordable?(options = {})
         # fixme: deal with them dirty bards!
         release_options = options.dup
         release_options[:multicast] = nil
@@ -539,7 +539,7 @@ module Games
         @@cast_lock.delete(Script.current)
       end
 
-      def cast(target=nil, results_of_interest=nil, arg_options=nil)
+      def cast(target = nil, results_of_interest = nil, arg_options = nil)
         # fixme: find multicast in target and check mana for it
         check_energy = proc {
           if Feat.known?(:mental_acuity)
@@ -722,7 +722,7 @@ module Games
         end
       end
 
-      def force_cast(target=nil, arg_options=nil, results_of_interest=nil)
+      def force_cast(target = nil, arg_options = nil, results_of_interest = nil)
         unless arg_options.nil? || arg_options.empty?
           arg_options = "cast #{arg_options}"
         else
@@ -731,7 +731,7 @@ module Games
         cast(target, results_of_interest, arg_options)
       end
 
-      def force_channel(target=nil, arg_options=nil, results_of_interest=nil)
+      def force_channel(target = nil, arg_options = nil, results_of_interest = nil)
         unless arg_options.nil? || arg_options.empty?
           arg_options = "channel #{arg_options}"
         else
@@ -740,7 +740,7 @@ module Games
         cast(target, results_of_interest, arg_options)
       end
 
-      def force_evoke(target=nil, arg_options=nil, results_of_interest=nil)
+      def force_evoke(target = nil, arg_options = nil, results_of_interest = nil)
         unless arg_options.nil? || arg_options.empty?
           arg_options = "evoke #{arg_options}"
         else
@@ -749,7 +749,7 @@ module Games
         cast(target, results_of_interest, arg_options)
       end
 
-      def force_incant(arg_options=nil, results_of_interest=nil)
+      def force_incant(arg_options = nil, results_of_interest = nil)
         unless arg_options.nil? || arg_options.empty?
           arg_options = "incant #{arg_options}"
         else

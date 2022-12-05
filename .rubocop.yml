@@ -46,6 +46,10 @@ Layout/SpaceAroundOperators:
   Enabled: true
   AllowForAlignment: true
 
+Layout/SpaceAroundEqualsInParameterDefault:
+  Enabled: true
+  EnforcedStyle: space
+    
 Style/TrailingCommaInHashLiteral:
   Enabled: true
   EnforcedStyleForMultiline: comma

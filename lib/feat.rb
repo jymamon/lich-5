@@ -97,7 +97,7 @@ class Feat
     "weapon_bonding" => 0
   }
 
-  def Feat.method_missing(arg1, arg2=nil)
+  def Feat.method_missing(arg1, arg2 = nil)
     echo "#{arg1} is not a defined Feat type.  Is it another Ability type?"
   end
 

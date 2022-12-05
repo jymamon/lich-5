@@ -265,7 +265,7 @@ class Shield
     },
   }
 
-  def Shield.method_missing(arg1, arg2=nil)
+  def Shield.method_missing(arg1, arg2 = nil)
     echo "#{arg1} is not a defined Shield type.  Is it another Ability type?"
   end
 

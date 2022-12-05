@@ -24,7 +24,7 @@ class Map
   attr_reader :id
   attr_accessor :title, :description, :paths, :uid, :location, :climate, :terrain, :wayto, :timeto, :image, :image_coords, :tags, :check_location, :unique_loot, :uid, :room_objects
 
-  def initialize(id, title, description, paths, uid = [], location=nil, climate=nil, terrain=nil, wayto={}, timeto={}, image=nil, image_coords=nil, tags=[], check_location=nil, unique_loot=nil, room_objects=nil)
+  def initialize(id, title, description, paths, uid = [], location = nil, climate = nil, terrain = nil, wayto = {}, timeto = {}, image = nil, image_coords = nil, tags = [], check_location = nil, unique_loot = nil, room_objects = nil)
     @id, @title, @description, @paths, @uid, @location, @climate, @terrain, @wayto, @timeto, @image, @image_coords, @tags, @check_location, @unique_loot = id, title, description, paths, uid, location, climate, terrain, wayto, timeto, image, image_coords, tags, check_location, unique_loot
     @@list[@id] = self
   end
@@ -433,7 +433,7 @@ class Map
     Map.load
   end
 
-  def Map.load(filename=nil)
+  def Map.load(filename = nil)
     if filename.nil?
       file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map\-[0-9]+\.(?:dat|xml|json)$/i }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
     else
@@ -461,7 +461,7 @@ class Map
     return false
   end
 
-  def Map.load_json(filename=nil)
+  def Map.load_json(filename = nil)
     if $SAFE == 0
       @@load_mutex.synchronize {
         if @@loaded
@@ -516,7 +516,7 @@ class Map
     end
   end
 
-  def Map.load_dat(filename=nil)
+  def Map.load_dat(filename = nil)
     if $SAFE == 0
       @@load_mutex.synchronize {
         if @@loaded
@@ -558,7 +558,7 @@ class Map
     end
   end
 
-  def Map.load_xml(filename="#{DATA_DIR}/#{XMLData.game}/map.xml")
+  def Map.load_xml(filename = "#{DATA_DIR}/#{XMLData.game}/map.xml")
     if $SAFE == 0
       @@load_mutex.synchronize {
         if @@loaded
@@ -682,7 +682,7 @@ class Map
     end
   end
 
-  def Map.save(filename="#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.dat")
+  def Map.save(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.dat")
     if $SAFE == 0
       if File.exists?(filename)
         respond "--- Backing up map database"
@@ -735,7 +735,7 @@ class Map
     JSON.pretty_generate(mapjson);
   end
 
-  def Map.save_json(filename="#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")
+  def Map.save_json(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")
     if File.exists?(filename)
       respond "File exists!  Backing it up before proceeding..."
       begin
@@ -755,7 +755,7 @@ class Map
     respond "#{filename} saved"
   end
 
-  def Map.save_xml(filename="#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.xml")
+  def Map.save_xml(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.xml")
     if $SAFE == 0
       if File.exists?(filename)
         respond "File exists!  Backing it up before proceeding..."
@@ -852,7 +852,7 @@ class Map
     time
   end
 
-  def Map.dijkstra(source, destination=nil)
+  def Map.dijkstra(source, destination = nil)
     if source.class == Map
       source.dijkstra(destination)
     elsif room = Map[source]
@@ -863,7 +863,7 @@ class Map
     end
   end
 
-  def dijkstra(destination=nil)
+  def dijkstra(destination = nil)
     begin
       Map.load unless @@loaded
       source = @id

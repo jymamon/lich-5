@@ -39,7 +39,7 @@ class Armor
   def Armor.puncture_protection=(val);   @@puncture_protection = val;    end
   def Armor.slash_protection=(val);      @@slash_protection = val;       end
 
-  def Armor.method_missing(arg1, arg2=nil)
+  def Armor.method_missing(arg1, arg2 = nil)
     echo "#{arg1} is not a defined Armor type.  Is it another Ability type?"
   end
 

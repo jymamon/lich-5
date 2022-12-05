@@ -20,21 +20,6 @@ Layout/MultilineBlockLayout:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 68
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, no_space
-Layout/SpaceAroundEqualsInParameterDefault:
-  Exclude:
-    - 'lib/armor.rb'
-    - 'lib/cman.rb'
-    - 'lib/feat.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/shield.rb'
-    - 'lib/spell.rb'
-    - 'lib/weapon.rb'
-
 # Offense count: 14
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
