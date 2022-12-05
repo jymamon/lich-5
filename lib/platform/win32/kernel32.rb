@@ -68,8 +68,22 @@ module Win32
     end
 
     lpStartupInfo = [68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    lpStartupInfo_index = { :lpDesktop => 2, :lpTitle => 3, :dwX => 4, :dwY => 5, :dwXSize => 6, :dwYSize => 7,
-                            :dwXCountChars => 8, :dwYCountChars => 9, :dwFillAttribute => 10, :dwFlags => 11, :wShowWindow => 12, :hStdInput => 15, :hStdOutput => 16, :hStdError => 17 }
+    lpStartupInfo_index = {
+        :lpDesktop => 2,
+        :lpTitle => 3,
+        :dwX => 4,
+        :dwY => 5,
+        :dwXSize => 6,
+        :dwYSize => 7,
+        :dwXCountChars => 8,
+        :dwYCountChars => 9,
+        :dwFillAttribute => 10,
+        :dwFlags => 11,
+        :wShowWindow => 12,
+        :hStdInput => 15,
+        :hStdOutput => 16,
+        :hStdError => 17
+    }
 
     for sym in [:lpDesktop, :lpTitle]
       if args[sym]
@@ -78,8 +92,7 @@ module Win32
       end
     end
 
-    for sym in [:dwX, :dwY, :dwXSize, :dwYSize, :dwXCountChars, :dwYCountChars, :dwFillAttribute, :dwFlags,
-                :wShowWindow, :hStdInput, :hStdOutput, :hStdError]
+    for sym in [:dwX, :dwY, :dwXSize, :dwYSize, :dwXCountChars, :dwYCountChars, :dwFillAttribute, :dwFlags, :wShowWindow, :hStdInput, :hStdOutput, :hStdError]
       if args[sym]
         lpStartupInfo[lpStartupInfo_index[sym]] = args[sym]
       end
@@ -87,8 +100,18 @@ module Win32
 
     lpStartupInfo = lpStartupInfo.pack('LLLLLLLLLLLLSSLLLL')
     lpProcessInformation = [0, 0, 0, 0,].pack('LLLL')
-    r = Kernel32.CreateProcess(args[:lpApplicationName], lpCommandLine, args[:lpProcessAttributes],
-                               args[:lpThreadAttributes], bInheritHandles, args[:dwCreationFlags].to_i, args[:lpEnvironment], args[:lpCurrentDirectory], lpStartupInfo, lpProcessInformation)
+    r = Kernel32.CreateProcess(
+        args[:lpApplicationName],
+        lpCommandLine,
+        args[:lpProcessAttributes],
+        args[:lpThreadAttributes],
+        bInheritHandles,
+        args[:dwCreationFlags].to_i,
+        args[:lpEnvironment],
+        args[:lpCurrentDirectory],
+        lpStartupInfo,
+        lpProcessInformation)
+
     lpProcessInformation = lpProcessInformation.unpack('LLLL')
     return :return => (r > 0 ? true : false), :hProcess => lpProcessInformation[0], :hThread => lpProcessInformation[1], :dwProcessId => lpProcessInformation[2], :dwThreadId => lpProcessInformation[3]
   end
@@ -114,6 +137,7 @@ module Win32
     a = [156, 0, 0, 0, 0, ("\0" * 128), 0, 0, 0, 0, 0].pack('LLLLLa128SSSCC')
     r = Kernel32.GetVersionEx(a)
     a = a.unpack('LLLLLa128SSSCC')
+    # Other values available
     return :return => r, :dwOSVersionInfoSize => a[0], :dwMajorVersion => a[1], :dwMinorVersion => a[2], :dwBuildNumber => a[3], :dwPlatformId => a[4], :szCSDVersion => a[5].strip, :wServicePackMajor => a[6], :wServicePackMinor => a[7], :wSuiteMask => a[8], :wProductType => a[9]
   end
 end
