@@ -137,7 +137,7 @@ class XMLParser
           if k =~ /Recovery/
             z.merge!(k => v) if k.instance_of?(String)
           else
-          z.merge!("#{k} Cooldown" => v) if k.instance_of?(String)
+            z.merge!("#{k} Cooldown" => v) if k.instance_of?(String)
           end
         when /Debuffs/
           z.merge!("#{k} Debuff" => v) if k.instance_of?(String)

@@ -403,13 +403,13 @@ class Map
     Map.load unless @@loaded
     @@uids.clear
     @@list.each { |r|
-        r.uid.each { |u|
-        if @@uids[u].nil?
-          @@uids[u] = [ r.id ]
-        else
-          @@uids[u] << r.id if !@@uids[u].include?(r.id)
-        end
-        }
+         r.uid.each { |u|
+           if @@uids[u].nil?
+             @@uids[u] = [ r.id ]
+           else
+             @@uids[u] << r.id if !@@uids[u].include?(r.id)
+           end
+         }
        }
   end
 

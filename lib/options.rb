@@ -120,10 +120,10 @@ class Parser
             .to_s
             .split("\n")
             .delete_if { |line|
-                do_not_document_options
-                    .find do |option|
+                  do_not_document_options
+                      .find do |option|
                         line =~ /#{option}/
-                    end
+                      end
                 }
             .join("\n")
 

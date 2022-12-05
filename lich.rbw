@@ -170,12 +170,12 @@ class SynchronizedSocket
 
   def puts_if(*args)
     @mutex.synchronize {
-      if yield
-         @delegate.puts *args
-         return true
-      else
+        if yield
+          @delegate.puts *args
+          return true
+        else
           return false
-      end
+        end
       }
   end
 
