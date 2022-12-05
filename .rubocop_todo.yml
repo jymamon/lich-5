@@ -376,14 +376,6 @@ Layout/SpaceInsideParens:
     - 'lib/map_dr.rb'
     - 'lib/spell.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: final_newline, final_blank_line
-Layout/TrailingEmptyLines:
-  Exclude:
-    - 'lib/front-end.rb'
-
 # Offense count: 115
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowInHeredoc.
