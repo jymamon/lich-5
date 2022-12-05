@@ -37,6 +37,11 @@ Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
   IndentationWidth: 2
 
+Layout/MultilineOperationIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+  IndentationWidth: 2
+
 Layout/SpaceAroundOperators:
   Enabled: true
   AllowForAlignment: true

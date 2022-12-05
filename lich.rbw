@@ -913,14 +913,14 @@ class Script
       File.exists?("#{SCRIPT_DIR}/#{script_name}") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}")
     else
       File.exists?("#{SCRIPT_DIR}/#{script_name}.lic") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.lic") ||
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.lich") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.lich") ||
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.rb") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.rb") ||
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.cmd") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.cmd") ||
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.wiz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.wiz") ||
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.lic.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.lic.gz") ||
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.rb.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.rb.gz") ||
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.cmd.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.cmd.gz") ||
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.wiz.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.wiz.gz")
+        File.exists?("#{SCRIPT_DIR}/#{script_name}.lich") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.lich") ||
+        File.exists?("#{SCRIPT_DIR}/#{script_name}.rb") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.rb") ||
+        File.exists?("#{SCRIPT_DIR}/#{script_name}.cmd") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.cmd") ||
+        File.exists?("#{SCRIPT_DIR}/#{script_name}.wiz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.wiz") ||
+        File.exists?("#{SCRIPT_DIR}/#{script_name}.lic.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.lic.gz") ||
+        File.exists?("#{SCRIPT_DIR}/#{script_name}.rb.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.rb.gz") ||
+        File.exists?("#{SCRIPT_DIR}/#{script_name}.cmd.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.cmd.gz") ||
+        File.exists?("#{SCRIPT_DIR}/#{script_name}.wiz.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.wiz.gz")
     end
   }
   @@elevated_log = proc { |data|

@@ -373,11 +373,11 @@ class Map
         uid         = [ XMLData.room_id ]
         room        = Map.new(Map.get_free_id, title, description, paths, uid, current_location)
         identical_rooms = @@list.find_all { |r| (r.location != current_location) and
-            r.title.include?(XMLData.room_title) and
-            r.description.include?(XMLData.room_description.strip) and
-            (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
-            (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
-            !r.uid.include?(XMLData.room_id)
+          r.title.include?(XMLData.room_title) and
+          r.description.include?(XMLData.room_description.strip) and
+          (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+          (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
+          !r.uid.include?(XMLData.room_id)
         }
         if identical_rooms.length > 0
           room.check_location = true

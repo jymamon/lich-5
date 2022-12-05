@@ -102,6 +102,6 @@ class Weapon
 
   def Weapon.available?(name)
     Weapon.known?(name) and Weapon.affordable?(name) and
-    !Lich::Util.normalize_lookup('Cooldowns', name) and !Lich::Util.normalize_lookup('Debuffs', 'Overexerted')
+      !Lich::Util.normalize_lookup('Cooldowns', name) and !Lich::Util.normalize_lookup('Debuffs', 'Overexerted')
   end
 end
