@@ -327,5 +327,4 @@ class Shield
     }
     usage_result
   end
-
 end

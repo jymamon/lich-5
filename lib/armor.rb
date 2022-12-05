@@ -62,5 +62,4 @@ class Armor
   def Armor.affordable?(name)
     return true
   end
-
 end
