@@ -20,17 +20,6 @@ Layout/MultilineBlockLayout:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 6
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideHashLiteralBraces:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/front-end.rb'
-    - 'lib/messaging.rb'
-
 # Offense count: 9
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
