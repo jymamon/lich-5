@@ -1,6 +1,5 @@
 # Lich5 carveout for init_db
 
-
 #
 # Report an error if Lich 4.4 data is found
 #
@@ -326,61 +325,18 @@ Lich.log "info: #{RUBY_PLATFORM}"
 Lich.log @early_gtk_error if @early_gtk_error
 @early_gtk_error = nil
 
-unless File.exists?(DATA_DIR)
-  begin
-    Dir.mkdir(DATA_DIR)
-  rescue
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-    Lich.msgbox(:message => "An error occured while attempting to create directory #{DATA_DIR}\n\n#{$!}", :icon => :error)
-    exit
-  end
-end
-unless File.exists?(SCRIPT_DIR)
-  begin
-    Dir.mkdir(SCRIPT_DIR)
-  rescue
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-    Lich.msgbox(:message => "An error occured while attempting to create directory #{SCRIPT_DIR}\n\n#{$!}", :icon => :error)
-    exit
-  end
-end
-unless File.exists?("#{SCRIPT_DIR}/custom")
-  begin
-    Dir.mkdir("#{SCRIPT_DIR}/custom")
-  rescue
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-    Lich.msgbox(:message => "An error occured while attempting to create directory #{SCRIPT_DIR}/custom\n\n#{$!}", :icon => :error)
-    exit
-  end
-end
-unless File.exists?(MAP_DIR)
-  begin
-    Dir.mkdir(MAP_DIR)
-  rescue
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-    Lich.msgbox(:message => "An error occured while attempting to create directory #{MAP_DIR}\n\n#{$!}", :icon => :error)
-    exit
-  end
-end
-unless File.exists?(LOG_DIR)
-  begin
-    Dir.mkdir(LOG_DIR)
-  rescue
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-    Lich.msgbox(:message => "An error occured while attempting to create directory #{LOG_DIR}\n\n#{$!}", :icon => :error)
-    exit
-  end
-end
-unless File.exists?(BACKUP_DIR)
-  begin
-    Dir.mkdir(BACKUP_DIR)
-  rescue
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-    Lich.msgbox(:message => "An error occured while attempting to create directory #{BACKUP_DIR}\n\n#{$!}", :icon => :error)
-    exit
-  end
-end
 
+[DATA_DIR, SCRIPT_DIR, "#{SCRIPT_DIR}/custom", MAP_DIR, LOG_DIR, BACKUP_DIR].each { |required_directory|
+  unless File.exists?(required_directory)
+    begin
+      Dir.mkdir(required_directory)
+    rescue
+      Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+      Lich.msgbox(:message => "An error occured while attempting to create directory #{required_directory}\n\n#{$!}", :icon => :error)
+      exit
+    end
+  end
+}
 Lich.init_db
 
 #
