@@ -12,6 +12,7 @@ class Parser
     # overly complex, is an improvement.
     args = Struct.new(
       :detachable_client,
+      :entryfile,
       :force_gui,
       :frontend,
       :frontend_command,
@@ -96,6 +97,7 @@ class Parser
           '--backup',
           '--data',
           '--detachable-client',
+          '--entrydat',
           '--frontend',
           '--frontend-command',
           '--home',
@@ -179,6 +181,12 @@ class Parser
       # -----------------------------------------------------------------
       # Game Login commands
       # -----------------------------------------------------------------
+      opts.on('--entrydat ENTRYFILE',
+              'Override the default saved logins file with the file specified.') do |entryfile|
+        args.entryfile = entryfile
+      end
+
+      # Using entry.dat, --character is used for manual login. Those can be consolidated.
       opts.on('--login CHARACTER',
               'Login the named CHARACTER using information from the saved logins file.') do |character|
         args.login_character = character.capitalize
@@ -508,6 +516,8 @@ class Parser
       end
     end
 
+    args.entryfile ||= "#{args.datadir}/entry.dat"
+    
     # TODO: Check for invalid combinations. For example, '-s -w' doesn't make sense.
     #if gamecode.gemstone
     #  if gamecode.platinum

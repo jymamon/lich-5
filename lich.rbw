@@ -4753,8 +4753,8 @@ main_thread = Thread.new {
   require_relative("./lib/eaccess.rb")
 
   if @options.login_character
-    if File.exists?("#{DATA_DIR}/entry.dat")
-      entry_data = File.open("#{DATA_DIR}/entry.dat", 'r') { |file|
+    if File.exists?(@options.entryfile)
+      entry_data = File.open(@options.entryfile, 'r') { |file|
         begin
           Marshal.load(file.read.unpack('m').first)
         rescue
