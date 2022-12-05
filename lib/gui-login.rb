@@ -1,7 +1,6 @@
 # Lich5 Carve out - GTK3 lich-login code stuff
 
 def gui_login(entry_data_file)
-
   @autosort_state = Lich.track_autosort_state
   @tab_layout_state = Lich.track_layout_state
   @theme_state = Lich.track_dark_mode
