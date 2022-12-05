@@ -11,22 +11,22 @@ module Win32
   def Win32.ShellExecuteEx(args)
     struct = [(SIZEOF_LONG * 15), 0, 0, 0, 0, 0, 0, SW_SHOW, 0, 0, 0, 0, 0, 0, 0]
     struct_index = {
-        :cbSize => 0,
-        :fMask => 1,
-        :hwnd => 2,
-        :lpVerb => 3,
-        :lpFile => 4,
-        :lpParameters => 5,
-        :lpDirectory => 6,
-        :nShow => 7,
-        :hInstApp => 8,
-        :lpIDList => 9,
-        :lpClass => 10,
-        :hkeyClass => 11,
-        :dwHotKey => 12,
-        :hIcon => 13,
-        :hMonitor => 13,
-        :hProcess => 14
+      :cbSize => 0,
+      :fMask => 1,
+      :hwnd => 2,
+      :lpVerb => 3,
+      :lpFile => 4,
+      :lpParameters => 5,
+      :lpDirectory => 6,
+      :nShow => 7,
+      :hInstApp => 8,
+      :lpIDList => 9,
+      :lpClass => 10,
+      :hkeyClass => 11,
+      :dwHotKey => 12,
+      :hIcon => 13,
+      :hMonitor => 13,
+      :hProcess => 14
     }
 
     args[:fMask] ||= Win32::SEE_MASK_NOCLOSEPROCESS

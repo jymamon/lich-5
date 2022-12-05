@@ -13,15 +13,6 @@ Layout/EndOfLine:
   Exclude:
     - 'lib/front-end.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_braces
-Layout/FirstHashElementIndentation:
-  Exclude:
-    - 'lib/platform/win32/kernel32.rb'
-    - 'lib/platform/win32/shell32.rb'
-
 # Offense count: 34
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.

@@ -69,20 +69,20 @@ module Win32
 
     lpStartupInfo = [68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     lpStartupInfo_index = {
-        :lpDesktop => 2,
-        :lpTitle => 3,
-        :dwX => 4,
-        :dwY => 5,
-        :dwXSize => 6,
-        :dwYSize => 7,
-        :dwXCountChars => 8,
-        :dwYCountChars => 9,
-        :dwFillAttribute => 10,
-        :dwFlags => 11,
-        :wShowWindow => 12,
-        :hStdInput => 15,
-        :hStdOutput => 16,
-        :hStdError => 17
+      :lpDesktop => 2,
+      :lpTitle => 3,
+      :dwX => 4,
+      :dwY => 5,
+      :dwXSize => 6,
+      :dwYSize => 7,
+      :dwXCountChars => 8,
+      :dwYCountChars => 9,
+      :dwFillAttribute => 10,
+      :dwFlags => 11,
+      :wShowWindow => 12,
+      :hStdInput => 15,
+      :hStdOutput => 16,
+      :hStdError => 17
     }
 
     for sym in [:lpDesktop, :lpTitle]
