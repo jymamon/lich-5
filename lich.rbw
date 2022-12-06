@@ -1244,11 +1244,11 @@ class Script
         @vars.concat args[:args].scan(/[^\s"]*(?<!\\)"(?:\\"|[^"])+(?<!\\)"[^\s]*|(?:\\"|[^"\s])+/).collect { |s| s.gsub(/(?<!\\)"/, '').gsub('\\"', '"') }
       end
     elsif args[:args].class == Array
-      unless (args[:args].nil? || args[:args].empty?)
+      if (args[:args].nil? || args[:args].empty?)
+        @vars = Array.new
+      else
         @vars = [args[:args].join(" ")]
         @vars.concat args[:args]
-      else
-        @vars = Array.new
       end
     else
       @vars = Array.new
@@ -2752,10 +2752,10 @@ module Games
             n += 1
             break if n >= 4
           end
-          unless n >= 4
-            @@renewed = Time.at(Time.now.to_f - (Spellsong.duration - old * 60.to_f))
-          else
+          if n >= 4
             @@renewed = Time.now
+          else
+            @@renewed = Time.at(Time.now.to_f - (Spellsong.duration - old * 60.to_f))
           end
         }
         nil

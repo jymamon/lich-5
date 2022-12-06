@@ -1255,18 +1255,18 @@ def match(label, string)
   strings.flatten!
   unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo("Error! 'match' was given no strings to look for!"); sleep 1; return false end
-  unless strings.length == 2
-    while line_in = script.gets
-      strings.each { |string|
-        if line_in =~ /#{string}/ then return $~.to_s end
-      }
-    end
-  else
+  if strings.length == 2
     if script.respond_to?(:match_stack_add)
       script.match_stack_add(strings.first.to_s, strings.last)
     else
       script.match_stack_labels.push(strings[0].to_s)
       script.match_stack_strings.push(strings[1])
+    end
+  else
+    while line_in = script.gets
+      strings.each { |string|
+        if line_in =~ /#{string}/ then return $~.to_s end
+      }
     end
   end
 end
@@ -1326,13 +1326,7 @@ end
 def matchwait(*strings)
   unless script = Script.current then respond('--- matchwait: Unable to identify calling script.'); return false; end
   strings.flatten!
-  unless strings.empty?
-    regexpstr = strings.collect { |str| str.kind_of?(Regexp) ? str.source : str }.join('|')
-    regexobj = /#{regexpstr}/
-    while line_in = script.gets
-      return line_in if line_in =~ regexobj
-    end
-  else
+  if strings.empty?
     strings = script.match_stack_strings
     labels = script.match_stack_labels
     regexpstr = /#{strings.join('|')}/i
@@ -1342,6 +1336,12 @@ def matchwait(*strings)
         script.match_stack_clear
         goto jmp
       end
+    end
+  else
+    regexpstr = strings.collect { |str| str.kind_of?(Regexp) ? str.source : str }.join('|')
+    regexobj = /#{regexpstr}/
+    while line_in = script.gets
+      return line_in if line_in =~ regexobj
     end
   end
 end
@@ -1757,19 +1757,19 @@ def dothis(action, success_line)
         break
       elsif line == 'That is impossible to do while unconscious!'
         100.times {
-          unless line = get?
-            sleep 0.1
-          else
+          if line = get?
             break if line =~ /Your thoughts slowly come back to you as you find yourself lying on the ground\.  You must have been sleeping\.$|^You wake up from your slumber\.$/
+          else
+            sleep 0.1
           end
         }
         break
       elsif line == "You don't seem to be able to move to do that."
         100.times {
-          unless line = get?
-            sleep 0.1
-          else
+          if line = get?
             break if line == 'The restricting force that envelops you dissolves away.'
+          else
+            sleep 0.1
           end
         }
         break
@@ -1778,11 +1778,11 @@ def dothis(action, success_line)
         break
       elsif line == 'You find that impossible under the effects of the lullabye.'
         100.times {
-          unless line = get?
-            sleep 0.1
-          else
+          if line = get?
             # fixme
             break if line == 'You shake off the effects of the lullabye.'
+          else
+            sleep 0.1
           end
         }
         break
@@ -1821,19 +1821,19 @@ def dothistimeout(action, timeout, success_line)
         break
       elsif line == 'That is impossible to do while unconscious!'
         100.times {
-          unless line = get?
-            sleep 0.1
-          else
+          if line = get?
             break if line =~ /Your thoughts slowly come back to you as you find yourself lying on the ground\.  You must have been sleeping\.$|^You wake up from your slumber\.$/
+          else
+            sleep 0.1
           end
         }
         break
       elsif line == "You don't seem to be able to move to do that."
         100.times {
-          unless line = get?
-            sleep 0.1
-          else
+          if line = get?
             break if line == 'The restricting force that envelops you dissolves away.'
+          else
+            sleep 0.1
           end
         }
         break
@@ -1842,11 +1842,11 @@ def dothistimeout(action, timeout, success_line)
         break
       elsif line == 'You find that impossible under the effects of the lullabye.'
         100.times {
-          unless line = get?
-            sleep 0.1
-          else
+          if line = get?
             # fixme
             break if line == 'You shake off the effects of the lullabye.'
+          else
+            sleep 0.1
           end
         }
         break

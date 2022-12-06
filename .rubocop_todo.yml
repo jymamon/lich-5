@@ -1333,16 +1333,6 @@ Style/TrivialAccessors:
     - 'lib/spell.rb'
     - 'lich.rbw'
 
-# Offense count: 16
-# This cop supports safe autocorrection (--autocorrect).
-Style/UnlessElse:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/global_defs.rb'
-    - 'lib/spell.rb'
-    - 'lib/update.rb'
-    - 'lich.rbw'
-
 # Offense count: 17
 # This cop supports safe autocorrection (--autocorrect).
 Style/UnpackFirst:

@@ -723,37 +723,37 @@ module Games
       end
 
       def force_cast(target = nil, arg_options = nil, results_of_interest = nil)
-        unless arg_options.nil? || arg_options.empty?
-          arg_options = "cast #{arg_options}"
-        else
+        if arg_options.nil? || arg_options.empty?
           arg_options = "cast"
+        else
+          arg_options = "cast #{arg_options}"
         end
         cast(target, results_of_interest, arg_options)
       end
 
       def force_channel(target = nil, arg_options = nil, results_of_interest = nil)
-        unless arg_options.nil? || arg_options.empty?
-          arg_options = "channel #{arg_options}"
-        else
+        if arg_options.nil? || arg_options.empty?
           arg_options = "channel"
+        else
+          arg_options = "channel #{arg_options}"
         end
         cast(target, results_of_interest, arg_options)
       end
 
       def force_evoke(target = nil, arg_options = nil, results_of_interest = nil)
-        unless arg_options.nil? || arg_options.empty?
-          arg_options = "evoke #{arg_options}"
-        else
+        if arg_options.nil? || arg_options.empty?
           arg_options = "evoke"
+        else
+          arg_options = "evoke #{arg_options}"
         end
         cast(target, results_of_interest, arg_options)
       end
 
       def force_incant(arg_options = nil, results_of_interest = nil)
-        unless arg_options.nil? || arg_options.empty?
-          arg_options = "incant #{arg_options}"
-        else
+        if arg_options.nil? || arg_options.empty?
           arg_options = "incant"
+        else
+          arg_options = "incant #{arg_options}"
         end
         cast(nil, results_of_interest, arg_options)
       end

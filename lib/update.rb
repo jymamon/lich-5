@@ -292,7 +292,12 @@ module Lich
           remote_repo = "https://raw.githubusercontent.com/elanthia-online/lich-5/master/data"
           requested_file =~ /(\.(?:xml|ui))$/ ? requested_file_ext = $1.dup : requested_file_ext = "bad extension"
         end
-        unless requested_file_ext == "bad extension"
+        if requested_file_ext == "bad extension"
+          _respond
+          _respond "The requested file #{requested_file} has an incorrect extension."
+          _respond "Valid extensions are '.lic' for scripts, '.rb' for library files,"
+          _respond "and '.xml' or '.ui' for data files. Please correct and try again."
+        else
           File.delete(File.join(location, requested_file)) if File.exists?(File.join(location, requested_file))
           begin
             File.open(File.join(location, requested_file), "wb") do |file|
@@ -308,11 +313,6 @@ module Lich
             _respond "Check the spelling of your requested file, or use ';jinx' to"
             _respond "to download #{requested_file} from another respository."
           end
-        else
-          _respond
-          _respond "The requested file #{requested_file} has an incorrect extension."
-          _respond "Valid extensions are '.lic' for scripts, '.rb' for library files,"
-          _respond "and '.xml' or '.ui' for data files. Please correct and try again."
         end
       end
       # End module definitions
