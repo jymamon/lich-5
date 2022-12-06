@@ -626,7 +626,7 @@ class XMLParser
                 @pc.status.concat " #{$2}" if $2
               end
               if text_string =~ /(?:^Also here: |, )(?:a )?([a-z\s]+)?([\w\s\-!?',]+)?$/
-                @player_status = ($1.strip.gsub('the body of', 'dead')) if $1
+                @player_status = $1.strip.gsub('the body of', 'dead') if $1
                 @player_title = $2
               end
             end

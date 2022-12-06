@@ -202,7 +202,7 @@ required_modules = [
         ((RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)) or
         ENV['DISPLAY'] or
         ((ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and @options.force_gui) or
-        (!$stdout.isatty)
+        !$stdout.isatty
       )
     },
   },

@@ -174,7 +174,7 @@ module Games
         Spell.load unless @@loaded
         if val.instance_of?(Spell)
           val
-        elsif (val.instance_of?(Integer)) or (val.instance_of?(String) and val =~ /^[0-9]+$/)
+        elsif val.instance_of?(Integer) or (val.instance_of?(String) and val =~ /^[0-9]+$/)
           @@list.find { |spell| spell.num == val.to_i }
         else
           val = Regexp.escape(val)
@@ -515,7 +515,7 @@ module Games
           ## convert Spell[9699].active? to Effects::Debuffs test (if Debuffs is where it shows)
           if Feat.known?(:mental_acuity) and (Spell[9699].active? or !checkstamina(mana_cost(options) * 2))
             false
-          elsif (!Feat.known?(:mental_acuity)) && (!checkmana(mana_cost(options)) or (Spell[515].active? and !checkmana(mana_cost(options) + [mana_cost(release_options) / 4, 1].max)))
+          elsif !Feat.known?(:mental_acuity) && (!checkmana(mana_cost(options)) or (Spell[515].active? and !checkmana(mana_cost(options) + [mana_cost(release_options) / 4, 1].max)))
             false
           else
             true
@@ -610,7 +610,7 @@ module Games
               end
             end
 
-            if (((target.nil? || target.to_s.empty?) && !(@no_incant)) && (cast_cmd == 'cast' && arg_options.nil?) || cast_cmd == 'incant') && cast_cmd !~ /^(?:channel|evoke)/
+            if (((target.nil? || target.to_s.empty?) && !@no_incant) && (cast_cmd == 'cast' && arg_options.nil?) || cast_cmd == 'incant') && cast_cmd !~ /^(?:channel|evoke)/
               cast_cmd = "incant #{@num}"
             elsif (target.nil? or target.to_s.empty?) and (@type =~ /attack/i) and ![410, 435, 525, 912, 909, 609].include?(@num)
               cast_cmd += ' target'

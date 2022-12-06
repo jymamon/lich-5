@@ -743,7 +743,7 @@ end
 def check_mind(string = nil)
   if string.nil?
     return XMLData.mind_text
-  elsif (string.instance_of?(String)) and (string.to_i == 0)
+  elsif string.instance_of?(String) and (string.to_i == 0)
     if string =~ /#{XMLData.mind_text}/i
       return true
     else
@@ -915,7 +915,7 @@ end
 def checkstance(num = nil)
   if num.nil?
     XMLData.stance_text
-  elsif (num.instance_of?(String)) and (num.to_i == 0)
+  elsif num.instance_of?(String) and (num.to_i == 0)
     if num =~ /off/i
       XMLData.stance_value == 0
     elsif num =~ /adv/i
@@ -932,7 +932,7 @@ def checkstance(num = nil)
       echo "checkstance: invalid argument (#{num}).  Must be off/adv/for/neu/gua/def or 0-100"
       nil
     end
-  elsif (num.instance_of?(Integer)) or (num =~ /^[0-9]+$/ and num = num.to_i)
+  elsif num.instance_of?(Integer) or (num =~ /^[0-9]+$/ and num = num.to_i)
     XMLData.stance_value == num.to_i
   else
     echo "checkstance: invalid argument (#{num}).  Must be off/adv/for/neu/gua/def or 0-100"
@@ -951,7 +951,7 @@ end
 def checkencumbrance(string = nil)
   if string.nil?
     XMLData.encumbrance_text
-  elsif (string.instance_of?(Integer)) or (string =~ /^[0-9]+$/ and string = string.to_i)
+  elsif string.instance_of?(Integer) or (string =~ /^[0-9]+$/ and string = string.to_i)
     string <= XMLData.encumbrance_value
   else
     # fixme
@@ -1233,9 +1233,9 @@ end
 def cast(spell, target = nil, results_of_interest = nil)
   if spell.instance_of?(Spell)
     spell.cast(target, results_of_interest)
-  elsif ((spell.instance_of?(Integer)) or (spell.to_s =~ /^[0-9]+$/)) and (find_spell = Spell[spell.to_i])
+  elsif (spell.instance_of?(Integer) or (spell.to_s =~ /^[0-9]+$/)) and (find_spell = Spell[spell.to_i])
     find_spell.cast(target, results_of_interest)
-  elsif (spell.instance_of?(String)) and (find_spell = Spell[spell])
+  elsif spell.instance_of?(String) and (find_spell = Spell[spell])
     find_spell.cast(target, results_of_interest)
   else
     echo "cast: invalid spell (#{spell})"
@@ -1355,7 +1355,7 @@ end
 def waitfor(*strings)
   unless script = Script.current then respond('--- waitfor: Unable to identify calling script.'); return false; end
   strings.flatten!
-  if (script.instance_of?(WizardScript)) and (strings.length == 1) and (strings.first.strip == '>')
+  if script.instance_of?(WizardScript) and (strings.length == 1) and (strings.first.strip == '>')
     return script.gets
   end
 
@@ -1402,7 +1402,7 @@ def reget(*lines)
   end
   history = history.split("\n").delete_if { |line| line.nil? or line.empty? or line =~ /^[\r\n\s\t]*$/ }
   if lines.first.is_a?(Numeric) or lines.first.to_i.nonzero?
-    history = history[-([lines.shift.to_i, history.length].min)..-1]
+    history = history[-[lines.shift.to_i, history.length].min..-1]
   end
   unless lines.empty? or lines.nil?
     regex = /#{lines.join('|')}/i
@@ -1484,7 +1484,7 @@ end
 
 def quiet_exit
   script = Script.current
-  script.quiet = !(script.quiet)
+  script.quiet = !script.quiet
 end
 
 def matchfindexact(*strings)

@@ -700,18 +700,6 @@ Style/RedundantInterpolation:
     - 'lib/init.rb'
     - 'lib/update.rb'
 
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantParentheses:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/init.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/spell.rb'
-    - 'lib/xmlparser.rb'
-    - 'lich.rbw'
-
 # Offense count: 198
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowMultipleReturnValues.

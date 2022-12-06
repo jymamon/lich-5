@@ -77,7 +77,7 @@ class Map
 
   def self.[](val)
     Map.load unless @@loaded
-    if (val.instance_of?(Integer)) or (val.instance_of?(Bignum)) or val =~ /^[0-9]+$/
+    if val.instance_of?(Integer) or val.instance_of?(Bignum) or val =~ /^[0-9]+$/
       @@list[val.to_i]
     elsif val =~ /^u(-?\d+)$/i
       uid_request = $1.dup.to_i
@@ -486,7 +486,7 @@ class Map
                     end
                   }
                   room['timeto'].keys.each { |k|
-                    if (room['timeto'][k].instance_of?(String)) and (room['timeto'][k][0..2] == ';e ')
+                    if room['timeto'][k].instance_of?(String) and (room['timeto'][k][0..2] == ';e ')
                       room['timeto'][k] = StringProc.new(room['timeto'][k][3..-1])
                     end
                   }
@@ -706,7 +706,7 @@ class Map
   end
 
   def to_json(*args)
-    mapjson = ({
+    mapjson = {
       :id => @id,
       :title => @title,
       :description => @description,
@@ -722,7 +722,7 @@ class Map
       :check_location => @check_location,
       :unique_loot => @unique_loot,
       :uid => @uid,
-    }).delete_if { |a, b| b.nil? or (b.instance_of?(Array) and b.empty?) }
+    }.delete_if { |a, b| b.nil? or (b.instance_of?(Array) and b.empty?) }
     JSON.pretty_generate(mapjson)
   end
 
