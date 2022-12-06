@@ -775,7 +775,7 @@ class Map
         File.open(filename, 'w') { |file|
           file.write "<map>\n"
           @@list.each { |room|
-            next if room == nil
+            next if room.nil?
 
             if room.location
               location = " location=#{(room.location.gsub(/(<|>|"|'|&)/) { escape[$1] }).inspect}"

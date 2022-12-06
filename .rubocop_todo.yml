@@ -641,6 +641,7 @@ Style/MutableConstant:
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, MinBodyLength.
 # SupportedStyles: skip_modifier_ifs, always
+# Just enough churn that this is worth a little more review
 Style/Next:
   Exclude:
     - 'lib/eaccess.rb'
@@ -649,15 +650,6 @@ Style/Next:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
     - 'lich.rbw'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: predicate, comparison
-Style/NilComparison:
-  Exclude:
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
