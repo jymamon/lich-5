@@ -434,6 +434,22 @@ Style/CombinableLoops:
   Exclude:
     - 'lich.rbw'
 
+# Offense count: 27
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: Keywords, RequireColon.
+# Keywords: TODO, FIXME, OPTIMIZE, HACK, REVIEW, NOTE
+Style/CommentAnnotation:
+  Exclude:
+    - 'lib/global_defs.rb'
+    - 'lib/init.rb'
+    - 'lib/lich.rb'
+    - 'lib/map_dr.rb'
+    - 'lib/map_gs.rb'
+    - 'lib/platform/wine.rb'
+    - 'lib/spell.rb'
+    - 'lib/xmlparser.rb'
+    - 'lich.rbw'
+
 # Offense count: 13
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/CommentedKeyword:
@@ -441,28 +457,6 @@ Style/CommentedKeyword:
     - 'lib/gui-saved-login.rb'
     - 'lib/map_gs.rb'
     - 'lib/spell.rb'
-    - 'lich.rbw'
-
-# Offense count: 97
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.
-# SupportedStyles: assign_to_condition, assign_inside_condition
-Style/ConditionalAssignment:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/gui-login.rb'
-    - 'lib/gui-manual-login.rb'
-    - 'lib/gui-saved-login.rb'
-    - 'lib/init.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/platform/win32/kernel32.rb'
-    - 'lib/platform/wine.rb'
-    - 'lib/spell.rb'
-    - 'lib/stash.rb'
-    - 'lib/update.rb'
-    - 'lib/xmlparser.rb'
     - 'lich.rbw'
 
 # Offense count: 74

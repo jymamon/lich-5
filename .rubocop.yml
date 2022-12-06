@@ -81,6 +81,12 @@ Style/BlockDelimiters:
   Enabled: true
   EnforcedStyle: always_braces
 
+Style/ConditionalAssignment:
+  Enabled: true
+  EnforcedStyle: assign_inside_condition
+  SingleLineConditionsOnly: true
+  IncludeTernaryExpressions: false
+
 Style/NumericLiterals:
   # Enabled is recommended.
   Enabled: false
