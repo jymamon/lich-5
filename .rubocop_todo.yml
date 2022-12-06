@@ -429,17 +429,6 @@ Style/ClassVars:
     - 'lib/xmlparser.rb'
     - 'lich.rbw'
 
-# Offense count: 22
-# This cop supports safe autocorrection (--autocorrect).
-Style/ColonMethodCall:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/gui-login.rb'
-    - 'lib/gui-saved-login.rb'
-    - 'lib/stash.rb'
-    - 'lib/update.rb'
-    - 'lib/util.rb'
-
 # Offense count: 1
 Style/CombinableLoops:
   Exclude:

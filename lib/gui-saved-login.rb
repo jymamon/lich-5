@@ -23,7 +23,7 @@ else
     @account_book.show_border = true
 
     unless @theme_state == true
-      lightgrey = Gdk::RGBA::parse('#d3d3d3')
+      lightgrey = Gdk::RGBA.parse('#d3d3d3')
       @account_book.override_background_color(:normal, lightgrey)
 
       @tab_provider = Gtk::CssProvider.new
@@ -360,12 +360,12 @@ else
       Gtk::Settings.default.gtk_application_prefer_dark_theme = true
       @play_button.style_context.remove_provider(@button_provider) if defined?(@button_provider)
       @account_book.style_context.remove_provider(@tab_provider) if defined?(@tab_provider)
-      @account_book.override_background_color(:normal, Gdk::RGBA::parse('rgba(0,0,0,0)'))
-      @notebook.override_background_color(:normal, Gdk::RGBA::parse('rgba(0,0,0,0)'))
+      @account_book.override_background_color(:normal, Gdk::RGBA.parse('rgba(0,0,0,0)'))
+      @notebook.override_background_color(:normal, Gdk::RGBA.parse('rgba(0,0,0,0)'))
       Lich.track_dark_mode = true
     else
       Gtk::Settings.default.gtk_application_prefer_dark_theme = false
-      lightgrey = Gdk::RGBA::parse('#d3d3d3')
+      lightgrey = Gdk::RGBA.parse('#d3d3d3')
       @account_book.override_background_color(:normal, lightgrey)
       @notebook.override_background_color(:normal, lightgrey)
       Lich.track_dark_mode = false

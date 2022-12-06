@@ -59,7 +59,7 @@ module Lich
       Script.current.want_downstream_xml = true
 
       begin
-        Timeout::timeout(timeout, Interrupt) {
+        Timeout.timeout(timeout, Interrupt) {
           DownstreamHook.add(name, proc { |xml|
             if filter
               if xml =~ end_pattern
@@ -111,7 +111,7 @@ module Lich
       Script.current.want_downstream_xml = false
 
       begin
-        Timeout::timeout(timeout, Interrupt) {
+        Timeout.timeout(timeout, Interrupt) {
           DownstreamHook.add(name, proc { |line|
             if filter
               if line =~ end_pattern

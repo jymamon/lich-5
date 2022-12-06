@@ -106,13 +106,13 @@ module Lich
             end
           }
           if lootsack
-            result = Lich::Stash::add_to_bag(lootsack, GameObj.left_hand)
+            result = Lich::Stash.add_to_bag(lootsack, GameObj.left_hand)
           else
             result = nil
           end
           if result.nil? or !result
             for container in other_containers.call
-              result = Lich::Stash::add_to_bag(container, GameObj.left_hand)
+              result = Lich::Stash.add_to_bag(container, GameObj.left_hand)
               break if result
             end
           end
@@ -137,16 +137,16 @@ module Lich
           weaponsack = GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack.strip)}/i } || GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack).sub(' ', ' .*')}/i }
         end
         if weaponsack
-          result = Lich::Stash::add_to_bag(weaponsack, GameObj.right_hand)
+          result = Lich::Stash.add_to_bag(weaponsack, GameObj.right_hand)
         elsif lootsack
-          result = Lich::Stash::add_to_bag(lootsack, GameObj.right_hand)
+          result = Lich::Stash.add_to_bag(lootsack, GameObj.right_hand)
         else
           result = nil
         end
         sleep 0.1
         if result.nil? or !result
           for container in other_containers.call
-            result = Lich::Stash::add_to_bag(container, GameObj.right_hand)
+            result = Lich::Stash.add_to_bag(container, GameObj.right_hand)
             break if result
           end
         end
