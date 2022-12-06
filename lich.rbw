@@ -96,11 +96,11 @@ end
 
 class Numeric
   def as_time
-    sprintf('%d:%02d:%02d', (self / 60).truncate, self.truncate % 60, ((self % 1) * 60).truncate)
+    sprintf('%d:%02d:%02d', (self / 60).truncate, truncate % 60, ((self % 1) * 60).truncate)
   end
 
   def with_commas
-    self.to_s.reverse.scan(/(?:\d*\.)?\d{1,3}-?/).join(',').reverse
+    to_s.reverse.scan(/(?:\d*\.)?\d{1,3}-?/).join(',').reverse
   end
 end
 
@@ -112,7 +112,7 @@ class String
   end
 
   def to_s
-    self.dup
+    dup
   end
 
   def stream
@@ -199,7 +199,7 @@ class LimitedArray < Array
   end
 
   def push(line)
-    self.shift while self.length >= @max_size
+    shift while length >= @max_size
     super
   end
 

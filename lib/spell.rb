@@ -263,7 +263,7 @@ module Games
       end
 
       def time_per(options = {})
-        formula = self.time_per_formula(options)
+        formula = time_per_formula(options)
         if options[:line]
           line = options[:line]
         end
@@ -276,12 +276,12 @@ module Games
       end
 
       def timeleft
-        if self.time_per_formula.to_s == 'Spellsong.timeleft'
+        if time_per_formula.to_s == 'Spellsong.timeleft'
           @timeleft = Spellsong.timeleft
         else
           @timeleft -= ((Time.now - @timestamp) / 60.to_f)
           if @timeleft <= 0
-            self.putdown
+            putdown
             return 0.to_f
           end
         end
@@ -290,11 +290,11 @@ module Games
       end
 
       def minsleft
-        self.timeleft
+        timeleft
       end
 
       def secsleft
-        self.timeleft * 60
+        timeleft * 60
       end
 
       def active=(val)
@@ -302,7 +302,7 @@ module Games
       end
 
       def active?
-        (self.timeleft > 0) and @active
+        (timeleft > 0) and @active
       end
 
       def stackable?(options = {})
@@ -438,7 +438,7 @@ module Games
       end
 
       def available?(options = {})
-        if self.known?
+        if known?
           if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
             if options[:target] and (options[:target].downcase == options[:caster].downcase)
               true
@@ -487,9 +487,9 @@ module Games
 
       def putup(options = {})
         if stackable?(options)
-          self.timeleft = [self.timeleft + self.time_per(options), self.max_duration(options)].min
+          self.timeleft = [timeleft + time_per(options), max_duration(options)].min
         else
-          self.timeleft = [self.time_per(options), self.max_duration(options)].min
+          self.timeleft = [time_per(options), max_duration(options)].min
         end
         @active = true
       end
@@ -500,22 +500,22 @@ module Games
       end
 
       def remaining
-        self.timeleft.as_time
+        timeleft.as_time
       end
 
       def affordable?(options = {})
         # fixme: deal with them dirty bards!
         release_options = options.dup
         release_options[:multicast] = nil
-        if (self.stamina_cost(options) > 0) and (Spell[9699].active? or not checkstamina(self.stamina_cost(options)))
+        if (stamina_cost(options) > 0) and (Spell[9699].active? or not checkstamina(stamina_cost(options)))
           false
-        elsif (self.spirit_cost(options) > 0) and not checkspirit(self.spirit_cost(options) + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
+        elsif (spirit_cost(options) > 0) and not checkspirit(spirit_cost(options) + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
           false
-        elsif (self.mana_cost(options) > 0)
+        elsif (mana_cost(options) > 0)
           ## convert Spell[9699].active? to Effects::Debuffs test (if Debuffs is where it shows)
-          if Feat.known?(:mental_acuity) and (Spell[9699].active? or not checkstamina(self.mana_cost(options) * 2))
+          if Feat.known?(:mental_acuity) and (Spell[9699].active? or not checkstamina(mana_cost(options) * 2))
             false
-          elsif (!Feat.known?(:mental_acuity)) && (!checkmana(self.mana_cost(options)) or (Spell[515].active? and !checkmana(self.mana_cost(options) + [self.mana_cost(release_options) / 4, 1].max)))
+          elsif (!Feat.known?(:mental_acuity)) && (!checkmana(mana_cost(options)) or (Spell[515].active? and !checkmana(mana_cost(options) + [mana_cost(release_options) / 4, 1].max)))
             false
           else
             true
@@ -543,24 +543,24 @@ module Games
         # fixme: find multicast in target and check mana for it
         check_energy = proc {
           if Feat.known?(:mental_acuity)
-            unless (self.mana_cost <= 0) or checkstamina(self.mana_cost * 2)
+            unless (mana_cost <= 0) or checkstamina(mana_cost * 2)
               echo 'cast: not enough stamina there, Monk!'
               sleep 0.1
               return false
             end
           else
-            unless (self.mana_cost <= 0) or checkmana(self.mana_cost)
+            unless (mana_cost <= 0) or checkmana(mana_cost)
               echo 'cast: not enough mana'
               sleep 0.1
               return false
             end
           end
-          unless (self.spirit_cost > 0) or checkspirit(self.spirit_cost + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
+          unless (spirit_cost > 0) or checkspirit(spirit_cost + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
             echo 'cast: not enough spirit'
             sleep 0.1
             return false
           end
-          unless (self.stamina_cost <= 0) or checkstamina(self.stamina_cost)
+          unless (stamina_cost <= 0) or checkstamina(stamina_cost)
             echo 'cast: not enough stamina'
             sleep 0.1
             return false
@@ -637,17 +637,17 @@ module Games
                 unless checkprep == @name
                   unless checkprep == 'None'
                     dothistimeout 'release', 5, /^You feel the magic of your spell rush away from you\.$|^You don't have a prepared spell to release!$/
-                    unless (self.mana_cost <= 0) or checkmana(self.mana_cost)
+                    unless (mana_cost <= 0) or checkmana(mana_cost)
                       echo 'cast: not enough mana'
                       sleep 0.1
                       return false
                     end
-                    unless (self.spirit_cost <= 0) or checkspirit(self.spirit_cost + 1 + (if checkspell(9912) then 1 else 0 end) + (if checkspell(9913) then 1 else 0 end) + (if checkspell(9914) then 1 else 0 end) + (if checkspell(9916) then 5 else 0 end))
+                    unless (spirit_cost <= 0) or checkspirit(spirit_cost + 1 + (if checkspell(9912) then 1 else 0 end) + (if checkspell(9913) then 1 else 0 end) + (if checkspell(9914) then 1 else 0 end) + (if checkspell(9916) then 5 else 0 end))
                       echo 'cast: not enough spirit'
                       sleep 0.1
                       return false
                     end
-                    unless (self.stamina_cost <= 0) or checkstamina(self.stamina_cost)
+                    unless (stamina_cost <= 0) or checkstamina(stamina_cost)
                       echo 'cast: not enough stamina'
                       sleep 0.1
                       return false
@@ -661,7 +661,7 @@ module Games
                       break
                     elsif prepare_result == 'You already have a spell readied!  You must RELEASE it if you wish to prepare another!'
                       dothistimeout 'release', 5, /^You feel the magic of your spell rush away from you\.$|^You don't have a prepared spell to release!$/
-                      unless (self.mana_cost <= 0) or checkmana(self.mana_cost)
+                      unless (mana_cost <= 0) or checkmana(mana_cost)
                         echo 'cast: not enough mana'
                         sleep 0.1
                         return false
@@ -823,28 +823,28 @@ module Games
       end
 
       # for backwards compatiblity
-      def duration;      self.time_per_formula;            end
-      def cost;          self.mana_cost_formula    || '0'; end
-      def manaCost;      self.mana_cost_formula    || '0'; end
-      def spiritCost;    self.spirit_cost_formula  || '0'; end
-      def staminaCost;   self.stamina_cost_formula || '0'; end
-      def boltAS;        self.bolt_as_formula;             end
-      def physicalAS;    self.physical_as_formula;         end
-      def boltDS;        self.bolt_ds_formula;             end
-      def physicalDS;    self.physical_ds_formula;         end
-      def elementalCS;   self.elemental_cs_formula;        end
-      def mentalCS;      self.mental_cs_formula;           end
-      def spiritCS;      self.spirit_cs_formula;           end
-      def sorcererCS;    self.sorcerer_cs_formula;         end
-      def elementalTD;   self.elemental_td_formula;        end
-      def mentalTD;      self.mental_td_formula;           end
-      def spiritTD;      self.spirit_td_formula;           end
-      def sorcererTD;    self.sorcerer_td_formula;         end
-      def castProc;      @cast_proc;                       end
-      def stacks;        self.stackable?                   end
-      def command;       nil;                              end
-      def circlename;    self.circle_name;                 end
-      def selfonly;      @availability != 'all';           end
+      def duration;      time_per_formula;            end
+      def cost;          mana_cost_formula    || '0'; end
+      def manaCost;      mana_cost_formula    || '0'; end
+      def spiritCost;    spirit_cost_formula  || '0'; end
+      def staminaCost;   stamina_cost_formula || '0'; end
+      def boltAS;        bolt_as_formula;             end
+      def physicalAS;    physical_as_formula;         end
+      def boltDS;        bolt_ds_formula;             end
+      def physicalDS;    physical_ds_formula;         end
+      def elementalCS;   elemental_cs_formula;        end
+      def mentalCS;      mental_cs_formula;           end
+      def spiritCS;      spirit_cs_formula;           end
+      def sorcererCS;    sorcerer_cs_formula;         end
+      def elementalTD;   elemental_td_formula;        end
+      def mentalTD;      mental_td_formula;           end
+      def spiritTD;      spirit_td_formula;           end
+      def sorcererTD;    sorcerer_td_formula;         end
+      def castProc;      @cast_proc; end
+      def stacks;        stackable? end
+      def command;       nil; end
+      def circlename;    circle_name; end
+      def selfonly;      @availability != 'all'; end
     end # class
   end # mod
 end # mod

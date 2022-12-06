@@ -336,7 +336,7 @@ class XMLParser
           @concentration, @max_concentration = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
         elsif PSM_3_DIALOG_IDS.include?(@active_ids[-2])
           # puts "kind=(%s) name=%s attributes=%s" % [@active_ids[-2], name, attributes]
-          self.parse_psm3_progressbar(@active_ids[-2], attributes)
+          parse_psm3_progressbar(@active_ids[-2], attributes)
           # since we received an updated spell duration, let's signal infomon to update
           $process_legacy_spell_durations = true
         end

@@ -16,26 +16,26 @@ module Lich
       def self.request(type = '--announce')
         case type
         when /--announce|-a/
-          self.announce
+          announce
         when /--help|-h/
-          self.help # Ok, that's just wrong.
+          help # Ok, that's just wrong.
         when /--update|-u/
-          self.download_update
+          download_update
         when /--refresh/
           _respond; _respond 'This command has been removed.'
         when /--revert|-r/
-          self.revert
+          revert
         when /--(?:(script|library|data))=(.*)/
-          self.update_file($1.dup, $2.dup)
+          update_file($1.dup, $2.dup)
         when /--snapshot|-s/ # this one needs to be after --script
-          self.snapshot
+          snapshot
         else
           _respond; _respond "Command '#{type}' unknown, illegitimate and ignored.  Exiting . . ."; _respond
         end
       end
 
       def self.announce
-        self.prep_update
+        prep_update
         if "#{LICH_VERSION}".chr == '5'
           if Gem::Version.new(@current) < Gem::Version.new(@update_to)
             if !@new_features.empty?
@@ -151,9 +151,9 @@ module Lich
         _respond; _respond 'Getting reaady to update.  First we will create a'
         _respond 'snapshot in case there are problems with the update.'
 
-        self.snapshot
+        snapshot
 
-        self.prep_update if @update_to.nil? or @update_to.empty?
+        prep_update if @update_to.nil? or @update_to.empty?
         if Gem::Version.new("#{@update_to}") <= Gem::Version.new("#{@current}")
           _respond ''; _respond "Lich version #{LICH_VERSION} is good.  Enjoy!"; _respond ''
         else

@@ -1044,19 +1044,6 @@ Style/RedundantRegexpEscape:
 Style/RedundantReturn:
   Enabled: false
 
-# Offense count: 81
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/messaging.rb'
-    - 'lib/spell.rb'
-    - 'lib/update.rb'
-    - 'lib/util.rb'
-    - 'lib/xmlparser.rb'
-    - 'lich.rbw'
-
 # Offense count: 4
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RedundantSort:

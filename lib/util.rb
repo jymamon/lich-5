@@ -47,7 +47,7 @@ module Lich
 
     def self.quiet_command_xml(command, start_pattern, end_pattern = /<prompt/, include_end = true, timeout = 5, silent = true)
       result = []
-      name = self.anon_hook
+      name = anon_hook
       filter = false
       if silent
         save_script_silent = Script.current.silent
@@ -99,7 +99,7 @@ module Lich
 
     def self.quiet_command(command, start_pattern, end_pattern, include_end = true, timeout = 5, silent = true)
       result = []
-      name = self.anon_hook
+      name = anon_hook
       filter = false
       if silent
         save_script_silent = Script.current.silent
@@ -152,7 +152,7 @@ module Lich
     def self.silver_count(timeout = 3)
       silence_me unless undo_silence = silence_me
       result = ''
-      name = self.anon_hook
+      name = anon_hook
       filter = false
 
       start_pattern = /^\s*Name\:/
