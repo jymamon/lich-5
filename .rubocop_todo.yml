@@ -101,12 +101,6 @@ Lint/RaiseException:
   Exclude:
     - 'lib/eaccess.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Lint/RedundantStringCoercion:
-  Exclude:
-    - 'lib/xmlparser.rb'
-
 # Offense count: 8
 Lint/RescueException:
   Exclude:

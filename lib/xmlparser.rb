@@ -515,7 +515,7 @@ class XMLParser
           Game._puts "#{$cmd_prefix}_injury 2"
           sleep 0.05
           # fixme: game name hardcoded as Gemstone IV; maybe doesn't make any difference to the client
-          $_CLIENT_.puts "\034GSB0000000000#{attributes['char']}\r\n\034GSA#{Time.now.to_i.to_s}GemStone IV\034GSD\r\n"
+          $_CLIENT_.puts "\034GSB0000000000#{attributes['char']}\r\n\034GSA#{Time.now.to_i}GemStone IV\034GSD\r\n"
           # Sending fake GSL tags to the Wizard FE is disabled until now, because it doesn't accept the tags and just gives errors until initialized with the above line
           @send_fake_tags = true
           # Send all the tags we missed out on
