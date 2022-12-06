@@ -700,12 +700,6 @@ Style/RedundantInterpolation:
     - 'lib/init.rb'
     - 'lib/update.rb'
 
-# Offense count: 198
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Enabled: false
-
 # Offense count: 4
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RedundantSort:

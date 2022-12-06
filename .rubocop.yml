@@ -113,6 +113,10 @@ Style/PerlBackrefs:
   # Enabled is recommended.
   Enabled: false
 
+Style/RedundantReturn:
+  # Enabled is recommended.
+  Enabled: false
+
 Style/Semicolon:
   Enabled: true
   AllowAsExpressionSeparator: true
