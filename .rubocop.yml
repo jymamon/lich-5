@@ -73,6 +73,10 @@ Layout/SpaceInsideParens:
   Enabled: true
   EnforcedStyle: no_space
 
+Style/PerlBackrefs:
+  # Enabled is recommended.
+  Enabled: false
+
 Style/Semicolon:
   Enabled: true
   AllowAsExpressionSeparator: true

@@ -955,19 +955,6 @@ Style/PercentLiteralDelimiters:
     - 'lib/stash.rb'
     - 'lich.rbw'
 
-# Offense count: 151
-# This cop supports safe autocorrection (--autocorrect).
-Style/PerlBackrefs:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/platform/wine.rb'
-    - 'lib/update.rb'
-    - 'lib/util.rb'
-    - 'lib/xmlparser.rb'
-    - 'lich.rbw'
-
 # Offense count: 3
 # This cop supports safe autocorrection (--autocorrect).
 Style/Proc:
