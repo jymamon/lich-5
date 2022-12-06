@@ -74,7 +74,7 @@ module EAccess
     # pp "M:response=%s" % response
 
     if legacy
-      login_info = Array.new
+      login_info = []
       for game in response.sub(/^M\t/, '').scan(/[^\t]+\t[^\t^\n]+/)
         game_code, game_name = game.split("\t")
         # pp "M:response = %s" % response

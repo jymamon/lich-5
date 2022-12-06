@@ -440,7 +440,7 @@ def move(dir = 'none', giveup_seconds = 10, giveup_lines = 30)
   line_count = 0
   room_count = XMLData.room_count
   giveup_time = Time.now.to_i + giveup_seconds.to_i
-  save_stream = Array.new
+  save_stream = []
 
   put_dir = proc {
     if XMLData.room_count > room_count
@@ -1023,7 +1023,7 @@ def checkfamroom(*strings)
 end
 
 def checkfamnpcs(*strings)
-  parsed = Array.new
+  parsed = []
   XMLData.familiar_npcs.each { |val| parsed.push(val.split.last) }
   if strings.empty?
     if parsed.empty?
@@ -1041,7 +1041,7 @@ def checkfamnpcs(*strings)
 end
 
 def checkfampcs(*strings)
-  familiar_pcs = Array.new
+  familiar_pcs = []
   XMLData.familiar_pcs.to_s.gsub(/Lord |Lady |Great |High |Renowned |Grand |Apprentice |Novice |Journeyman /, '').split(',').each { |line| familiar_pcs.push(line.slice(/[A-Z][a-z]+/)) }
   if familiar_pcs.empty?
     return false
@@ -1491,13 +1491,13 @@ def matchfindexact(*strings)
   strings.flatten!
   unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo("error! 'matchfind' with no strings to look for!"); sleep 1; return false end
-  looking = Array.new
+  looking = []
   strings.each { |str| looking.push(str.gsub('?', '(\b.+\b)')) }
   if looking.empty? then echo('matchfind without any strings to wait for!'); return false end
   regexpstr = looking.join('|')
   while line_in = script.gets
     if gotit = line_in.slice(/#{regexpstr}/)
-      matches = Array.new
+      matches = []
       looking.each_with_index { |str, idx|
         if gotit =~ /#{str}/i
           strings[idx].count('?').times { |n| matches.push(eval("$#{n + 1}")) }

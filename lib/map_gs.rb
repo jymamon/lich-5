@@ -1,8 +1,8 @@
 class Map
   @@loaded                   = false
   @@load_mutex               = Mutex.new
-  @@list                   ||= Array.new
-  @@tags                   ||= Array.new
+  @@list                   ||= []
+  @@tags                   ||= []
   @@current_room_mutex       = Mutex.new
   @@current_room_id        ||= nil
   @@current_room_count     ||= -1
@@ -155,7 +155,7 @@ class Map
 
   def self.match_current(script) # returns id
     @@current_room_mutex.synchronize {
-      peer_history = Hash.new
+      peer_history = {}
       need_set_desc_off = false
       check_peer_tag = proc { |r|
         begin
@@ -191,7 +191,7 @@ class Map
               DownstreamHook.add('squelch-peer', squelch_proc)
               result = dothistimeout "peer #{peer_direction}", 3, /^You peer|^\[Usage: PEER/
               if result =~ /^You peer/
-                peer_results = Array.new
+                peer_results = []
                 5.times {
                   if line = get?
                     peer_results.push line
@@ -199,8 +199,8 @@ class Map
                   end
                 }
                 if XMLData.room_count == peer_room_count
-                  peer_history[peer_room_count] ||= Hash.new
-                  peer_history[peer_room_count][peer_direction] ||= Hash.new
+                  peer_history[peer_room_count] ||= {}
+                  peer_history[peer_room_count][peer_direction] ||= {}
                   if need_desc
                     peer_history[peer_room_count][peer_direction][true] = peer_results
                     peer_history[peer_room_count][peer_direction][false] = peer_results
@@ -557,19 +557,19 @@ class Map
             current_tag = element
             current_attributes = attributes
             if element == 'room'
-              room = Hash.new
+              room = {}
               room['id'] = attributes['id'].to_i
               room['location'] = attributes['location']
               room['climate'] = attributes['climate']
               room['terrain'] = attributes['terrain']
-              room['wayto'] = Hash.new
-              room['timeto'] = Hash.new
-              room['title'] = Array.new
-              room['description'] = Array.new
-              room['paths'] = Array.new
-              room['tags'] = Array.new
-              room['unique_loot'] = Array.new
-              room['uid'] = Array.new
+              room['wayto'] = {}
+              room['timeto'] = {}
+              room['title'] = []
+              room['description'] = []
+              room['paths'] = []
+              room['tags'] = []
+              room['unique_loot'] = []
+              room['uid'] = []
             elsif element =~ /^(?:image|tsoran)$/ and attributes['name'] and attributes['x'] and attributes['y'] and attributes['size']
               room['image'] = attributes['name']
               room['image_coords'] = [(attributes['x'].to_i - (attributes['size'] / 2.0).round), (attributes['y'].to_i - (attributes['size'] / 2.0).round), (attributes['x'].to_i + (attributes['size'] / 2.0).round), (attributes['y'].to_i + (attributes['size'] / 2.0).round)]
@@ -628,7 +628,7 @@ class Map
                         tag_end.call(element)
                       else
                         element = /^<([^\s>\/]+)/.match(str).captures.first
-                        attributes = Hash.new
+                        attributes = {}
                         str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2].gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] } }
                         tag_start.call(element, attributes)
                         tag_end.call(element) if str[-2, 1] == '/'
@@ -843,9 +843,9 @@ class Map
     begin
       Map.load unless @@loaded
       source = @id
-      visited = Array.new
-      shortest_distances = Array.new
-      previous = Array.new
+      visited = []
+      shortest_distances = []
+      previous = []
       pq = [source]
       pq_push = proc { |val|
         for i in 0...pq.size
@@ -966,7 +966,7 @@ class Map
   end
 
   def find_nearest_by_tag(tag_name)
-    target_list = Array.new
+    target_list = []
     @@list.each { |room| target_list.push(room.id) if room.tags.include?(tag_name) }
     previous, shortest_distances = Map.dijkstra(@id, target_list)
     if target_list.include?(@id)
@@ -978,7 +978,7 @@ class Map
   end
 
   def find_all_nearest_by_tag(tag_name)
-    target_list = Array.new
+    target_list = []
     @@list.each { |room| target_list.push(room.id) if room.tags.include?(tag_name) }
     previous, shortest_distances = Map.dijkstra(@id)
     target_list.delete_if { |room_num| shortest_distances[room_num].nil? }

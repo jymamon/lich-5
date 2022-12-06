@@ -27,11 +27,11 @@ Further modifications are to support the retirement of spell-list.xml.
 module Games
   module Gemstone
     class Spell
-      @@list ||= Array.new
+      @@list ||= []
       @@loaded ||= false
-      @@cast_lock ||= Array.new
-      @@bonus_list ||= Array.new
-      @@cost_list ||= Array.new
+      @@cast_lock ||= []
+      @@bonus_list ||= []
+      @@cost_list ||= []
       @@load_mutex = Mutex.new
       @@elevated_load = proc { Spell.load }
       @@after_stance = nil
@@ -53,7 +53,7 @@ module Games
         else
           @availability = 'self-cast'
         end
-        @bonus = Hash.new
+        @bonus = {}
         xml_spell.elements.find_all { |e| e.name == 'bonus' }.each { |e|
           @bonus[e.attributes['type']] = e.text
           @bonus[e.attributes['type']].untaint
@@ -64,16 +64,16 @@ module Games
         @msgdn = nil if @msgdn.empty?
         @stance = ((xml_spell.attributes['stance'] =~ /^(yes|true)$/i) ? true : false)
         @channel = ((xml_spell.attributes['channel'] =~ /^(yes|true)$/i) ? true : false)
-        @cost = Hash.new
+        @cost = {}
         xml_spell.elements.find_all { |e| e.name == 'cost' }.each { |xml_cost|
-          @cost[xml_cost.attributes['type'].downcase] ||= Hash.new
+          @cost[xml_cost.attributes['type'].downcase] ||= {}
           if xml_cost.attributes['cast-type'].downcase == 'target'
             @cost[xml_cost.attributes['type'].downcase]['target'] = xml_cost.text
           else
             @cost[xml_cost.attributes['type'].downcase]['self'] = xml_cost.text
           end
         }
-        @duration = Hash.new
+        @duration = {}
         xml_spell.elements.find_all { |e| e.name == 'duration' }.each { |xml_duration|
           if xml_duration.attributes['cast-type'].downcase == 'target'
             cast_type = 'target'
@@ -85,7 +85,7 @@ module Games
               @real_time = false
             end
           end
-          @duration[cast_type] = Hash.new
+          @duration[cast_type] = {}
           @duration[cast_type][:duration] = xml_duration.text
           @duration[cast_type][:stackable] = (xml_duration.attributes['span'].downcase == 'stackable')
           @duration[cast_type][:refreshable] = (xml_duration.attributes['span'].downcase == 'refreshable')
@@ -135,7 +135,7 @@ module Games
             return true if @loaded
 
             begin
-              spell_times = Hash.new
+              spell_times = {}
               # reloading spell data should not reset spell tracking...
               unless @@list.empty?
                 @@list.each { |spell| spell_times[spell.num] = spell.timeleft if spell.active? }
@@ -184,7 +184,7 @@ module Games
 
       def self.active
         Spell.load unless @@loaded
-        active = Array.new
+        active = []
         @@list.each { |spell| active.push(spell) if spell.active? }
         active
       end

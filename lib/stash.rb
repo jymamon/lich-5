@@ -54,11 +54,11 @@ module Lich
     end
 
     def self.stash_hands(right: false, left: false, both: false)
-      $fill_hands_actions ||= Array.new
-      $fill_left_hand_actions ||= Array.new
-      $fill_right_hand_actions ||= Array.new
+      $fill_hands_actions ||= []
+      $fill_left_hand_actions ||= []
+      $fill_right_hand_actions ||= []
 
-      actions = Array.new
+      actions = []
       right_hand = GameObj.right_hand
       left_hand = GameObj.left_hand
       if UserVars.lootsack.nil? or UserVars.lootsack.empty?

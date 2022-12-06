@@ -74,7 +74,7 @@ class NilClass
   end
 
   def split(*val)
-    Array.new
+    []
   end
 
   def to_s
@@ -208,14 +208,14 @@ class LimitedArray < Array
   end
 
   def history
-    Array.new
+    []
   end
 end
 
 require_relative('./lib/xmlparser')
 
 class UpstreamHook
-  @@upstream_hooks ||= Hash.new
+  @@upstream_hooks ||= {}
   def self.add(name, action)
     unless action.instance_of?(Proc)
       echo "UpstreamHook: not a Proc (#{action})"
@@ -248,7 +248,7 @@ class UpstreamHook
 end
 
 class DownstreamHook
-  @@downstream_hooks ||= Hash.new
+  @@downstream_hooks ||= {}
   def self.add(name, action)
     unless action.instance_of?(Proc)
       echo "DownstreamHook: not a Proc (#{action})"
@@ -303,7 +303,7 @@ module Setting
       respond $!.backtrace[0..2]
       exit
     end
-    values = Array.new
+    values = []
     for setting in args
       begin
         v = Lich.db.get_first_value('SELECT value FROM script_setting WHERE script=? AND name=?;', script.name.encode('UTF-8'), setting.encode('UTF-8'))
@@ -437,7 +437,7 @@ module GameSetting
   end
 
   def self.save(hash)
-    game_hash = Hash.new
+    game_hash = {}
     hash.each_pair { |k, v| game_hash["#{XMLData.game}:#{k}"] = v }
     Setting.save(game_hash)
   end
@@ -449,15 +449,15 @@ module CharSetting
   end
 
   def self.save(hash)
-    game_hash = Hash.new
+    game_hash = {}
     hash.each_pair { |k, v| game_hash["#{XMLData.game}:#{XMLData.name}:#{k}"] = v }
     Setting.save(game_hash)
   end
 end
 
 module Settings
-  settings    = Hash.new
-  md5_at_load = Hash.new
+  settings    = {}
+  md5_at_load = {}
   mutex       = Mutex.new
   @@settings = proc { |scope|
     unless script = Script.current
@@ -476,9 +476,9 @@ module Settings
           sleep 0.1
           retry
         end
-        settings[script.name] ||= Hash.new
+        settings[script.name] ||= {}
         if _hash.nil?
-          settings[script.name][scope] = Hash.new
+          settings[script.name][scope] = {}
         else
           begin
             hash = Marshal.load(_hash)
@@ -489,7 +489,7 @@ module Settings
           end
           settings[script.name][scope] = hash
         end
-        md5_at_load[script.name] ||= Hash.new
+        md5_at_load[script.name] ||= {}
         md5_at_load[script.name][scope] = Digest::MD5.hexdigest(settings[script.name][scope].to_s)
       end
     }
@@ -599,7 +599,7 @@ module CharSettings
 end
 
 module Vars
-  @@vars   = Hash.new
+  @@vars   = {}
   md5      = nil
   mutex    = Mutex.new
   @@loaded = false
@@ -738,7 +738,7 @@ class Script
           next nil
         end
       else
-        options = Hash.new
+        options = {}
       end
     elsif args[0].instance_of?(Hash)
       options = args[0]
@@ -982,7 +982,7 @@ class Script
       nil
     end
   }
-  @@running = Array.new
+  @@running = []
 
   attr_reader :name, :vars, :safe, :file_name, :label_order, :at_exit_procs
   attr_accessor :quiet, :no_echo, :jump_label, :current_label, :want_downstream, :want_downstream_xml, :want_upstream, :want_script_output, :hidden, :paused, :silent, :no_pause_all, :no_kill_all, :downstream_buffer, :upstream_buffer, :unique_buffer, :die_with, :match_stack_labels, :match_stack_strings, :watchfor, :command_line, :ignore_pause
@@ -1211,7 +1211,7 @@ class Script
     end
 
     def Script.list_trusted
-      list = Array.new
+      list = []
       begin
         Lich.db.execute('SELECT name FROM trusted_scripts;').each { |name| list.push(name[0]) }
       rescue SQLite3::BusyException
@@ -1238,20 +1238,20 @@ class Script
     @name = /.*[\/\\]+([^.]+)\./.match(@file_name).captures.first
     if args[:args].instance_of?(String)
       if args[:args].empty?
-        @vars = Array.new
+        @vars = []
       else
         @vars = [args[:args]]
         @vars.concat args[:args].scan(/[^\s"]*(?<!\\)"(?:\\"|[^"])+(?<!\\)"[^\s]*|(?:\\"|[^"\s])+/).collect { |s| s.gsub(/(?<!\\)"/, '').gsub('\\"', '"') }
       end
     elsif args[:args].instance_of?(Array)
       if args[:args].nil? || args[:args].empty?
-        @vars = Array.new
+        @vars = []
       else
         @vars = [args[:args].join(' ')]
         @vars.concat args[:args]
       end
     else
-      @vars = Array.new
+      @vars = []
     end
     @quiet = (args[:quiet] ? true : false)
     @downstream_buffer = LimitedArray.new
@@ -1261,9 +1261,9 @@ class Script
     @upstream_buffer = LimitedArray.new
     @want_upstream = false
     @unique_buffer = LimitedArray.new
-    @watchfor = Hash.new
-    @at_exit_procs = Array.new
-    @die_with = Array.new
+    @watchfor = {}
+    @at_exit_procs = []
+    @die_with = []
     @paused = false
     @hidden = false
     @no_pause_all = false
@@ -1271,10 +1271,10 @@ class Script
     @silent = false
     @safe = false
     @no_echo = false
-    @match_stack_labels = Array.new
-    @match_stack_strings = Array.new
-    @label_order = Array.new
-    @labels = Hash.new
+    @match_stack_labels = []
+    @match_stack_strings = []
+    @label_order = []
+    @labels = {}
     @killer_mutex = Mutex.new
     @ignore_pause = false
     data = nil
@@ -1650,17 +1650,17 @@ class ExecScript < Script
     end
   end
 
-  def initialize(cmd_data, flags = Hash.new)
+  def initialize(cmd_data, flags = {})
     @cmd_data = cmd_data
-    @vars = Array.new
+    @vars = []
     @downstream_buffer = LimitedArray.new
     @killer_mutex = Mutex.new
     @want_downstream = true
     @want_downstream_xml = false
     @upstream_buffer = LimitedArray.new
     @want_upstream = false
-    @at_exit_procs = Array.new
-    @watchfor = Hash.new
+    @at_exit_procs = []
+    @watchfor = {}
     @hidden = false
     @paused = false
     @silent = false
@@ -1673,11 +1673,11 @@ class ExecScript < Script
     @no_echo = false
     @thread_group = ThreadGroup.new
     @unique_buffer = LimitedArray.new
-    @die_with = Array.new
+    @die_with = []
     @no_pause_all = false
     @no_kill_all = false
-    @match_stack_labels = Array.new
-    @match_stack_strings = Array.new
+    @match_stack_labels = []
+    @match_stack_strings = []
     num = '1'; num.succ! while @@running.any? { |s| s.name == "exec#{num}" }
     @name = "exec#{num}"
     @@running.push(self)
@@ -1694,7 +1694,7 @@ class WizardScript < Script
   def initialize(file_name, cli_vars = [])
     @name = /.*[\/\\]+([^.]+)\./.match(file_name).captures.first
     @file_name = file_name
-    @vars = Array.new
+    @vars = []
     @killer_mutex = Mutex.new
     unless cli_vars.empty?
       if cli_vars.is_a?(String)
@@ -1716,9 +1716,9 @@ class WizardScript < Script
     @upstream_buffer = LimitedArray.new
     @want_upstream = false
     @unique_buffer = LimitedArray.new
-    @at_exit_procs = Array.new
-    @patchfor = Hash.new
-    @die_with = Array.new
+    @at_exit_procs = []
+    @patchfor = {}
+    @die_with = []
     @paused = false
     @hidden = false
     @no_pause_all = false
@@ -1726,10 +1726,10 @@ class WizardScript < Script
     @silent = false
     @safe = false
     @no_echo = false
-    @match_stack_labels = Array.new
-    @match_stack_strings = Array.new
-    @label_order = Array.new
-    @labels = Hash.new
+    @match_stack_labels = []
+    @match_stack_strings = []
+    @label_order = []
+    @labels = {}
     data = nil
     begin
       Zlib::GzipReader.open(file_name) { |f| data = f.readlines.collect { |line| line.chomp } }
@@ -1752,7 +1752,7 @@ class WizardScript < Script
       'set' => '',
     }
 
-    setvars = Array.new
+    setvars = []
     data.each { |line| setvars.push($1) if line =~ /[\s\t]*setvariable\s+([^\s\t]+)[\s\t]/i and !setvars.include?($1) }
     has_counter = data.find { |line| line =~ /%c/i }
     has_save = data.find { |line| line =~ /%s/i }
@@ -1916,7 +1916,7 @@ class Watchfor
   end
 
   def self.clear
-    script.watchfor = Hash.new
+    script.watchfor = ({})
   end
 end
 
@@ -1933,11 +1933,11 @@ module Buffer
   UPSTREAM            = 8
   UPSTREAM_MOD        = 16
   SCRIPT_OUTPUT       = 32
-  @@index             = Hash.new
-  @@streams           = Hash.new
+  @@index             = {}
+  @@streams           = {}
   @@mutex             = Mutex.new
   @@offset            = 0
-  @@buffer            = Array.new
+  @@buffer            = []
   @@max_size          = 3000
   def self.gets
     thread_id = Thread.current.object_id
@@ -2005,7 +2005,7 @@ module Buffer
         @@streams[thread_id] ||= DOWNSTREAM_STRIPPED
       }
     end
-    lines = Array.new
+    lines = []
     loop {
       if (@@index[thread_id] - @@offset) >= @@buffer.length
         return lines
@@ -2063,9 +2063,9 @@ class SharedBuffer
   attr_accessor :max_size
 
   def initialize(args = {})
-    @buffer = Array.new
+    @buffer = []
     @buffer_offset = 0
-    @buffer_index = Hash.new
+    @buffer_index = {}
     @buffer_mutex = Mutex.new
     @max_size = args[:max_size] || 500
     return self
@@ -2114,13 +2114,13 @@ class SharedBuffer
     thread_id = Thread.current.object_id
     if @buffer_index[thread_id].nil?
       @buffer_mutex.synchronize { @buffer_index[thread_id] = (@buffer_offset + @buffer.length) }
-      return Array.new
+      return []
     end
     if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
-      return Array.new
+      return []
     end
 
-    lines = Array.new
+    lines = []
     @buffer_mutex.synchronize {
       if @buffer_index[thread_id] < @buffer_offset
         @buffer_index[thread_id] = @buffer_offset
@@ -2156,7 +2156,7 @@ class SharedBuffer
 end
 
 class SpellRanks
-  @@list      ||= Array.new
+  @@list      ||= []
   @@timestamp ||= 0
   @@loaded    ||= false
   @@elevated_load = proc { SpellRanks.load }
@@ -2179,7 +2179,7 @@ class SpellRanks
         rescue
           respond "--- Lich: error: SpellRanks.load: #{$!}"
           Lich.log "error: SpellRanks.load: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          @@list      = Array.new
+          @@list      = []
           @@timestamp = 0
           @@loaded = true
         end
@@ -3224,7 +3224,7 @@ module Games
       end
 
       def self.known
-        known_spells = Array.new
+        known_spells = []
         Spell.list.each { |spell| known_spells.push(spell) if spell.known? }
         return known_spells
       end
@@ -3623,22 +3623,22 @@ module Games
     end
 
     class GameObj
-      @@loot          = Array.new
-      @@npcs          = Array.new
-      @@npc_status    = Hash.new
-      @@pcs           = Array.new
-      @@pc_status     = Hash.new
-      @@inv           = Array.new
-      @@contents      = Hash.new
+      @@loot          = []
+      @@npcs          = []
+      @@npc_status    = {}
+      @@pcs           = []
+      @@pc_status     = {}
+      @@inv           = []
+      @@contents      = {}
       @@right_hand    = nil
       @@left_hand     = nil
-      @@room_desc     = Array.new
-      @@fam_loot      = Array.new
-      @@fam_npcs      = Array.new
-      @@fam_pcs       = Array.new
-      @@fam_room_desc = Array.new
-      @@type_data     = Hash.new
-      @@sellable_data = Hash.new
+      @@room_desc     = []
+      @@fam_loot      = []
+      @@fam_npcs      = []
+      @@fam_pcs       = []
+      @@fam_room_desc = []
+      @@type_data     = {}
+      @@sellable_data = {}
       @@elevated_load = proc { GameObj.load_data }
 
       attr_reader :id
@@ -3919,7 +3919,7 @@ module Games
       end
 
       def self.clear_container(container_id)
-        @@contents[container_id] = Array.new
+        @@contents[container_id] = []
       end
 
       def self.delete_container(container_id)
@@ -3927,7 +3927,7 @@ module Games
       end
 
       def self.targets
-        a = Array.new
+        a = []
         XMLData.current_target_ids.each { |id|
           if (npc = @@npcs.find { |n| n.id == id }) and (npc.status !~ /dead|gone/)
             a.push(npc)
@@ -3937,7 +3937,7 @@ module Games
       end
 
       def self.dead
-        dead_list = Array.new
+        dead_list = []
         for obj in @@npcs
           dead_list.push(obj) if obj.status == 'dead'
         end
@@ -3963,13 +3963,13 @@ module Games
           end
           if File.exist?(filename)
             begin
-              @@type_data = Hash.new
-              @@sellable_data = Hash.new
+              @@type_data = {}
+              @@sellable_data = {}
               File.open(filename) { |file|
                 doc = REXML::Document.new(file.read)
                 doc.elements.each('data/type') { |e|
                   if type = e.attributes['name']
-                    @@type_data[type] = Hash.new
+                    @@type_data[type] = {}
                     @@type_data[type][:name]    = Regexp.new(e.elements['name'].text) unless e.elements['name'].text.nil? or e.elements['name'].text.empty?
                     @@type_data[type][:noun]    = Regexp.new(e.elements['noun'].text) unless e.elements['noun'].text.nil? or e.elements['noun'].text.empty?
                     @@type_data[type][:exclude] = Regexp.new(e.elements['exclude'].text) unless e.elements['exclude'].text.nil? or e.elements['exclude'].text.empty?
@@ -3977,7 +3977,7 @@ module Games
                 }
                 doc.elements.each('data/sellable') { |e|
                   if sellable = e.attributes['name']
-                    @@sellable_data[sellable] = Hash.new
+                    @@sellable_data[sellable] = {}
                     @@sellable_data[sellable][:name]    = Regexp.new(e.elements['name'].text) unless e.elements['name'].text.nil? or e.elements['name'].text.empty?
                     @@sellable_data[sellable][:noun]    = Regexp.new(e.elements['noun'].text) unless e.elements['noun'].text.nil? or e.elements['noun'].text.empty?
                     @@sellable_data[sellable][:exclude] = Regexp.new(e.elements['exclude'].text) unless e.elements['exclude'].text.nil? or e.elements['exclude'].text.empty?
@@ -4147,7 +4147,7 @@ class Script
   end
 
   def self.running
-    list = Array.new
+    list = []
     for script in @@running
       list.push(script) unless script.hidden
     end
@@ -4159,7 +4159,7 @@ class Script
   end
 
   def self.hidden
-    list = Array.new
+    list = []
     for script in @@running
       list.push(script) if script.hidden
     end
@@ -4248,7 +4248,7 @@ class Spellsong
   end
 end
 
-def start_script(script_name, cli_vars = [], flags = Hash.new)
+def start_script(script_name, cli_vars = [], flags = {})
   if flags == true
     flags = { :quiet => true }
   end
@@ -4263,7 +4263,7 @@ def start_scripts(*script_names)
 end
 
 def force_start_script(script_name, cli_vars = [], flags = {})
-  flags = Hash.new unless flags.instance_of?(Hash)
+  flags = {} unless flags.instance_of?(Hash)
   flags[:force] = true
   start_script(script_name, cli_vars, flags)
 end
@@ -4428,7 +4428,7 @@ module UserVars
   end
 
   def self.list_global
-    Array.new
+    []
   end
 
   def self.list_char
@@ -4436,7 +4436,7 @@ module UserVars
   end
 end
 
-def start_exec_script(cmd_data, options = Hash.new)
+def start_exec_script(cmd_data, options = {})
   ExecScript.start(cmd_data, options)
 end
 
@@ -4774,11 +4774,11 @@ main_thread = Thread.new {
         begin
           Marshal.load(file.read.unpack('m').first)
         rescue
-          Array.new
+          []
         end
       }
     else
-      entry_data = Array.new
+      entry_data = []
     end
     # TODO: Capitalization can move to options/ini. @options.logn can be made consistent with
     #       @options.character using entry.dat when @options.login_character and @options.account are not

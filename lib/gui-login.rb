@@ -21,11 +21,11 @@ def gui_login(entry_data_file)
           }
         end
       rescue
-        Array.new
+        []
       end
     }
   else
-    @entry_data = Array.new
+    @entry_data = []
   end
   @save_entry_data = false
   done = false

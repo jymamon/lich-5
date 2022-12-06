@@ -464,20 +464,6 @@ Style/CommentedKeyword:
 Style/Documentation:
   Enabled: false
 
-# Offense count: 163
-# This cop supports safe autocorrection (--autocorrect).
-Style/EmptyLiteral:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/global_defs.rb'
-    - 'lib/gui-login.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/spell.rb'
-    - 'lib/stash.rb'
-    - 'lib/xmlparser.rb'
-    - 'lich.rbw'
-
 # Offense count: 7
 # This cop supports safe autocorrection (--autocorrect).
 Style/EvalWithLocation:

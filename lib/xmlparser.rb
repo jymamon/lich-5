@@ -42,8 +42,8 @@ class XMLParser
     @buffer = String.new
     @unescape = { 'lt' => '<', 'gt' => '>', 'quot' => '"', 'apos' => "'", 'amp' => '&' }
     @bold = false
-    @active_tags = Array.new
-    @active_ids = Array.new
+    @active_tags = []
+    @active_ids = []
     @last_tag = String.new
     @last_id = String.new
     @current_stream = String.new
@@ -75,18 +75,18 @@ class XMLParser
     @level = 0
     @next_level_value = 0
     @next_level_text = String.new
-    @current_target_ids = Array.new
+    @current_target_ids = []
 
     @room_count = 0
     @room_title = String.new
     @room_description = String.new
-    @room_exits = Array.new
+    @room_exits = []
     @room_exits_string = String.new
     @room_objects = String.new
 
     @familiar_room_title = String.new
     @familiar_room_description = String.new
-    @familiar_room_exits = Array.new
+    @familiar_room_exits = []
 
     @bounty_task = String.new
     @society_task = String.new
@@ -113,7 +113,7 @@ class XMLParser
     @encumbrance_text = String.new
     @encumbrance_full_text = String.new
     @encumbrance_value = 0
-    @indicator = Hash.new
+    @indicator = {}
     @injuries = { 'back' => { 'scar' => 0, 'wound' => 0 }, 'leftHand' => { 'scar' => 0, 'wound' => 0 }, 'rightHand' => { 'scar' => 0, 'wound' => 0 }, 'head' => { 'scar' => 0, 'wound' => 0 }, 'rightArm' => { 'scar' => 0, 'wound' => 0 }, 'abdomen' => { 'scar' => 0, 'wound' => 0 }, 'leftEye' => { 'scar' => 0, 'wound' => 0 }, 'leftArm' => { 'scar' => 0, 'wound' => 0 }, 'chest' => { 'scar' => 0, 'wound' => 0 }, 'leftFoot' => { 'scar' => 0, 'wound' => 0 }, 'rightFoot' => { 'scar' => 0, 'wound' => 0 }, 'rightLeg' => { 'scar' => 0, 'wound' => 0 }, 'neck' => { 'scar' => 0, 'wound' => 0 }, 'leftLeg' => { 'scar' => 0, 'wound' => 0 }, 'nsys' => { 'scar' => 0, 'wound' => 0 }, 'rightEye' => { 'scar' => 0, 'wound' => 0 } }
     @injury_mode = 0
 
@@ -148,8 +148,8 @@ class XMLParser
   end
 
   def reset
-    @active_tags = Array.new
-    @active_ids = Array.new
+    @active_tags = []
+    @active_ids = []
     @current_stream = String.new
     @current_style = String.new
   end
@@ -180,7 +180,7 @@ class XMLParser
         tag_end(element)
       elsif str = @buffer.slice!(/^<[^<]+>/)
         element = /^<([^\s>\/]+)/.match(str).captures.first
-        attributes = Hash.new
+        attributes = {}
         str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2] }
         tag_start(element, attributes)
         tag_end(element) if str =~ /\/>$/
@@ -273,7 +273,7 @@ class XMLParser
         elsif attributes['id'] == 'room players'
           GameObj.clear_pcs
         elsif attributes['id'] == 'room exits'
-          @room_exits = Array.new
+          @room_exits = []
           @room_exits_string = String.new
         elsif attributes['id'] == 'room desc'
           @room_description = String.new
@@ -454,7 +454,7 @@ class XMLParser
         if @current_stream == 'familiar'
           @fam_mode = String.new
         elsif @room_window_disabled
-          @room_exits = Array.new
+          @room_exits = []
         end
       elsif @room_window_disabled and (name == 'dir') and @active_tags.include?('compass')
         @room_exits.push(LONGDIR[attributes['value']])
@@ -656,7 +656,7 @@ class XMLParser
         if @current_style == 'roomName'
           @familiar_room_title = text_string
           @familiar_room_description = String.new
-          @familiar_room_exits = Array.new
+          @familiar_room_exits = []
           GameObj.clear_fam_room_desc
           GameObj.clear_fam_loot
           GameObj.clear_fam_npcs
