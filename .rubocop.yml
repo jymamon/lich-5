@@ -73,11 +73,15 @@ Layout/SpaceInsideParens:
   Enabled: true
   EnforcedStyle: no_space
 
-Style/NumericLiterals:
+Style/BlockComments:
   # Enabled is recommended.
   Enabled: false
 
-Style/BlockComments:
+Style/BlockDelimiters:
+  Enabled: true
+  EnforcedStyle: always_braces
+
+Style/NumericLiterals:
   # Enabled is recommended.
   Enabled: false
 

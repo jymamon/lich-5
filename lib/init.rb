@@ -108,10 +108,10 @@ if (RUBY_PLATFORM =~ /mingw|win/i) && (RUBY_PLATFORM !~ /darwin/i)
     false
   end
 
-  paths.each do |path|
+  paths.each { |path|
     next unless key_exists?(path)
 
-    Registry.open(Registry::HKEY_LOCAL_MACHINE, path).each_value do |_subkey, _type, data|
+    Registry.open(Registry::HKEY_LOCAL_MACHINE, path).each_value { |_subkey, _type, data|
       dirloc = data
       if path =~ /WIZ32/
         $wiz_fe_loc = dirloc
@@ -120,8 +120,8 @@ if (RUBY_PLATFORM =~ /mingw|win/i) && (RUBY_PLATFORM !~ /darwin/i)
       else
         Lich.log("Hammer time, couldn't find me a SIMU FE on a Windows box")
       end
-    end
-  end
+    }
+  }
 elsif defined?(Wine)
   paths = ['HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Simutronics\\STORM32\\Directory',
            'HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Simutronics\\WIZ32\\Directory']

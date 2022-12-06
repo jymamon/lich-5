@@ -2322,7 +2322,7 @@ module Games
                 $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" /><pushStream id="combat" />', '<pushStream id="combat" />') while $_SERVERSTRING_.include?('<pushStream id="combat" /><pushStream id="combat" />')
 
                 if combat_count > 0
-                  end_combat_tags.each do |tag|
+                  end_combat_tags.each { |tag|
                     # $_SERVERSTRING_ = "<!-- looking for tag: #{tag}" + $_SERVERSTRING_
                     if $_SERVERSTRING_.include?(tag)
                       $_SERVERSTRING_ = $_SERVERSTRING_.gsub(tag, '<popStream id="combat" />' + tag) unless $_SERVERSTRING_.include?('<popStream id="combat" />')
@@ -2331,7 +2331,7 @@ module Games
                     if $_SERVERSTRING_.include?('<pushStream id="combat" />')
                       $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" />', '')
                     end
-                  end
+                  }
                 end
 
                 combat_count += $_SERVERSTRING_.scan('<pushStream id="combat" />').length

@@ -21,9 +21,9 @@ stash.rb: Core lich file for extending free_hands, empty_hands functions in
 module Lich
   module Stash
     def self.find_container(param)
-      GameObj.inv.find do |container|
+      GameObj.inv.find { |container|
         container.name =~ %r[#{param}]
-      end or fail "could not find Container[name: #{param}]"
+      } or fail "could not find Container[name: #{param}]"
     end
 
     def self.container(param)
@@ -36,13 +36,13 @@ module Lich
     def self.try_or_fail(seconds: 2, command: nil)
       fput(command)
       expiry = Time.now + seconds
-      wait_until do yield or Time.now > expiry end
+      wait_until { yield or Time.now > expiry }
       fail "Error[command: #{command}, seconds: #{seconds}]" if Time.now > expiry
     end
 
     def self.add_to_bag(bag, item)
       bag = container(bag)
-      try_or_fail(command: "_drag ##{item.id} ##{bag.id}") do
+      try_or_fail(command: "_drag ##{item.id} ##{bag.id}") {
         20.times {
           return true if ![GameObj.right_hand, GameObj.left_hand].map(&:id).compact.include?(item.id) and bag.contents.to_a.map(&:id).include?(item.id)
           return true if item.name =~ /^ethereal \w+$/ && ![GameObj.right_hand, GameObj.left_hand].map(&:id).compact.include?(item.id)
@@ -50,7 +50,7 @@ module Lich
           sleep 0.1
         }
         return false
-      end
+      }
     end
 
     def self.stash_hands(right: false, left: false, both: false)

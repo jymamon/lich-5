@@ -128,8 +128,8 @@ class XMLParser
   # for backwards compatibility
   def active_spells
     z = {}
-    XMLData.dialogs.sort.each do |a, b|
-      b.each do |k, v|
+    XMLData.dialogs.sort.each { |a, b|
+      b.each { |k, v|
         case a
         when /Active Spells|Buffs/
           z.merge!(k => v) if k.instance_of?(String)
@@ -142,8 +142,8 @@ class XMLParser
         when /Debuffs/
           z.merge!("#{k} Debuff" => v) if k.instance_of?(String)
         end
-      end
-    end
+      }
+    }
     z
   end
 

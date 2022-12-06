@@ -159,9 +159,9 @@ module Lich
         else
           _respond; _respond "Downloading Lich5 version #{@update_to}"; _respond
           filename = "lich5-#{@update_to}"
-          File.open(File.join(TEMP_DIR, "#{filename}.tar.gz"), 'wb') do |file|
+          File.open(File.join(TEMP_DIR, "#{filename}.tar.gz"), 'wb') { |file|
             file.write open("#{@zipfile}").read
-          end
+          }
 
           Dir.mkdir(File.join(TEMP_DIR, filename))
           Gem::Package.new('').extract_tar_gz(File.open(File.join(TEMP_DIR, "#{filename}.tar.gz"), 'rb'), "#{TEMP_DIR}/#{filename}")
@@ -263,11 +263,11 @@ module Lich
           # as a courtesy to the player, remind which version they were rev'd back to
           targetversion = ''
           targetfile = File.open(File.join(LIB_DIR, 'version.rb')).read
-          targetfile.each_line do |line|
+          targetfile.each_line { |line|
             if line =~ /LICH_VERSION\s+?=\s+?/
               targetversion = line.sub(/LICH_VERSION\s+?=\s+?/, '').sub('"', '')
             end
-          end
+          }
           _respond
           _respond "Lich5 has been reverted to Lich5 version #{targetversion}"
           _respond 'You should exit the game, then log back in.  This will start the game'
@@ -300,9 +300,9 @@ module Lich
         else
           File.delete(File.join(location, requested_file)) if File.exist?(File.join(location, requested_file))
           begin
-            File.open(File.join(location, requested_file), 'wb') do |file|
+            File.open(File.join(location, requested_file), 'wb') { |file|
               file.write open(File.join(remote_repo, requested_file)).read
-            end
+            }
             _respond
             _respond "#{requested_file} has been updated."
           rescue
