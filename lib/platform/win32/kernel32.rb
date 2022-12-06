@@ -99,7 +99,7 @@ module Win32
     end
 
     lpStartupInfo = lpStartupInfo.pack('LLLLLLLLLLLLSSLLLL')
-    lpProcessInformation = [0, 0, 0, 0,].pack('LLLL')
+    lpProcessInformation = [0, 0, 0, 0].pack('LLLL')
     r = Kernel32.CreateProcess(
       args[:lpApplicationName],
       lpCommandLine,

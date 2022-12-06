@@ -205,7 +205,7 @@ required_modules = [
         (!$stdout.isatty)
       )
     },
-  }
+  },
 ]
 
 required_modules.each { |required_module|

@@ -78,6 +78,10 @@ Style/SingleLineMethods:
   Enabled: false
   AllowIfMethodIsEmpty: true
 
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: comma
+
 Style/TrailingCommaInHashLiteral:
   Enabled: true
   EnforcedStyleForMultiline: comma
