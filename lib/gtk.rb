@@ -1,12 +1,12 @@
 if defined?(Gtk)
   Gdk.module_eval {
-    define_deprecated_singleton_method :screen_height, :warn => 'Gdk::screen_height is deprecated; use monitor methods instead' do |_self|
+    define_deprecated_singleton_method(:screen_height, :warn => 'Gdk::screen_height is deprecated; use monitor methods instead') { |_self|
       99999
-    end
+    }
 
-    define_deprecated_singleton_method :screen_width, :warn => 'Gdk::screen_width is deprecated; use monitor methods instead' do |_self|
+    define_deprecated_singleton_method(:screen_width, :warn => 'Gdk::screen_width is deprecated; use monitor methods instead') { |_self|
       99999
-    end
+    }
   }
 
   Gtk::Drag.module_eval {
@@ -44,12 +44,12 @@ if defined?(Gtk)
     }
 
     Gtk::HBox.class_eval {
-      define_deprecated_singleton_method :new, :warn => "Use 'Gtk::Box.new(:horizontal, spacing)'." do |_self, homogeneous, spacing|
+      define_deprecated_singleton_method(:new, :warn => "Use 'Gtk::Box.new(:horizontal, spacing)'.") { |_self, homogeneous, spacing|
         respond "'Gtk::Hbox' is deprecated; use 'Gtk::Box.new(:horizontal, spacing)'."
         box = Gtk::Box.new(:horizontal, spacing)
         box.set_homogeneous(homogeneous ? true : false)
         box
-      end
+      }
     }
 
     Gtk::Notebook.class_eval {
@@ -86,12 +86,12 @@ if defined?(Gtk)
     end
 
     Gtk::VBox.class_eval {
-      define_deprecated_singleton_method :new, :warn => "Use 'Gtk::Box.new(:vertical, spacing)'." do |_self, homogeneous, spacing|
+      define_deprecated_singleton_method(:new, :warn => "Use 'Gtk::Box.new(:vertical, spacing)'.") { |_self, homogeneous, spacing|
         respond "'Gtk::VBox' is deprecated; use 'Gtk::Box.new(:vertical, spacing)' instead"
         box = Gtk::Box.new(:vertical, spacing)
         box.set_homogeneous(homogeneous ? true : false)
         box
-      end
+      }
     }
 
     # Calling Gtk API in a thread other than the main thread may cause random segfaults

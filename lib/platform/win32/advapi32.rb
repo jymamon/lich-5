@@ -61,11 +61,11 @@ module Win32
       elsif lpType == REG_QWORD
         lpData = lpData.unpack('Q')[0]
       elsif lpType == REG_BINARY
-        # fixme
+        # FIXME: This needs handled or reported as an error
       elsif lpType == REG_DWORD_BIG_ENDIAN
-        # fixme
+        # FIXME: This needs handled or reported as an error
       else
-        # fixme
+        # FIXME: This needs handled or reported as an error
       end
       return :return => r, :lpType => lpType, :lpcbData => lpcbData, :lpData => lpData
     else
