@@ -109,12 +109,12 @@ class Map
   def self.current # returns Map/Room
     Map.load unless @@loaded
     if script = Script.current
-      return @@list[@@current_room_id] if XMLData.room_count == @@current_room_count and !@@current_room_id.nil?;
+      return @@list[@@current_room_id] if XMLData.room_count == @@current_room_count and !@@current_room_id.nil?
     else
-      return @@list[@@current_room_id] if XMLData.room_count == @@fuzzy_room_count and !@@current_room_id.nil?;
+      return @@list[@@current_room_id] if XMLData.room_count == @@fuzzy_room_count and !@@current_room_id.nil?
     end
-    ids = Map.ids_from_uid(XMLData.room_id);
-    return Map.set_current(ids[0]) if ids.size == 1;
+    ids = Map.ids_from_uid(XMLData.room_id)
+    return Map.set_current(ids[0]) if ids.size == 1
     if ids.size > 1 and !@@current_room_id.nil? and id = Map.match_multi_ids(ids)
       return Map.set_current(id)
     end
@@ -123,7 +123,7 @@ class Map
   end
 
   def self.set_current(id) # returns Map/Room
-    @@previous_room_id = @@current_room_id if id != @@current_room_id;
+    @@previous_room_id = @@current_room_id if id != @@current_room_id
     @@current_room_id  = id
     return nil if id.nil?
 
@@ -131,7 +131,7 @@ class Map
   end
 
   def self.set_fuzzy(id) # returns Map/Room
-    @@previous_room_id = @@current_room_id if !id.nil? and id != @@current_room_id;
+    @@previous_room_id = @@current_room_id if !id.nil? and id != @@current_room_id
     @@current_room_id  = id
     return nil if id.nil?
 
@@ -140,13 +140,13 @@ class Map
 
   def self.match_multi_ids(ids) # returns id
     matches = ids.find_all { |s| @@list[@@current_room_id].wayto.keys.include?(s.to_s) }
-    return matches[0] if matches.size == 1;
+    return matches[0] if matches.size == 1
 
-    return nil;
+    return nil
   end
 
   def self.match_no_uid # returns Map/Room
-    if script = Script.current;
+    if script = Script.current
       return Map.set_current(Map.match_current(script))
     else
       return Map.set_fuzzy(Map.match_fuzzy())
@@ -304,11 +304,11 @@ class Map
     return nil unless Script.current
 
     Map.load unless @@loaded
-    ids = Map.ids_from_uid(XMLData.room_id);
+    ids = Map.ids_from_uid(XMLData.room_id)
     room = nil
-    id = ids[0] if ids.size == 1;
-    id = Map.match_multi_ids(ids) if ids.size > 1;
-    id = Map.match_current(Script.current) if id.nil?;
+    id = ids[0] if ids.size == 1
+    id = Map.match_multi_ids(ids) if ids.size > 1
+    id = Map.match_current(Script.current) if id.nil?
     if !id.nil? # existing room
       room = Map[id]
       if !room.uid.include?(XMLData.room_id)
@@ -708,8 +708,8 @@ class Map
       :check_location => @check_location,
       :unique_loot => @unique_loot,
       :uid => @uid,
-    }).delete_if { |a, b| b.nil? or (b.class == Array and b.empty?) };
-    JSON.pretty_generate(mapjson);
+    }).delete_if { |a, b| b.nil? or (b.class == Array and b.empty?) }
+    JSON.pretty_generate(mapjson)
   end
 
   def self.save_json(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")

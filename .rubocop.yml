@@ -73,6 +73,10 @@ Layout/SpaceInsideParens:
   Enabled: true
   EnforcedStyle: no_space
 
+Style/Semicolon:
+  Enabled: true
+  AllowAsExpressionSeparator: true
+
 Style/SingleLineMethods:
   # Enabled is recommended.
   Enabled: false

@@ -731,8 +731,8 @@ class Map
       :check_location => @check_location,
       :unique_loot => @unique_loot,
       :uid => @uid,
-    }).delete_if { |a, b| b.nil? or (b.class == Array and b.empty?) };
-    JSON.pretty_generate(mapjson);
+    }).delete_if { |a, b| b.nil? or (b.class == Array and b.empty?) }
+    JSON.pretty_generate(mapjson)
   end
 
   def self.save_json(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")
