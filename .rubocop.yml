@@ -94,6 +94,10 @@ Style/EvalWithLocation:
   # Enabled is recommended.  Revisit
   Enabled: false
 
+Style/FormatString:
+  Enabled: true
+  EnforcedStyle: sprintf
+
 Style/NumericLiterals:
   # Enabled is recommended.
   Enabled: false
