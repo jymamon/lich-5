@@ -38,7 +38,7 @@ $data_dir = "#{DATA_DIR}/"
 #
 # Report an error if Lich 4.4 data is found
 #
-if File.exists?("#{DATA_DIR}/lich.sav")
+if File.exist?("#{DATA_DIR}/lich.sav")
   Lich.log "error: Archaic Lich 4.4 configuration found: Please remove #{DATA_DIR}/lich.sav"
   Lich.msgbox "error: Archaic Lich 4.4 configuration found: Please remove #{DATA_DIR}/lich.sav"
   exit
@@ -85,7 +85,7 @@ elsif ENV['HOME']
 else
   $wine_prefix = nil
 end
-if $wine_bin and File.exists?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exists?($wine_prefix) and File.directory?($wine_prefix)
+if $wine_bin and File.exist?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exist?($wine_prefix) and File.directory?($wine_prefix)
   require 'lib/platform/wine'
 end
 # $wine_bin = nil
@@ -168,7 +168,7 @@ else
   else
     $wine_prefix = nil
   end
-  if $wine_bin and File.exists?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exists?($wine_prefix) and File.directory?($wine_prefix)
+  if $wine_bin and File.exist?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exist?($wine_prefix) and File.directory?($wine_prefix)
     require 'lib/platform/wine'
   end
   $wine_bin = nil
@@ -249,7 +249,7 @@ required_modules.each { |required_module|
           # Result is either the result of ShellExecute on the gem_file command or the result of
           # requesting that the used clicks OK to restart lich.
           if result == Win32::IDIOK
-            if File.exists?("#{ruby_bin_dir}\\rubyw.exe")
+            if File.exist?("#{ruby_bin_dir}\\rubyw.exe")
               Win32.ShellExecute(:lpOperation => 'open', :lpFile => "#{ruby_bin_dir}\\rubyw.exe", :lpParameters => "\"#{File.expand_path($PROGRAM_NAME)}\"")
               exit
             else
@@ -280,12 +280,12 @@ required_modules.each { |required_module|
 
 HAVE_GTK = Module.const_defined?(:Gtk)
 
-unless File.exists?(LICH_DIR)
+unless File.exist?(LICH_DIR)
   begin
     Dir.mkdir(LICH_DIR)
   rescue
     message = "An error occured while attempting to create directory #{LICH_DIR}\n\n"
-    if !File.exists?(LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
+    if !File.exist?(LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
       message.concat "This was likely because the parent directory (#{LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop}) doesn't exist."
     elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]:\\(Users|Documents and Settings)/)
       message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
@@ -299,12 +299,12 @@ end
 
 Dir.chdir(LICH_DIR)
 
-unless File.exists?(TEMP_DIR)
+unless File.exist?(TEMP_DIR)
   begin
     Dir.mkdir(TEMP_DIR)
   rescue
     message = "An error occured while attempting to create directory #{TEMP_DIR}\n\n"
-    if !File.exists?(TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
+    if !File.exist?(TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
       message.concat "This was likely because the parent directory (#{TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop}) doesn't exist."
     elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]:\\(Users|Documents and Settings)/)
       message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
@@ -343,7 +343,7 @@ required_modules.each { |required_module|
 }
 
 [DATA_DIR, SCRIPT_DIR, "#{SCRIPT_DIR}/custom", MAP_DIR, LOG_DIR, BACKUP_DIR].each { |required_directory|
-  unless File.exists?(required_directory)
+  unless File.exist?(required_directory)
     begin
       Dir.mkdir(required_directory)
     rescue

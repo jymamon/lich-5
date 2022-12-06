@@ -88,7 +88,7 @@ module Lich
         _respond 'another location for additional safety, after any'
         _respond 'additional requested updates are completed.'
         snapshot_subdir = File.join(BACKUP_DIR, "L5-snapshot-#{Time.now.strftime('%Y-%m-%d-%H-%M-%S')}")
-        unless File.exists?(snapshot_subdir)
+        unless File.exist?(snapshot_subdir)
           Dir.mkdir(snapshot_subdir)
         end
         filename = File.join(LICH_DIR, File.basename($PROGRAM_NAME))
@@ -96,7 +96,7 @@ module Lich
         File.open(filename, 'rb') { |r| File.open(copyfilename, 'wb') { |w| w.write(r.read) } }
 
         snapshot_lib_subdir = File.join(snapshot_subdir, 'lib')
-        unless File.exists?(snapshot_lib_subdir)
+        unless File.exist?(snapshot_lib_subdir)
           Dir.mkdir(snapshot_lib_subdir)
         end
         ## let's just get the directory contents and back it up
@@ -109,7 +109,7 @@ module Lich
         }
 
         snapshot_script_subdir = File.join(snapshot_subdir, 'scripts')
-        unless File.exists?(snapshot_script_subdir)
+        unless File.exist?(snapshot_script_subdir)
           Dir.mkdir(snapshot_script_subdir)
         end
         ## here we should maintain a discrete array of script files (450K versus 10M plus)
@@ -298,7 +298,7 @@ module Lich
           _respond "Valid extensions are '.lic' for scripts, '.rb' for library files,"
           _respond "and '.xml' or '.ui' for data files. Please correct and try again."
         else
-          File.delete(File.join(location, requested_file)) if File.exists?(File.join(location, requested_file))
+          File.delete(File.join(location, requested_file)) if File.exist?(File.join(location, requested_file))
           begin
             File.open(File.join(location, requested_file), 'wb') do |file|
               file.write open(File.join(remote_repo, requested_file)).read
@@ -308,7 +308,7 @@ module Lich
           rescue
             # we created a garbage file (zero bytes filename) so let's clean it up and inform.
             sleep 1
-            File.delete(File.join(location, requested_file)) if File.exists?(File.join(location, requested_file))
+            File.delete(File.join(location, requested_file)) if File.exist?(File.join(location, requested_file))
             _respond; _respond "The filename #{requested_file} is not available via lich5-update."
             _respond "Check the spelling of your requested file, or use ';jinx' to"
             _respond "to download #{requested_file} from another respository."

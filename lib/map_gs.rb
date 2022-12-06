@@ -463,7 +463,7 @@ class Map
           end
           error = false
           while filename = file_list.shift
-            if File.exists?(filename)
+            if File.exist?(filename)
               File.open(filename) { |f|
                 JSON.parse(f.read).each { |room|
                   room['wayto'].keys.each { |k|
@@ -543,7 +543,7 @@ class Map
         if @@loaded
           return true
         else
-          unless File.exists?(filename)
+          unless File.exist?(filename)
             raise Exception.exception('MapDatabaseError'), "Fatal error: file `#{filename}' does not exist!"
           end
 
@@ -661,7 +661,7 @@ class Map
 
   def self.save(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.dat")
     if $SAFE == 0
-      if File.exists?(filename)
+      if File.exist?(filename)
         respond '--- Backing up map database'
         begin
           # fixme: does this work on all platforms? File.rename(filename, "#{filename}.bak")
@@ -713,7 +713,7 @@ class Map
   end
 
   def self.save_json(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")
-    if File.exists?(filename)
+    if File.exist?(filename)
       respond 'File exists!  Backing it up before proceeding...'
       begin
         File.open(filename, 'rb') { |infile|
@@ -734,7 +734,7 @@ class Map
 
   def self.save_xml(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.xml")
     if $SAFE == 0
-      if File.exists?(filename)
+      if File.exist?(filename)
         respond 'File exists!  Backing it up before proceeding...'
         begin
           File.open(filename, 'rb') { |infile|

@@ -122,9 +122,9 @@ module Games
       def self.load(filename = nil)
         if $SAFE == 0
           if filename.nil?
-            if File.exists?("#{DATA_DIR}/spell-list.xml")
+            if File.exist?("#{DATA_DIR}/spell-list.xml")
               filename = "#{DATA_DIR}/spell-list.xml"
-            elsif File.exists?("#{SCRIPT_DIR}/spell-list.xml") # deprecated
+            elsif File.exist?("#{SCRIPT_DIR}/spell-list.xml") # deprecated
               filename = "#{SCRIPT_DIR}/spell-list.xml"
             else
               filename = "#{DATA_DIR}/spell-list.xml"

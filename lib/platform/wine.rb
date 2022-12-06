@@ -33,7 +33,7 @@ module Wine
 
   def self.registry_puts(key, value)
     hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # fixme ]/
-    if File.exists?(PREFIX)
+    if File.exist?(PREFIX)
       if thingie.nil? or thingie.empty?
         thingie = '@'
       else

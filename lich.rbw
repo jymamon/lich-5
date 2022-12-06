@@ -910,17 +910,17 @@ class Script
     if script_name =~ /\\|\//
       nil
     elsif script_name =~ /\.(?:lic|lich|rb|cmd|wiz)(?:\.gz)?$/i
-      File.exists?("#{SCRIPT_DIR}/#{script_name}") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}")
+      File.exist?("#{SCRIPT_DIR}/#{script_name}") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}")
     else
-      File.exists?("#{SCRIPT_DIR}/#{script_name}.lic") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.lic") ||
-        File.exists?("#{SCRIPT_DIR}/#{script_name}.lich") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.lich") ||
-        File.exists?("#{SCRIPT_DIR}/#{script_name}.rb") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.rb") ||
-        File.exists?("#{SCRIPT_DIR}/#{script_name}.cmd") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.cmd") ||
-        File.exists?("#{SCRIPT_DIR}/#{script_name}.wiz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.wiz") ||
-        File.exists?("#{SCRIPT_DIR}/#{script_name}.lic.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.lic.gz") ||
-        File.exists?("#{SCRIPT_DIR}/#{script_name}.rb.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.rb.gz") ||
-        File.exists?("#{SCRIPT_DIR}/#{script_name}.cmd.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.cmd.gz") ||
-        File.exists?("#{SCRIPT_DIR}/#{script_name}.wiz.gz") || File.exists?("#{SCRIPT_DIR}/custom/#{script_name}.wiz.gz")
+      File.exist?("#{SCRIPT_DIR}/#{script_name}.lic") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.lic") ||
+        File.exist?("#{SCRIPT_DIR}/#{script_name}.lich") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.lich") ||
+        File.exist?("#{SCRIPT_DIR}/#{script_name}.rb") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.rb") ||
+        File.exist?("#{SCRIPT_DIR}/#{script_name}.cmd") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.cmd") ||
+        File.exist?("#{SCRIPT_DIR}/#{script_name}.wiz") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.wiz") ||
+        File.exist?("#{SCRIPT_DIR}/#{script_name}.lic.gz") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.lic.gz") ||
+        File.exist?("#{SCRIPT_DIR}/#{script_name}.rb.gz") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.rb.gz") ||
+        File.exist?("#{SCRIPT_DIR}/#{script_name}.cmd.gz") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.cmd.gz") ||
+        File.exist?("#{SCRIPT_DIR}/#{script_name}.wiz.gz") || File.exist?("#{SCRIPT_DIR}/custom/#{script_name}.wiz.gz")
     end
   }
   @@elevated_log = proc { |data|
@@ -929,7 +929,7 @@ class Script
         nil
       else
         begin
-          Dir.mkdir("#{LICH_DIR}/logs") unless File.exists?("#{LICH_DIR}/logs")
+          Dir.mkdir("#{LICH_DIR}/logs") unless File.exist?("#{LICH_DIR}/logs")
           File.open("#{LICH_DIR}/logs/#{script.name}.log", 'a') { |f| f.puts data }
           true
         rescue
@@ -2166,7 +2166,7 @@ class SpellRanks
 
   def self.load
     if $SAFE == 0
-      if File.exists?("#{DATA_DIR}/#{XMLData.game}/spell-ranks.dat")
+      if File.exist?("#{DATA_DIR}/#{XMLData.game}/spell-ranks.dat")
         begin
           File.open("#{DATA_DIR}/#{XMLData.game}/spell-ranks.dat", 'rb') { |f|
             @@timestamp, @@list = Marshal.load(f.read)
@@ -3953,15 +3953,15 @@ module Games
       def self.load_data(filename = nil)
         if $SAFE == 0
           if filename.nil?
-            if File.exists?("#{DATA_DIR}/gameobj-data.xml")
+            if File.exist?("#{DATA_DIR}/gameobj-data.xml")
               filename = "#{DATA_DIR}/gameobj-data.xml"
-            elsif File.exists?("#{SCRIPT_DIR}/gameobj-data.xml") # deprecated
+            elsif File.exist?("#{SCRIPT_DIR}/gameobj-data.xml") # deprecated
               filename = "#{SCRIPT_DIR}/gameobj-data.xml"
             else
               filename = "#{DATA_DIR}/gameobj-data.xml"
             end
           end
-          if File.exists?(filename)
+          if File.exist?(filename)
             begin
               @@type_data = Hash.new
               @@sellable_data = Hash.new
@@ -4570,7 +4570,7 @@ alias :bounty? :checkbounty
 if @options.hostsdirectory
   hosts_dir = @options.hostsdirectory
   # TODO: Extra logic here can move to when the option is being set
-  if hosts_dir and File.exists?(hosts_dir)
+  if hosts_dir and File.exist?(hosts_dir)
     hosts_dir = hosts_dir.tr('\\', '/')
     hosts_dir += '/' unless hosts_dir[-1..-1] == '/'
   else
@@ -4585,7 +4585,7 @@ detachable_client_port = @options.detachable_client
 
 if @options.sal
   # TODO: Extra logic here can move to when the option is being set
-  unless File.exists?(@options.sal)
+  unless File.exist?(@options.sal)
     Lich.log "error: launch file does not exist: #{@options.sal}"
     Lich.msgbox "error: launch file does not exist: #{@options.sal}"
     exit
@@ -4769,7 +4769,7 @@ main_thread = Thread.new {
   require_relative('./lib/eaccess')
 
   if @options.login_character
-    if File.exists?(@options.entryfile)
+    if File.exist?(@options.entryfile)
       entry_data = File.open(@options.entryfile, 'r') { |file|
         begin
           Marshal.load(file.read.unpack('m').first)
@@ -5034,7 +5034,7 @@ main_thread = Thread.new {
         end
         @launch_data.collect! { |line| line.sub(/GAMEPORT=.+/, "GAMEPORT=#{localport}").sub(/GAMEHOST=.+/, "GAMEHOST=#{localhost}") }
         sal_filename = "#{TEMP_DIR}/lich#{rand(10000)}.sal"
-        sal_filename = "#{TEMP_DIR}/lich#{rand(10000)}.sal" while File.exists?(sal_filename)
+        sal_filename = "#{TEMP_DIR}/lich#{rand(10000)}.sal" while File.exist?(sal_filename)
         File.open(sal_filename, 'w') { |f| f.puts @launch_data }
         launcher_cmd = launcher_cmd.sub('%1', sal_filename)
         launcher_cmd = launcher_cmd.tr('/', '\\') if (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
