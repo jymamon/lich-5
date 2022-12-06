@@ -1061,7 +1061,7 @@ end
 def checkpcs(*strings)
   pcs = GameObj.pcs.collect { |pc| pc.noun }
   if pcs.empty?
-    if strings.empty? then return nil else return false end
+    strings.empty? ? (return nil) : (return false)
   end
   strings.flatten!
   if strings.empty?
@@ -1075,7 +1075,7 @@ end
 def checknpcs(*strings)
   npcs = GameObj.npcs.collect { |npc| npc.noun }
   if npcs.empty?
-    if strings.empty? then return nil else return false end
+    strings.empty? ? (return nil) : (return false)
   end
   strings.flatten!
   if strings.empty?

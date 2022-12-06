@@ -642,7 +642,7 @@ module Games
                       sleep 0.1
                       return false
                     end
-                    unless (spirit_cost <= 0) or checkspirit(spirit_cost + 1 + (if checkspell(9912) then 1 else 0 end) + (if checkspell(9913) then 1 else 0 end) + (if checkspell(9914) then 1 else 0 end) + (if checkspell(9916) then 5 else 0 end))
+                    unless (spirit_cost <= 0) or checkspirit(spirit_cost + 1 + (checkspell(9912) ? 1 : 0) + (checkspell(9913) ? 1 : 0) + (checkspell(9914) ? 1 : 0) + (checkspell(9916) ? 5 : 0))
                       echo 'cast: not enough spirit'
                       sleep 0.1
                       return false
