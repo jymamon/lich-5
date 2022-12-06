@@ -715,7 +715,7 @@ TRUSTED_SCRIPT_BINDING = proc { _script }
 class Script
   @@elevated_script_start = proc { |args|
     if args.empty?
-      # fixme: error
+      # FIXME: error
       next nil
     elsif args[0].instance_of?(String)
       script_name = args[0]
@@ -726,7 +726,7 @@ class Script
             if args[2].instance_of?(Hash)
               options = args[2]
             else
-              # fixme: error
+              # FIXME: error
               next nil
             end
           end
@@ -734,7 +734,7 @@ class Script
           options = args[1]
           script_args = (options[:args] || String.new)
         else
-          # fixme: error
+          # FIXME: error
           next nil
         end
       else
@@ -745,13 +745,13 @@ class Script
       if options[:name]
         script_name = options[:name]
       else
-        # fixme: error
+        # FIXME: error
         next nil
       end
       script_args = (options[:args] || String.new)
     end
 
-    # fixme: look in wizard script directory
+    # FIXME: look in wizard script directory
     # fixme: allow subdirectories?
     file_list = Dir.children(File.join(SCRIPT_DIR, 'custom')).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend('/custom/') } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
     if file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i })
@@ -971,7 +971,7 @@ class Script
         nil
       elsif ext.downcase == 'db3'
         SQLite3::Database.new("#{DATA_DIR}/#{script.name.gsub(/\/|\\/, '_')}.db3")
-        # fixme: block gets elevated... why?
+        # FIXME: block gets elevated... why?
         #         elsif block
         #            File.open("#{DATA_DIR}/#{script.name.gsub(/\/|\\/, '_')}.#{ext.gsub(/\/|\\/, '_')}", mode, &block)
       else
@@ -1175,7 +1175,7 @@ class Script
   end
   if RUBY_VERSION =~ /^2\.[012]\./
     def Script.trust(script_name)
-      # fixme: case sensitive blah blah
+      # FIXME: case sensitive blah blah
       if ($SAFE == 0) and !caller.any? { |c| c =~ /eval|run/ }
         begin
           Lich.db.execute('INSERT OR REPLACE INTO trusted_scripts(name) values(?);', script_name.encode('UTF-8'))
@@ -1425,7 +1425,7 @@ class Script
   end
 
   def gets
-    # fixme: no xml gets
+    # FIXME: no xml gets
     if @want_downstream or @want_downstream_xml or @want_script_output
       sleep 0.05 while @downstream_buffer.empty?
       @downstream_buffer.shift
@@ -2778,7 +2778,7 @@ module Games
       end
 
       def self.renew_cost
-        # fixme: multi-spell penalty?
+        # FIXME: multi-spell penalty?
         total = num_active = 0
         [1003, 1006, 1009, 1010, 1012, 1014, 1018, 1019, 1025].each { |song_num|
           if song = Spell[song_num]
@@ -4111,7 +4111,7 @@ reconnect_if_wanted = proc {
     Lich.log 'info: reconnecting...'
     if (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
       if $frontend == 'stormfront'
-        system 'taskkill /FI "WINDOWTITLE eq [GSIV: ' + Char.name + '*"' # fixme: window title changing to Gemstone IV: Char.name # name optional
+        system 'taskkill /FI "WINDOWTITLE eq [GSIV: ' + Char.name + '*"' # FIXME: window title changing to Gemstone IV: Char.name # name optional
       end
       args = ['start rubyw.exe']
     else

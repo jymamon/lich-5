@@ -2,7 +2,7 @@ module Wine
   BIN = $wine_bin
   PREFIX = $wine_prefix
   def self.registry_gets(key)
-    hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # fixme: stupid highlights ]/
+    hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # FIXME: stupid highlights ]/
     if File.exist?(PREFIX + '/system.reg')
       if hkey == 'HKEY_LOCAL_MACHINE'
         subkey = "[#{subkey.gsub('\\', '\\\\\\')}]"
@@ -32,7 +32,7 @@ module Wine
   end
 
   def self.registry_puts(key, value)
-    hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # fixme ]/
+    hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # FIXME: ]/
     if File.exist?(PREFIX)
       if thingie.nil? or thingie.empty?
         thingie = '@'

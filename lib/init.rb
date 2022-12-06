@@ -223,7 +223,7 @@ required_modules.each { |required_module|
 
       if result == Win32::IDIYES
         if gem_file
-          # fixme: using --source http://rubygems.org to avoid https because it has been failing to validate the certificate on Windows
+          # FIXME: using --source http://rubygems.org to avoid https because it has been failing to validate the certificate on Windows
           result = Win32.ShellExecuteEx(:lpVerb => gem_verb, :lpFile => gem_file, :lpParameters => "install #{required_module[:name]} --version #{required_module[:version]} #{gem_default_parameters}")
 
           if result[:return] > 0
@@ -271,7 +271,7 @@ required_modules.each { |required_module|
         required_module[:result] = 'User declined installation.'
       end
     else
-      # fixme: no module on Linux/Mac
+      # FIXME: no module on Linux/Mac
       puts "The #{required_module[:name]} gem is not installed (or failed to load), you may need to: sudo gem install #{required_module[:name]}"
       required_module[:result] = 'Install skipped. Not a Win32 platform.'
     end

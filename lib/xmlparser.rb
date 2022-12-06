@@ -300,7 +300,7 @@ class XMLParser
           last_mana = @mana
           @mana, @max_mana = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
           difference = @mana - last_mana
-          # fixme: enhancives screw this up
+          # FIXME: enhancives screw this up
           if (difference == noded_pulse) or (difference == unnoded_pulse) or ((@mana == @max_mana) and (last_mana + noded_pulse > @max_mana))
             @last_pulse = Time.now.to_i
             if @send_fake_tags
@@ -514,7 +514,7 @@ class XMLParser
           sleep 0.05
           Game._puts "#{$cmd_prefix}_injury 2"
           sleep 0.05
-          # fixme: game name hardcoded as Gemstone IV; maybe doesn't make any difference to the client
+          # FIXME: game name hardcoded as Gemstone IV; maybe doesn't make any difference to the client
           $_CLIENT_.puts "\034GSB0000000000#{attributes['char']}\r\n\034GSA#{Time.now.to_i}GemStone IV\034GSD\r\n"
           # Sending fake GSL tags to the Wizard FE is disabled until now, because it doesn't accept the tags and just gives errors until initialized with the above line
           @send_fake_tags = true
@@ -548,7 +548,7 @@ class XMLParser
 
   def text(text_string)
     begin
-      # fixme: /<stream id="Spells">.*?<\/stream>/m
+      # FIXME: /<stream id="Spells">.*?<\/stream>/m
       # $_CLIENT_.write(text_string) unless ($frontend != 'suks') or (@current_stream =~ /^(?:spellfront|inv|bounty|society)$/) or @active_tags.any? { |tag| tag =~ /^(?:compDef|inv|component|right|left|spell)$/ } or (@active_tags.include?('stream') and @active_ids.include?('Spells')) or (text_string == "\n" and (@last_tag =~ /^(?:popStream|prompt|compDef|dialogData|openDialog|switchQuickBar|component)$/))
       if @active_tags.include?('inv')
         if @active_tags[-1] == 'a'
@@ -652,7 +652,7 @@ class XMLParser
       elsif (@current_stream == 'inv') and @active_tags.include?('a')
         GameObj.new_inv(@obj_exist, @obj_noun, text_string, nil)
       elsif @current_stream == 'familiar'
-        # fixme: familiar room tracking does not (can not?) auto update, status of pcs and npcs isn't tracked at all, titles of pcs aren't tracked
+        # FIXME: familiar room tracking does not (can not?) auto update, status of pcs and npcs isn't tracked at all, titles of pcs aren't tracked
         if @current_style == 'roomName'
           @familiar_room_title = text_string
           @familiar_room_description = String.new

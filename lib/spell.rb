@@ -504,7 +504,7 @@ module Games
       end
 
       def affordable?(options = {})
-        # fixme: deal with them dirty bards!
+        # FIXME: deal with them dirty bards!
         release_options = options.dup
         release_options[:multicast] = nil
         if (stamina_cost(options) > 0) and (Spell[9699].active? or !checkstamina(stamina_cost(options)))
@@ -540,7 +540,7 @@ module Games
       end
 
       def cast(target = nil, results_of_interest = nil, arg_options = nil)
-        # fixme: find multicast in target and check mana for it
+        # FIXME: find multicast in target and check mana for it
         check_energy = proc {
           if Feat.known?(:mental_acuity)
             unless (mana_cost <= 0) or checkstamina(mana_cost * 2)

@@ -614,7 +614,7 @@ class Map
             File.open(filename) { |file|
               while line = file.gets
                 buffer.concat(line)
-                # fixme: remove   (?=<)   ?
+                # FIXME: remove   (?=<)   ?
                 while str = buffer.slice!(/^<([^>]+)><\/\1>|^[^<]+(?=<)|^<[^<]+>/)
                   if str[0, 1] == '<'
                     if str[1, 1] == '/'
@@ -664,7 +664,7 @@ class Map
       if File.exist?(filename)
         respond '--- Backing up map database'
         begin
-          # fixme: does this work on all platforms? File.rename(filename, "#{filename}.bak")
+          # FIXME: does this work on all platforms? File.rename(filename, "#{filename}.bak")
           File.open(filename, 'rb') { |infile|
             File.open("#{filename}.bak", 'wb') { |outfile|
               outfile.write(infile.read)

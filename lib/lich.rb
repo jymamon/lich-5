@@ -286,7 +286,7 @@ module Lich
     if defined?(Win32)
       if Win32.admin?
         begin
-          # fixme: 64 bit browsers?
+          # FIXME: 64 bit browsers?
           launcher_key = Win32.RegOpenKeyEx(:hKey => Win32::HKEY_LOCAL_MACHINE, :lpSubKey => 'Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command', :samDesired => (Win32::KEY_ALL_ACCESS | Win32::KEY_WOW64_32KEY))[:phkResult]
           r = Win32.RegQueryValueEx(:hKey => launcher_key, :lpValueName => 'RealCommand')
           if (r[:return] == 0) and !r[:lpData].empty?
@@ -471,7 +471,7 @@ module Lich
   def self.restore_hosts
     if Lich.hosts_file and File.exist?(Lich.hosts_file)
       begin
-        # fixme: use rename instead?  test rename on windows
+        # FIXME: use rename instead?  test rename on windows
         if File.exist?("#{Lich.hosts_file}.bak")
           File.open("#{Lich.hosts_file}.bak") { |infile|
             File.open(Lich.hosts_file, 'w') { |outfile|
