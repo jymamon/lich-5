@@ -1172,22 +1172,6 @@ Style/SignalException:
     - 'lib/stash.rb'
     - 'lib/util.rb'
 
-# Offense count: 607
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowIfMethodIsEmpty.
-Style/SingleLineMethods:
-  Exclude:
-    - 'lib/armor.rb'
-    - 'lib/cman.rb'
-    - 'lib/feat.rb'
-    - 'lib/global_defs.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/shield.rb'
-    - 'lib/spell.rb'
-    - 'lib/weapon.rb'
-    - 'lich.rbw'
-
 # Offense count: 20
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/SlicingWithRange:

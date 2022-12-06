@@ -73,6 +73,11 @@ Layout/SpaceInsideParens:
   Enabled: true
   EnforcedStyle: no_space
 
+Style/SingleLineMethods:
+  # Enabled is recommended.
+  Enabled: false
+  AllowIfMethodIsEmpty: true
+
 Style/TrailingCommaInHashLiteral:
   Enabled: true
   EnforcedStyleForMultiline: comma
