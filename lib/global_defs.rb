@@ -265,11 +265,11 @@ def timetest(*contestants)
 end
 
 def dec2bin(n)
-  '0' + [n].pack('N').unpack('B32')[0].sub(/^0+(?=\d)/, '')
+  '0' + [n].pack('N').unpack1('B32').sub(/^0+(?=\d)/, '')
 end
 
 def bin2dec(n)
-  [('0' * 32 + n.to_s)[-32..-1]].pack('B32').unpack('N')[0]
+  [('0' * 32 + n.to_s)[-32..-1]].pack('B32').unpack1('N')
 end
 
 def idle?(time = 60)

@@ -4748,7 +4748,7 @@ main_thread = Thread.new {
     if File.exist?(@options.entryfile)
       entry_data = File.open(@options.entryfile, 'r') { |file|
         begin
-          Marshal.load(file.read.unpack('m').first)
+          Marshal.load(file.read.unpack1('m'))
         rescue
           []
         end

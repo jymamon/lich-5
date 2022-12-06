@@ -22,7 +22,7 @@ module Win32
       pProcessIds = Array.new((args[:cb] / SIZEOF_LONG), 0).pack(''.rjust((args[:cb] / SIZEOF_LONG), 'L'))
       pBytesReturned = [0].pack('L')
       r = Kernel32.EnumProcesses(pProcessIds, args[:cb], pBytesReturned)
-      pBytesReturned = pBytesReturned.unpack('L')[0]
+      pBytesReturned = pBytesReturned.unpack1('L')
       return :return => r, :pProcessIds => pProcessIds.unpack(''.rjust((args[:cb] / SIZEOF_LONG),
                                                                        'L'))[0...(pBytesReturned / SIZEOF_LONG)], :pBytesReturned => pBytesReturned
     end
@@ -38,7 +38,7 @@ module Win32
       pProcessIds = Array.new((args[:cb] / SIZEOF_LONG), 0).pack(''.rjust((args[:cb] / SIZEOF_LONG), 'L'))
       pBytesReturned = [0].pack('L')
       r = Psapi.EnumProcesses(pProcessIds, args[:cb], pBytesReturned)
-      pBytesReturned = pBytesReturned.unpack('L')[0]
+      pBytesReturned = pBytesReturned.unpack1('L')
       return :return => r, :pProcessIds => pProcessIds.unpack(''.rjust((args[:cb] / SIZEOF_LONG),
                                                                        'L'))[0...(pBytesReturned / SIZEOF_LONG)], :pBytesReturned => pBytesReturned
     end
@@ -122,7 +122,7 @@ module Win32
   def self.GetExitCodeProcess(args)
     lpExitCode = [0].pack('L')
     r = Kernel32.GetExitCodeProcess(args[:hProcess].to_i, lpExitCode)
-    return :return => r, :lpExitCode => lpExitCode.unpack('L')[0]
+    return :return => r, :lpExitCode => lpExitCode.unpack1('L')
   end
 
   def self.GetModuleFileName(args = {})

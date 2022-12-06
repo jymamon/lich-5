@@ -23,19 +23,19 @@ module Win32
     return_length = [0].pack('L')
     r = Advapi32.GetTokenInformation(args[:TokenHandle].to_i, args[:TokenInformationClass], token_information,
                                      token_information_length, return_length)
-    return :return => r, :TokenIsElevated => token_information.unpack('L')[0] if args[:TokenInformationClass] == TokenElevation
+    return :return => r, :TokenIsElevated => token_information.unpack1('L') if args[:TokenInformationClass] == TokenElevation
   end
 
   def self.OpenProcessToken(args)
     token_handle = [0].pack('L')
     r = Advapi32.OpenProcessToken(args[:ProcessHandle].to_i, args[:DesiredAccess].to_i, token_handle)
-    return :return => r, :TokenHandle => token_handle.unpack('L')[0]
+    return :return => r, :TokenHandle => token_handle.unpack1('L')
   end
 
   def self.RegOpenKeyEx(args)
     phkResult = [0].pack('L')
     r = Advapi32.RegOpenKeyEx(args[:hKey].to_i, args[:lpSubKey].to_s, 0, args[:samDesired].to_i, phkResult)
-    return :return => r, :phkResult => phkResult.unpack('L')[0]
+    return :return => r, :phkResult => phkResult.unpack1('L')
   end
 
   def self.RegQueryValueEx(args)
@@ -43,21 +43,21 @@ module Win32
     lpcbData = [0].pack('L')
     r = Advapi32.RegQueryValueEx(args[:hKey].to_i, args[:lpValueName], 0, 0, 0, lpcbData)
     if r == 0
-      lpcbData = lpcbData.unpack('L')[0]
+      lpcbData = lpcbData.unpack1('L')
       lpData = String.new.rjust(lpcbData, "\x00")
       lpcbData = [lpcbData].pack('L')
       lpType = [0].pack('L')
       r = Advapi32.RegQueryValueEx(args[:hKey].to_i, args[:lpValueName], 0, lpType, lpData, lpcbData)
-      lpType = lpType.unpack('L')[0]
-      lpcbData = lpcbData.unpack('L')[0]
+      lpType = lpType.unpack1('L')
+      lpcbData = lpcbData.unpack1('L')
       if [REG_EXPAND_SZ, REG_SZ, REG_LINK].include?(lpType)
         lpData.gsub!("\x00", '')
       elsif lpType == REG_MULTI_SZ
         lpData = lpData.gsub("\x00\x00", '').split("\x00")
       elsif lpType == REG_DWORD
-        lpData = lpData.unpack('L')[0]
+        lpData = lpData.unpack1('L')
       elsif lpType == REG_QWORD
-        lpData = lpData.unpack('Q')[0]
+        lpData = lpData.unpack1('Q')
       elsif lpType == REG_BINARY
         # FIXME: This needs handled or reported as an error
       elsif lpType == REG_DWORD_BIG_ENDIAN

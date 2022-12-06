@@ -811,17 +811,6 @@ Style/TrivialAccessors:
     - 'lib/spell.rb'
     - 'lich.rbw'
 
-# Offense count: 17
-# This cop supports safe autocorrection (--autocorrect).
-Style/UnpackFirst:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/gtk.rb'
-    - 'lib/gui-login.rb'
-    - 'lib/platform/win32/advapi32.rb'
-    - 'lib/platform/win32/kernel32.rb'
-    - 'lich.rbw'
-
 # Offense count: 15
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/ZeroLengthPredicate:
