@@ -3449,8 +3449,8 @@ module Games
           XMLData.dialogs.fetch(@dialog, {})
         end
 
-        def each
-          to_h.each { |k, v| yield(k, v) }
+        def each(&block)
+          to_h.each(&block)
         end
 
         def active?(effect)
