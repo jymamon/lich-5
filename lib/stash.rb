@@ -42,7 +42,7 @@ module Lich
 
     def self.add_to_bag(bag, item)
       bag = container(bag)
-      try_or_fail(command: "_drag ##{item.id} ##{bag.id}") {
+      try_or_fail(:command => "_drag ##{item.id} ##{bag.id}") {
         20.times {
           return true if ![GameObj.right_hand, GameObj.left_hand].map(&:id).compact.include?(item.id) and bag.contents.to_a.map(&:id).include?(item.id)
           return true if item.name =~ /^ethereal \w+$/ && ![GameObj.right_hand, GameObj.left_hand].map(&:id).compact.include?(item.id)

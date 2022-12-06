@@ -170,10 +170,10 @@ play_button.signal_connect('clicked') {
   char_name = treeview.selection.selected[3]
 
   launch_data_hash = EAccess.auth(
-    account: user_id_entry.text,
-    password: pass_entry.text,
-    character: char_name,
-    game_code: game_code
+    :account => user_id_entry.text,
+    :password => pass_entry.text,
+    :character => char_name,
+    :game_code => game_code
   )
 
   @launch_data = launch_data_hash.map { |k, v| "#{k.upcase}=#{v}" }

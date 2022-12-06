@@ -27,7 +27,7 @@ else
       @account_book.override_background_color(:normal, lightgrey)
 
       @tab_provider = Gtk::CssProvider.new
-      @tab_provider.load(data: "tab { background-image: none; background-color: silver; }\
+      @tab_provider.load(:data => "tab { background-image: none; background-color: silver; }\
                           tab:hover { background-color: darkgrey; }")
     end
 
@@ -57,8 +57,7 @@ else
         end
 
         @button_provider = Gtk::CssProvider.new
-        @button_provider.load(data:
-            "button { font-size: 14px; padding-top: 0px; \
+        @button_provider.load(:data => "button { font-size: 14px; padding-top: 0px; \
                   padding-bottom: 0px; margin-top: 0px; margin-bottom: 0px; \
                   background-image: none; }\
                   button:hover { background-color: darkgrey; } ")
@@ -101,10 +100,10 @@ else
             if ev.button == 1
               @play_button.sensitive = false
               launch_data_hash = EAccess.auth(
-                account: login_info[:user_id],
-                password: login_info[:password],
-                character: login_info[:char_name],
-                game_code: login_info[:game_code]
+                :account => login_info[:user_id],
+                :password => login_info[:password],
+                :character => login_info[:char_name],
+                :game_code => login_info[:game_code]
               )
               launch_data = launch_data_hash.map { |k, v| "#{k.upcase}=#{v}" }
               if login_info[:frontend] == 'wizard'
@@ -169,8 +168,7 @@ else
       remove_button = Gtk::Button.new(:label => 'X')
 
       @button_provider = Gtk::CssProvider.new
-      @button_provider.load(data:
-        "button { font-size: 12px; padding-top: 0px; \
+      @button_provider.load(:data => "button { font-size: 12px; padding-top: 0px; \
                   padding-bottom: 0px; margin-top: 0px; margin-bottom: 0px; \
                   background-image: none; }\
                   button:hover { background-color: darkgrey; } ")
@@ -188,10 +186,10 @@ else
           if ev.button == 1
             play_button.sensitive = false
             launch_data_hash = EAccess.auth(
-              account: login_info[:user_id],
-              password: login_info[:password],
-              character: login_info[:char_name],
-              game_code: login_info[:game_code]
+              :account => login_info[:user_id],
+              :password => login_info[:password],
+              :character => login_info[:char_name],
+              :game_code => login_info[:game_code]
             )
             launch_data = launch_data_hash.map { |k, v| "#{k.upcase}=#{v}" }
             if login_info[:frontend] == 'wizard'
@@ -248,8 +246,7 @@ else
   end
 
   @togglebutton_provider = Gtk::CssProvider.new
-  @togglebutton_provider.load(data:
-    "button { font-size: 12px; padding-top: 0px; \
+  @togglebutton_provider.load(:data => "button { font-size: 12px; padding-top: 0px; \
               padding-bottom: 0px; margin-top: 0px; margin-bottom: 0px; \
               background-image: none; }\
               button:hover { background-color: darkgrey; } ")

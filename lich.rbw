@@ -4836,10 +4836,10 @@ main_thread = Thread.new {
       }
 
       launch_data_hash = EAccess.auth(
-        account: data[:user_id],
-        password: data[:password],
-        character: data[:char_name],
-        game_code: data[:game_code]
+        :account => data[:user_id],
+        :password => data[:password],
+        :character => data[:char_name],
+        :game_code => data[:game_code]
       )
 
       @launch_data = launch_data_hash.map { |k, v| "#{k.upcase}=#{v}" }

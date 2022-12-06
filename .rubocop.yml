@@ -98,6 +98,13 @@ Style/FormatString:
   Enabled: true
   EnforcedStyle: sprintf
 
+Style/HashSyntax:
+  Enabled: true
+  EnforcedStyle: hash_rockets
+  EnforcedShorthandSyntax: always
+  UseHashRocketsWithSymbolValues: true
+  PreferHashRocketsForNonAlnumEndingSymbols: true
+  
 Style/NumericLiterals:
   # Enabled is recommended.
   Enabled: false
