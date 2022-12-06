@@ -74,12 +74,6 @@ Lint/DuplicateMethods:
     - 'lib/platform/win32/kernel32.rb'
     - 'lib/xmlparser.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Lint/ElseLayout:
-  Exclude:
-    - 'lib/global_defs.rb'
-
 # Offense count: 4
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: AllowComments.

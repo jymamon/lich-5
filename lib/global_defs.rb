@@ -714,7 +714,8 @@ def reverse_direction(dir)
   elsif dir == nw then se
   elsif dir == u then d
   elsif dir == d then u
-  else echo("Cannot recognize direction to properly reverse it!"); false
+  else
+    echo("Cannot recognize direction to properly reverse it!"); false
   end
 end
 
