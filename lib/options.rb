@@ -177,7 +177,6 @@ class Parser
       # Line length triggers on the user facing text. Sacrificing user understanding for a rule
       # isn't the right trade.  We could break them up into multi-line strings, but that reads
       # even worse than the long lines.
-      # rubocop:disable Layout/LineLength
       # -----------------------------------------------------------------
       # Game Login commands
       # -----------------------------------------------------------------
@@ -480,8 +479,6 @@ class Parser
         args.save = value
       end
     end
-    # rubocop:enable Layout/LineLength
-
     opt_parser.parse!(options)
 
     options.delete_if { |arg| arg =~ /^launcher\.exe$/i } # added by Simutronics Game Entry

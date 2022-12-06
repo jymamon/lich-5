@@ -1,6 +1,5 @@
 # For this module, allow Win32 naming conventions to match the APIs being used underneath.
 # rubocop:disable Naming/MethodName
-# rubocop:disable Naming/VariableName
 require 'fiddle'
 require 'fiddle/import'
 require 'lib/platform/win32/advapi32'
@@ -67,5 +66,4 @@ module Win32
     end
   end
 end
-# rubocop:enable Naming/VariableName
 # rubocop:enable Naming/MethodName
