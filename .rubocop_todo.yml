@@ -464,13 +464,6 @@ Style/CommentedKeyword:
 Style/Documentation:
   Enabled: false
 
-# Offense count: 7
-# This cop supports safe autocorrection (--autocorrect).
-Style/EvalWithLocation:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lich.rbw'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Style/ExplicitBlockArgument:

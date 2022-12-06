@@ -90,6 +90,10 @@ Style/ConditionalAssignment:
 Style/EmptyElse:
   Enabled: false
 
+Style/EvalWithLocation:
+  # Enabled is recommended.  Revisit
+  Enabled: false
+
 Style/NumericLiterals:
   # Enabled is recommended.
   Enabled: false
