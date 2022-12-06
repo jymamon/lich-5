@@ -507,13 +507,13 @@ module Games
         # fixme: deal with them dirty bards!
         release_options = options.dup
         release_options[:multicast] = nil
-        if (stamina_cost(options) > 0) and (Spell[9699].active? or not checkstamina(stamina_cost(options)))
+        if (stamina_cost(options) > 0) and (Spell[9699].active? or !checkstamina(stamina_cost(options)))
           false
-        elsif (spirit_cost(options) > 0) and not checkspirit(spirit_cost(options) + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
+        elsif (spirit_cost(options) > 0) and !checkspirit(spirit_cost(options) + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
           false
         elsif mana_cost(options) > 0
           ## convert Spell[9699].active? to Effects::Debuffs test (if Debuffs is where it shows)
-          if Feat.known?(:mental_acuity) and (Spell[9699].active? or not checkstamina(mana_cost(options) * 2))
+          if Feat.known?(:mental_acuity) and (Spell[9699].active? or !checkstamina(mana_cost(options) * 2))
             false
           elsif (!Feat.known?(:mental_acuity)) && (!checkmana(mana_cost(options)) or (Spell[515].active? and !checkmana(mana_cost(options) + [mana_cost(release_options) / 4, 1].max)))
             false
@@ -531,7 +531,7 @@ module Games
         until (@@cast_lock.first == script) or @@cast_lock.empty?
           sleep 0.1
           Script.current # allows this loop to be paused
-          @@cast_lock.delete_if { |s| s.paused or not Script.list.include?(s) }
+          @@cast_lock.delete_if { |s| s.paused or !Script.list.include?(s) }
         end
       end
 
@@ -582,7 +582,7 @@ module Games
           until (@@cast_lock.first == script) or @@cast_lock.empty?
             sleep 0.1
             Script.current # allows this loop to be paused
-            @@cast_lock.delete_if { |s| s.paused or not Script.list.include?(s) }
+            @@cast_lock.delete_if { |s| s.paused or !Script.list.include?(s) }
           end
           check_energy.call
           if @cast_proc
@@ -612,7 +612,7 @@ module Games
 
             if (((target.nil? || target.to_s.empty?) && !(@no_incant)) && (cast_cmd == 'cast' && arg_options.nil?) || cast_cmd == 'incant') && cast_cmd !~ /^(?:channel|evoke)/
               cast_cmd = "incant #{@num}"
-            elsif (target.nil? or target.to_s.empty?) and (@type =~ /attack/i) and not [410, 435, 525, 912, 909, 609].include?(@num)
+            elsif (target.nil? or target.to_s.empty?) and (@type =~ /attack/i) and ![410, 435, 525, 912, 909, 609].include?(@num)
               cast_cmd += ' target'
             elsif target.class == GameObj
               cast_cmd += " ##{target.id}"

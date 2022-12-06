@@ -1031,7 +1031,7 @@ class Script
 
   def self.current
     if script = @@running.find { |s| s.has_thread?(Thread.current) }
-      sleep 0.2 while script.paused? and not script.ignore_pause
+      sleep 0.2 while script.paused? and !script.ignore_pause
       script
     else
       nil
@@ -1057,7 +1057,7 @@ class Script
       Script.current.pause
       Script.current
     else
-      if s = (@@running.find { |i| (i.name == name) and not i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and not i.paused? })
+      if s = (@@running.find { |i| (i.name == name) and !i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and !i.paused? })
         s.pause
         true
       else
@@ -1176,7 +1176,7 @@ class Script
   if RUBY_VERSION =~ /^2\.[012]\./
     def Script.trust(script_name)
       # fixme: case sensitive blah blah
-      if ($SAFE == 0) and not caller.any? { |c| c =~ /eval|run/ }
+      if ($SAFE == 0) and !caller.any? { |c| c =~ /eval|run/ }
         begin
           Lich.db.execute('INSERT OR REPLACE INTO trusted_scripts(name) values(?);', script_name.encode('UTF-8'))
         rescue SQLite3::BusyException
@@ -1753,13 +1753,13 @@ class WizardScript < Script
     }
 
     setvars = Array.new
-    data.each { |line| setvars.push($1) if line =~ /[\s\t]*setvariable\s+([^\s\t]+)[\s\t]/i and not setvars.include?($1) }
+    data.each { |line| setvars.push($1) if line =~ /[\s\t]*setvariable\s+([^\s\t]+)[\s\t]/i and !setvars.include?($1) }
     has_counter = data.find { |line| line =~ /%c/i }
     has_save = data.find { |line| line =~ /%s/i }
     has_nextroom = data.find { |line| line =~ /nextroom/i }
 
     fixstring = proc { |str|
-      str.gsub!('%' + $1 + '%', '#{' + $1.downcase + '}') while not setvars.empty? and str =~ /%(#{setvars.join('|')})%/io
+      str.gsub!('%' + $1 + '%', '#{' + $1.downcase + '}') while !setvars.empty? and str =~ /%(#{setvars.join('|')})%/io
       str.gsub!(/%c(?:%)?/i, '#{c}')
       str.gsub!(/%s(?:%)?/i, '#{sav}')
       str.gsub!(/%#{$1}(?:%)?/, '#{script.vars[' + $1 + ']}') while str =~ /%([0-9])(?:%)?/
@@ -2053,8 +2053,8 @@ module Buffer
   end
 
   def self.cleanup
-    @@index.delete_if { |k, v| not Thread.list.any? { |t| t.object_id == k } }
-    @@streams.delete_if { |k, v| not Thread.list.any? { |t| t.object_id == k } }
+    @@index.delete_if { |k, v| !Thread.list.any? { |t| t.object_id == k } }
+    @@streams.delete_if { |k, v| !Thread.list.any? { |t| t.object_id == k } }
     return self
   end
 end
@@ -2150,7 +2150,7 @@ class SharedBuffer
   end
 
   def cleanup_threads
-    @buffer_index.delete_if { |k, v| not Thread.list.any? { |t| t.object_id == k } }
+    @buffer_index.delete_if { |k, v| !Thread.list.any? { |t| t.object_id == k } }
     return self
   end
 end
@@ -2505,7 +2505,7 @@ module Games
           script_name = '(unknown script)'
         end
         $_CLIENTBUFFER_.push "[#{script_name}]#{$SEND_CHARACTER}#{$cmd_prefix}#{str}\r\n"
-        if script.nil? or not script.silent
+        if script.nil? or !script.silent
           respond "[#{script_name}]#{$SEND_CHARACTER}#{str}\r\n"
         end
         Game._puts "#{$cmd_prefix}#{str}"
@@ -4098,7 +4098,7 @@ ICONMAP = {
 XMLData = XMLParser.new
 
 reconnect_if_wanted = proc {
-  if @options.reconnect and @options.login_character and not $_CLIENTBUFFER_.any? { |cmd| cmd =~ /^(?:\[.*?\])?(?:<c>)?(?:quit|exit)/i }
+  if @options.reconnect and @options.login_character and !$_CLIENTBUFFER_.any? { |cmd| cmd =~ /^(?:\[.*?\])?(?:<c>)?(?:quit|exit)/i }
     if @options.reconnect_delay
       reconnect_delay = @options.reconnect_delay.delay
       reconnect_step = @options.reconnect_delay.step
@@ -4307,7 +4307,7 @@ def fetchloot(userbagchoice = UserVars.lootsack)
     stowed = nil
   end
   GameObj.loot.each { |loot|
-    unless not regexpstr.nil? and loot.name =~ /#{regexpstr}/
+    unless !regexpstr.nil? and loot.name =~ /#{regexpstr}/
       fput "get #{loot.noun}"
       fput("put my #{loot.noun} in my #{userbagchoice}") if checkright || checkleft
     end

@@ -868,20 +868,6 @@ Style/NilComparison:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 43
-# This cop supports safe autocorrection (--autocorrect).
-Style/Not:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/gui-login.rb'
-    - 'lib/init.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/spell.rb'
-    - 'lib/stash.rb'
-    - 'lich.rbw'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedOctalStyle.

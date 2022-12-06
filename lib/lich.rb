@@ -155,7 +155,7 @@ module Lich
       end
     elsif defined?(Wine)
       launcher_cmd = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\RealCommand')
-      unless launcher_cmd and not launcher_cmd.empty?
+      unless launcher_cmd and !launcher_cmd.empty?
         launcher_cmd = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\')
       end
       return launcher_cmd
@@ -170,7 +170,7 @@ module Lich
         begin
           launcher_key = Win32.RegOpenKeyEx(:hKey => Win32::HKEY_LOCAL_MACHINE, :lpSubKey => 'Software\\Simutronics\\Launcher', :samDesired => (Win32::KEY_ALL_ACCESS | Win32::KEY_WOW64_32KEY))[:phkResult]
           r = Win32.RegQueryValueEx(:hKey => launcher_key, :lpValueName => 'RealDirectory')
-          if (r[:return] == 0) and not r[:lpData].empty?
+          if (r[:return] == 0) and !r[:lpData].empty?
             # already linked
             return true
           end
@@ -272,7 +272,7 @@ module Lich
     elsif defined?(Wine)
       real_launch_dir = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Simutronics\\Launcher\\RealDirectory')
       result = true
-      if real_launch_dir and not real_launch_dir.empty?
+      if real_launch_dir and !real_launch_dir.empty?
         result &&= Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Simutronics\\Launcher\\Directory', real_launch_dir)
         result &&= Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Simutronics\\Launcher\\RealDirectory', '')
       end
@@ -289,7 +289,7 @@ module Lich
           # fixme: 64 bit browsers?
           launcher_key = Win32.RegOpenKeyEx(:hKey => Win32::HKEY_LOCAL_MACHINE, :lpSubKey => 'Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command', :samDesired => (Win32::KEY_ALL_ACCESS | Win32::KEY_WOW64_32KEY))[:phkResult]
           r = Win32.RegQueryValueEx(:hKey => launcher_key, :lpValueName => 'RealCommand')
-          if (r[:return] == 0) and not r[:lpData].empty?
+          if (r[:return] == 0) and !r[:lpData].empty?
             # already linked
             return true
           end
@@ -391,7 +391,7 @@ module Lich
     elsif defined?(Wine)
       real_launch_cmd = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\RealCommand')
       result = true
-      if real_launch_cmd and not real_launch_cmd.empty?
+      if real_launch_cmd and !real_launch_cmd.empty?
         result &&= Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\', real_launch_cmd)
         result &&= Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\RealCommand', '')
       end

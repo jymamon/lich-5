@@ -58,7 +58,7 @@ def gui_login(entry_data_file)
     @notebook.append_page(@game_entry_tab, Gtk::Label.new('Manual Entry'))
 
     @notebook.signal_connect('switch-page') { |who, page, page_num|
-      if (page_num == 2) and not install_tab_loaded
+      if (page_num == 2) and !install_tab_loaded
         refresh_button.clicked
       end
     }

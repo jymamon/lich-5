@@ -285,7 +285,7 @@ unless File.exists?(LICH_DIR)
     Dir.mkdir(LICH_DIR)
   rescue
     message = "An error occured while attempting to create directory #{LICH_DIR}\n\n"
-    if not File.exists?(LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
+    if !File.exists?(LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
       message.concat "This was likely because the parent directory (#{LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop}) doesn't exist."
     elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]:\\(Users|Documents and Settings)/)
       message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
@@ -304,7 +304,7 @@ unless File.exists?(TEMP_DIR)
     Dir.mkdir(TEMP_DIR)
   rescue
     message = "An error occured while attempting to create directory #{TEMP_DIR}\n\n"
-    if not File.exists?(TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
+    if !File.exists?(TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
       message.concat "This was likely because the parent directory (#{TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop}) doesn't exist."
     elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]:\\(Users|Documents and Settings)/)
       message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
@@ -321,7 +321,7 @@ begin
   $stderr = File.open(debug_filename, 'w')
 rescue
   message = "An error occured while attempting to create file #{debug_filename}\n\n"
-  if defined?(Win32) and (TEMP_DIR !~ /^[A-z]:\\(Users|Documents and Settings)/) and not Win32.isXP?
+  if defined?(Win32) and (TEMP_DIR !~ /^[A-z]:\\(Users|Documents and Settings)/) and !Win32.isXP?
     message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
   else
     message.concat $!

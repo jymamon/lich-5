@@ -232,7 +232,7 @@ class Map
               r.description.include?(XMLData.room_description.strip) and
               (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
               (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
-              (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r)
+              (!r.check_location or r.location == Map.get_location) and check_peer_tag.call(r)
           }
             redo unless @@current_room_count == XMLData.room_count
             return room.id
@@ -243,7 +243,7 @@ class Map
                 (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                 (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
                 (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
-                (not r.check_location or r.location == Map.get_location) and check_peer_tag.call(r)
+                (!r.check_location or r.location == Map.get_location) and check_peer_tag.call(r)
             }
               redo unless @@current_room_count == XMLData.room_count
               return room.id
@@ -268,7 +268,7 @@ class Map
             r.description.include?(XMLData.room_description.strip) and
             (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
             (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
-            (not r.check_location or r.location == Map.get_location)
+            (!r.check_location or r.location == Map.get_location)
         })
           redo unless @@fuzzy_room_count == XMLData.room_count
           if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }
@@ -283,7 +283,7 @@ class Map
               (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
               (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
               (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
-              (not r.check_location or r.location == Map.get_location)
+              (!r.check_location or r.location == Map.get_location)
           }
             redo unless @@fuzzy_room_count == XMLData.room_count
             if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }

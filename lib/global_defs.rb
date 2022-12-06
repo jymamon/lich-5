@@ -109,7 +109,7 @@ def unpause_script(*names)
   names.flatten!
   names.each { |scr|
     fnd = Script.list.find { |nm| nm.name =~ /^#{scr}/i }
-    fnd.unpause if fnd.paused and not fnd.nil?
+    fnd.unpause if fnd.paused and !fnd.nil?
   }
 end
 
@@ -2017,7 +2017,7 @@ def do_client(client_string)
         Script.running.last.kill
       end
     elsif cmd =~ /^p$|^pause$/
-      if s = Script.running.reverse.find { |s| not s.paused? }
+      if s = Script.running.reverse.find { |s| !s.paused? }
         s.pause
       else
         respond '--- Lich: no scripts to pause'
@@ -2032,15 +2032,15 @@ def do_client(client_string)
       s = nil
     elsif cmd =~ /^ka$|^kill\s?all$|^stop\s?all$/
       did_something = false
-      Script.running.find_all { |s| not s.no_kill_all }.each { |s| s.kill; did_something = true }
+      Script.running.find_all { |s| !s.no_kill_all }.each { |s| s.kill; did_something = true }
       respond('--- Lich: no scripts to kill') unless did_something
     elsif cmd =~ /^pa$|^pause\s?all$/
       did_something = false
-      Script.running.find_all { |s| not s.paused? and not s.no_pause_all }.each { |s| s.pause; did_something = true }
+      Script.running.find_all { |s| !s.paused? and !s.no_pause_all }.each { |s| s.pause; did_something = true }
       respond('--- Lich: no scripts to pause') unless did_something
     elsif cmd =~ /^ua$|^unpause\s?all$/
       did_something = false
-      Script.running.find_all { |s| s.paused? and not s.no_pause_all }.each { |s| s.unpause; did_something = true }
+      Script.running.find_all { |s| s.paused? and !s.no_pause_all }.each { |s| s.unpause; did_something = true }
       respond('--- Lich: no scripts to unpause') unless did_something
     elsif cmd =~ /^(k|kill|stop|p|pause|u|unpause)\s(.+)/
       action = $1
