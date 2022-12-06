@@ -121,6 +121,11 @@ Style/RedundantReturn:
   # Enabled is recommended.
   Enabled: false
 
+Style/RegexpLiteral:
+  Enabled: true
+  EnforcedStyle: slashes
+  AllowInnerSlashes: true
+
 Style/Semicolon:
   Enabled: true
   AllowAsExpressionSeparator: true

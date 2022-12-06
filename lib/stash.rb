@@ -22,7 +22,7 @@ module Lich
   module Stash
     def self.find_container(param)
       GameObj.inv.find { |container|
-        container.name =~ %r[#{param}]
+        container.name =~ /#{param}/
       } or fail "could not find Container[name: #{param}]"
     end
 

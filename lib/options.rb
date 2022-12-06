@@ -307,33 +307,33 @@ class Parser
       # Directory override commands
       # -----------------------------------------------------------------
       opts.on('--backup BACKUPDIR', 'Override the default backup directory.') { |directory|
-        options.backupdir = directory.sub(%r{[\\/]$}, '')
+        options.backupdir = directory.sub(/[\\\/]$/, '')
       }
 
       opts.on('--data DATADIR', 'Override the default data directory.') { |directory|
-        options.datadir = directory.sub(%r{[\\/]$}, '')
+        options.datadir = directory.sub(/[\\\/]$/, '')
       }
 
       # This probably shouldn't be allowed at all. Lich is already loaded as is,
       # at least, this lib. What does it mean to change the home directory now?
       opts.on('--home HOMEDIR', 'Override the default base lich directory.') { |directory|
-        options.lichdir = directory.sub(%r{[\\/]$}, '')
+        options.lichdir = directory.sub(/[\\\/]$/, '')
       }
 
       opts.on('--logs LOGDIR', 'Override the default logs directory.') { |directory|
-        options.logdir = directory.sub(%r{[\\/]$}, '')
+        options.logdir = directory.sub(/[\\\/]$/, '')
       }
 
       opts.on('--maps MAPDIR', 'Override the default maps directory.') { |directory|
-        options.mapdir = directory.sub(%r{[\\/]$}, '')
+        options.mapdir = directory.sub(/[\\\/]$/, '')
       }
 
       opts.on('--scripts SCRIPTDIR', 'Override the default scripts directory.') { |directory|
-        options.scriptdir = directory.sub(%r{[\\/]$}, '')
+        options.scriptdir = directory.sub(/[\\\/]$/, '')
       }
 
       opts.on('--temp TEMPDIR', 'Override the default temp directory.') { |directory|
-        options.tempdir = directory.sub(%r{[\\/]$}, '')
+        options.tempdir = directory.sub(/[\\\/]$/, '')
       }
 
       # -----------------------------------------------------------------
