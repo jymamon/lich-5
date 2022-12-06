@@ -304,7 +304,7 @@ class Shield
       /^You are unable to do that right now\.$/,
       /^You don't seem to be able to move to do that\.$/,
       /^Provoking a GameMaster is not such a good idea\.$/,
-      /^You do not currently have a target\.$/,
+      /^You do not currently have a target\.$/
     )
     usage_cmd = "shield #{usage}"
     if target.instance_of?(GameObj)

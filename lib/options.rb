@@ -55,7 +55,7 @@ class Parser
       :gemstone,
       :platinum,
       :shattered,
-      :test,
+      :test
     ).new
 
     args.lichdir = File.dirname(File.expand_path($PROGRAM_NAME))
