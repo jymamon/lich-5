@@ -207,10 +207,10 @@ end
 def muckled?
   muckled = checkwebbed || checkdead || checkstunned
   if defined?(checksleeping)
-    muckled = muckled || checksleeping
+    muckled ||= checksleeping
   end
   if defined?(checkbound)
-    muckled = muckled || checkbound
+    muckled ||= checkbound
   end
   return muckled
 end

@@ -153,9 +153,9 @@ module Games
                 end
               }
               @@bonus_list = @@list.collect { |spell| spell._bonus.keys }.flatten
-              @@bonus_list = @@bonus_list | @@bonus_list
+              @@bonus_list |= @@bonus_list
               @@cost_list = @@list.collect { |spell| spell._cost.keys }.flatten
-              @@cost_list = @@cost_list | @@cost_list
+              @@cost_list |= @@cost_list
               @@loaded = true
               return true
             rescue
@@ -279,7 +279,7 @@ module Games
         if self.time_per_formula.to_s == 'Spellsong.timeleft'
           @timeleft = Spellsong.timeleft
         else
-          @timeleft = @timeleft - ((Time.now - @timestamp) / 60.to_f)
+          @timeleft -= ((Time.now - @timestamp) / 60.to_f)
           if @timeleft <= 0
             self.putdown
             return 0.to_f
