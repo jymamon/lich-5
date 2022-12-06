@@ -172,9 +172,9 @@ module Games
 
       def self.[](val)
         Spell.load unless @@loaded
-        if val.class == Spell
+        if val.instance_of?(Spell)
           val
-        elsif (val.class == Integer) or (val.class == String and val =~ /^[0-9]+$/)
+        elsif (val.instance_of?(Integer)) or (val.instance_of?(String) and val =~ /^[0-9]+$/)
           @@list.find { |spell| spell.num == val.to_i }
         else
           val = Regexp.escape(val)
@@ -614,9 +614,9 @@ module Games
               cast_cmd = "incant #{@num}"
             elsif (target.nil? or target.to_s.empty?) and (@type =~ /attack/i) and ![410, 435, 525, 912, 909, 609].include?(@num)
               cast_cmd += ' target'
-            elsif target.class == GameObj
+            elsif target.instance_of?(GameObj)
               cast_cmd += " ##{target.id}"
-            elsif target.class == Integer
+            elsif target.instance_of?(Integer)
               cast_cmd += " ##{target}"
             elsif cast_cmd !~ /^incant/
               cast_cmd += " #{target}"
@@ -678,7 +678,7 @@ module Games
                 put 'stance offensive'
                 # dothistimeout 'stance offensive', 5, /^You (?:are now in|move into) an? offensive stance|^You are unable to change your stance\.$/
               end
-              if results_of_interest.class == Regexp
+              if results_of_interest.instance_of?(Regexp)
                 merged_results_regex = /#{@@results_regex}|#{results_of_interest}/
               else
                 merged_results_regex = @@results_regex

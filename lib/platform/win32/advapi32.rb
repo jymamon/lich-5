@@ -74,17 +74,17 @@ module Win32
   end
 
   def self.RegSetValueEx(args)
-    if [REG_EXPAND_SZ, REG_SZ, REG_LINK].include?(args[:dwType]) and (args[:lpData].class == String)
+    if [REG_EXPAND_SZ, REG_SZ, REG_LINK].include?(args[:dwType]) and args[:lpData].instance_of?(String)
       lpData = args[:lpData].dup
       lpData.concat("\x00")
       cbData = lpData.length
-    elsif (args[:dwType] == REG_MULTI_SZ) and (args[:lpData].class == Array)
+    elsif (args[:dwType] == REG_MULTI_SZ) and args[:lpData].instance_of?(Array)
       lpData = args[:lpData].join("\x00").concat("\x00\x00")
       cbData = lpData.length
-    elsif (args[:dwType] == REG_DWORD) and (args[:lpData].class == Fixnum)
+    elsif (args[:dwType] == REG_DWORD) and args[:lpData].instance_of?(Fixnum)
       lpData = [args[:lpData]].pack('L')
       cbData = 4
-    elsif (args[:dwType] == REG_QWORD) and (args[:lpData].class == Fixnum or args[:lpData].class == Bignum)
+    elsif (args[:dwType] == REG_QWORD) and (args[:lpData].instance_of?(Fixnum) or args[:lpData].instance_of?(Bignum))
       lpData = [args[:lpData]].pack('Q')
       cbData = 8
     elsif args[:dwType] == REG_BINARY

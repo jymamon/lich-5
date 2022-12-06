@@ -63,7 +63,7 @@ class Map
 
   def self.[](val)
     Map.load unless @@loaded
-    if (val.class == Integer) or (val.class == Bignum) or val =~ /^[0-9]+$/
+    if (val.instance_of?(Integer)) or (val.instance_of?(Bignum)) or val =~ /^[0-9]+$/
       @@list[val.to_i]
     elsif val =~ /^u(-?\d+)$/i
       uid_request = $1.dup.to_i
@@ -472,7 +472,7 @@ class Map
                     end
                   }
                   room['timeto'].keys.each { |k|
-                    if (room['timeto'][k].class == String) and (room['timeto'][k][0..2] == ';e ')
+                    if (room['timeto'][k].instance_of?(String)) and (room['timeto'][k][0..2] == ';e ')
                       room['timeto'][k] = StringProc.new(room['timeto'][k][3..-1])
                     end
                   }
@@ -708,7 +708,7 @@ class Map
       :check_location => @check_location,
       :unique_loot => @unique_loot,
       :uid => @uid,
-    }).delete_if { |a, b| b.nil? or (b.class == Array and b.empty?) }
+    }).delete_if { |a, b| b.nil? or (b.instance_of?(Array) and b.empty?) }
     JSON.pretty_generate(mapjson)
   end
 
@@ -778,14 +778,14 @@ class Map
             room.unique_loot.to_a.each { |loot| file.write "      <unique_loot>#{loot.gsub(/(<|>|"|'|&)/) { escape[$1] }}</unique_loot>\n" }
             file.write "      <image name=\"#{room.image.gsub(/(<|>|"|'|&)/) { escape[$1] }}\" coords=\"#{room.image_coords.join(',')}\" />\n" if room.image and room.image_coords
             room.wayto.keys.each { |target|
-              if room.timeto[target].class == Proc
+              if room.timeto[target].instance_of?(Proc)
                 cost = " cost=\"#{room.timeto[target]._dump.gsub(/(<|>|"|'|&)/) { escape[$1] }}\""
               elsif room.timeto[target]
                 cost = " cost=\"#{room.timeto[target]}\""
               else
                 cost = ''
               end
-              if room.wayto[target].class == Proc
+              if room.wayto[target].instance_of?(Proc)
                 file.write "      <exit target=\"#{target}\" type=\"Proc\"#{cost}>#{room.wayto[target]._dump.gsub(/(<|>|"|'|&)/) { escape[$1] }}</exit>\n"
               else
                 file.write "      <exit target=\"#{target}\" type=\"#{room.wayto[target].class}\"#{cost}>#{room.wayto[target].gsub(/(<|>|"|'|&)/) { escape[$1] }}</exit>\n"
@@ -808,7 +808,7 @@ class Map
 
   def self.estimate_time(array)
     Map.load unless @@loaded
-    unless array.class == Array
+    unless array.instance_of?(Array)
       raise Exception.exception('MapError'), 'Map.estimate_time was given something not an array!'
     end
 
@@ -816,7 +816,7 @@ class Map
     until array.length < 2
       room = array.shift
       if t = Map[room].timeto[array.first.to_s]
-        if t.class == Proc
+        if t.instance_of?(Proc)
           time += t.call.to_f
         else
           time += t.to_f
@@ -829,7 +829,7 @@ class Map
   end
 
   def self.dijkstra(source, destination = nil)
-    if source.class == Map
+    if source.instance_of?(Map)
       source.dijkstra(destination)
     elsif room = Map[source]
       room.dijkstra(destination)
@@ -865,7 +865,7 @@ class Map
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
             unless visited[adj_room_i]
-              if @@list[v].timeto[adj_room].class == Proc
+              if @@list[v].timeto[adj_room].instance_of?(Proc)
                 nd = @@list[v].timeto[adj_room].call
               else
                 nd = @@list[v].timeto[adj_room]
@@ -881,7 +881,7 @@ class Map
             end
           }
         end
-      elsif destination.class == Integer
+      elsif destination.instance_of?(Integer)
         until pq.size == 0
           v = pq.shift
           break if v == destination
@@ -890,7 +890,7 @@ class Map
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
             unless visited[adj_room_i]
-              if @@list[v].timeto[adj_room].class == Proc
+              if @@list[v].timeto[adj_room].instance_of?(Proc)
                 nd = @@list[v].timeto[adj_room].call
               else
                 nd = @@list[v].timeto[adj_room]
@@ -906,7 +906,7 @@ class Map
             end
           }
         end
-      elsif destination.class == Array
+      elsif destination.instance_of?(Array)
         dest_list = destination.collect { |dest| dest.to_i }
         until pq.size == 0
           v = pq.shift
@@ -916,7 +916,7 @@ class Map
           @@list[v].wayto.keys.each { |adj_room|
             adj_room_i = adj_room.to_i
             unless visited[adj_room_i]
-              if @@list[v].timeto[adj_room].class == Proc
+              if @@list[v].timeto[adj_room].instance_of?(Proc)
                 nd = @@list[v].timeto[adj_room].call
               else
                 nd = @@list[v].timeto[adj_room]
@@ -942,7 +942,7 @@ class Map
   end
 
   def self.findpath(source, destination)
-    if source.class == Map
+    if source.instance_of?(Map)
       source.path_to(destination)
     elsif room = Map[source]
       room.path_to(destination)

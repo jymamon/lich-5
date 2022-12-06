@@ -63,7 +63,7 @@ module Win32
       bInheritHandles = args[:bInheritHandles].to_i
     end
 
-    if args[:lpEnvironment].class == Array
+    if args[:lpEnvironment].instance_of?(Array)
       # fixme
     end
 

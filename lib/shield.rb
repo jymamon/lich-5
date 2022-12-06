@@ -307,9 +307,9 @@ class Shield
       /^You do not currently have a target\.$/,
     )
     usage_cmd = "shield #{usage}"
-    if target.class == GameObj
+    if target.instance_of?(GameObj)
       usage_cmd += " ##{target.id}"
-    elsif target.class == Integer
+    elsif target.instance_of?(Integer)
       usage_cmd += " ##{target}"
     elsif target != ''
       usage_cmd += " #{target}"

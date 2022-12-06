@@ -414,21 +414,6 @@ Style/ClassAndModuleChildren:
   Exclude:
     - 'lib/gtk.rb'
 
-# Offense count: 76
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods.
-# AllowedMethods: ==, equal?, eql?
-Style/ClassEqualityComparison:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/platform/win32/advapi32.rb'
-    - 'lib/platform/win32/kernel32.rb'
-    - 'lib/shield.rb'
-    - 'lib/spell.rb'
-    - 'lich.rbw'
-
 # Offense count: 831
 Style/ClassVars:
   Exclude:

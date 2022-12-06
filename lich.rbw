@@ -217,7 +217,7 @@ require_relative('./lib/xmlparser')
 class UpstreamHook
   @@upstream_hooks ||= Hash.new
   def self.add(name, action)
-    unless action.class == Proc
+    unless action.instance_of?(Proc)
       echo "UpstreamHook: not a Proc (#{action})"
       return false
     end
@@ -250,7 +250,7 @@ end
 class DownstreamHook
   @@downstream_hooks ||= Hash.new
   def self.add(name, action)
-    unless action.class == Proc
+    unless action.instance_of?(Proc)
       echo "DownstreamHook: not a Proc (#{action})"
       return false
     end
@@ -288,7 +288,7 @@ module Setting
       respond $!.backtrace[0..2]
       next nil
     end
-    if script.class == ExecScript
+    if script.instance_of?(ExecScript)
       respond "--- Lich: error: Setting.load: exec scripts can't have settings"
       respond $!.backtrace[0..2]
       exit
@@ -335,7 +335,7 @@ module Setting
       respond $!.backtrace[0..2]
       next nil
     end
-    if script.class == ExecScript
+    if script.instance_of?(ExecScript)
       respond "--- Lich: error: Setting.load: exec scripts can't have settings"
       respond $!.backtrace[0..2]
       exit
@@ -400,7 +400,7 @@ module Setting
       respond '--- error: Setting: unknown calling script'
       next nil
     end
-    if script.class == ExecScript
+    if script.instance_of?(ExecScript)
       respond "--- Lich: error: Setting.load: exec scripts can't have settings"
       respond $!.backtrace[0..2]
       exit
@@ -717,20 +717,20 @@ class Script
     if args.empty?
       # fixme: error
       next nil
-    elsif args[0].class == String
+    elsif args[0].instance_of?(String)
       script_name = args[0]
       if args[1]
-        if args[1].class == String
+        if args[1].instance_of?(String)
           script_args = args[1]
           if args[2]
-            if args[2].class == Hash
+            if args[2].instance_of?(Hash)
               options = args[2]
             else
               # fixme: error
               next nil
             end
           end
-        elsif args[1].class == Hash
+        elsif args[1].instance_of?(Hash)
           options = args[1]
           script_args = (options[:args] || String.new)
         else
@@ -740,7 +740,7 @@ class Script
       else
         options = Hash.new
       end
-    elsif args[0].class == Hash
+    elsif args[0].instance_of?(Hash)
       options = args[0]
       if options[:name]
         script_name = options[:name]
@@ -947,7 +947,7 @@ class Script
       if script.name =~ /^lich$/i
         respond '--- error: Script.db cannot be used by a script named lich'
         nil
-      elsif script.class == ExecScript
+      elsif script.instance_of?(ExecScript)
         respond '--- error: Script.db cannot be used by exec scripts'
         nil
       else
@@ -966,7 +966,7 @@ class Script
       elsif script.name =~ /^entry$/i
         respond '--- error: Script.open_file cannot be used by a script named entry'
         nil
-      elsif script.class == ExecScript
+      elsif script.instance_of?(ExecScript)
         respond '--- error: Script.open_file cannot be used by exec scripts'
         nil
       elsif ext.downcase == 'db3'
@@ -1236,14 +1236,14 @@ class Script
   def initialize(args)
     @file_name = args[:file]
     @name = /.*[\/\\]+([^.]+)\./.match(@file_name).captures.first
-    if args[:args].class == String
+    if args[:args].instance_of?(String)
       if args[:args].empty?
         @vars = Array.new
       else
         @vars = [args[:args]]
         @vars.concat args[:args].scan(/[^\s"]*(?<!\\)"(?:\\"|[^"])+(?<!\\)"[^\s]*|(?:\\"|[^"\s])+/).collect { |s| s.gsub(/(?<!\\)"/, '').gsub('\\"', '"') }
       end
-    elsif args[:args].class == Array
+    elsif args[:args].instance_of?(Array)
       if args[:args].nil? || args[:args].empty?
         @vars = Array.new
       else
@@ -1898,7 +1898,7 @@ class Watchfor
   def initialize(line, theproc = nil, &block)
     return nil unless script = Script.current
 
-    if line.class == String
+    if line.instance_of?(String)
       line = Regexp.new(Regexp.escape(line))
     elsif line.class != Regexp
       echo 'watchfor: no string or regexp given'
@@ -3711,7 +3711,7 @@ module Games
       end
 
       def self.[](val)
-        if val.class == String
+        if val.instance_of?(String)
           if val =~ /^-?[0-9]+$/
             obj = @@inv.find { |o| o.id == val } || @@loot.find { |o| o.id == val } || @@npcs.find { |o| o.id == val } || @@pcs.find { |o| o.id == val } || [@@right_hand, @@left_hand].find { |o| o.id == val } || @@room_desc.find { |o| o.id == val }
           elsif val.split(' ').length == 1
@@ -3719,7 +3719,7 @@ module Games
           else
             obj = @@inv.find { |o| o.name == val } || @@loot.find { |o| o.name == val } || @@npcs.find { |o| o.name == val } || @@pcs.find { |o| o.name == val } || [@@right_hand, @@left_hand].find { |o| o.name == val } || @@room_desc.find { |o| o.name == val } || @@inv.find { |o| o.name =~ /\b#{Regexp.escape(val.strip)}$/i } || @@loot.find { |o| o.name =~ /\b#{Regexp.escape(val.strip)}$/i } || @@npcs.find { |o| o.name =~ /\b#{Regexp.escape(val.strip)}$/i } || @@pcs.find { |o| o.name =~ /\b#{Regexp.escape(val.strip)}$/i } || [@@right_hand, @@left_hand].find { |o| o.name =~ /\b#{Regexp.escape(val.strip)}$/i } || @@room_desc.find { |o| o.name =~ /\b#{Regexp.escape(val.strip)}$/i } || @@inv.find { |o| o.name =~ /\b#{Regexp.escape(val).sub(' ', ' .*')}$/i } || @@loot.find { |o| o.name =~ /\b#{Regexp.escape(val).sub(' ', ' .*')}$/i } || @@npcs.find { |o| o.name =~ /\b#{Regexp.escape(val).sub(' ', ' .*')}$/i } || @@pcs.find { |o| o.name =~ /\b#{Regexp.escape(val).sub(' ', ' .*')}$/i } || [@@right_hand, @@left_hand].find { |o| o.name =~ /\b#{Regexp.escape(val).sub(' ', ' .*')}$/i } || @@room_desc.find { |o| o.name =~ /\b#{Regexp.escape(val).sub(' ', ' .*')}$/i }
           end
-        elsif val.class == Regexp
+        elsif val.instance_of?(Regexp)
           obj = @@inv.find { |o| o.name =~ val } || @@loot.find { |o| o.name =~ val } || @@npcs.find { |o| o.name =~ val } || @@pcs.find { |o| o.name =~ val } || [@@right_hand, @@left_hand].find { |o| o.name =~ val } || @@room_desc.find { |o| o.name =~ val }
         end
       end
@@ -4263,7 +4263,7 @@ def start_scripts(*script_names)
 end
 
 def force_start_script(script_name, cli_vars = [], flags = {})
-  flags = Hash.new unless flags.class == Hash
+  flags = Hash.new unless flags.instance_of?(Hash)
   flags[:force] = true
   start_script(script_name, cli_vars, flags)
 end
