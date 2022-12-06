@@ -93,13 +93,6 @@ Lint/MissingSuper:
   Exclude:
     - 'lich.rbw'
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-Lint/ParenthesesAsGroupedExpression:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lich.rbw'
-
 # Offense count: 3
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: AllowedImplicitNamespaces.

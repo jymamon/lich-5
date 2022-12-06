@@ -5045,7 +5045,7 @@ main_thread = Thread.new {
         end
 
         if (RUBY_PLATFORM =~ /mingw|win/i) && (RUBY_PLATFORM !~ /darwin/i)
-          system ("start #{launcher_cmd}")
+          system("start #{launcher_cmd}")
         elsif defined?(Wine) and (game != 'AVALON') # Wine on linux
           spawn "#{Wine::BIN} #{launcher_cmd}"
         else # macOS and linux - does not account for WINE on linux

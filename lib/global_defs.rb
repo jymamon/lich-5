@@ -567,7 +567,7 @@ def move(dir = 'none', giveup_seconds = 10, giveup_lines = 30)
       end
     elsif line =~ /^(\.\.\.w|W)ait ([0-9]+) sec(onds)?\.$/
       if $2.to_i > 1
-        sleep ($2.to_i - '0.2'.to_f)
+        sleep($2.to_i - '0.2'.to_f)
       else
         sleep 0.3
       end
@@ -1744,7 +1744,7 @@ def dothis(action, success_line)
         return line
       elsif line =~ /^(\.\.\.w|W)ait ([0-9]+) sec(onds)?\.$/
         if $2.to_i > 1
-          sleep ($2.to_i - '0.5'.to_f)
+          sleep($2.to_i - '0.5'.to_f)
         else
           sleep 0.3
         end
@@ -1805,7 +1805,7 @@ def dothistimeout(action, timeout, success_line)
         return line
       elsif line =~ /^(\.\.\.w|W)ait ([0-9]+) sec(onds)?\.$/
         if $2.to_i > 1
-          sleep ($2.to_i - '0.5'.to_f)
+          sleep($2.to_i - '0.5'.to_f)
         else
           sleep 0.3
         end
