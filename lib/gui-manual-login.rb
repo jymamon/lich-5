@@ -62,11 +62,11 @@ end
 # frontend_box.pack_start(suks_option, false, false, 0)
 
 custom_launch_option = Gtk::CheckButton.new('Custom launch command')
-@custom_launch_entry = Gtk::ComboBoxEntry.new()
+@custom_launch_entry = Gtk::ComboBoxEntry.new
 @custom_launch_entry.child.text = '(enter custom launch command)'
 @custom_launch_entry.append_text('Wizard.Exe /GGS /H127.0.0.1 /P%port% /K%key%')
 @custom_launch_entry.append_text('Stormfront.exe /GGS/Hlocalhost/P%port%/K%key%')
-@custom_launch_dir = Gtk::ComboBoxEntry.new()
+@custom_launch_dir = Gtk::ComboBoxEntry.new
 @custom_launch_dir.child.text = '(enter working directory for command)'
 @custom_launch_dir.append_text('../wizard')
 @custom_launch_dir.append_text('../StormFront')

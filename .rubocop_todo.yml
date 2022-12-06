@@ -594,18 +594,6 @@ Style/InverseMethods:
     - 'lib/eaccess.rb'
     - 'lich.rbw'
 
-# Offense count: 11
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods.
-Style/MethodCallWithoutArgsParentheses:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/global_defs.rb'
-    - 'lib/gui-manual-login.rb'
-    - 'lib/gui-saved-login.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/update.rb'
-
 # Offense count: 17
 Style/MissingRespondToMissing:
   Exclude:

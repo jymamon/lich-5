@@ -119,7 +119,7 @@ class Map
       return Map.set_current(id)
     end
 
-    return Map.match_no_uid()
+    return Map.match_no_uid
   end
 
   def self.set_current(id) # returns Map/Room
@@ -149,7 +149,7 @@ class Map
     if script = Script.current
       return Map.set_current(Map.match_current(script))
     else
-      return Map.set_fuzzy(Map.match_fuzzy())
+      return Map.set_fuzzy(Map.match_fuzzy)
     end
   end
 

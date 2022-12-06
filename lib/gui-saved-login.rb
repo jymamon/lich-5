@@ -62,7 +62,7 @@ else
                   background-image: none; }\
                   button:hover { background-color: darkgrey; } ")
 
-        @play_button = Gtk::Button.new()
+        @play_button = Gtk::Button.new
         char_label = Gtk::Label.new("#{realm} - #{login_info[:char_name]}")
         char_label = Gtk::Label.new("#{login_info[:char_name]}")
         char_label.set_width_chars(15)
@@ -80,7 +80,7 @@ else
 
         @play_button.add(button_row)
         @play_button.set_alignment(0.0, 0.5)
-        @remove_button = Gtk::Button.new()
+        @remove_button = Gtk::Button.new
         remove_label = Gtk::Label.new('<span foreground="red"><b>Remove</b></span>')
         remove_label.use_markup = true
         remove_label.set_width_chars(10)
@@ -263,7 +263,7 @@ else
   add_character_pane.add1(add_char_label)
   add_character_pane.pack2(add_char_entry)
 
-  add_inst_select = Gtk::ComboBoxEntry.new()
+  add_inst_select = Gtk::ComboBoxEntry.new
   add_inst_select.child.text = 'Prime'
   add_inst_select.append_text('Prime')
   add_inst_select.append_text('Platinum')

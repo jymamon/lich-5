@@ -1721,7 +1721,7 @@ end
 
 def fill_hand
   waitrt?
-  Lich::Stash.equip_hands()
+  Lich::Stash.equip_hands
 end
 
 def fill_right_hand

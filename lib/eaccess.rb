@@ -49,7 +49,7 @@ module EAccess
   end
 
   def self.auth(password:, account:, character: nil, game_code: nil, legacy: false)
-    conn = EAccess.socket()
+    conn = EAccess.socket
     # it is vitally important to verify self-signed certs
     # because there is no chain-of-trust for them
     EAccess.verify_pem(conn)
