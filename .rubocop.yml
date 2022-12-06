@@ -73,6 +73,10 @@ Layout/SpaceInsideParens:
   Enabled: true
   EnforcedStyle: no_space
 
+Style/Alias:
+  Enabled: true
+  EnforcedStyle: prefer_alias
+
 Style/BlockComments:
   # Enabled is recommended.
   Enabled: false
