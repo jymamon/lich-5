@@ -48,7 +48,7 @@ class Armor
   end
 
   def self.[]=(name, val)
-    Armor.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
+    Armor.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase}=", val.to_i)
   end
 
   def self.known?(name)

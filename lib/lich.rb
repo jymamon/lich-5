@@ -64,7 +64,7 @@ module Lich
   def self.module_eval(*a);        nil; end
 
   def self.log(msg)
-    $stderr.puts "#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}: #{msg}"
+    $stderr.puts "#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}: #{msg}"
   end
 
   def self.msgbox(args)

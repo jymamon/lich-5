@@ -257,7 +257,7 @@ class CMan
   end
 
   def self.[]=(name, val)
-    CMan.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
+    CMan.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase}=", val.to_i)
   end
 
   def self.known?(name)

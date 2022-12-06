@@ -106,7 +106,7 @@ class Feat
   end
 
   def self.[]=(name, val)
-    Feat.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
+    Feat.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase}=", val.to_i)
   end
 
   def self.known?(name)

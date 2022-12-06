@@ -2065,7 +2065,7 @@ def do_client(client_string)
       if list.empty?
         respond '--- Lich: no active scripts'
       else
-        respond "--- Lich: #{list.collect { |s| s.paused? ? "#{s.name} (paused)" : s.name }.join(", ")}"
+        respond "--- Lich: #{list.collect { |s| s.paused? ? "#{s.name} (paused)" : s.name }.join(', ')}"
       end
       list = nil
     elsif cmd =~ /^force\s+[^\s]+/

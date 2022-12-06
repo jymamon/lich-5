@@ -89,7 +89,7 @@ class Weapon
   end
 
   def self.[]=(name, val)
-    Weapon.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
+    Weapon.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase}=", val.to_i)
   end
 
   def self.known?(name)

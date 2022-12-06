@@ -274,7 +274,7 @@ class Shield
   end
 
   def self.[]=(name, val)
-    Shield.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
+    Shield.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase}=", val.to_i)
   end
 
   def self.known?(name)

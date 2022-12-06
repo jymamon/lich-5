@@ -87,7 +87,7 @@ module Lich
         _respond; _respond 'You may also wish to copy your entire Lich5 folder to'
         _respond 'another location for additional safety, after any'
         _respond 'additional requested updates are completed.'
-        snapshot_subdir = File.join(BACKUP_DIR, "L5-snapshot-#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}")
+        snapshot_subdir = File.join(BACKUP_DIR, "L5-snapshot-#{Time.now.strftime('%Y-%m-%d-%H-%M-%S')}")
         unless File.exists?(snapshot_subdir)
           Dir.mkdir(snapshot_subdir)
         end

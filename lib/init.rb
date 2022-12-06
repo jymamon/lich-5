@@ -317,7 +317,7 @@ unless File.exists?(TEMP_DIR)
 end
 
 begin
-  debug_filename = "#{TEMP_DIR}/debug-#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}.log"
+  debug_filename = "#{TEMP_DIR}/debug-#{Time.now.strftime('%Y-%m-%d-%H-%M-%S')}.log"
   $stderr = File.open(debug_filename, 'w')
 rescue
   message = "An error occured while attempting to create file #{debug_filename}\n\n"

@@ -1782,7 +1782,7 @@ class WizardScript < Script
         line = "#{indent}echo #{fixstring.call(arg.inspect)}"
       elsif line =~ /^([\s\t]*)waitfor[\s\t]+(.+)/i
         indent, arg = $1, $2
-        line = "#{indent}waitfor #{fixstring.call(Regexp.escape(arg).inspect.gsub("\\\\ ", ' '))}"
+        line = "#{indent}waitfor #{fixstring.call(Regexp.escape(arg).inspect.gsub('\\\\ ', ' '))}"
       elsif line =~ /^([\s\t]*)put[\s\t]+\.(.+)$/i
         indent, arg = $1, $2
         if arg.include?(' ')
@@ -1813,7 +1813,7 @@ class WizardScript < Script
         line = "#{indent}pause #{arg}"
       elsif line =~ /^([\s\t]*)match[\s\t]+([^\s\t]+)[\s\t]+(.+)/i
         indent, label, arg = $1, $2, $3
-        line = "#{indent}match #{fixstring.call(label.inspect).downcase}, #{fixstring.call(Regexp.escape(arg).inspect.gsub("\\\\ ", ' '))}"
+        line = "#{indent}match #{fixstring.call(label.inspect).downcase}, #{fixstring.call(Regexp.escape(arg).inspect.gsub('\\\\ ', ' '))}"
       elsif line =~ /^([\s\t]*)matchre[\s\t]+([^\s\t]+)[\s\t]+(.+)/i
         indent, label, regex = $1, $2, $3
         line = "#{indent}matchre #{fixstring.call(label.inspect).downcase}, #{regex}"
