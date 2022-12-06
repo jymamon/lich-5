@@ -408,7 +408,7 @@ class Map
         if @@uids[u].nil?
           @@uids[u] = [r.id]
         else
-          @@uids[u] << r.id if !@@uids[u].include?(r.id)
+          @@uids[u] << r.id unless @@uids[u].include?(r.id)
         end
       }
     }

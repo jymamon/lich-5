@@ -137,9 +137,9 @@ elsif defined?(Wine)
     $sf_fe_loc = $sf_fe_loc_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c')
   end
 
-  if !File.exist?($sf_fe_loc)
+  unless File.exist?($sf_fe_loc)
     $sf_fe_loc =~ /SIMU/ ? $sf_fe_loc = $sf_fe_loc.gsub('SIMU', 'Simu') : $sf_fe_loc = $sf_fe_loc.gsub('Simu', 'SIMU')
-    Lich.log('Cannot find STORM equivalent FE to launch.') if !File.exist?($sf_fe_loc)
+    Lich.log('Cannot find STORM equivalent FE to launch.') unless File.exist?($sf_fe_loc)
   end
 end
 

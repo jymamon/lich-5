@@ -309,22 +309,22 @@ class Map
     id = ids[0] if ids.size == 1
     id = Map.match_multi_ids(ids) if ids.size > 1
     id = Map.match_current(Script.current) if id.nil?
-    if !id.nil? # existing room
+    unless id.nil? # existing room
       room = Map[id]
-      if !room.uid.include?(XMLData.room_id)
+      unless room.uid.include?(XMLData.room_id)
         room.uid << XMLData.room_id
         Map.uids_add(XMLData.room_id, room.id)
         echo "Map: Adding new uid for #{room.id}: #{XMLData.room_id}"
       end
-      if !room.title.include?(XMLData.room_title)
+      unless room.title.include?(XMLData.room_title)
         room.title.unshift(XMLData.room_title)
         echo "Map: Adding new title for #{room.id}: '#{XMLData.room_title}'"
       end
-      if !room.description.include?(XMLData.room_description.strip)
+      unless room.description.include?(XMLData.room_description.strip)
         room.description.unshift(XMLData.room_description.strip)
         echo "Map: Adding new description for #{room.id}: '#{XMLData.room_description.strip}'"
       end
-      if !room.paths.include?(XMLData.room_exits_string.strip)
+      unless room.paths.include?(XMLData.room_exits_string.strip)
         room.paths.unshift(XMLData.room_exits_string.strip)
         echo "Map: Adding new paths for #{room.id}: '#{XMLData.room_exits_string.strip}'"
       end
@@ -377,7 +377,7 @@ class Map
     if @@uids[uid].nil?
       @@uids[uid] = [id]
     else
-      @@uids[uid] << id if !@@uids[uid].include?(id)
+      @@uids[uid] << id unless @@uids[uid].include?(id)
     end
   end
 

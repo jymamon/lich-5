@@ -38,7 +38,7 @@ module Lich
         prep_update
         if "#{LICH_VERSION}".chr == '5'
           if Gem::Version.new(@current) < Gem::Version.new(@update_to)
-            if !@new_features.empty?
+            unless @new_features.empty?
               _respond ''; _respond monsterbold_start + '*** NEW VERSION AVAILABLE ***' + monsterbold_end
               _respond ''; _respond ''
               _respond ''; _respond @new_features
