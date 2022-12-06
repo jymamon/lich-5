@@ -665,12 +665,6 @@ Style/OptionalBooleanParameter:
   Exclude:
     - 'lib/util.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/OrAssignment:
-  Exclude:
-    - 'lib/xmlparser.rb'
-
 # Offense count: 18
 # This cop supports safe autocorrection (--autocorrect).
 Style/ParallelAssignment:

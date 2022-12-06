@@ -323,7 +323,7 @@ class XMLParser
         elsif attributes['id'] == 'spirit'
           @last_spirit = @spirit if @last_spirit
           @spirit, @max_spirit = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
-          @last_spirit = @spirit unless @last_spirit
+          @last_spirit ||= @spirit
           $_CLIENT_.puts "\034GSV#{sprintf('%010d%010d%010d%010d%010d%010d%010d%010d', @max_health.to_i, @health.to_i, @max_spirit.to_i, @spirit.to_i, @max_mana.to_i, @mana.to_i, @wound_gsl, @scar_gsl)}\r\n" if @send_fake_tags
         elsif attributes['id'] == 'nextLvlPB'
           Gift.pulse unless @next_level_text == attributes['text']
