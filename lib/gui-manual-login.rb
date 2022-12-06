@@ -34,12 +34,12 @@ renderer = Gtk::CellRendererText.new
 treeview = Gtk::TreeView.new(liststore)
 treeview.height_request = 160
 
-col = Gtk::TreeViewColumn.new("Game", renderer, :text => 1)
+col = Gtk::TreeViewColumn.new('Game', renderer, :text => 1)
 col.set_sort_column_id(1)
 col.resizable = true
 treeview.append_column(col)
 
-col = Gtk::TreeViewColumn.new("Character", renderer, :text => 3)
+col = Gtk::TreeViewColumn.new('Character', renderer, :text => 3)
 col.set_sort_column_id(3)
 col.resizable = true
 treeview.append_column(col)
@@ -63,13 +63,13 @@ end
 
 custom_launch_option = Gtk::CheckButton.new('Custom launch command')
 @custom_launch_entry = Gtk::ComboBoxEntry.new()
-@custom_launch_entry.child.text = "(enter custom launch command)"
-@custom_launch_entry.append_text("Wizard.Exe /GGS /H127.0.0.1 /P%port% /K%key%")
-@custom_launch_entry.append_text("Stormfront.exe /GGS/Hlocalhost/P%port%/K%key%")
+@custom_launch_entry.child.text = '(enter custom launch command)'
+@custom_launch_entry.append_text('Wizard.Exe /GGS /H127.0.0.1 /P%port% /K%key%')
+@custom_launch_entry.append_text('Stormfront.exe /GGS/Hlocalhost/P%port%/K%key%')
 @custom_launch_dir = Gtk::ComboBoxEntry.new()
-@custom_launch_dir.child.text = "(enter working directory for command)"
-@custom_launch_dir.append_text("../wizard")
-@custom_launch_dir.append_text("../StormFront")
+@custom_launch_dir.child.text = '(enter working directory for command)'
+@custom_launch_dir.append_text('../wizard')
+@custom_launch_dir.append_text('../StormFront')
 
 @make_quick_option = Gtk::CheckButton.new('Save this info for quick game entry')
 
@@ -178,15 +178,15 @@ play_button.signal_connect('clicked') {
 
   @launch_data = launch_data_hash.map { |k, v| "#{k.upcase}=#{v}" }
   if wizard_option.active?
-    @launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, "GAMEFILE=WIZARD.EXE").sub(/GAME=.+/, "GAME=WIZ") }
+    @launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, 'GAMEFILE=WIZARD.EXE').sub(/GAME=.+/, 'GAME=WIZ') }
   elsif avalon_option.active?
-    @launch_data.collect! { |line| line.sub(/GAME=.+/, "GAME=AVALON") }
+    @launch_data.collect! { |line| line.sub(/GAME=.+/, 'GAME=AVALON') }
   elsif suks_option.active?
-    @launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, "GAMEFILE=WIZARD.EXE").sub(/GAME=.+/, "GAME=SUKS") }
+    @launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, 'GAMEFILE=WIZARD.EXE').sub(/GAME=.+/, 'GAME=SUKS') }
   end
   if custom_launch_option.active?
     @launch_data.push "CUSTOMLAUNCH=#{@custom_launch_entry.child.text}"
-    unless @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == "(enter working directory for command)"
+    unless @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == '(enter working directory for command)'
       @launch_data.push "CUSTOMLAUNCHDIR=#{@custom_launch_dir.child.text}"
     end
   end
@@ -202,7 +202,7 @@ play_button.signal_connect('clicked') {
     end
     if custom_launch_option.active?
       custom_launch = @custom_launch_entry.child.text
-      if @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == "(enter working directory for command)"
+      if @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == '(enter working directory for command)'
         custom_launch_dir = nil
       else
         @custom_launch_dir = @custom_launch_dir.child.text

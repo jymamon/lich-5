@@ -44,7 +44,7 @@ class Map
   end
 
   def inspect
-    self.instance_variables.collect { |var| var.to_s + "=" + self.instance_variable_get(var).inspect }.join("\n")
+    self.instance_variables.collect { |var| var.to_s + '=' + self.instance_variable_get(var).inspect }.join("\n")
   end
 
   def self.fuzzy_room_id
@@ -419,7 +419,7 @@ class Map
       file_list = [filename]
     end
     if file_list.empty?
-      respond "--- Lich: error: no map database found"
+      respond '--- Lich: error: no map database found'
       return false
     end
     while filename = file_list.shift
@@ -458,7 +458,7 @@ class Map
             # respond "--- loading #{filename}" #if error
           end
           if file_list.empty?
-            respond "--- Lich: error: no map database found"
+            respond '--- Lich: error: no map database found'
             return false
           end
           error = false
@@ -508,7 +508,7 @@ class Map
             respond "--- file_list = #{filename.inspect}"
           end
           if file_list.empty?
-            respond "--- Lich: error: no map database found"
+            respond '--- Lich: error: no map database found'
             return false
           end
           error = false
@@ -544,7 +544,7 @@ class Map
           return true
         else
           unless File.exists?(filename)
-            raise Exception.exception("MapDatabaseError"), "Fatal error: file `#{filename}' does not exist!"
+            raise Exception.exception('MapDatabaseError'), "Fatal error: file `#{filename}' does not exist!"
           end
 
           missing_end = false
@@ -662,7 +662,7 @@ class Map
   def self.save(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.dat")
     if $SAFE == 0
       if File.exists?(filename)
-        respond "--- Backing up map database"
+        respond '--- Backing up map database'
         begin
           # fixme: does this work on all platforms? File.rename(filename, "#{filename}.bak")
           File.open(filename, 'rb') { |infile|
@@ -677,7 +677,7 @@ class Map
       begin
         File.open(filename, 'wb') { |f| f.write(Marshal.dump(@@list)) }
         @@tags.clear
-        respond "--- Map database saved"
+        respond '--- Map database saved'
       rescue
         respond "--- Lich: error: #{$!}"
       end
@@ -714,10 +714,10 @@ class Map
 
   def self.save_json(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")
     if File.exists?(filename)
-      respond "File exists!  Backing it up before proceeding..."
+      respond 'File exists!  Backing it up before proceeding...'
       begin
         File.open(filename, 'rb') { |infile|
-          File.open("#{filename}.bak", "wb:UTF-8") { |outfile|
+          File.open("#{filename}.bak", 'wb:UTF-8') { |outfile|
             outfile.write(infile.read)
           }
         }
@@ -735,10 +735,10 @@ class Map
   def self.save_xml(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.xml")
     if $SAFE == 0
       if File.exists?(filename)
-        respond "File exists!  Backing it up before proceeding..."
+        respond 'File exists!  Backing it up before proceeding...'
         begin
           File.open(filename, 'rb') { |infile|
-            File.open("#{filename}.bak", "wb") { |outfile|
+            File.open("#{filename}.bak", 'wb') { |outfile|
               outfile.write(infile.read)
             }
           }
@@ -748,7 +748,7 @@ class Map
         end
       end
       begin
-        escape = { '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => "&apos;", '&' => '&amp;' }
+        escape = { '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&apos;', '&' => '&amp;' }
         File.open(filename, 'w') { |file|
           file.write "<map>\n"
           @@list.each { |room|
@@ -809,7 +809,7 @@ class Map
   def self.estimate_time(array)
     Map.load unless @@loaded
     unless array.class == Array
-      raise Exception.exception("MapError"), "Map.estimate_time was given something not an array!"
+      raise Exception.exception('MapError'), 'Map.estimate_time was given something not an array!'
     end
 
     time = 0.to_f
@@ -822,7 +822,7 @@ class Map
           time += t.to_f
         end
       else
-        time += "0.2".to_f
+        time += '0.2'.to_f
       end
     end
     time
@@ -834,7 +834,7 @@ class Map
     elsif room = Map[source]
       room.dijkstra(destination)
     else
-      echo "Map.dijkstra: error: invalid source room"
+      echo 'Map.dijkstra: error: invalid source room'
       nil
     end
   end
@@ -947,7 +947,7 @@ class Map
     elsif room = Map[source]
       room.path_to(destination)
     else
-      echo "Map.findpath: error: invalid source room"
+      echo 'Map.findpath: error: invalid source room'
       nil
     end
   end

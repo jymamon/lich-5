@@ -8,5 +8,5 @@ if XMLData.game =~ /DR/
 elsif XMLData.game =~ /GS/
   require 'lib/map_gs.rb'
 else
-  echo "Got me boss, no clue on map class."
+  echo 'Got me boss, no clue on map class.'
 end

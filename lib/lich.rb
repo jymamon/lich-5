@@ -26,7 +26,7 @@ module Lich
       return $sf_fe_loc
     end
 
-    pp "Landed in get_simu_launcher method"
+    pp 'Landed in get_simu_launcher method'
   end
 
   def self.db
@@ -42,15 +42,15 @@ module Lich
     # TODO: Parameter validation
     @@lich_db_file = database_file
     begin
-      Lich.db.execute("CREATE TABLE IF NOT EXISTS script_setting (script TEXT NOT NULL, name TEXT NOT NULL, value BLOB, PRIMARY KEY(script, name));")
-      Lich.db.execute("CREATE TABLE IF NOT EXISTS script_auto_settings (script TEXT NOT NULL, scope TEXT, hash BLOB, PRIMARY KEY(script, scope));")
-      Lich.db.execute("CREATE TABLE IF NOT EXISTS lich_settings (name TEXT NOT NULL, value TEXT, PRIMARY KEY(name));")
-      Lich.db.execute("CREATE TABLE IF NOT EXISTS uservars (scope TEXT NOT NULL, hash BLOB, PRIMARY KEY(scope));")
+      Lich.db.execute('CREATE TABLE IF NOT EXISTS script_setting (script TEXT NOT NULL, name TEXT NOT NULL, value BLOB, PRIMARY KEY(script, name));')
+      Lich.db.execute('CREATE TABLE IF NOT EXISTS script_auto_settings (script TEXT NOT NULL, scope TEXT, hash BLOB, PRIMARY KEY(script, scope));')
+      Lich.db.execute('CREATE TABLE IF NOT EXISTS lich_settings (name TEXT NOT NULL, value TEXT, PRIMARY KEY(name));')
+      Lich.db.execute('CREATE TABLE IF NOT EXISTS uservars (scope TEXT NOT NULL, hash BLOB, PRIMARY KEY(scope));')
       if (RUBY_VERSION =~ /^2\.[012]\./)
-        Lich.db.execute("CREATE TABLE IF NOT EXISTS trusted_scripts (name TEXT NOT NULL);")
+        Lich.db.execute('CREATE TABLE IF NOT EXISTS trusted_scripts (name TEXT NOT NULL);')
       end
-      Lich.db.execute("CREATE TABLE IF NOT EXISTS simu_game_entry (character TEXT NOT NULL, game_code TEXT NOT NULL, data BLOB, PRIMARY KEY(character, game_code));")
-      Lich.db.execute("CREATE TABLE IF NOT EXISTS enable_inventory_boxes (player_id INTEGER NOT NULL, PRIMARY KEY(player_id));")
+      Lich.db.execute('CREATE TABLE IF NOT EXISTS simu_game_entry (character TEXT NOT NULL, game_code TEXT NOT NULL, data BLOB, PRIMARY KEY(character, game_code));')
+      Lich.db.execute('CREATE TABLE IF NOT EXISTS enable_inventory_boxes (player_id INTEGER NOT NULL, PRIMARY KEY(player_id));')
     rescue SQLite3::BusyException
       sleep 0.1
       retry
@@ -218,8 +218,8 @@ module Lich
       result = true
       if launch_dir
         if launch_dir =~ /lich/i
-          $stdout.puts "--- warning: Lich appears to already be installed to the registry"
-          Lich.log "warning: Lich appears to already be installed to the registry"
+          $stdout.puts '--- warning: Lich appears to already be installed to the registry'
+          Lich.log 'warning: Lich appears to already be installed to the registry'
           Lich.log 'info: launch_dir: ' + launch_dir
         else
           result = result && Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Simutronics\\Launcher\\RealDirectory', launch_dir)
@@ -337,8 +337,8 @@ module Lich
       result = true
       if launch_cmd
         if launch_cmd =~ /lich/i
-          $stdout.puts "--- warning: Lich appears to already be installed to the registry"
-          Lich.log "warning: Lich appears to already be installed to the registry"
+          $stdout.puts '--- warning: Lich appears to already be installed to the registry'
+          Lich.log 'warning: Lich appears to already be installed to the registry'
           Lich.log 'info: launch_cmd: ' + launch_cmd
         else
           result = result && Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\RealCommand', launch_cmd)
@@ -613,7 +613,7 @@ module Lich
         sleep 0.1
         retry
       end
-      val = (XMLData.game =~ /^GS/ ? true : false) if val.nil? and XMLData.game != ""; # default false if DR, otherwise default true
+      val = (XMLData.game =~ /^GS/ ? true : false) if val.nil? and XMLData.game != ''; # default false if DR, otherwise default true
       @@display_lichid = (val.to_s =~ /on|true|yes/ ? true : false) if !val.nil?;
     end
     return @@display_lichid
@@ -638,7 +638,7 @@ module Lich
         sleep 0.1
         retry
       end
-      val = (XMLData.game =~ /^GS/ ? true : false) if val.nil? and XMLData.game != ""; # default false if DR, otherwise default true
+      val = (XMLData.game =~ /^GS/ ? true : false) if val.nil? and XMLData.game != ''; # default false if DR, otherwise default true
       @@display_uid = (val.to_s =~ /on|true|yes/ ? true : false) if !val.nil?;
     end
     return @@display_uid

@@ -273,11 +273,11 @@ def timetest(*contestants)
 end
 
 def dec2bin(n)
-  "0" + [n].pack("N").unpack("B32")[0].sub(/^0+(?=\d)/, '')
+  '0' + [n].pack('N').unpack('B32')[0].sub(/^0+(?=\d)/, '')
 end
 
 def bin2dec(n)
-  [("0" * 32 + n.to_s)[-32..-1]].pack("B32").unpack("N")[0]
+  [('0' * 32 + n.to_s)[-32..-1]].pack('B32').unpack('N')[0]
 end
 
 def idle?(time = 60)
@@ -289,7 +289,7 @@ def selectput(string, success, failure, timeout = nil)
   success = [success] if success.kind_of? String
   failure = [failure] if failure.kind_of? String
   if !string.kind_of?(String) or !success.kind_of?(Array) or !failure.kind_of?(Array) or timeout && !timeout.kind_of?(Numeric)
-    raise ArgumentError, "usage is: selectput(game_command,success_array,failure_array[,timeout_in_secs])"
+    raise ArgumentError, 'usage is: selectput(game_command,success_array,failure_array[,timeout_in_secs])'
   end
 
   success.flatten!
@@ -300,7 +300,7 @@ def selectput(string, success, failure, timeout = nil)
   thr = Thread.current
 
   timethr = Thread.new {
-    timeout -= sleep("0.1".to_f) until timeout <= 0
+    timeout -= sleep('0.1'.to_f) until timeout <= 0
     thr.raise(StandardError)
   } if timeout
 
@@ -567,7 +567,7 @@ def move(dir = 'none', giveup_seconds = 10, giveup_lines = 30)
       end
     elsif line =~ /^(\.\.\.w|W)ait ([0-9]+) sec(onds)?\.$/
       if $2.to_i > 1
-        sleep ($2.to_i - "0.2".to_f)
+        sleep ($2.to_i - '0.2'.to_f)
       else
         sleep 0.3
       end
@@ -611,7 +611,7 @@ def move(dir = 'none', giveup_seconds = 10, giveup_lines = 30)
       }
       put_dir.call
     elsif line =~ /^It's pitch dark and you can't see a thing!/
-      echo "You will need a light source to continue your journey"
+      echo 'You will need a light source to continue your journey'
       return true
     end
     if XMLData.room_count > room_count
@@ -673,8 +673,8 @@ def wait_while(announce = nil)
   Thread.current.priority = priosave
 end
 
-def checkpaths(dir = "none")
-  if dir == "none"
+def checkpaths(dir = 'none')
+  if dir == 'none'
     if XMLData.room_exits.empty?
       return false
     else
@@ -686,17 +686,17 @@ def checkpaths(dir = "none")
 end
 
 def reverse_direction(dir)
-  if dir == "n" then 's'
-  elsif dir == "ne" then 'sw'
-  elsif dir == "e" then 'w'
-  elsif dir == "se" then 'nw'
-  elsif dir == "s" then 'n'
-  elsif dir == "sw" then 'ne'
-  elsif dir == "w" then 'e'
-  elsif dir == "nw" then 'se'
-  elsif dir == "up" then 'down'
-  elsif dir == "down" then 'up'
-  elsif dir == "out" then 'out'
+  if dir == 'n' then 's'
+  elsif dir == 'ne' then 'sw'
+  elsif dir == 'e' then 'w'
+  elsif dir == 'se' then 'nw'
+  elsif dir == 's' then 'n'
+  elsif dir == 'sw' then 'ne'
+  elsif dir == 'w' then 'e'
+  elsif dir == 'nw' then 'se'
+  elsif dir == 'up' then 'down'
+  elsif dir == 'down' then 'up'
+  elsif dir == 'out' then 'out'
   elsif dir == 'o' then out
   elsif dir == 'u' then 'down'
   elsif dir == 'd' then up
@@ -711,7 +711,7 @@ def reverse_direction(dir)
   elsif dir == u then d
   elsif dir == d then u
   else
-    echo("Cannot recognize direction to properly reverse it!"); false
+    echo('Cannot recognize direction to properly reverse it!'); false
   end
 end
 
@@ -752,7 +752,7 @@ def check_mind(string = nil)
   elsif string.to_i.between?(0, 100)
     return string.to_i <= XMLData.mind_value.to_i
   else
-    echo("check_mind error! You must provide an integer ranging from 0-100, the common abbreviation of how full your head is, or provide no input to have check_mind return an abbreviation of how filled your head is."); sleep 1
+    echo('check_mind error! You must provide an integer ranging from 0-100, the common abbreviation of how full your head is, or provide no input to have check_mind return an abbreviation of how filled your head is.'); sleep 1
     return false
   end
 end
@@ -772,11 +772,11 @@ def checkmind(string = nil)
       mind = mind_state.index(XMLData.mind_text) + 1
       return string.to_i <= mind
     else
-      echo "Bad string in checkmind: mind_state"
+      echo 'Bad string in checkmind: mind_state'
       nil
     end
   else
-    echo("Checkmind error! You must provide an integer ranging from 1-8 (7 is fried, 8 is 100% fried), the common abbreviation of how full your head is, or provide no input to have checkmind return an abbreviation of how filled your head is."); sleep 1
+    echo('Checkmind error! You must provide an integer ranging from 1-8 (7 is fried, 8 is 100% fried), the common abbreviation of how full your head is, or provide no input to have checkmind return an abbreviation of how filled your head is.'); sleep 1
     return false
   end
 end
@@ -1004,8 +1004,8 @@ def checkfamarea(*strings)
   XMLData.familiar_room_title.split(',').first =~ /#{strings.join('|')}/i
 end
 
-def checkfampaths(dir = "none")
-  if dir == "none"
+def checkfampaths(dir = 'none')
+  if dir == 'none'
     if XMLData.familiar_room_exits.empty?
       return false
     else
@@ -1094,7 +1094,7 @@ def checkright(*hand)
   if GameObj.right_hand.nil? then return nil end
 
   hand.flatten!
-  if GameObj.right_hand.name == "Empty" or GameObj.right_hand.name.empty?
+  if GameObj.right_hand.name == 'Empty' or GameObj.right_hand.name.empty?
     nil
   elsif hand.empty?
     GameObj.right_hand.noun
@@ -1107,7 +1107,7 @@ def checkleft(*hand)
   if GameObj.left_hand.nil? then return nil end
 
   hand.flatten!
-  if GameObj.left_hand.name == "Empty" or GameObj.left_hand.name.empty?
+  if GameObj.left_hand.name == 'Empty' or GameObj.left_hand.name.empty?
     nil
   elsif hand.empty?
     GameObj.left_hand.noun
@@ -1146,7 +1146,7 @@ def checkprep(spell = nil)
   if spell.nil?
     XMLData.prepared_spell
   elsif spell.class != String
-    echo("Checkprep error, spell # not implemented!  You must use the spell name")
+    echo('Checkprep error, spell # not implemented!  You must use the spell name')
     false
   else
     XMLData.prepared_spell =~ /^#{spell}/i
@@ -1279,7 +1279,7 @@ def matchtimeout(secs, *strings)
   end
   strings.flatten!
   if strings.empty?
-    echo("matchtimeout without any strings to wait for!")
+    echo('matchtimeout without any strings to wait for!')
     sleep 1
     return false
   end
@@ -1301,7 +1301,7 @@ end
 def matchbefore(*strings)
   strings.flatten!
   unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
-  if strings.empty? then echo("matchbefore without any strings to wait for!"); return false end
+  if strings.empty? then echo('matchbefore without any strings to wait for!'); return false end
   regexpstr = strings.join('|')
   loop { if (line_in = script.gets) =~ /#{regexpstr}/ then return $`.to_s end }
 end
@@ -1309,7 +1309,7 @@ end
 def matchafter(*strings)
   strings.flatten!
   unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
-  if strings.empty? then echo("matchafter without any strings to wait for!"); return end
+  if strings.empty? then echo('matchafter without any strings to wait for!'); return end
   regexpstr = strings.join('|')
   loop { if (line_in = script.gets) =~ /#{regexpstr}/ then return $'.to_s end }
 end
@@ -1317,7 +1317,7 @@ end
 def matchboth(*strings)
   strings.flatten!
   unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
-  if strings.empty? then echo("matchboth without any strings to wait for!"); return end
+  if strings.empty? then echo('matchboth without any strings to wait for!'); return end
   regexpstr = strings.join('|')
   loop { if (line_in = script.gets) =~ /#{regexpstr}/ then break end }
   return [$`.to_s, $'.to_s]
@@ -1447,9 +1447,9 @@ def fput(message, *waitingfor)
         script.downstream_buffer.unshift(string)
         return false
       elsif checkstunned
-        sleep("0.25".to_f) while checkstunned
+        sleep('0.25'.to_f) while checkstunned
       elsif checkwebbed
-        sleep("0.25".to_f) while checkwebbed
+        sleep('0.25'.to_f) while checkwebbed
       elsif string =~ /Sorry, you may only type ahead/
         sleep 1
       else
@@ -1493,7 +1493,7 @@ def matchfindexact(*strings)
   if strings.empty? then echo("error! 'matchfind' with no strings to look for!"); sleep 1; return false end
   looking = Array.new
   strings.each { |str| looking.push(str.gsub('?', '(\b.+\b)')) }
-  if looking.empty? then echo("matchfind without any strings to wait for!"); return false end
+  if looking.empty? then echo('matchfind without any strings to wait for!'); return false end
   regexpstr = looking.join('|')
   while line_in = script.gets
     if gotit = line_in.slice(/#{regexpstr}/)
@@ -1516,7 +1516,7 @@ end
 def matchfind(*strings)
   regex = /#{strings.flatten.join('|').gsub('?', '(.+)')}/i
   unless script = Script.current
-    respond "Unknown script is asking to use matchfind!  Cannot process request without identifying the calling script; killing this thread."
+    respond 'Unknown script is asking to use matchfind!  Cannot process request without identifying the calling script; killing this thread.'
     Thread.current.kill
   end
   while true
@@ -1534,7 +1534,7 @@ end
 def matchfindword(*strings)
   regex = /#{strings.flatten.join('|').gsub('?', '([\w\d]+)')}/i
   unless script = Script.current
-    respond "Unknown script is asking to use matchfindword!  Cannot process request without identifying the calling script; killing this thread."
+    respond 'Unknown script is asking to use matchfindword!  Cannot process request without identifying the calling script; killing this thread.'
     Thread.current.kill
   end
   while true
@@ -1557,16 +1557,16 @@ def send_scripts(*messages)
   true
 end
 
-def status_tags(onoff = "none")
+def status_tags(onoff = 'none')
   script = Script.current
-  if onoff == "on"
+  if onoff == 'on'
     script.want_downstream = false
     script.want_downstream_xml = true
-    echo("Status tags will be sent to this script.")
-  elsif onoff == "off"
+    echo('Status tags will be sent to this script.')
+  elsif onoff == 'off'
     script.want_downstream = true
     script.want_downstream_xml = false
-    echo("Status tags will no longer be sent to this script.")
+    echo('Status tags will no longer be sent to this script.')
   elsif script.want_downstream_xml
     script.want_downstream = true
     script.want_downstream_xml = false
@@ -1576,7 +1576,7 @@ def status_tags(onoff = "none")
   end
 end
 
-def respond(first = "", *messages)
+def respond(first = '', *messages)
   str = ''
   begin
     if first.class == Array
@@ -1617,7 +1617,7 @@ def respond(first = "", *messages)
   end
 end
 
-def _respond(first = "", *messages)
+def _respond(first = '', *messages)
   str = ''
   begin
     if first.class == Array
@@ -1744,7 +1744,7 @@ def dothis(action, success_line)
         return line
       elsif line =~ /^(\.\.\.w|W)ait ([0-9]+) sec(onds)?\.$/
         if $2.to_i > 1
-          sleep ($2.to_i - "0.5".to_f)
+          sleep ($2.to_i - '0.5'.to_f)
         else
           sleep 0.3
         end
@@ -1805,7 +1805,7 @@ def dothistimeout(action, timeout, success_line)
         return line
       elsif line =~ /^(\.\.\.w|W)ait ([0-9]+) sec(onds)?\.$/
         if $2.to_i > 1
-          sleep ($2.to_i - "0.5".to_f)
+          sleep ($2.to_i - '0.5'.to_f)
         else
           sleep 0.3
         end
@@ -1867,7 +1867,7 @@ def fb_to_sf(line)
   begin
     return line if line == "\r\n"
 
-    line = line.gsub(/<c>/, "")
+    line = line.gsub(/<c>/, '')
     return nil if line.gsub("\r\n", '').length < 1
 
     return line
@@ -1925,12 +1925,12 @@ def sf_to_wiz(line)
     end
     line.gsub!(/<style id="roomDesc"\/><style id=""\/>\r?\n/, '')
     if line =~ /<style id="roomDesc"\/>(.*?)<style id=""\/>/m
-      desc = $1.gsub(/<a[^>]*>/, $link_highlight_start).gsub("</a>", $link_highlight_end)
+      desc = $1.gsub(/<a[^>]*>/, $link_highlight_start).gsub('</a>', $link_highlight_end)
       line = line.sub(/<style id="roomDesc"\/>.*?<style id=""\/>/m, "\034GSH\r\n#{desc}\034GSI\r\n")
     end
-    line = line.gsub("</prompt>\r\n", "</prompt>")
-    line = line.gsub("<pushBold/>", "\034GSL\r\n")
-    line = line.gsub("<popBold/>", "\034GSM\r\n")
+    line = line.gsub("</prompt>\r\n", '</prompt>')
+    line = line.gsub('<pushBold/>', "\034GSL\r\n")
+    line = line.gsub('<popBold/>', "\034GSM\r\n")
     line = line.gsub(/<pushStream id=["'](?:spellfront|inv|bounty|society|speech|talk)["'][^>]*\/>.*?<popStream[^>]*>/m, '')
     line = line.gsub(/<stream id="Spells">.*?<\/stream>/m, '')
     line = line.gsub(/<(compDef|inv|component|right|left|spell|prompt)[^>]*>.*?<\/\1>/m, '')
@@ -2075,7 +2075,7 @@ def do_client(client_string)
         Script.start($1, :force => true)
       end
     elsif cmd =~ /^send |^s /
-      if cmd.split[1] == "to"
+      if cmd.split[1] == 'to'
         script = (Script.running + Script.hidden).find { |scr| scr.name == cmd.split[2].chomp.strip } || script = (Script.running + Script.hidden).find { |scr| scr.name =~ /^#{cmd.split[2].chomp.strip}/i }
         if script
           msg = cmd.split[3..-1].join(' ').chomp
@@ -2131,7 +2131,7 @@ def do_client(client_string)
       if RUBY_VERSION =~ /^2\.[012]\./
         list = Script.list_trusted
         if list.empty?
-          respond "--- Lich: no scripts are trusted"
+          respond '--- Lich: no scripts are trusted'
         else
           respond "--- Lich: trusted scripts: #{list.join(', ')}"
         end
@@ -2144,7 +2144,7 @@ def do_client(client_string)
       set_state = $2
       did_something = false
       begin
-        Lich.db.execute("INSERT OR REPLACE INTO lich_settings(name,value) values(?,?);", toggle_var.to_s.encode('UTF-8'), set_state.to_s.encode('UTF-8'))
+        Lich.db.execute('INSERT OR REPLACE INTO lich_settings(name,value) values(?,?);', toggle_var.to_s.encode('UTF-8'), set_state.to_s.encode('UTF-8'))
         did_something = true
       rescue SQLite3::BusyException
         sleep 0.1
@@ -2159,7 +2159,7 @@ def do_client(client_string)
       Lich::Util::Update.request("#{update_parameter}")
     elsif cmd =~ /^(?:lich5-update|l5u)/i
       require 'lib/update.rb'
-      Lich::Util::Update.request("--help")
+      Lich::Util::Update.request('--help')
     elsif cmd =~ /^help$/i
       respond
       respond "Lich v#{LICH_VERSION}"

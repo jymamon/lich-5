@@ -30,7 +30,7 @@ module Win32
     }
 
     args[:fMask] ||= Win32::SEE_MASK_NOCLOSEPROCESS
-    args[:lpDirectory] ||= LICH_DIR.tr("/", "\\")
+    args[:lpDirectory] ||= LICH_DIR.tr('/', '\\')
     args[:lpVerb] ||= 'runas'
 
     for sym in [:lpVerb, :lpFile, :lpParameters, :lpDirectory, :lpIDList, :lpClass]
@@ -53,7 +53,7 @@ module Win32
   end
 
   def self.ShellExecute(args)
-    args[:lpDirectory] ||= LICH_DIR.tr("/", "\\")
+    args[:lpDirectory] ||= LICH_DIR.tr('/', '\\')
     args[:lpOperation] ||= 0
     args[:lpParameters] ||= 0
     args[:lpVerb] ||= 'runas'

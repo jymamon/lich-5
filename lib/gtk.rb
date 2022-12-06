@@ -1,17 +1,17 @@
 if defined?(Gtk)
   Gdk.module_eval do
-    define_deprecated_singleton_method :screen_height, :warn => "Gdk::screen_height is deprecated; use monitor methods instead" do |_self|
+    define_deprecated_singleton_method :screen_height, :warn => 'Gdk::screen_height is deprecated; use monitor methods instead' do |_self|
       99999
     end
 
-    define_deprecated_singleton_method :screen_width, :warn => "Gdk::screen_width is deprecated; use monitor methods instead" do |_self|
+    define_deprecated_singleton_method :screen_width, :warn => 'Gdk::screen_width is deprecated; use monitor methods instead' do |_self|
       99999
     end
   end
 
   Gtk::Drag.module_eval do
-    define_deprecated_const :TARGET_SAME_APP, "Gtk::TargetFlags::SAME_APP"
-    define_deprecated_const :DEST_DEFAULT_ALL, "Gtk::DestDefaults::ALL"
+    define_deprecated_const :TARGET_SAME_APP, 'Gtk::TargetFlags::SAME_APP'
+    define_deprecated_const :DEST_DEFAULT_ALL, 'Gtk::DestDefaults::ALL'
   end
 
   Gtk.module_eval do
@@ -36,7 +36,7 @@ if defined?(Gtk)
       def set_text(text)
         if text.nil?
           respond "'Gtk::Entry#set_text' no longer accepts nil values; fix me"
-          text = ""
+          text = ''
         end
         parent.set_text(text)
         return self

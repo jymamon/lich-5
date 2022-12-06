@@ -3,10 +3,10 @@
 # Ugly hack to preserve the behavior of force_gui being false if there are any other options and true if
 # there are not.
 if ARGV.empty?
-  ARGV.push("--gui")
+  ARGV.push('--gui')
 else
   # Must be first so subsequent --gui options will undo this parameter.
-  ARGV.unshift("--no-gui")
+  ARGV.unshift('--no-gui')
 end
 
 # instance variable syntax necessarry until this can be further refactored for init to only
@@ -49,7 +49,7 @@ if Gem::Version.new(RUBY_VERSION) < Gem::Version.new(REQUIRED_RUBY)
     require 'fiddle'
     Fiddle::Function.new(DL.dlopen('user32.dll')['MessageBox'], [Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT], Fiddle::TYPE_INT).call(0, 'Upgrade Ruby to version 2.6', "Lich v#{LICH_VERSION}", 16)
   else
-    puts "Upgrade Ruby to version 2.6"
+    puts 'Upgrade Ruby to version 2.6'
   end
   exit
 end
@@ -138,8 +138,8 @@ elsif defined?(Wine)
   end
 
   if !File.exist?($sf_fe_loc)
-    $sf_fe_loc =~ /SIMU/ ? $sf_fe_loc = $sf_fe_loc.gsub("SIMU", "Simu") : $sf_fe_loc = $sf_fe_loc.gsub("Simu", "SIMU")
-    Lich.log("Cannot find STORM equivalent FE to launch.") if !File.exist?($sf_fe_loc)
+    $sf_fe_loc =~ /SIMU/ ? $sf_fe_loc = $sf_fe_loc.gsub('SIMU', 'Simu') : $sf_fe_loc = $sf_fe_loc.gsub('Simu', 'SIMU')
+    Lich.log('Cannot find STORM equivalent FE to launch.') if !File.exist?($sf_fe_loc)
   end
 end
 
@@ -213,7 +213,7 @@ required_modules.each { |required_module|
     if !required_module.key?(:condition) || required_module[:condition].call
       require required_module[:name]
     else
-      required_module[:result] = "Not required."
+      required_module[:result] = 'Not required.'
     end
   rescue LoadError
     if defined?(Win32)
@@ -230,7 +230,7 @@ required_modules.each { |required_module|
             pid = result[:hProcess]
             # Use to indicate that the hProcess member receives the process handle. This handle is typically used to allow an application to find out when a process created with ShellExecuteEx terminates
             sleep 1 while Win32.GetExitCodeProcess(:hProcess => pid)[:lpExitCode] == Win32::STILL_ACTIVE
-            result = Win32.MessageBox(:lpText => "Install finished.  Lich will restart now.", :lpCaption => "Lich v#{LICH_VERSION}", :uType => Win32::MB_OKCANCEL)
+            result = Win32.MessageBox(:lpText => 'Install finished.  Lich will restart now.', :lpCaption => "Lich v#{LICH_VERSION}", :uType => Win32::MB_OKCANCEL)
 
           else
             # ShellExecuteEx failed: this seems to happen with an access denied error even while elevated on some random systems
@@ -243,7 +243,7 @@ required_modules.each { |required_module|
               exit
             end
 
-            result = Win32.MessageBox(:lpText => "When the installer is finished, click OK to restart Lich.", :lpCaption => "Lich v#{LICH_VERSION}", :uType => Win32::MB_OKCANCEL)
+            result = Win32.MessageBox(:lpText => 'When the installer is finished, click OK to restart Lich.', :lpCaption => "Lich v#{LICH_VERSION}", :uType => Win32::MB_OKCANCEL)
           end
 
           # Result is either the result of ShellExecute on the gem_file command or the result of
@@ -258,7 +258,7 @@ required_modules.each { |required_module|
             end
           else
             # user doesn't want to restart Lich
-            required_module[:result] = "Installed, but lich not restarted."
+            required_module[:result] = 'Installed, but lich not restarted.'
           end
 
         else
@@ -268,12 +268,12 @@ required_modules.each { |required_module|
 
       else
         # user doesn't want to install gem
-        required_module[:result] = "User declined installation."
+        required_module[:result] = 'User declined installation.'
       end
     else
       # fixme: no module on Linux/Mac
       puts "The #{required_module[:name]} gem is not installed (or failed to load), you may need to: sudo gem install #{required_module[:name]}"
-      required_module[:result] = "Install skipped. Not a Win32 platform."
+      required_module[:result] = 'Install skipped. Not a Win32 platform.'
     end
   end
 }

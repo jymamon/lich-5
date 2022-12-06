@@ -78,11 +78,11 @@ class NilClass
   end
 
   def to_s
-    ""
+    ''
   end
 
   def strip
-    ""
+    ''
   end
 
   def +(val)
@@ -96,7 +96,7 @@ end
 
 class Numeric
   def as_time
-    sprintf("%d:%02d:%02d", (self / 60).truncate, self.truncate % 60, ((self % 1) * 60).truncate)
+    sprintf('%d:%02d:%02d', (self / 60).truncate, self.truncate % 60, ((self % 1) * 60).truncate)
   end
 
   def with_commas
@@ -212,7 +212,7 @@ class LimitedArray < Array
   end
 end
 
-require_relative("./lib/xmlparser.rb")
+require_relative('./lib/xmlparser.rb')
 
 class UpstreamHook
   @@upstream_hooks ||= Hash.new
@@ -299,7 +299,7 @@ module Setting
       exit
     end
     if args.any? { |a| a.class != String }
-      respond "--- Lich: error: Setting.load: non-string given as setting name"
+      respond '--- Lich: error: Setting.load: non-string given as setting name'
       respond $!.backtrace[0..2]
       exit
     end
@@ -350,7 +350,7 @@ module Setting
     end
 
     if hash.keys.any? { |k| k.class != String }
-      respond "--- Lich: error: Setting.save: non-string given as a setting name"
+      respond '--- Lich: error: Setting.save: non-string given as a setting name'
       respond $!.backtrace[0..2]
       exit
     end
@@ -753,7 +753,7 @@ class Script
 
     # fixme: look in wizard script directory
     # fixme: allow subdirectories?
-    file_list = Dir.children(File.join(SCRIPT_DIR, "custom")).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend("/custom/") } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
+    file_list = Dir.children(File.join(SCRIPT_DIR, 'custom')).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend('/custom/') } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
     if file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i })
       script_name = file_name.sub(/\..{1,3}$/, '')
     end
@@ -989,7 +989,7 @@ class Script
 
   def self.version(script_name, script_version_required = nil)
     script_name = script_name.sub(/[.](lic|rb|cmd|wiz)$/, '')
-    file_list = Dir.children(File.join(SCRIPT_DIR, "custom")).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend("/custom/") } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
+    file_list = Dir.children(File.join(SCRIPT_DIR, 'custom')).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend('/custom/') } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
     if file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i })
       script_name = file_name.sub(/\..{1,3}$/, '')
     end
@@ -1247,7 +1247,7 @@ class Script
       if (args[:args].nil? || args[:args].empty?)
         @vars = Array.new
       else
-        @vars = [args[:args].join(" ")]
+        @vars = [args[:args].join(' ')]
         @vars.concat args[:args]
       end
     else
@@ -2271,18 +2271,18 @@ module Games
           begin
             atmospherics = false
             combat_count = 0
-            end_combat_tags = ["<prompt", "<clearStream", "<component", "<pushStream id=\"percWindow"]
+            end_combat_tags = ['<prompt', '<clearStream', '<component', '<pushStream id="percWindow']
             while $_SERVERSTRING_ = @@socket.gets
               @@last_recv = Time.now
               @@_buffer.update($_SERVERSTRING_) if TESTING
               begin
                 $cmd_prefix = String.new if $_SERVERSTRING_ =~ /^\034GSw/
                 ## Clear out superfluous tags
-                $_SERVERSTRING_ = $_SERVERSTRING_.gsub("<pushStream id=\"combat\" /><popStream id=\"combat\" />", "")
-                $_SERVERSTRING_ = $_SERVERSTRING_.gsub("<popStream id=\"combat\" /><pushStream id=\"combat\" />", "")
+                $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" /><popStream id="combat" />', '')
+                $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<popStream id="combat" /><pushStream id="combat" />', '')
 
                 ## Fix combat wrapping components - Why, DR, Why?
-                $_SERVERSTRING_ = $_SERVERSTRING_.gsub("<pushStream id=\"combat\" /><component id=", "<component id=")
+                $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" /><component id=', '<component id=')
                 # $_SERVERSTRING_ = $_SERVERSTRING_.gsub("<pushStream id=\"combat\" /><prompt ","<prompt ")
 
                 # Fixes xml with \r\n in the middle of it like:
@@ -2299,7 +2299,7 @@ module Games
                 # This is an actual DR line "<compass></compass></component>\r\n" which happens when the above is sent... subbing it out since we fix the tag above.
                 if $_SERVERSTRING_ == "<compass></compass></component>\r\n"
                   Lich.log "Extraneous closed tag detected: #{$_SERVERSTRING_.inspect}"
-                  $_SERVERSTRING_ = ""
+                  $_SERVERSTRING_ = ''
                   Lich.log "Extraneous closed tag fixed: #{$_SERVERSTRING_.inspect}"
                 end
 
@@ -2309,33 +2309,33 @@ module Games
                 # "</component>\r\n"
                 if $_SERVERSTRING_ =~ /^<component id='room (?:objs|extra)'>[^<]*(?!<\/component>)\r\n/
                   Lich.log "Open-ended room objects component id tag: #{$_SERVERSTRING_.inspect}"
-                  $_SERVERSTRING_.gsub!("\r\n", "</component>")
+                  $_SERVERSTRING_.gsub!("\r\n", '</component>')
                   Lich.log "Open-ended room objects component id tag fixed to: #{$_SERVERSTRING_.inspect}"
                 end
                 # "</component>\r\n"
                 if $_SERVERSTRING_ == "</component>\r\n"
                   Lich.log "Extraneous closing tag detected and deleted: #{$_SERVERSTRING_.inspect}"
-                  $_SERVERSTRING_ = ""
+                  $_SERVERSTRING_ = ''
                 end
 
                 ## Fix duplicate pushStrings
-                $_SERVERSTRING_ = $_SERVERSTRING_.gsub("<pushStream id=\"combat\" /><pushStream id=\"combat\" />", "<pushStream id=\"combat\" />") while $_SERVERSTRING_.include?("<pushStream id=\"combat\" /><pushStream id=\"combat\" />")
+                $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" /><pushStream id="combat" />', '<pushStream id="combat" />') while $_SERVERSTRING_.include?('<pushStream id="combat" /><pushStream id="combat" />')
 
                 if combat_count > 0
                   end_combat_tags.each do |tag|
                     # $_SERVERSTRING_ = "<!-- looking for tag: #{tag}" + $_SERVERSTRING_
                     if $_SERVERSTRING_.include?(tag)
-                      $_SERVERSTRING_ = $_SERVERSTRING_.gsub(tag, "<popStream id=\"combat\" />" + tag) unless $_SERVERSTRING_.include?("<popStream id=\"combat\" />")
+                      $_SERVERSTRING_ = $_SERVERSTRING_.gsub(tag, '<popStream id="combat" />' + tag) unless $_SERVERSTRING_.include?('<popStream id="combat" />')
                       combat_count -= 1
                     end
-                    if $_SERVERSTRING_.include?("<pushStream id=\"combat\" />")
-                      $_SERVERSTRING_ = $_SERVERSTRING_.gsub("<pushStream id=\"combat\" />", "")
+                    if $_SERVERSTRING_.include?('<pushStream id="combat" />')
+                      $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" />', '')
                     end
                   end
                 end
 
-                combat_count += $_SERVERSTRING_.scan("<pushStream id=\"combat\" />").length
-                combat_count -= $_SERVERSTRING_.scan("<popStream id=\"combat\" />").length
+                combat_count += $_SERVERSTRING_.scan('<pushStream id="combat" />').length
+                combat_count -= $_SERVERSTRING_.scan('<popStream id="combat" />').length
                 combat_count = 0 if combat_count < 0
                 # The Rift, Scatter is broken...
                 if $_SERVERSTRING_ =~ /<compDef id='room text'><\/compDef>/
@@ -2627,37 +2627,37 @@ module Games
 
       def self.info
         ary = []
-        ary.push sprintf("Name: %s  Race: %s  Profession: %s", XMLData.name, Stats.race, Stats.prof)
-        ary.push sprintf("Gender: %s    Age: %d    Expr: %d    Level: %d", Stats.gender, Stats.age, Stats.exp, Stats.level)
-        ary.push sprintf("%017.17s Normal (Bonus)  ...  Enhanced (Bonus)", "")
+        ary.push sprintf('Name: %s  Race: %s  Profession: %s', XMLData.name, Stats.race, Stats.prof)
+        ary.push sprintf('Gender: %s    Age: %d    Expr: %d    Level: %d', Stats.gender, Stats.age, Stats.exp, Stats.level)
+        ary.push sprintf('%017.17s Normal (Bonus)  ...  Enhanced (Bonus)', '')
         ['Strength', 'Constitution', 'Dexterity', 'Agility', 'Discipline', 'Aura', 'Logic', 'Intuition', 'Wisdom', 'Influence'].each { |stat|
           val, bon = Stats.send(stat[0..2].downcase)
           enh_val, enh_bon = Stats.send("enhanced_#{stat[0..2].downcase}")
-          spc = " " * (4 - bon.to_s.length)
-          ary.push sprintf("%012s (%s): %05s (%d) %s ... %05s (%d)", stat, stat[0..2].upcase, val, bon, spc, enh_val, enh_bon)
+          spc = ' ' * (4 - bon.to_s.length)
+          ary.push sprintf('%012s (%s): %05s (%d) %s ... %05s (%d)', stat, stat[0..2].upcase, val, bon, spc, enh_val, enh_bon)
         }
-        ary.push sprintf("Mana: %04s", mana)
+        ary.push sprintf('Mana: %04s', mana)
         ary
       end
 
       def self.skills
         ary = []
-        ary.push sprintf("%s (at level %d), your current skill bonuses and ranks (including all modifiers) are:", XMLData.name, Stats.level)
-        ary.push sprintf("  %-035s| Current Current", 'Skill Name')
-        ary.push sprintf("  %-035s|%08s%08s", '', 'Bonus', 'Ranks')
+        ary.push sprintf('%s (at level %d), your current skill bonuses and ranks (including all modifiers) are:', XMLData.name, Stats.level)
+        ary.push sprintf('  %-035s| Current Current', 'Skill Name')
+        ary.push sprintf('  %-035s|%08s%08s', '', 'Bonus', 'Ranks')
         fmt = [['Two Weapon Combat', 'Armor Use', 'Shield Use', 'Combat Maneuvers', 'Edged Weapons', 'Blunt Weapons', 'Two-Handed Weapons', 'Ranged Weapons', 'Thrown Weapons', 'Polearm Weapons', 'Brawling', 'Ambush', 'Multi Opponent Combat', 'Combat Leadership', 'Physical Fitness', 'Dodging', 'Arcane Symbols', 'Magic Item Use', 'Spell Aiming', 'Harness Power', 'Elemental Mana Control', 'Mental Mana Control', 'Spirit Mana Control', 'Elemental Lore - Air', 'Elemental Lore - Earth', 'Elemental Lore - Fire', 'Elemental Lore - Water', 'Spiritual Lore - Blessings', 'Spiritual Lore - Religion', 'Spiritual Lore - Summoning', 'Sorcerous Lore - Demonology', 'Sorcerous Lore - Necromancy', 'Mental Lore - Divination', 'Mental Lore - Manipulation', 'Mental Lore - Telepathy', 'Mental Lore - Transference', 'Mental Lore - Transformation', 'Survival', 'Disarming Traps', 'Picking Locks', 'Stalking and Hiding', 'Perception', 'Climbing', 'Swimming', 'First Aid', 'Trading', 'Pickpocketing'], ['twoweaponcombat', 'armoruse', 'shielduse', 'combatmaneuvers', 'edgedweapons', 'bluntweapons', 'twohandedweapons', 'rangedweapons', 'thrownweapons', 'polearmweapons', 'brawling', 'ambush', 'multiopponentcombat', 'combatleadership', 'physicalfitness', 'dodging', 'arcanesymbols', 'magicitemuse', 'spellaiming', 'harnesspower', 'emc', 'mmc', 'smc', 'elair', 'elearth', 'elfire', 'elwater', 'slblessings', 'slreligion', 'slsummoning', 'sldemonology', 'slnecromancy', 'mldivination', 'mlmanipulation', 'mltelepathy', 'mltransference', 'mltransformation', 'survival', 'disarmingtraps', 'pickinglocks', 'stalkingandhiding', 'perception', 'climbing', 'swimming', 'firstaid', 'trading', 'pickpocketing']]
         0.upto(fmt.first.length - 1) { |n|
           dots = '.' * (35 - fmt[0][n].length)
           rnk = Skills.send(fmt[1][n])
-          ary.push sprintf("  %s%s|%08s%08s", fmt[0][n], dots, Skills.to_bonus(rnk), rnk) unless rnk.zero?
+          ary.push sprintf('  %s%s|%08s%08s', fmt[0][n], dots, Skills.to_bonus(rnk), rnk) unless rnk.zero?
         }
         %[Minor Elemental,Major Elemental,Minor Spirit,Major Spirit,Minor Mental,Bard,Cleric,Empath,Paladin,Ranger,Sorcerer,Wizard].split(',').each { |circ|
-          rnk = Spells.send(circ.gsub(" ", '').downcase)
+          rnk = Spells.send(circ.gsub(' ', '').downcase)
           if rnk.nonzero?
             ary.push ''
-            ary.push "Spell Lists"
+            ary.push 'Spell Lists'
             dots = '.' * (35 - circ.length)
-            ary.push sprintf("  %s%s|%016s", circ, dots, rnk)
+            ary.push sprintf('  %s%s|%016s', circ, dots, rnk)
           end
         }
         ary
@@ -3240,14 +3240,14 @@ module Games
       end
     end
 
-    require_relative("./lib/spell.rb")
+    require_relative('./lib/spell.rb')
 
     # #updating PSM3 abilities via breakout - 20210801
-    require_relative("./lib/armor.rb")
-    require_relative("./lib/cman.rb")
-    require_relative("./lib/feat.rb")
-    require_relative("./lib/shield.rb")
-    require_relative("./lib/weapon.rb")
+    require_relative('./lib/armor.rb')
+    require_relative('./lib/cman.rb')
+    require_relative('./lib/feat.rb')
+    require_relative('./lib/shield.rb')
+    require_relative('./lib/weapon.rb')
 
     class Stats
       @@race ||= 'unknown'
@@ -3468,10 +3468,10 @@ module Games
         end
       end
 
-      Spells    = Registry.new("Active Spells")
-      Buffs     = Registry.new("Buffs")
-      Debuffs   = Registry.new("Debuffs")
-      Cooldowns = Registry.new("Cooldowns")
+      Spells    = Registry.new('Active Spells')
+      Buffs     = Registry.new('Buffs')
+      Debuffs   = Registry.new('Debuffs')
+      Cooldowns = Registry.new('Cooldowns')
     end
 
     class Wounds
@@ -3648,8 +3648,8 @@ module Games
         @id = id
         @noun = noun
         @noun = 'lapis' if @noun == 'lapis lazuli'
-        @noun = 'hammer' if @noun == "Hammer of Kai"
-        @noun = 'ball' if @noun == "ball and chain" # DR item 'ball and chain' doesn't work.
+        @noun = 'hammer' if @noun == 'Hammer of Kai'
+        @noun = 'ball' if @noun == 'ball and chain' # DR item 'ball and chain' doesn't work.
         @noun = 'mother-of-pearl' if (@noun == 'pearl') and (@name =~ /mother\-of\-pearl/)
         @name = name
         @before_name = before
@@ -3939,7 +3939,7 @@ module Games
       def self.dead
         dead_list = Array.new
         for obj in @@npcs
-          dead_list.push(obj) if obj.status == "dead"
+          dead_list.push(obj) if obj.status == 'dead'
         end
         return nil if dead_list.empty?
 
@@ -4695,24 +4695,24 @@ elsif @options.fallen
   # Not sure what the port info is for anything else but Genie :(
   if @options.stormfront
     $frontend = 'stormfront'
-    $stdout.puts "fixme"
-    Lich.log "fixme"
+    $stdout.puts 'fixme'
+    Lich.log 'fixme'
     exit
   elsif @options.genie
     game_host = 'dr.simutronics.net'
     game_port = 11324
     $frontend = 'genie'
   else
-    $stdout.puts "fixme"
-    Lich.log "fixme"
+    $stdout.puts 'fixme'
+    Lich.log 'fixme'
     exit
   end
 elsif @options.dragonrealms
   if @options.platinum
     $platinum = true
     if @options.stormfront
-      $stdout.puts "fixme"
-      Lich.log "fixme"
+      $stdout.puts 'fixme'
+      Lich.log 'fixme'
       exit
       $frontend = 'stormfront'
     elsif @options.genie
@@ -4724,8 +4724,8 @@ elsif @options.dragonrealms
       game_port = 11124
       $frontend = 'frostbite'
     else
-      $stdout.puts "fixme"
-      Lich.log "fixme"
+      $stdout.puts 'fixme'
+      Lich.log 'fixme'
       exit
       $frontend = 'wizard'
     end
@@ -4733,8 +4733,8 @@ elsif @options.dragonrealms
     $platinum = false
     if @options.stormfront
       $frontend = 'stormfront'
-      $stdout.puts "fixme"
-      Lich.log "fixme"
+      $stdout.puts 'fixme'
+      Lich.log 'fixme'
       exit
     elsif @options.genie
       game_host = 'dr.simutronics.net'
@@ -4754,7 +4754,7 @@ elsif @options.dragonrealms
   end
 else
   game_host, game_port = nil, nil
-  Lich.log "info: no force-mode info given"
+  Lich.log 'info: no force-mode info given'
 end
 
 main_thread = Thread.new {
@@ -4766,7 +4766,7 @@ main_thread = Thread.new {
   $lich_char_regex = Regexp.union(',', ';')
 
   @launch_data = nil
-  require_relative("./lib/eaccess.rb")
+  require_relative('./lib/eaccess.rb')
 
   if @options.login_character
     if File.exists?(@options.entryfile)
@@ -4890,35 +4890,35 @@ main_thread = Thread.new {
 
   if @launch_data
     if @launch_data.find { |opt| opt =~ /GAMECODE=DR/ }
-      gamecodeshort = "DR"
+      gamecodeshort = 'DR'
     else
-      gamecodeshort = "GS"
+      gamecodeshort = 'GS'
     end
     unless gamecode = @launch_data.find { |line| line =~ /GAMECODE=/ }
-      $stdout.puts "error: launch_data contains no GAMECODE info"
-      Lich.log "error: launch_data contains no GAMECODE info"
+      $stdout.puts 'error: launch_data contains no GAMECODE info'
+      Lich.log 'error: launch_data contains no GAMECODE info'
       exit(1)
     end
     unless gameport = @launch_data.find { |line| line =~ /GAMEPORT=/ }
-      $stdout.puts "error: launch_data contains no GAMEPORT info"
-      Lich.log "error: launch_data contains no GAMEPORT info"
+      $stdout.puts 'error: launch_data contains no GAMEPORT info'
+      Lich.log 'error: launch_data contains no GAMEPORT info'
       exit(1)
     end
     unless gamehost = @launch_data.find { |opt| opt =~ /GAMEHOST=/ }
-      $stdout.puts "error: launch_data contains no GAMEHOST info"
-      Lich.log "error: launch_data contains no GAMEHOST info"
+      $stdout.puts 'error: launch_data contains no GAMEHOST info'
+      Lich.log 'error: launch_data contains no GAMEHOST info'
       exit(1)
     end
     unless game = @launch_data.find { |opt| opt =~ /GAME=/ }
-      $stdout.puts "error: launch_data contains no GAME info"
-      Lich.log "error: launch_data contains no GAME info"
+      $stdout.puts 'error: launch_data contains no GAME info'
+      Lich.log 'error: launch_data contains no GAME info'
       exit(1)
     end
     if custom_launch = @launch_data.find { |opt| opt =~ /CUSTOMLAUNCH=/ }
       custom_launch.sub!(/^.*?\=/, '')
       Lich.log "info: using custom launch command: #{custom_launch}"
     elsif (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
-      Lich.log("info: Working against a Windows Platform for FE Executable")
+      Lich.log('info: Working against a Windows Platform for FE Executable')
       if @launch_data.find { |opt| opt =~ /GAME=WIZ/ }
         custom_launch = "Wizard.Exe /G#{gamecodeshort}/H127.0.0.1 /P%port% /K%key%"
       elsif @launch_data.find { |opt| opt =~ /GAME=STORM/ }
@@ -4926,7 +4926,7 @@ main_thread = Thread.new {
         custom_launch = "Stormfront.exe /G#{gamecodeshort}/Hlocalhost/P%port%/K%key%" if $sf_fe_loc =~ /STORM/
       end
     elsif defined?(Wine)
-      Lich.log("info: Working against a Linux | WINE Platform")
+      Lich.log('info: Working against a Linux | WINE Platform')
       if @launch_data.find { |opt| opt =~ /GAME=WIZ/ }
         custom_launch = "Wizard.Exe /G#{gamecodeshort}/H127.0.0.1 /P%port% /K%key%"
       elsif @launch_data.find { |opt| opt =~ /GAME=STORM/ }
@@ -4938,7 +4938,7 @@ main_thread = Thread.new {
       custom_launch_dir.sub!(/^.*?\=/, '')
       Lich.log "info: using working directory for custom launch command: #{custom_launch_dir}"
     elsif (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
-      Lich.log "info: Working against a Windows Platform for FE Location"
+      Lich.log 'info: Working against a Windows Platform for FE Location'
       if @launch_data.find { |opt| opt =~ /GAME=WIZ/ }
         custom_launch_dir = Lich.seek('wizard') # #HERE I AM
       elsif @launch_data.find { |opt| opt =~ /GAME=STORM/ }
@@ -4946,7 +4946,7 @@ main_thread = Thread.new {
       end
       Lich.log "info: Current Windows working directory is #{custom_launch_dir}"
     elsif defined?(Wine)
-      Lich.log "Info: Working against a Linux | WINE Platform for FE location"
+      Lich.log 'Info: Working against a Linux | WINE Platform for FE location'
       if @launch_data.find { |opt| opt =~ /GAME=WIZ/ }
         custom_launch_dir_temp = Lich.seek('wizard') # #HERE I AM
         custom_launch_dir = custom_launch_dir_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c')
@@ -4959,23 +4959,23 @@ main_thread = Thread.new {
     if @options.without_frontend
       $frontend = 'unknown'
       unless (game_key = @launch_data.find { |opt| opt =~ /KEY=/ }) && (game_key = game_key.split('=').last.chomp)
-        $stdout.puts "error: launch_data contains no KEY info"
-        Lich.log "error: launch_data contains no KEY info"
+        $stdout.puts 'error: launch_data contains no KEY info'
+        Lich.log 'error: launch_data contains no KEY info'
         exit(1)
       end
     elsif game =~ /SUKS/i
       $frontend = 'suks'
       unless (game_key = @launch_data.find { |opt| opt =~ /KEY=/ }) && (game_key = game_key.split('=').last.chomp)
-        $stdout.puts "error: launch_data contains no KEY info"
-        Lich.log "error: launch_data contains no KEY info"
+        $stdout.puts 'error: launch_data contains no KEY info'
+        Lich.log 'error: launch_data contains no KEY info'
         exit(1)
       end
     elsif game =~ /AVALON/i
-      launcher_cmd = "open -n -b Avalon \"%1\""
+      launcher_cmd = 'open -n -b Avalon "%1"'
     elsif custom_launch
       unless (game_key = @launch_data.find { |opt| opt =~ /KEY=/ }) && (game_key = game_key.split('=').last.chomp)
-        $stdout.puts "error: launch_data contains no KEY info"
-        Lich.log "error: launch_data contains no KEY info"
+        $stdout.puts 'error: launch_data contains no KEY info'
+        Lich.log 'error: launch_data contains no KEY info'
         exit(1)
       end
     else
@@ -5028,16 +5028,16 @@ main_thread = Thread.new {
         Lich.log "info: launcher_cmd: #{scrubbed_launcher_cmd}"
       else
         if RUBY_PLATFORM =~ /darwin/i
-          localhost = "127.0.0.1"
+          localhost = '127.0.0.1'
         else
-          localhost = "localhost"
+          localhost = 'localhost'
         end
         @launch_data.collect! { |line| line.sub(/GAMEPORT=.+/, "GAMEPORT=#{localport}").sub(/GAMEHOST=.+/, "GAMEHOST=#{localhost}") }
         sal_filename = "#{TEMP_DIR}/lich#{rand(10000)}.sal"
         sal_filename = "#{TEMP_DIR}/lich#{rand(10000)}.sal" while File.exists?(sal_filename)
         File.open(sal_filename, 'w') { |f| f.puts @launch_data }
         launcher_cmd = launcher_cmd.sub('%1', sal_filename)
-        launcher_cmd = launcher_cmd.tr('/', "\\") if (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
+        launcher_cmd = launcher_cmd.tr('/', '\\') if (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
       end
       begin
         if custom_launch_dir
@@ -5060,11 +5060,11 @@ main_thread = Thread.new {
       accept_thread.kill if accept_thread.status
       Dir.chdir(LICH_DIR)
       unless $_CLIENT_
-        Lich.log "error: timeout waiting for client to connect"
+        Lich.log 'error: timeout waiting for client to connect'
         #        if defined?(Win32)
         #          Lich.msgbox(:message => "error: launch method #{method_num + 1} timed out waiting for the client to connect\n\nTry again and another method will be used.", :icon => :error)
         #        else
-        Lich.msgbox(:message => "error: timeout waiting for client to connect", :icon => :error)
+        Lich.msgbox(:message => 'error: timeout waiting for client to connect', :icon => :error)
         #        end
         if sal_filename
           File.delete(sal_filename) rescue()
@@ -5072,7 +5072,7 @@ main_thread = Thread.new {
         listener.close rescue()
         $_CLIENT_.close rescue()
         reconnect_if_wanted.call
-        Lich.log "info: exiting..."
+        Lich.log 'info: exiting...'
         Gtk.queue { Gtk.main_quit } if defined?(Gtk)
         exit
       end
@@ -5119,7 +5119,7 @@ main_thread = Thread.new {
         Lich.log "error: #{$!}"
         $_CLIENT_.close rescue nil
         reconnect_if_wanted.call
-        Lich.log "info: exiting..."
+        Lich.log 'info: exiting...'
         Gtk.queue { Gtk.main_quit } if defined?(Gtk)
         exit
       end
@@ -5127,8 +5127,8 @@ main_thread = Thread.new {
     Lich.log 'info: connected'
   elsif game_host and game_port
     unless Lich.hosts_file
-      Lich.log "error: cannot find hosts file"
-      $stdout.puts "error: cannot find hosts file"
+      Lich.log 'error: cannot find hosts file'
+      $stdout.puts 'error: cannot find hosts file'
       exit
     end
     game_quad_ip = IPSocket.getaddress(game_host)
@@ -5154,10 +5154,10 @@ main_thread = Thread.new {
 
     $stdout.puts "Pretending to be #{game_host}"
     $stdout.puts "Listening on port #{game_port}"
-    $stdout.puts "Waiting for the client to connect..."
+    $stdout.puts 'Waiting for the client to connect...'
     Lich.log "info: pretending to be #{game_host}"
     Lich.log "info: listening on port #{game_port}"
-    Lich.log "info: waiting for the client to connect..."
+    Lich.log 'info: waiting for the client to connect...'
 
     timeout_thread = Thread.new {
       sleep 120
@@ -5171,12 +5171,12 @@ main_thread = Thread.new {
     $_CLIENT_ = SynchronizedSocket.new(listener.accept)
     listener.close rescue nil
     timeout_thread.kill
-    $stdout.puts "Connection with the local game client is open."
-    Lich.log "info: connection with the game client is open"
+    $stdout.puts 'Connection with the local game client is open.'
+    Lich.log 'info: connection with the game client is open'
     Lich.restore_hosts
     if test_mode
       $_SERVER_ = $stdin # fixme
-      $_CLIENT_.puts "Running in test mode: host socket set to stdin."
+      $_CLIENT_.puts 'Running in test mode: host socket set to stdin.'
     else
       Lich.log 'info: connecting to the real game host...'
       game_host, game_port = Lich.fix_game_host_port(game_host, game_port)
@@ -5235,7 +5235,7 @@ main_thread = Thread.new {
       2.times {
         sleep 0.3
         $_CLIENTBUFFER_.push("<c>\r\n")
-        Game._puts("<c>")
+        Game._puts('<c>')
       }
       $login_time = Time.now
     }
@@ -5339,7 +5339,7 @@ main_thread = Thread.new {
           elsif server_string =~ /^<flag id="Display Inventory Boxes" status='on' desc="Display all inventory and container windows."\/>/
             server_string.sub("status='on'", "status='off'")
           elsif server_string =~ /^\s*<d cmd="flag Inventory off">Inventory<\/d>\s+ON/
-            server_string.sub("flag Inventory off", "flag Inventory on").sub('ON ', 'OFF')
+            server_string.sub('flag Inventory off', 'flag Inventory on').sub('ON ', 'OFF')
           else
             server_string
           end
@@ -5532,7 +5532,7 @@ main_thread = Thread.new {
   Lich.db.close
   200.times { sleep 0.1; break if Lich.db.closed? }
   reconnect_if_wanted.call
-  Lich.log "info: exiting..."
+  Lich.log 'info: exiting...'
   Gtk.queue { Gtk.main_quit } if defined?(Gtk)
   exit
 }

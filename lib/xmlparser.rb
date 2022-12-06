@@ -163,11 +163,11 @@ class XMLParser
   end
 
   def make_wound_gsl
-    @wound_gsl = sprintf("0b0%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b", @injuries['nsys']['wound'], @injuries['leftEye']['wound'], @injuries['rightEye']['wound'], @injuries['back']['wound'], @injuries['abdomen']['wound'], @injuries['chest']['wound'], @injuries['leftHand']['wound'], @injuries['rightHand']['wound'], @injuries['leftLeg']['wound'], @injuries['rightLeg']['wound'], @injuries['leftArm']['wound'], @injuries['rightArm']['wound'], @injuries['neck']['wound'], @injuries['head']['wound'])
+    @wound_gsl = sprintf('0b0%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b', @injuries['nsys']['wound'], @injuries['leftEye']['wound'], @injuries['rightEye']['wound'], @injuries['back']['wound'], @injuries['abdomen']['wound'], @injuries['chest']['wound'], @injuries['leftHand']['wound'], @injuries['rightHand']['wound'], @injuries['leftLeg']['wound'], @injuries['rightLeg']['wound'], @injuries['leftArm']['wound'], @injuries['rightArm']['wound'], @injuries['neck']['wound'], @injuries['head']['wound'])
   end
 
   def make_scar_gsl
-    @scar_gsl = sprintf("0b0%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b", @injuries['nsys']['scar'], @injuries['leftEye']['scar'], @injuries['rightEye']['scar'], @injuries['back']['scar'], @injuries['abdomen']['scar'], @injuries['chest']['scar'], @injuries['leftHand']['scar'], @injuries['rightHand']['scar'], @injuries['leftLeg']['scar'], @injuries['rightLeg']['scar'], @injuries['leftArm']['scar'], @injuries['rightArm']['scar'], @injuries['neck']['scar'], @injuries['head']['scar'])
+    @scar_gsl = sprintf('0b0%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b%02b', @injuries['nsys']['scar'], @injuries['leftEye']['scar'], @injuries['rightEye']['scar'], @injuries['back']['scar'], @injuries['abdomen']['scar'], @injuries['chest']['scar'], @injuries['leftHand']['scar'], @injuries['rightHand']['scar'], @injuries['leftLeg']['scar'], @injuries['rightLeg']['scar'], @injuries['leftArm']['scar'], @injuries['rightArm']['scar'], @injuries['neck']['scar'], @injuries['head']['scar'])
   end
 
   def parse(line)
@@ -194,19 +194,19 @@ class XMLParser
 
   def parse_psm3_progressbar(kind, attributes)
     @dialogs[kind] ||= {}
-    id = attributes["id"].to_i
-    name = attributes["text"]
-    value = attributes["time"]
+    id = attributes['id'].to_i
+    name = attributes['text']
+    value = attributes['time']
     return unless name && value
     # set the expiry for a decade for infinite duration effects
-    return @dialogs[kind][name] = @dialogs[kind][id] = Time.now + DECADE if value.downcase.eql?("indefinite")
+    return @dialogs[kind][name] = @dialogs[kind][id] = Time.now + DECADE if value.downcase.eql?('indefinite')
 
     # in psm 3.0 progress bars now have second precision!
     hour, minute, second = value.split(':')
     @dialogs[kind][name] = @dialogs[kind][id] = Time.now + (hour.to_i * 3600) + (minute.to_i * 60) + second.to_i
   end
 
-  PSM_3_DIALOG_IDS = ["Buffs", "Active Spells", "Debuffs", "Cooldowns"]
+  PSM_3_DIALOG_IDS = ['Buffs', 'Active Spells', 'Debuffs', 'Cooldowns']
 
   def tag_start(name, attributes)
     begin
@@ -226,9 +226,9 @@ class XMLParser
         @obj_name = nil
         @obj_before_name = nil
         @obj_after_name = nil
-      elsif name == 'dialogData' and attributes['clear'] == 't' and PSM_3_DIALOG_IDS.include?(attributes["id"])
-        @dialogs[attributes["id"]] ||= {}
-        @dialogs[attributes["id"]].clear
+      elsif name == 'dialogData' and attributes['clear'] == 't' and PSM_3_DIALOG_IDS.include?(attributes['id'])
+        @dialogs[attributes['id']] ||= {}
+        @dialogs[attributes['id']].clear
       elsif name == 'resource'
         nil
       elsif name == 'nav'

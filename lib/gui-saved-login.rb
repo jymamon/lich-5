@@ -23,7 +23,7 @@ else
     @account_book.show_border = true
 
     unless @theme_state == true
-      lightgrey = Gdk::RGBA::parse("#d3d3d3")
+      lightgrey = Gdk::RGBA::parse('#d3d3d3')
       @account_book.override_background_color(:normal, lightgrey)
 
       @tab_provider = Gtk::CssProvider.new
@@ -122,7 +122,7 @@ else
               @window.destroy
               @done = true
             elsif (ev.button == 3)
-              pp "I would be adding to a team tab"
+              pp 'I would be adding to a team tab'
             end
           end
         }
@@ -134,8 +134,8 @@ else
               @save_entry_data = true
               char_box.visible = false
             else
-              dialog = Gtk::MessageDialog.new(:parent => nil, :flags => :modal, :type => :question, :buttons => :yes_no, :message => "Delete record?")
-              dialog.title = "Confirm"
+              dialog = Gtk::MessageDialog.new(:parent => nil, :flags => :modal, :type => :question, :buttons => :yes_no, :message => 'Delete record?')
+              dialog.title = 'Confirm'
               dialog.set_icon(@default_icon)
               response = nil
               response = dialog.run
@@ -161,7 +161,7 @@ else
     @entry_data.each { |login_info|
       if login_info[:user_id].downcase != last_user_id
         last_user_id = login_info[:user_id].downcase
-        quick_box.pack_start(Gtk::Label.new("Account: " + last_user_id), :expand => false, :fill => false, :padding => 6)
+        quick_box.pack_start(Gtk::Label.new('Account: ' + last_user_id), :expand => false, :fill => false, :padding => 6)
       end
 
       label = Gtk::Label.new("#{login_info[:char_name]} (#{login_info[:game_name]}, #{login_info[:frontend]})")
@@ -209,7 +209,7 @@ else
             @window.destroy
             @done = true
           elsif (ev.button == 3)
-            pp "I would be adding to a team tab"
+            pp 'I would be adding to a team tab'
           end
         end
       }
@@ -221,8 +221,8 @@ else
             @save_entry_data = true
             char_box.visible = false
           else
-            dialog = Gtk::MessageDialog.new(:parent => nil, :flags => :modal, :type => :question, :buttons => :yes_no, :message => "Delete record?")
-            dialog.title = "Confirm"
+            dialog = Gtk::MessageDialog.new(:parent => nil, :flags => :modal, :type => :question, :buttons => :yes_no, :message => 'Delete record?')
+            dialog.title = 'Confirm'
             dialog.set_icon(@default_icon)
             response = nil
             response = dialog.run
@@ -259,7 +259,7 @@ else
   add_character_pane = Gtk::Paned.new(:horizontal)
   add_instance_pane = Gtk::Paned.new(:horizontal)
 
-  add_char_label = Gtk::Label.new("Character")
+  add_char_label = Gtk::Label.new('Character')
   add_char_label.set_width_chars(15)
   add_char_entry = Gtk::Entry.new
   add_char_entry.set_width_chars(15)
@@ -267,12 +267,12 @@ else
   add_character_pane.pack2(add_char_entry)
 
   add_inst_select = Gtk::ComboBoxEntry.new()
-  add_inst_select.child.text = "Prime"
-  add_inst_select.append_text("Prime")
-  add_inst_select.append_text("Platinum")
-  add_inst_select.append_text("Shattered")
-  add_inst_select.append_text("Test")
-  add_inst_label = Gtk::Label.new("Instance")
+  add_inst_select.child.text = 'Prime'
+  add_inst_select.append_text('Prime')
+  add_inst_select.append_text('Platinum')
+  add_inst_select.append_text('Shattered')
+  add_inst_select.append_text('Test')
+  add_inst_label = Gtk::Label.new('Instance')
   add_inst_label.set_width_chars(15)
 
   add_instance_pane.add1(add_inst_label)
@@ -282,7 +282,7 @@ else
   q_wizard_option = Gtk::RadioButton.new(:label => 'Wizard', :member => q_stormfront_option)
   q_avalon_option = Gtk::RadioButton.new(:label => 'Avalon', :member => q_stormfront_option)
 
-  add_char_button = Gtk::Button.new(:label => "Add to this account")
+  add_char_button = Gtk::Button.new(:label => 'Add to this account')
   q_frontend_box = Gtk::Box.new(:horizontal, 10)
   if RUBY_PLATFORM =~ /darwin/i
     q_frontend_box.pack_end(q_avalon_option, :expand => false, :fill => false, :padding => 0)
@@ -360,12 +360,12 @@ else
       Gtk::Settings.default.gtk_application_prefer_dark_theme = true
       @play_button.style_context.remove_provider(@button_provider) if defined?(@button_provider)
       @account_book.style_context.remove_provider(@tab_provider) if defined?(@tab_provider)
-      @account_book.override_background_color(:normal, Gdk::RGBA::parse("rgba(0,0,0,0)"))
-      @notebook.override_background_color(:normal, Gdk::RGBA::parse("rgba(0,0,0,0)"))
+      @account_book.override_background_color(:normal, Gdk::RGBA::parse('rgba(0,0,0,0)'))
+      @notebook.override_background_color(:normal, Gdk::RGBA::parse('rgba(0,0,0,0)'))
       Lich.track_dark_mode = true
     else
       Gtk::Settings.default.gtk_application_prefer_dark_theme = false
-      lightgrey = Gdk::RGBA::parse("#d3d3d3")
+      lightgrey = Gdk::RGBA::parse('#d3d3d3')
       @account_book.override_background_color(:normal, lightgrey)
       @notebook.override_background_color(:normal, lightgrey)
       Lich.track_dark_mode = false

@@ -1,8 +1,8 @@
-require "openssl"
-require "socket"
+require 'openssl'
+require 'socket'
 
 module EAccess
-  PEM = File.join("#{DATA_DIR}/", "simu.pem")
+  PEM = File.join("#{DATA_DIR}/", 'simu.pem')
   #  pp PEM
   PACKET_SIZE = 8192
 
@@ -10,7 +10,7 @@ module EAccess
     File.exist? PEM
   end
 
-  def self.download_pem(hostname = "eaccess.play.net", port = 7910)
+  def self.download_pem(hostname = 'eaccess.play.net', port = 7910)
     # Create an OpenSSL context
     ctx = OpenSSL::SSL::SSLContext.new
     # Get remote TCP socket
@@ -34,7 +34,7 @@ module EAccess
     #     fail Exception, "\nssl peer certificate did not match #{EAccess::PEM}\nwas:\n#{conn.peer_cert}"
   end
 
-  def self.socket(hostname = "eaccess.play.net", port = 7910)
+  def self.socket(hostname = 'eaccess.play.net', port = 7910)
     download_pem unless pem_exist?
     socket = TCPSocket.open(hostname, port)
     cert_store              = OpenSSL::X509::Store.new
@@ -63,7 +63,7 @@ module EAccess
     conn.puts "A\t#{account}\t#{password}\n"
     response = EAccess.read(conn)
     unless login = /KEY\t(?<key>.*)\t/.match(response)
-      eaccess_error = "Error(%s)" % response.split(/\s+/).last
+      eaccess_error = 'Error(%s)' % response.split(/\s+/).last
       return eaccess_error
     end
     # pp "A:response=%s" % response
@@ -127,7 +127,7 @@ module EAccess
       login_info = Hash[response.sub(/^L\tOK\t/, '')
         .split("\t")
         .map { |kv|
-          k, v = kv.split("=")
+          k, v = kv.split('=')
           [k.downcase, v]
         }]
     end

@@ -51,7 +51,7 @@ def gui_login(entry_data_file)
     #
     # put it together and show the window
     #
-    lightgrey = Gdk::RGBA::parse("#d3d3d3")
+    lightgrey = Gdk::RGBA::parse('#d3d3d3')
     @notebook = Gtk::Notebook.new
     @notebook.override_background_color(:normal, lightgrey) unless @theme_state == true
     @notebook.append_page(@quick_game_entry_tab, Gtk::Label.new('Saved Entry'))
@@ -94,7 +94,7 @@ def gui_login(entry_data_file)
 
   unless !@launch_data.nil?
     Gtk.queue { Gtk.main_quit }
-    Lich.log "info: exited without selection"
+    Lich.log 'info: exited without selection'
     exit
   end
 end

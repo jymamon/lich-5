@@ -251,10 +251,10 @@ module Games
             end
           elsif options[:activator] =~ /^(invoke|scroll)$/i
             if formula =~ can_haz_spell_ranks
-              skills.each { |skill_name| formula.gsub!(skill_name, "Skills.arcanesymbols.to_i") }
+              skills.each { |skill_name| formula.gsub!(skill_name, 'Skills.arcanesymbols.to_i') }
               formula = "(#{formula})/2.0"
             elsif formula =~ /Skills\.(?:magicitemuse|arcanesymbols)/
-              skills.each { |skill_name| formula.gsub!(skill_name, "Skills.arcanesymbols.to_i") }
+              skills.each { |skill_name| formula.gsub!(skill_name, 'Skills.arcanesymbols.to_i') }
             end
           end
         end
@@ -603,14 +603,14 @@ module Games
               cast_cmd = 'cast'
             end
             unless (arg_options.nil? || arg_options.empty?)
-              if arg_options.split(" ")[0] =~ /incant|channel|evoke|cast/
-                cast_cmd = arg_options.split(" ")[0]
-                arg_options = arg_options.split(" ").drop(1)
-                arg_options = arg_options.join(" ") unless arg_options.empty?
+              if arg_options.split(' ')[0] =~ /incant|channel|evoke|cast/
+                cast_cmd = arg_options.split(' ')[0]
+                arg_options = arg_options.split(' ').drop(1)
+                arg_options = arg_options.join(' ') unless arg_options.empty?
               end
             end
 
-            if (((target.nil? || target.to_s.empty?) && !(@no_incant)) && (cast_cmd == "cast" && arg_options.nil?) || cast_cmd == "incant") && cast_cmd !~ /^(?:channel|evoke)/
+            if (((target.nil? || target.to_s.empty?) && !(@no_incant)) && (cast_cmd == 'cast' && arg_options.nil?) || cast_cmd == 'incant') && cast_cmd !~ /^(?:channel|evoke)/
               cast_cmd = "incant #{@num}"
             elsif (target.nil? or target.to_s.empty?) and (@type =~ /attack/i) and not [410, 435, 525, 912, 909, 609].include?(@num)
               cast_cmd += ' target'
@@ -708,7 +708,7 @@ module Games
               end
               if cast_result =~ /You can only evoke certain spells\.|You can only channel certain spells for extra power\./
                 echo "cast: can't evoke/channel #{@num}"
-                cast_cmd = cast_cmd.gsub(/^(?:evoke|channel)/, "cast")
+                cast_cmd = cast_cmd.gsub(/^(?:evoke|channel)/, 'cast')
                 next
               end
               break unless ((@circle.to_i == 10) && (cast_result =~ /^\[Spell Hindrance for/))
@@ -724,7 +724,7 @@ module Games
 
       def force_cast(target = nil, arg_options = nil, results_of_interest = nil)
         if arg_options.nil? || arg_options.empty?
-          arg_options = "cast"
+          arg_options = 'cast'
         else
           arg_options = "cast #{arg_options}"
         end
@@ -733,7 +733,7 @@ module Games
 
       def force_channel(target = nil, arg_options = nil, results_of_interest = nil)
         if arg_options.nil? || arg_options.empty?
-          arg_options = "channel"
+          arg_options = 'channel'
         else
           arg_options = "channel #{arg_options}"
         end
@@ -742,7 +742,7 @@ module Games
 
       def force_evoke(target = nil, arg_options = nil, results_of_interest = nil)
         if arg_options.nil? || arg_options.empty?
-          arg_options = "evoke"
+          arg_options = 'evoke'
         else
           arg_options = "evoke #{arg_options}"
         end
@@ -751,7 +751,7 @@ module Games
 
       def force_incant(arg_options = nil, results_of_interest = nil)
         if arg_options.nil? || arg_options.empty?
-          arg_options = "incant"
+          arg_options = 'incant'
         else
           arg_options = "incant #{arg_options}"
         end
