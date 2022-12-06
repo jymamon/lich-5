@@ -389,17 +389,6 @@ Style/Alias:
 Style/AndOr:
   Enabled: false
 
-# Offense count: 6
-# This cop supports safe autocorrection (--autocorrect).
-Style/BlockComments:
-  Exclude:
-    - 'lib/gui-saved-login.rb'
-    - 'lib/messaging.rb'
-    - 'lib/spell.rb'
-    - 'lib/stash.rb'
-    - 'lib/util.rb'
-    - 'lib/xmlparser.rb'
-
 # Offense count: 245
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, AllowedMethods, AllowedPatterns, IgnoredMethods, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.

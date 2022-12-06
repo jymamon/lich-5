@@ -77,6 +77,10 @@ Style/NumericLiterals:
   # Enabled is recommended.
   Enabled: false
 
+Style/BlockComments:
+  # Enabled is recommended.
+  Enabled: false
+
 Style/PerlBackrefs:
   # Enabled is recommended.
   Enabled: false
