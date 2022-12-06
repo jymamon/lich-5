@@ -46,9 +46,7 @@ module Lich
       Lich.db.execute('CREATE TABLE IF NOT EXISTS script_auto_settings (script TEXT NOT NULL, scope TEXT, hash BLOB, PRIMARY KEY(script, scope));')
       Lich.db.execute('CREATE TABLE IF NOT EXISTS lich_settings (name TEXT NOT NULL, value TEXT, PRIMARY KEY(name));')
       Lich.db.execute('CREATE TABLE IF NOT EXISTS uservars (scope TEXT NOT NULL, hash BLOB, PRIMARY KEY(scope));')
-      if RUBY_VERSION =~ /^2\.[012]\./
-        Lich.db.execute('CREATE TABLE IF NOT EXISTS trusted_scripts (name TEXT NOT NULL);')
-      end
+      Lich.db.execute('CREATE TABLE IF NOT EXISTS trusted_scripts (name TEXT NOT NULL);') if RUBY_VERSION =~ /^2\.[012]\./
       Lich.db.execute('CREATE TABLE IF NOT EXISTS simu_game_entry (character TEXT NOT NULL, game_code TEXT NOT NULL, data BLOB, PRIMARY KEY(character, game_code));')
       Lich.db.execute('CREATE TABLE IF NOT EXISTS enable_inventory_boxes (player_id INTEGER NOT NULL, PRIMARY KEY(player_id));')
     rescue SQLite3::BusyException
@@ -145,9 +143,7 @@ module Lich
       begin
         launcher_key = Win32.RegOpenKeyEx(:hKey => Win32::HKEY_LOCAL_MACHINE, :lpSubKey => 'Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command', :samDesired => (Win32::KEY_ALL_ACCESS | Win32::KEY_WOW64_32KEY))[:phkResult]
         launcher_cmd = Win32.RegQueryValueEx(:hKey => launcher_key, :lpValueName => 'RealCommand')[:lpData]
-        if launcher_cmd.nil? or launcher_cmd.empty?
-          launcher_cmd = Win32.RegQueryValueEx(:hKey => launcher_key)[:lpData]
-        end
+        launcher_cmd = Win32.RegQueryValueEx(:hKey => launcher_key)[:lpData] if launcher_cmd.nil? or launcher_cmd.empty?
         return launcher_cmd
         Lich.log 'returned #{launcher_cmd}'
       ensure
@@ -155,9 +151,7 @@ module Lich
       end
     elsif defined?(Wine)
       launcher_cmd = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\RealCommand')
-      unless launcher_cmd and !launcher_cmd.empty?
-        launcher_cmd = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\')
-      end
+      launcher_cmd = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\') unless launcher_cmd and !launcher_cmd.empty?
       return launcher_cmd
     else
       return nil
@@ -419,9 +413,7 @@ module Lich
         windir = (ENV['windir'] || ENV['SYSTEMROOT'] || 'c:\windows')
         hosts_path.gsub('%SystemRoot%', windir)
         hosts_file = "#{hosts_path}\\hosts"
-        if File.exist?(hosts_file)
-          return (@@hosts_file = hosts_file)
-        end
+        return (@@hosts_file = hosts_file) if File.exist?(hosts_file)
       end
 
       if (windir = (ENV['windir'] || ENV['SYSTEMROOT'])) and File.exist?("#{windir}\\system32\\drivers\\etc\\hosts")
@@ -430,9 +422,7 @@ module Lich
 
       for drive in ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
         for windir in ['winnt', 'windows']
-          if File.exist?("#{drive}:\\#{windir}\\system32\\drivers\\etc\\hosts")
-            return (@@hosts_file = "#{drive}:\\#{windir}\\system32\\drivers\\etc\\hosts")
-          end
+          return (@@hosts_file = "#{drive}:\\#{windir}\\system32\\drivers\\etc\\hosts") if File.exist?("#{drive}:\\#{windir}\\system32\\drivers\\etc\\hosts")
         end
       end
 
@@ -448,9 +438,7 @@ module Lich
     if Lich.hosts_file and File.exist?(Lich.hosts_file)
       at_exit { Lich.restore_hosts }
       Lich.restore_hosts
-      if File.exist?("#{Lich.hosts_file}.bak")
-        return false
-      end
+      return false if File.exist?("#{Lich.hosts_file}.bak")
 
       begin
         # copy hosts to hosts.bak

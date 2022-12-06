@@ -93,9 +93,7 @@ module Win32
     end
 
     for sym in [:dwX, :dwY, :dwXSize, :dwYSize, :dwXCountChars, :dwYCountChars, :dwFillAttribute, :dwFlags, :wShowWindow, :hStdInput, :hStdOutput, :hStdError]
-      if args[sym]
-        lpStartupInfo[lpStartupInfo_index[sym]] = args[sym]
-      end
+      lpStartupInfo[lpStartupInfo_index[sym]] = args[sym] if args[sym]
     end
 
     lpStartupInfo = lpStartupInfo.pack('LLLLLLLLLLLLSSLLLL')

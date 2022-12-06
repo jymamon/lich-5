@@ -248,18 +248,14 @@ class XMLParser
           end
         end
         @in_stream = false
-        if attributes['id'] == 'bounty'
-          @bounty_task.strip!
-        end
+        @bounty_task.strip! if attributes['id'] == 'bounty'
         @current_stream = String.new
       elsif name == 'pushBold'
         @bold = true
       elsif name == 'popBold'
         @bold = false
       elsif name == 'streamWindow'
-        if (attributes['id'] == 'main') and attributes['subtitle']
-          @room_title = '[' + attributes['subtitle'][3..-1] + ']'
-        end
+        @room_title = '[' + attributes['subtitle'][3..-1] + ']' if (attributes['id'] == 'main') and attributes['subtitle']
       elsif name == 'style'
         @current_style = attributes['id']
       elsif name == 'prompt'
@@ -308,9 +304,7 @@ class XMLParser
               $_CLIENT_.puts "\034GSZ#{sprintf('%010d', @mana)}\n"
             end
           end
-          if @send_fake_tags
-            $_CLIENT_.puts "\034GSV#{sprintf('%010d%010d%010d%010d%010d%010d%010d%010d', @max_health.to_i, @health.to_i, @max_spirit.to_i, @spirit.to_i, @max_mana.to_i, @mana.to_i, @wound_gsl, @scar_gsl)}\r\n"
-          end
+          $_CLIENT_.puts "\034GSV#{sprintf('%010d%010d%010d%010d%010d%010d%010d%010d', @max_health.to_i, @health.to_i, @max_spirit.to_i, @spirit.to_i, @max_mana.to_i, @mana.to_i, @wound_gsl, @scar_gsl)}\r\n" if @send_fake_tags
         elsif attributes['id'] == 'stamina'
           @stamina, @max_stamina = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
         elsif attributes['id'] == 'mindState'
@@ -349,9 +343,7 @@ class XMLParser
         if attributes['id'] == 'dDBTarget'
           @current_target_ids.clear
           attributes['content_value'].split(',').each { |t|
-            if t =~ /^\#(-?\d+)(?:,|$)/
-              @current_target_ids.push($1)
-            end
+            @current_target_ids.push($1) if t =~ /^\#(-?\d+)(?:,|$)/
           }
           if attributes['content_value'] =~ /^\#(-?\d+)(?:,|$)/
             @current_target_id = $1
@@ -433,9 +425,7 @@ class XMLParser
                       nil
                     end
                   else
-                    if server_string =~ /<output class=['"]mono['"]\/>/
-                      @nerve_tracker_active = 'maybe'
-                    end
+                    @nerve_tracker_active = 'maybe' if server_string =~ /<output class=['"]mono['"]\/>/
                     server_string
                   end
                 }
@@ -478,15 +468,11 @@ class XMLParser
       elsif (name == 'container') and (attributes['id'] == 'stow')
         @stow_container_id = attributes['target'].sub('#', '')
       elsif name == 'clearStream'
-        if attributes['id'] == 'bounty'
-          @bounty_task = String.new
-        end
+        @bounty_task = String.new if attributes['id'] == 'bounty'
       elsif name == 'playerID'
         @player_id = attributes['id']
         unless $frontend =~ /^(?:wizard|avalon)$/
-          if Lich.inventory_boxes(@player_id)
-            DownstreamHook.remove('inventory_boxes_off')
-          end
+          DownstreamHook.remove('inventory_boxes_off') if Lich.inventory_boxes(@player_id)
         end
       elsif name == 'settingsInfo'
         if game = attributes['instance']
@@ -500,15 +486,9 @@ class XMLParser
         end
       elsif (name == 'app') and (@name = attributes['char'])
         @game = attributes['game'] if @game =~ /^DR/
-        if @game.nil? or @game.empty?
-          @game = 'unknown'
-        end
-        unless File.exist?("#{DATA_DIR}/#{@game}")
-          Dir.mkdir("#{DATA_DIR}/#{@game}")
-        end
-        unless File.exist?("#{DATA_DIR}/#{@game}/#{@name}")
-          Dir.mkdir("#{DATA_DIR}/#{@game}/#{@name}")
-        end
+        @game = 'unknown' if @game.nil? or @game.empty?
+        Dir.mkdir("#{DATA_DIR}/#{@game}") unless File.exist?("#{DATA_DIR}/#{@game}")
+        Dir.mkdir("#{DATA_DIR}/#{@game}/#{@name}") unless File.exist?("#{DATA_DIR}/#{@game}/#{@name}")
         if $frontend =~ /^(?:wizard|avalon)$/
           Game._puts "#{$cmd_prefix}_flag Display Dialog Boxes 0"
           sleep 0.05
@@ -635,9 +615,7 @@ class XMLParser
           else
             @room_window_disabled = false
             @room_description.concat(text_string)
-            if @active_tags.include?('a')
-              GameObj.new_room_desc(@obj_exist, @obj_noun, text_string)
-            end
+            GameObj.new_room_desc(@obj_exist, @obj_noun, text_string) if @active_tags.include?('a')
           end
         elsif @active_ids.include?('room exits')
           @room_exits_string.concat(text_string)
@@ -662,9 +640,7 @@ class XMLParser
           @fam_mode = String.new
         elsif @current_style == 'roomDesc'
           @familiar_room_description.concat(text_string)
-          if @active_tags.include?('a')
-            GameObj.new_fam_room_desc(@obj_exist, @obj_noun, text_string)
-          end
+          GameObj.new_fam_room_desc(@obj_exist, @obj_noun, text_string) if @active_tags.include?('a')
         elsif text_string =~ /^You also see/
           @fam_mode = 'things'
         elsif text_string =~ /^Also here/
@@ -689,9 +665,7 @@ class XMLParser
       elsif @room_window_disabled
         if @current_style == 'roomDesc'
           @room_description.concat(text_string)
-          if @active_tags.include?('a')
-            GameObj.new_room_desc(@obj_exist, @obj_noun, text_string)
-          end
+          GameObj.new_room_desc(@obj_exist, @obj_noun, text_string) if @active_tags.include?('a')
         elsif text_string =~ /^Obvious (?:paths|exits): (?:none)?$/
           @room_exits_string = text_string.strip
         end
@@ -708,9 +682,7 @@ class XMLParser
     begin
       if name == 'inv'
         if @obj_exist == @obj_location
-          if @obj_after_name == 'is closed.'
-            GameObj.delete_container(@stow_container_id)
-          end
+          GameObj.delete_container(@stow_container_id) if @obj_after_name == 'is closed.'
         elsif @obj_exist
           GameObj.new_inv(@obj_exist, @obj_noun, @obj_name, @obj_location, @obj_before_name, @obj_after_name)
         end

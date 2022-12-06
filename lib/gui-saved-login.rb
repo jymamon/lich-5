@@ -113,9 +113,7 @@ else
               end
               if login_info[:custom_launch]
                 launch_data.push "CUSTOMLAUNCH=#{login_info[:custom_launch]}"
-                if login_info[:custom_launch_dir]
-                  launch_data.push "CUSTOMLAUNCHDIR=#{login_info[:custom_launch_dir]}"
-                end
+                launch_data.push "CUSTOMLAUNCHDIR=#{login_info[:custom_launch_dir]}" if login_info[:custom_launch_dir]
               end
               @launch_data = launch_data
               @window.destroy
@@ -199,9 +197,7 @@ else
             end
             if login_info[:custom_launch]
               launch_data.push "CUSTOMLAUNCH=#{login_info[:custom_launch]}"
-              if login_info[:custom_launch_dir]
-                launch_data.push "CUSTOMLAUNCHDIR=#{login_info[:custom_launch_dir]}"
-              end
+              launch_data.push "CUSTOMLAUNCHDIR=#{login_info[:custom_launch_dir]}" if login_info[:custom_launch_dir]
             end
             @launch_data = launch_data
             @window.destroy

@@ -58,9 +58,7 @@ def gui_login(entry_data_file)
     @notebook.append_page(@game_entry_tab, Gtk::Label.new('Manual Entry'))
 
     @notebook.signal_connect('switch-page') { |who, page, page_num|
-      if (page_num == 2) and !install_tab_loaded
-        refresh_button.clicked
-      end
+      refresh_button.clicked if (page_num == 2) and !install_tab_loaded
     }
 
     #    grey = Gdk::RGBA::parse("#d3d3d3")

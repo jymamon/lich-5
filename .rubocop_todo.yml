@@ -546,11 +546,6 @@ Style/IdenticalConditionalBranches:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 130
-# This cop supports safe autocorrection (--autocorrect).
-Style/IfUnlessModifier:
-  Enabled: false
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Style/IfWithSemicolon:

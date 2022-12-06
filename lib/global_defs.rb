@@ -66,9 +66,7 @@ end
 def echo(*messages)
   respond if messages.empty?
   if script = Script.current
-    unless script.no_echo
-      messages.each { |message| respond("[#{script.name}: #{message.to_s.chomp}]") }
-    end
+    messages.each { |message| respond("[#{script.name}: #{message.to_s.chomp}]") } unless script.no_echo
   else
     messages.each { |message| respond("[(unknown script): #{message.to_s.chomp}]") }
   end
@@ -78,9 +76,7 @@ end
 def _echo(*messages)
   _respond if messages.empty?
   if script = Script.current
-    unless script.no_echo
-      messages.each { |message| _respond("[#{script.name}: #{message.to_s.chomp}]") }
-    end
+    messages.each { |message| _respond("[#{script.name}: #{message.to_s.chomp}]") } unless script.no_echo
   else
     messages.each { |message| _respond("[(unknown script): #{message.to_s.chomp}]") }
   end
@@ -206,12 +202,8 @@ end
 
 def muckled?
   muckled = checkwebbed || checkdead || checkstunned
-  if defined?(checksleeping)
-    muckled ||= checksleeping
-  end
-  if defined?(checkbound)
-    muckled ||= checkbound
-  end
+  muckled ||= checksleeping if defined?(checksleeping)
+  muckled ||= checkbound if defined?(checkbound)
   return muckled
 end
 
@@ -288,9 +280,7 @@ def selectput(string, success, failure, timeout = nil)
   timeout = timeout.to_f if timeout and !timeout.is_a?(Numeric)
   success = [success] if success.is_a? String
   failure = [failure] if failure.is_a? String
-  if !string.is_a?(String) or !success.is_a?(Array) or !failure.is_a?(Array) or timeout && !timeout.is_a?(Numeric)
-    raise ArgumentError, 'usage is: selectput(game_command,success_array,failure_array[,timeout_in_secs])'
-  end
+  raise ArgumentError, 'usage is: selectput(game_command,success_array,failure_array[,timeout_in_secs])' if !string.is_a?(String) or !success.is_a?(Array) or !failure.is_a?(Array) or timeout && !timeout.is_a?(Numeric)
 
   success.flatten!
   failure.flatten!
@@ -337,9 +327,7 @@ def upstream_waitfor(*strings)
   unless script.want_upstream then echo("This script wants to listen to the upstream, but it isn't set as receiving the upstream! This will cause a permanent hang, aborting (ask for the upstream with 'toggle_upstream' in the script)"); return false end
   regexpstr = strings.join('|')
   while line = script.upstream_gets
-    if line =~ /#{regexpstr}/i
-      return line
-    end
+    return line if line =~ /#{regexpstr}/i
   end
 end
 
@@ -377,9 +365,7 @@ def unique_waitfor(*strings)
   regexp = /#{strings.join('|')}/
   while true
     str = script.unique_gets
-    if str =~ regexp
-      return str
-    end
+    return str if str =~ regexp
   end
 end
 
@@ -656,9 +642,7 @@ end
 def wait_until(announce = nil)
   priosave = Thread.current.priority
   Thread.current.priority = 0
-  unless announce.nil? or yield
-    respond(announce)
-  end
+  respond(announce) unless announce.nil? or yield
   sleep 0.25 until yield
   Thread.current.priority = priosave
 end
@@ -666,9 +650,7 @@ end
 def wait_while(announce = nil)
   priosave = Thread.current.priority
   Thread.current.priority = 0
-  unless announce.nil? or !yield
-    respond(announce)
-  end
+  respond(announce) unless announce.nil? or !yield
   sleep 0.25 while yield
   Thread.current.priority = priosave
 end
@@ -997,7 +979,7 @@ end
 
 def checkfamarea(*strings)
   strings.flatten!
-  if strings.empty? then return XMLData.familiar_room_title.split(',').first.sub('[', '') end
+  return XMLData.familiar_room_title.split(',').first.sub('[', '') if strings.empty?
 
   XMLData.familiar_room_title.split(',').first =~ /#{strings.join('|')}/i
 end
@@ -1015,7 +997,7 @@ def checkfampaths(dir = 'none')
 end
 
 def checkfamroom(*strings)
-  strings.flatten!; if strings.empty? then return XMLData.familiar_room_title.chomp end
+  strings.flatten!; return XMLData.familiar_room_title.chomp if strings.empty?
 
   XMLData.familiar_room_title =~ /#{strings.join('|')}/i
 end
@@ -1087,7 +1069,7 @@ def count_npcs
 end
 
 def checkright(*hand)
-  if GameObj.right_hand.nil? then return nil end
+  return nil if GameObj.right_hand.nil?
 
   hand.flatten!
   if GameObj.right_hand.name == 'Empty' or GameObj.right_hand.name.empty?
@@ -1100,7 +1082,7 @@ def checkright(*hand)
 end
 
 def checkleft(*hand)
-  if GameObj.left_hand.nil? then return nil end
+  return nil if GameObj.left_hand.nil?
 
   hand.flatten!
   if GameObj.left_hand.name == 'Empty' or GameObj.left_hand.name.empty?
@@ -1150,7 +1132,7 @@ def checkprep(spell = nil)
 end
 
 def setpriority(val = nil)
-  if val.nil? then return Thread.current.priority end
+  return Thread.current.priority if val.nil?
 
   if val.to_i > 3
     echo("You're trying to set a script's priority as being higher than the send/recv threads (this is telling Lich to run the script before it even gets data to give the script, and is useless); the limit is 3")
@@ -1261,7 +1243,7 @@ def match(label, string)
   else
     while line_in = script.gets
       strings.each { |string|
-        if line_in =~ /#{string}/ then return $~.to_s end
+        return $~.to_s if line_in =~ /#{string}/
       }
     end
   end
@@ -1288,9 +1270,7 @@ def matchtimeout(secs, *strings)
     elsif line =~ /#{regexpstr}/i
       return line
     end
-    if Time.now.to_f > end_time
-      return false
-    end
+    return false if Time.now.to_f > end_time
   }
 end
 
@@ -1351,9 +1331,7 @@ end
 def waitfor(*strings)
   unless script = Script.current then respond('--- waitfor: Unable to identify calling script.'); return false; end
   strings.flatten!
-  if script.instance_of?(WizardScript) and (strings.length == 1) and (strings.first.strip == '>')
-    return script.gets
-  end
+  return script.gets if script.instance_of?(WizardScript) and (strings.length == 1) and (strings.first.strip == '>')
 
   if strings.empty?
     echo 'waitfor: no string to wait for'
@@ -1362,7 +1340,7 @@ def waitfor(*strings)
   regexpstr = strings.join('|')
   while true
     line_in = script.gets
-    if line_in =~ /#{regexpstr}/i then return line_in end
+    return line_in if line_in =~ /#{regexpstr}/i
   end
 end
 
@@ -1397,9 +1375,7 @@ def reget(*lines)
     history.gsub!('&lt;', '<')
   end
   history = history.split("\n").delete_if { |line| line.nil? or line.empty? or line =~ /^[\r\n\s\t]*$/ }
-  if lines.first.is_a?(Numeric) or lines.first.to_i.nonzero?
-    history = history[-[lines.shift.to_i, history.length].min..-1]
-  end
+  history = history[-[lines.shift.to_i, history.length].min..-1] if lines.first.is_a?(Numeric) or lines.first.to_i.nonzero?
   unless lines.empty? or lines.nil?
     regex = /#{lines.join('|')}/i
     history = history.find_all { |line| line =~ regex }
@@ -1493,9 +1469,7 @@ def matchfindexact(*strings)
     if gotit = line_in.slice(/#{regexpstr}/)
       matches = []
       looking.each_with_index { |str, idx|
-        if gotit =~ /#{str}/i
-          strings[idx].count('?').times { |n| matches.push(eval("$#{n + 1}")) }
-        end
+        strings[idx].count('?').times { |n| matches.push(eval("$#{n + 1}")) } if gotit =~ /#{str}/i
       }
       break
     end
@@ -1845,9 +1819,7 @@ def dothistimeout(action, timeout, success_line)
         }
         break
       end
-      if Time.now.to_f >= end_time
-        return nil
-      end
+      return nil if Time.now.to_f >= end_time
     }
   }
 end
@@ -1888,12 +1860,8 @@ def sf_to_wiz(line)
       return nil
     end
     $sftowiz_multiline = nil
-    if line =~ /<LaunchURL src="(.*?)" \/>/
-      $_CLIENT_.puts "\034GSw00005\r\nhttps://www.play.net#{$1}\r\n"
-    end
-    if line =~ /<preset id='speech'>(.*?)<\/preset>/m
-      line = line.sub(/<preset id='speech'>.*?<\/preset>/m, "#{$speech_highlight_start}#{$1}#{$speech_highlight_end}")
-    end
+    $_CLIENT_.puts "\034GSw00005\r\nhttps://www.play.net#{$1}\r\n" if line =~ /<LaunchURL src="(.*?)" \/>/
+    line = line.sub(/<preset id='speech'>.*?<\/preset>/m, "#{$speech_highlight_start}#{$1}#{$speech_highlight_end}") if line =~ /<preset id='speech'>(.*?)<\/preset>/m
     if line =~ /<pushStream id="thoughts"[^>]*>\[([^\\]+?)\]\s*(.*?)<popStream\/>/m
       thought_channel = $1
       msg = $2
@@ -1902,21 +1870,11 @@ def sf_to_wiz(line)
       msg.gsub!('<popBold/>', '')
       line = line.sub(/<pushStream id="thoughts".*<popStream\/>/m, "You hear the faint thoughts of [#{thought_channel}]-ESP echo in your mind:\r\n#{msg}")
     end
-    if line =~ /<pushStream id="voln"[^>]*>\[Voln - (?:<a[^>]*>)?([A-Z][a-z]+)(?:<\/a>)?\]\s*(".*")[\r\n]*<popStream\/>/m
-      line = line.sub(/<pushStream id="voln"[^>]*>\[Voln - (?:<a[^>]*>)?([A-Z][a-z]+)(?:<\/a>)?\]\s*(".*")[\r\n]*<popStream\/>/m, "The Symbol of Thought begins to burn in your mind and you hear #{$1} thinking, #{$2}\r\n")
-    end
-    if line =~ /<stream id="thoughts"[^>]*>([^:]+): (.*?)<\/stream>/m
-      line = line.sub(/<stream id="thoughts"[^>]*>.*?<\/stream>/m, "You hear the faint thoughts of #{$1} echo in your mind:\r\n#{$2}")
-    end
-    if line =~ /<pushStream id="familiar"[^>]*>(.*)<popStream\/>/m
-      line = line.sub(/<pushStream id="familiar"[^>]*>.*<popStream\/>/m, "\034GSe\r\n#{$1}\034GSf\r\n")
-    end
-    if line =~ /<pushStream id="death"\/>(.*?)<popStream\/>/m
-      line = line.sub(/<pushStream id="death"\/>.*?<popStream\/>/m, "\034GSw00003\r\n#{$1}\034GSw00004\r\n")
-    end
-    if line =~ /<style id="roomName" \/>(.*?)<style id=""\/>/m
-      line = line.sub(/<style id="roomName" \/>.*?<style id=""\/>/m, "\034GSo\r\n#{$1}\034GSp\r\n")
-    end
+    line = line.sub(/<pushStream id="voln"[^>]*>\[Voln - (?:<a[^>]*>)?([A-Z][a-z]+)(?:<\/a>)?\]\s*(".*")[\r\n]*<popStream\/>/m, "The Symbol of Thought begins to burn in your mind and you hear #{$1} thinking, #{$2}\r\n") if line =~ /<pushStream id="voln"[^>]*>\[Voln - (?:<a[^>]*>)?([A-Z][a-z]+)(?:<\/a>)?\]\s*(".*")[\r\n]*<popStream\/>/m
+    line = line.sub(/<stream id="thoughts"[^>]*>.*?<\/stream>/m, "You hear the faint thoughts of #{$1} echo in your mind:\r\n#{$2}") if line =~ /<stream id="thoughts"[^>]*>([^:]+): (.*?)<\/stream>/m
+    line = line.sub(/<pushStream id="familiar"[^>]*>.*<popStream\/>/m, "\034GSe\r\n#{$1}\034GSf\r\n") if line =~ /<pushStream id="familiar"[^>]*>(.*)<popStream\/>/m
+    line = line.sub(/<pushStream id="death"\/>.*?<popStream\/>/m, "\034GSw00003\r\n#{$1}\034GSw00004\r\n") if line =~ /<pushStream id="death"\/>(.*?)<popStream\/>/m
+    line = line.sub(/<style id="roomName" \/>.*?<style id=""\/>/m, "\034GSo\r\n#{$1}\034GSp\r\n") if line =~ /<style id="roomName" \/>(.*?)<style id=""\/>/m
     line.gsub!(/<style id="roomDesc"\/><style id=""\/>\r?\n/, '')
     if line =~ /<style id="roomDesc"\/>(.*?)<style id=""\/>/m
       desc = $1.gsub(/<a[^>]*>/, $link_highlight_start).gsub('</a>', $link_highlight_end)

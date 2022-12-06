@@ -85,9 +85,7 @@ elsif ENV['HOME']
 else
   $wine_prefix = nil
 end
-if $wine_bin and File.exist?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exist?($wine_prefix) and File.directory?($wine_prefix)
-  require 'lib/platform/wine'
-end
+require 'lib/platform/wine' if $wine_bin and File.exist?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exist?($wine_prefix) and File.directory?($wine_prefix)
 # $wine_bin = nil
 # $wine_prefix = nil
 # end
@@ -130,12 +128,8 @@ elsif defined?(Wine)
   $wiz_fe_loc_temp = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Wow6432Node\\Simutronics\\WIZ32\\Directory')
   $sf_fe_loc_temp = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Wow6432Node\\Simutronics\\STORM32\\Directory')
 
-  if $wiz_fe_loc_temp
-    $wiz_fe_loc = $wiz_fe_loc_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c')
-  end
-  if $sf_fe_loc_temp
-    $sf_fe_loc = $sf_fe_loc_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c')
-  end
+  $wiz_fe_loc = $wiz_fe_loc_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c') if $wiz_fe_loc_temp
+  $sf_fe_loc = $sf_fe_loc_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c') if $sf_fe_loc_temp
 
   unless File.exist?($sf_fe_loc)
     $sf_fe_loc =~ /SIMU/ ? $sf_fe_loc = $sf_fe_loc.gsub('SIMU', 'Simu') : $sf_fe_loc = $sf_fe_loc.gsub('Simu', 'SIMU')
@@ -168,9 +162,7 @@ else
   else
     $wine_prefix = nil
   end
-  if $wine_bin and File.exist?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exist?($wine_prefix) and File.directory?($wine_prefix)
-    require 'lib/platform/wine'
-  end
+  require 'lib/platform/wine' if $wine_bin and File.exist?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exist?($wine_prefix) and File.directory?($wine_prefix)
   $wine_bin = nil
   $wine_prefix = nil
 end

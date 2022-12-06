@@ -345,9 +345,7 @@ module Setting
       respond $!.backtrace[0..2]
       exit
     end
-    if hash.empty?
-      next nil
-    end
+    next nil if hash.empty?
 
     if hash.keys.any? { |k| k.class != String }
       respond '--- Lich: error: Setting.save: non-string given as a setting name'
@@ -1014,9 +1012,7 @@ class Script
       }
     end
     for line in comments
-      if line =~ /^[\s\t#]*version:[\s\t]*([\w,\s.\d]+)/i
-        script_version = $1.sub(/\s\(.*?\)/, '').strip
-      end
+      script_version = $1.sub(/\s\(.*?\)/, '').strip if line =~ /^[\s\t#]*version:[\s\t]*([\w,\s.\d]+)/i
     end
     if script_version_required
       Gem::Version.new(script_version) < Gem::Version.new(script_version_required)
@@ -1317,9 +1313,7 @@ class Script
         if @@running.include?(self)
           begin
             @thread_group.list.dup.each { |t|
-              unless t == Thread.current
-                t.kill rescue nil
-              end
+              t.kill rescue nil unless t == Thread.current
             }
             @thread_group.add(Thread.current)
             @die_with.each { |script_name| Script.kill(script_name) }
@@ -1695,9 +1689,7 @@ class WizardScript < Script
     @vars = []
     @killer_mutex = Mutex.new
     unless cli_vars.empty?
-      if cli_vars.is_a?(String)
-        cli_vars = cli_vars.split(' ')
-      end
+      cli_vars = cli_vars.split(' ') if cli_vars.is_a?(String)
       cli_vars.each_index { |idx| @vars[idx + 1] = cli_vars[idx] }
       @vars[0] = @vars[1..-1].join(' ')
       cli_vars = nil
@@ -1967,13 +1959,9 @@ module Buffer
     end
     line = nil
     loop {
-      if (@@index[thread_id] - @@offset) >= @@buffer.length
-        sleep 0.05 while (@@index[thread_id] - @@offset) >= @@buffer.length
-      end
+      sleep 0.05 while (@@index[thread_id] - @@offset) >= @@buffer.length if (@@index[thread_id] - @@offset) >= @@buffer.length
       @@mutex.synchronize {
-        if @@index[thread_id] < @@offset
-          @@index[thread_id] = @@offset
-        end
+        @@index[thread_id] = @@offset if @@index[thread_id] < @@offset
         line = @@buffer[@@index[thread_id] - @@offset]
       }
       @@index[thread_id] += 1
@@ -1992,14 +1980,10 @@ module Buffer
     end
     line = nil
     loop {
-      if (@@index[thread_id] - @@offset) >= @@buffer.length
-        return nil
-      end
+      return nil if (@@index[thread_id] - @@offset) >= @@buffer.length
 
       @@mutex.synchronize {
-        if @@index[thread_id] < @@offset
-          @@index[thread_id] = @@offset
-        end
+        @@index[thread_id] = @@offset if @@index[thread_id] < @@offset
         line = @@buffer[@@index[thread_id] - @@offset]
       }
       @@index[thread_id] += 1
@@ -2025,15 +2009,11 @@ module Buffer
     end
     lines = []
     loop {
-      if (@@index[thread_id] - @@offset) >= @@buffer.length
-        return lines
-      end
+      return lines if (@@index[thread_id] - @@offset) >= @@buffer.length
 
       line = nil
       @@mutex.synchronize {
-        if @@index[thread_id] < @@offset
-          @@index[thread_id] = @@offset
-        end
+        @@index[thread_id] = @@offset if @@index[thread_id] < @@offset
         line = @@buffer[@@index[thread_id] - @@offset]
       }
       @@index[thread_id] += 1
@@ -2045,9 +2025,7 @@ module Buffer
   def self.update(line, stream = nil)
     @@mutex.synchronize {
       frozen_line = line.dup
-      unless stream.nil?
-        frozen_line.stream = stream
-      end
+      frozen_line.stream = stream unless stream.nil?
       frozen_line.freeze
       @@buffer.push(frozen_line)
       while @@buffer.length > @@max_size
@@ -2091,17 +2069,11 @@ class SharedBuffer
 
   def gets
     thread_id = Thread.current.object_id
-    if @buffer_index[thread_id].nil?
-      @buffer_mutex.synchronize { @buffer_index[thread_id] = (@buffer_offset + @buffer.length) }
-    end
-    if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
-      sleep 0.05 while (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
-    end
+    @buffer_mutex.synchronize { @buffer_index[thread_id] = (@buffer_offset + @buffer.length) } if @buffer_index[thread_id].nil?
+    sleep 0.05 while (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
     line = nil
     @buffer_mutex.synchronize {
-      if @buffer_index[thread_id] < @buffer_offset
-        @buffer_index[thread_id] = @buffer_offset
-      end
+      @buffer_index[thread_id] = @buffer_offset if @buffer_index[thread_id] < @buffer_offset
       line = @buffer[@buffer_index[thread_id] - @buffer_offset]
     }
     @buffer_index[thread_id] += 1
@@ -2110,18 +2082,12 @@ class SharedBuffer
 
   def gets?
     thread_id = Thread.current.object_id
-    if @buffer_index[thread_id].nil?
-      @buffer_mutex.synchronize { @buffer_index[thread_id] = (@buffer_offset + @buffer.length) }
-    end
-    if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
-      return nil
-    end
+    @buffer_mutex.synchronize { @buffer_index[thread_id] = (@buffer_offset + @buffer.length) } if @buffer_index[thread_id].nil?
+    return nil if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
 
     line = nil
     @buffer_mutex.synchronize {
-      if @buffer_index[thread_id] < @buffer_offset
-        @buffer_index[thread_id] = @buffer_offset
-      end
+      @buffer_index[thread_id] = @buffer_offset if @buffer_index[thread_id] < @buffer_offset
       line = @buffer[@buffer_index[thread_id] - @buffer_offset]
     }
     @buffer_index[thread_id] += 1
@@ -2134,15 +2100,11 @@ class SharedBuffer
       @buffer_mutex.synchronize { @buffer_index[thread_id] = (@buffer_offset + @buffer.length) }
       return []
     end
-    if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
-      return []
-    end
+    return [] if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
 
     lines = []
     @buffer_mutex.synchronize {
-      if @buffer_index[thread_id] < @buffer_offset
-        @buffer_index[thread_id] = @buffer_offset
-      end
+      @buffer_index[thread_id] = @buffer_offset if @buffer_index[thread_id] < @buffer_offset
       lines = @buffer[(@buffer_index[thread_id] - @buffer_offset)..-1]
       @buffer_index[thread_id] = (@buffer_offset + @buffer.length)
     }
@@ -2359,9 +2321,7 @@ module Games
                       $_SERVERSTRING_ = $_SERVERSTRING_.gsub(tag, '<popStream id="combat" />' + tag) unless $_SERVERSTRING_.include?('<popStream id="combat" />')
                       combat_count -= 1
                     end
-                    if $_SERVERSTRING_.include?('<pushStream id="combat" />')
-                      $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" />', '')
-                    end
+                    $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" />', '') if $_SERVERSTRING_.include?('<pushStream id="combat" />')
                   }
                 end
 
@@ -2369,9 +2329,7 @@ module Games
                 combat_count -= $_SERVERSTRING_.scan('<popStream id="combat" />').length
                 combat_count = 0 if combat_count < 0
                 # The Rift, Scatter is broken...
-                if $_SERVERSTRING_ =~ /<compDef id='room text'><\/compDef>/
-                  $_SERVERSTRING_.sub!(/(.*)\s\s<compDef id='room text'><\/compDef>/) { "<compDef id='room desc'>#{$1}</compDef>" }
-                end
+                $_SERVERSTRING_.sub!(/(.*)\s\s<compDef id='room text'><\/compDef>/) { "<compDef id='room desc'>#{$1}</compDef>" } if $_SERVERSTRING_ =~ /<compDef id='room text'><\/compDef>/
                 if atmospherics
                   atmospherics = false
                   $_SERVERSTRING.prepend('<popStream id="atmospherics" \/>') unless $_SERVERSTRING =~ /<popStream id="atmospherics" \/>/
@@ -2414,9 +2372,7 @@ module Games
                       alt_string.sub!(']') { "] (u#{XMLData.room_id})" }
                     end
                   end
-                  if $frontend =~ /^(?:wizard|avalon)$/
-                    alt_string = sf_to_wiz(alt_string)
-                  end
+                  alt_string = sf_to_wiz(alt_string) if $frontend =~ /^(?:wizard|avalon)$/
                   if $_DETACHABLE_CLIENT_
                     begin
                       $_DETACHABLE_CLIENT_.write(alt_string)
@@ -2536,9 +2492,7 @@ module Games
           script_name = '(unknown script)'
         end
         $_CLIENTBUFFER_.push "[#{script_name}]#{$SEND_CHARACTER}#{$cmd_prefix}#{str}\r\n"
-        if script.nil? or !script.silent
-          respond "[#{script_name}]#{$SEND_CHARACTER}#{str}\r\n"
-        end
+        respond "[#{script_name}]#{$SEND_CHARACTER}#{str}\r\n" if script.nil? or !script.silent
         Game._puts "#{$cmd_prefix}#{str}"
         $_LASTUPSTREAM_ = "[#{script_name}]#{$SEND_CHARACTER}#{str}"
       end
@@ -2843,7 +2797,7 @@ module Games
       def self.tonishastebonus
         bonus = -1
         thresholds = [30, 75]
-        thresholds.each { |val| if Skills.elair >= val then bonus -= 1 end }
+        thresholds.each { |val| bonus -= 1 if Skills.elair >= val }
         bonus
       end
 
@@ -2854,7 +2808,7 @@ module Games
       def self.depressionslow
         thresholds = [10, 25, 45, 70, 100]
         bonus = -2
-        thresholds.each { |val| if Skills.mltelepathy >= val then bonus -= 1 end }
+        thresholds.each { |val| bonus -= 1 if Skills.mltelepathy >= val }
         bonus
       end
 
@@ -4210,7 +4164,7 @@ class Spellsong
   def self.tonisdodgebonus
     thresholds = [1, 2, 3, 5, 8, 10, 14, 17, 21, 26, 31, 36, 42, 49, 55, 63, 70, 78, 87, 96]
     bonus = 20
-    thresholds.each { |val| if Skills.elair >= val then bonus += 1 end }
+    thresholds.each { |val| bonus += 1 if Skills.elair >= val }
     bonus
   end
 
@@ -4280,9 +4234,7 @@ class Spellsong
 end
 
 def start_script(script_name, cli_vars = [], flags = {})
-  if flags == true
-    flags = { :quiet => true }
-  end
+  flags = { :quiet => true } if flags == true
   Script.start(script_name, cli_vars.join(' '), flags)
 end
 
@@ -4322,9 +4274,7 @@ def abort!
 end
 
 def fetchloot(userbagchoice = UserVars.lootsack)
-  if GameObj.loot.empty?
-    return false
-  end
+  return false if GameObj.loot.empty?
 
   if UserVars.excludeloot.empty?
     regexpstr = nil
@@ -4343,9 +4293,7 @@ def fetchloot(userbagchoice = UserVars.lootsack)
       fput("put my #{loot.noun} in my #{userbagchoice}") if checkright || checkleft
     end
   }
-  if stowed
-    fput "take my #{stowed} from my #{UserVars.lootsack}"
-  end
+  fput "take my #{stowed} from my #{UserVars.lootsack}" if stowed
 end
 
 def take(*items)
@@ -4361,7 +4309,7 @@ def take(*items)
     fput "take #{trinket}"
     fput("put my #{trinket} in my #{UserVars.lootsack}") if righthand? || lefthand?
   }
-  if unsh then fput("take my #{weap} from my #{UserVars.lootsack}") end
+  fput("take my #{weap} from my #{UserVars.lootsack}") if unsh
 end
 
 def stop_script(*target_names)
@@ -4371,9 +4319,7 @@ def stop_script(*target_names)
     if condemned.nil?
       respond("--- Lich: '#{Script.current}' tried to stop '#{target_name}', but it isn't running!")
     else
-      if condemned.name =~ /^#{Script.current.name}$/i
-        exit
-      end
+      exit if condemned.name =~ /^#{Script.current.name}$/i
       condemned.kill
       respond("--- Lich: '#{condemned}' has been stopped by #{Script.current}.")
       numkilled += 1
@@ -4637,9 +4583,7 @@ if @options.sal
       file = dir_file.sub(/^.*[\\\/]/, '')
       operation = (Win32.isXP? ? 'open' : 'runas')
       Win32.ShellExecute(:lpOperation => operation, :lpFile => file, :lpDirectory => dir, :lpParameters => param)
-      if r < 33
-        Lich.log "error: Win32.ShellExecute returned #{r}; Win32.GetLastError: #{Win32.GetLastError}"
-      end
+      Lich.log "error: Win32.ShellExecute returned #{r}; Win32.GetLastError: #{Win32.GetLastError}" if r < 33
     elsif defined?(Wine)
       system("#{Wine::BIN} #{launcher_cmd}")
     else
@@ -4882,9 +4826,7 @@ main_thread = Thread.new {
       end
       if data[:custom_launch]
         @launch_data.push "CUSTOMLAUNCH=#{data[:custom_launch]}"
-        if data[:custom_launch_dir]
-          @launch_data.push "CUSTOMLAUNCHDIR=#{data[:custom_launch_dir]}"
-        end
+        @launch_data.push "CUSTOMLAUNCHDIR=#{data[:custom_launch_dir]}" if data[:custom_launch_dir]
       end
     else
       $stdout.puts "error: failed to find login data for #{char_name}"
@@ -5072,9 +5014,7 @@ main_thread = Thread.new {
         launcher_cmd = launcher_cmd.tr('/', '\\') if (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
       end
       begin
-        if custom_launch_dir
-          Dir.chdir(custom_launch_dir)
-        end
+        Dir.chdir(custom_launch_dir) if custom_launch_dir
 
         if (RUBY_PLATFORM =~ /mingw|win/i) && (RUBY_PLATFORM !~ /darwin/i)
           system("start #{launcher_cmd}")
@@ -5098,9 +5038,7 @@ main_thread = Thread.new {
         #        else
         Lich.msgbox(:message => 'error: timeout waiting for client to connect', :icon => :error)
         #        end
-        if sal_filename
-          File.delete(sal_filename) rescue()
-        end
+        File.delete(sal_filename) rescue() if sal_filename
         listener.close rescue()
         $_CLIENT_.close rescue()
         reconnect_if_wanted.call
@@ -5113,9 +5051,7 @@ main_thread = Thread.new {
       #      end
       Lich.log 'info: connected'
       listener.close rescue nil
-      if sal_filename
-        File.delete(sal_filename) rescue nil
-      end
+      File.delete(sal_filename) rescue nil if sal_filename
     end
     gamehost, gameport = Lich.fix_game_host_port(gamehost, gameport)
     Lich.log "info: connecting to game server (#{gamehost}:#{gameport})"

@@ -87,9 +87,7 @@ module Lich
             dothistimeout "remove ##{left_hand.id}", 3, /^You|^With a slight roll of your shoulder, you|^Remove what\?/
             20.times { break if GameObj.left_hand.id == left_hand.id or GameObj.right_hand.id == left_hand.id; sleep 0.1 }
 
-            if GameObj.right_hand.id == left_hand.id
-              dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/
-            end
+            dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/ if GameObj.right_hand.id == left_hand.id
           }
         else
           actions.unshift proc {
@@ -101,9 +99,7 @@ module Lich
               20.times { break if (GameObj.left_hand.id == left_hand.id) or (GameObj.right_hand.id == left_hand.id); sleep 0.1 }
             end
 
-            if GameObj.right_hand.id == left_hand.id or (GameObj.right_hand.name == left_hand.name && left_hand.name =~ /^ethereal \w+$/)
-              dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/
-            end
+            dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/ if GameObj.right_hand.id == left_hand.id or (GameObj.right_hand.name == left_hand.name && left_hand.name =~ /^ethereal \w+$/)
           }
           if lootsack
             result = Lich::Stash.add_to_bag(lootsack, GameObj.left_hand)
@@ -129,13 +125,9 @@ module Lich
             20.times { break if GameObj.left_hand.id == right_hand.id or GameObj.right_hand.id == right_hand.id; sleep 0.1 }
           end
 
-          if GameObj.left_hand.id == right_hand.id or (GameObj.left_hand.name == right_hand.name && right_hand.name =~ /^ethereal \w+$/)
-            dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/
-          end
+          dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/ if GameObj.left_hand.id == right_hand.id or (GameObj.left_hand.name == right_hand.name && right_hand.name =~ /^ethereal \w+$/)
         }
-        if UserVars.weapon and UserVars.weaponsack and !UserVars.weapon.empty? and !UserVars.weaponsack.empty? and (right_hand.name =~ /#{Regexp.escape(UserVars.weapon.strip)}/i or right_hand.name =~ /#{Regexp.escape(UserVars.weapon).sub(' ', ' .*')}/i)
-          weaponsack = GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack.strip)}/i } || GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack).sub(' ', ' .*')}/i }
-        end
+        weaponsack = GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack.strip)}/i } || GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack).sub(' ', ' .*')}/i } if UserVars.weapon and UserVars.weaponsack and !UserVars.weapon.empty? and !UserVars.weaponsack.empty? and (right_hand.name =~ /#{Regexp.escape(UserVars.weapon.strip)}/i or right_hand.name =~ /#{Regexp.escape(UserVars.weapon).sub(' ', ' .*')}/i)
         if weaponsack
           result = Lich::Stash.add_to_bag(weaponsack, GameObj.right_hand)
         elsif lootsack

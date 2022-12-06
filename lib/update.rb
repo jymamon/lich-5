@@ -88,17 +88,13 @@ module Lich
         _respond 'another location for additional safety, after any'
         _respond 'additional requested updates are completed.'
         snapshot_subdir = File.join(BACKUP_DIR, "L5-snapshot-#{Time.now.strftime('%Y-%m-%d-%H-%M-%S')}")
-        unless File.exist?(snapshot_subdir)
-          Dir.mkdir(snapshot_subdir)
-        end
+        Dir.mkdir(snapshot_subdir) unless File.exist?(snapshot_subdir)
         filename = File.join(LICH_DIR, File.basename($PROGRAM_NAME))
         copyfilename = File.join(snapshot_subdir, File.basename($PROGRAM_NAME))
         File.open(filename, 'rb') { |r| File.open(copyfilename, 'wb') { |w| w.write(r.read) } }
 
         snapshot_lib_subdir = File.join(snapshot_subdir, 'lib')
-        unless File.exist?(snapshot_lib_subdir)
-          Dir.mkdir(snapshot_lib_subdir)
-        end
+        Dir.mkdir(snapshot_lib_subdir) unless File.exist?(snapshot_lib_subdir)
         ## let's just get the directory contents and back it up
 
         snapshot_lib_files = Dir.children(LIB_DIR)
@@ -109,9 +105,7 @@ module Lich
         }
 
         snapshot_script_subdir = File.join(snapshot_subdir, 'scripts')
-        unless File.exist?(snapshot_script_subdir)
-          Dir.mkdir(snapshot_script_subdir)
-        end
+        Dir.mkdir(snapshot_script_subdir) unless File.exist?(snapshot_script_subdir)
         ## here we should maintain a discrete array of script files (450K versus 10M plus)
         ## we need to find a better way without hving to maintain this list
 
@@ -264,9 +258,7 @@ module Lich
           targetversion = ''
           targetfile = File.open(File.join(LIB_DIR, 'version.rb')).read
           targetfile.each_line { |line|
-            if line =~ /LICH_VERSION\s+?=\s+?/
-              targetversion = line.sub(/LICH_VERSION\s+?=\s+?/, '').sub('"', '')
-            end
+            targetversion = line.sub(/LICH_VERSION\s+?=\s+?/, '').sub('"', '') if line =~ /LICH_VERSION\s+?=\s+?/
           }
           _respond
           _respond "Lich5 has been reverted to Lich5 version #{targetversion}"

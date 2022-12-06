@@ -82,9 +82,7 @@ module Lich
           until (xml = get) =~ end_pattern
             result << xml.rstrip
           end
-          if include_end
-            result << xml.rstrip
-          end
+          result << xml.rstrip if include_end
         }
       rescue Interrupt
         nil
@@ -134,9 +132,7 @@ module Lich
           until (line = get) =~ end_pattern
             result << line.rstrip
           end
-          if include_end
-            result << line.rstrip
-          end
+          result << line.rstrip if include_end
         }
       rescue Interrupt
         nil

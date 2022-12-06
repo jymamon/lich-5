@@ -56,9 +56,7 @@ suks_option = Gtk::RadioButton.new(:label => 'suks', :member => wizard_option)
 frontend_box = Gtk::Box.new(:horizontal, 10)
 frontend_box.pack_start(wizard_option, :expand => false, :fill => false, :padding => 0)
 frontend_box.pack_start(stormfront_option, :expand => false, :fill => false, :padding => 0)
-if RUBY_PLATFORM =~ /darwin/i
-  frontend_box.pack_start(avalon_option, :expand => false, :fill => false, :padding => 0)
-end
+frontend_box.pack_start(avalon_option, :expand => false, :fill => false, :padding => 0) if RUBY_PLATFORM =~ /darwin/i
 # frontend_box.pack_start(suks_option, false, false, 0)
 
 custom_launch_option = Gtk::CheckButton.new('Custom launch command')
@@ -186,9 +184,7 @@ play_button.signal_connect('clicked') {
   end
   if custom_launch_option.active?
     @launch_data.push "CUSTOMLAUNCH=#{@custom_launch_entry.child.text}"
-    unless @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == '(enter working directory for command)'
-      @launch_data.push "CUSTOMLAUNCHDIR=#{@custom_launch_dir.child.text}"
-    end
+    @launch_data.push "CUSTOMLAUNCHDIR=#{@custom_launch_dir.child.text}" unless @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == '(enter working directory for command)'
   end
   if @make_quick_option.active?
     if wizard_option.active?

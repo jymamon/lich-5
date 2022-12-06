@@ -41,9 +41,7 @@ module Win32
     end
 
     for sym in [:fMask, :hwnd, :nShow, :hkeyClass, :dwHotKey, :hIcon, :hMonitor, :hProcess]
-      if args[sym]
-        struct[struct_index[sym]] = args[sym]
-      end
+      struct[struct_index[sym]] = args[sym] if args[sym]
     end
 
     struct = struct.pack('LLLLLLLLLLLLLLL')

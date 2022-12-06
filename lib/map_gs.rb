@@ -191,9 +191,7 @@ class Map
               squelch_started = false
               squelch_proc = proc { |server_string|
                 if squelch_started
-                  if server_string =~ /<prompt/
-                    DownstreamHook.remove('squelch-peer')
-                  end
+                  DownstreamHook.remove('squelch-peer') if server_string =~ /<prompt/
                   nil
                 elsif server_string =~ /^You peer/
                   squelch_started = true
@@ -438,13 +436,9 @@ class Map
     end
     while filename = file_list.shift
       if filename =~ /\.json$/i
-        if Map.load_json(filename)
-          return true
-        end
+        return true if Map.load_json(filename)
       elsif filename =~ /\.xml$/
-        if Map.load_xml(filename)
-          return true
-        end
+        return true if Map.load_xml(filename)
       elsif Map.load_dat(filename)
         return true
       end
@@ -479,14 +473,10 @@ class Map
               File.open(filename) { |f|
                 JSON.parse(f.read).each { |room|
                   room['wayto'].keys.each { |k|
-                    if room['wayto'][k][0..2] == ';e '
-                      room['wayto'][k] = StringProc.new(room['wayto'][k][3..-1])
-                    end
+                    room['wayto'][k] = StringProc.new(room['wayto'][k][3..-1]) if room['wayto'][k][0..2] == ';e '
                   }
                   room['timeto'].keys.each { |k|
-                    if room['timeto'][k].instance_of?(String) and (room['timeto'][k][0..2] == ';e ')
-                      room['timeto'][k] = StringProc.new(room['timeto'][k][3..-1])
-                    end
+                    room['timeto'][k] = StringProc.new(room['timeto'][k][3..-1]) if room['timeto'][k].instance_of?(String) and (room['timeto'][k][0..2] == ';e ')
                   }
                   room['tags'] ||= []
                   room['uid'] ||= []
@@ -555,9 +545,7 @@ class Map
         if @@loaded
           return true
         else
-          unless File.exist?(filename)
-            raise Exception.exception('MapDatabaseError'), "Fatal error: file `#{filename}' does not exist!"
-          end
+          raise Exception.exception('MapDatabaseError'), "Fatal error: file `#{filename}' does not exist!" unless File.exist?(filename)
 
           missing_end = false
           current_tag = nil
@@ -818,9 +806,7 @@ class Map
 
   def self.estimate_time(array)
     Map.load unless @@loaded
-    unless array.instance_of?(Array)
-      raise Exception.exception('MapError'), 'Map.estimate_time was given something not an array!'
-    end
+    raise Exception.exception('MapError'), 'Map.estimate_time was given something not an array!' unless array.instance_of?(Array)
 
     time = 0.to_f
     until array.length < 2

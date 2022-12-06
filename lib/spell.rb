@@ -264,9 +264,7 @@ module Games
 
       def time_per(options = {})
         formula = time_per_formula(options)
-        if options[:line]
-          line = options[:line]
-        end
+        line = options[:line] if options[:line]
         proc { begin; $SAFE = 3; rescue; nil; end; eval(formula) }.call.to_f
       end
 
@@ -606,17 +604,13 @@ module Games
               cast_cmd += " #{target}"
             end
 
-            unless arg_options.nil? || arg_options.empty?
-              cast_cmd += " #{arg_options}"
-            end
+            cast_cmd += " #{arg_options}" unless arg_options.nil? || arg_options.empty?
 
             cast_result = nil
             loop {
               waitrt?
               if cast_cmd =~ /^incant/
-                if (checkprep != @name) and (checkprep != 'None')
-                  dothistimeout 'release', 5, /^You feel the magic of your spell rush away from you\.$|^You don't have a prepared spell to release!$/
-                end
+                dothistimeout 'release', 5, /^You feel the magic of your spell rush away from you\.$|^You don't have a prepared spell to release!$/ if (checkprep != @name) and (checkprep != 'None')
               else
                 unless checkprep == @name
                   unless checkprep == 'None'
@@ -687,9 +681,7 @@ module Games
                   end
                 end
               end
-              if cast_result =~ /^Cast at what\?$|^Be at peace my child, there is no need for spells of war in here\.$|^Provoking a GameMaster is not such a good idea\.$/
-                dothistimeout 'release', 5, /^You feel the magic of your spell rush away from you\.$|^You don't have a prepared spell to release!$/
-              end
+              dothistimeout 'release', 5, /^You feel the magic of your spell rush away from you\.$|^You don't have a prepared spell to release!$/ if cast_result =~ /^Cast at what\?$|^Be at peace my child, there is no need for spells of war in here\.$|^Provoking a GameMaster is not such a good idea\.$/
               if cast_result =~ /You can only evoke certain spells\.|You can only channel certain spells for extra power\./
                 echo "cast: can't evoke/channel #{@num}"
                 cast_cmd = cast_cmd.gsub(/^(?:evoke|channel)/, 'cast')
@@ -774,12 +766,8 @@ module Games
           else
             formula = @cost[args[0].to_s.sub(/_formula$/, '').sub(/_cost$/, '')]['self'].dup
           end
-          if args[0].to_s =~ /mana/ and Spell[597].active? # Rapid Fire Penalty
-            formula = "#{formula}+5"
-          end
-          if options[:multicast].to_i > 1
-            formula = "(#{formula})*#{options[:multicast].to_i}"
-          end
+          formula = "#{formula}+5" if args[0].to_s =~ /mana/ and Spell[597].active? # Rapid Fire Penalty
+          formula = "(#{formula})*#{options[:multicast].to_i}" if options[:multicast].to_i > 1
           if args[0].to_s =~ /_formula$/
             formula.dup
           elsif formula

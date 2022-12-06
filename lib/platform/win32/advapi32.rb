@@ -23,9 +23,7 @@ module Win32
     return_length = [0].pack('L')
     r = Advapi32.GetTokenInformation(args[:TokenHandle].to_i, args[:TokenInformationClass], token_information,
                                      token_information_length, return_length)
-    if args[:TokenInformationClass] == TokenElevation
-      return :return => r, :TokenIsElevated => token_information.unpack('L')[0]
-    end
+    return :return => r, :TokenIsElevated => token_information.unpack('L')[0] if args[:TokenInformationClass] == TokenElevation
   end
 
   def self.OpenProcessToken(args)
