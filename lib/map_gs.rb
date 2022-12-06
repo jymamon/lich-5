@@ -328,7 +328,7 @@ class Map
         room.paths.unshift(XMLData.room_exits_string.strip)
         echo "Map: Adding new paths for #{room.id}: '#{XMLData.room_exits_string.strip}'"
       end
-      if (room.location.nil? or room.location == false)
+      if room.location.nil? or room.location == false
         current_location = Map.get_location
         room.location    = current_location
         echo "Map: Updating location for #{room.id}: '#{current_location}'"

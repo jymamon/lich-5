@@ -46,7 +46,7 @@ module Lich
       Lich.db.execute('CREATE TABLE IF NOT EXISTS script_auto_settings (script TEXT NOT NULL, scope TEXT, hash BLOB, PRIMARY KEY(script, scope));')
       Lich.db.execute('CREATE TABLE IF NOT EXISTS lich_settings (name TEXT NOT NULL, value TEXT, PRIMARY KEY(name));')
       Lich.db.execute('CREATE TABLE IF NOT EXISTS uservars (scope TEXT NOT NULL, hash BLOB, PRIMARY KEY(scope));')
-      if (RUBY_VERSION =~ /^2\.[012]\./)
+      if RUBY_VERSION =~ /^2\.[012]\./
         Lich.db.execute('CREATE TABLE IF NOT EXISTS trusted_scripts (name TEXT NOT NULL);')
       end
       Lich.db.execute('CREATE TABLE IF NOT EXISTS simu_game_entry (character TEXT NOT NULL, game_code TEXT NOT NULL, data BLOB, PRIMARY KEY(character, game_code));')
@@ -185,7 +185,7 @@ module Lich
           r = Win32.RegQueryValueEx(:hKey => launcher_key, :lpValueName => 'Directory')
           launcher_dir = r[:lpData]
           r = Win32.RegSetValueEx(:hKey => launcher_key, :lpValueName => 'RealDirectory', :dwType => Win32::REG_SZ, :lpData => launcher_dir)
-          return false unless (r == 0)
+          return false unless r == 0
 
           r = Win32.RegSetValueEx(:hKey => launcher_key, :lpValueName => 'Directory', :dwType => Win32::REG_SZ, :lpData => new_launcher_dir)
           return (r == 0)
@@ -244,7 +244,7 @@ module Lich
           end
 
           r = Win32.RegSetValueEx(:hKey => launcher_key, :lpValueName => 'Directory', :dwType => Win32::REG_SZ, :lpData => real_directory)
-          return false unless (r == 0)
+          return false unless r == 0
 
           r = Win32.RegDeleteValue(:hKey => launcher_key, :lpValueName => 'RealDirectory')
           return (r == 0)
@@ -304,7 +304,7 @@ module Lich
           r = Win32.RegQueryValueEx(:hKey => launcher_key)
           launcher_cmd = r[:lpData]
           r = Win32.RegSetValueEx(:hKey => launcher_key, :lpValueName => 'RealCommand', :dwType => Win32::REG_SZ, :lpData => launcher_cmd)
-          return false unless (r == 0)
+          return false unless r == 0
 
           r = Win32.RegSetValueEx(:hKey => launcher_key, :dwType => Win32::REG_SZ, :lpData => new_launcher_cmd)
           return (r == 0)
@@ -363,7 +363,7 @@ module Lich
           end
 
           r = Win32.RegSetValueEx(:hKey => launcher_key, :dwType => Win32::REG_SZ, :lpData => real_directory)
-          return false unless (r == 0)
+          return false unless r == 0
 
           r = Win32.RegDeleteValue(:hKey => launcher_key, :lpValueName => 'RealCommand')
           return (r == 0)

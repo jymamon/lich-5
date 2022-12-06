@@ -1173,7 +1173,7 @@ class Script
       return false
     end
   end
-  if (RUBY_VERSION =~ /^2\.[012]\./)
+  if RUBY_VERSION =~ /^2\.[012]\./
     def Script.trust(script_name)
       # fixme: case sensitive blah blah
       if ($SAFE == 0) and not caller.any? { |c| c =~ /eval|run/ }
@@ -1244,7 +1244,7 @@ class Script
         @vars.concat args[:args].scan(/[^\s"]*(?<!\\)"(?:\\"|[^"])+(?<!\\)"[^\s]*|(?:\\"|[^"\s])+/).collect { |s| s.gsub(/(?<!\\)"/, '').gsub('\\"', '"') }
       end
     elsif args[:args].class == Array
-      if (args[:args].nil? || args[:args].empty?)
+      if args[:args].nil? || args[:args].empty?
         @vars = Array.new
       else
         @vars = [args[:args].join(' ')]
@@ -1950,7 +1950,7 @@ module Buffer
     line = nil
     loop {
       if (@@index[thread_id] - @@offset) >= @@buffer.length
-        sleep 0.05 while ((@@index[thread_id] - @@offset) >= @@buffer.length)
+        sleep 0.05 while (@@index[thread_id] - @@offset) >= @@buffer.length
       end
       @@mutex.synchronize {
         if @@index[thread_id] < @@offset
@@ -1959,7 +1959,7 @@ module Buffer
         line = @@buffer[@@index[thread_id] - @@offset]
       }
       @@index[thread_id] += 1
-      break if ((line.stream & @@streams[thread_id]) != 0)
+      break if (line.stream & @@streams[thread_id]) != 0
     }
     return line
   end
@@ -1985,7 +1985,7 @@ module Buffer
         line = @@buffer[@@index[thread_id] - @@offset]
       }
       @@index[thread_id] += 1
-      break if ((line.stream & @@streams[thread_id]) != 0)
+      break if (line.stream & @@streams[thread_id]) != 0
     }
     return line
   end
@@ -2019,7 +2019,7 @@ module Buffer
         line = @@buffer[@@index[thread_id] - @@offset]
       }
       @@index[thread_id] += 1
-      lines.push(line) if ((line.stream & @@streams[thread_id]) != 0)
+      lines.push(line) if (line.stream & @@streams[thread_id]) != 0
     }
     return lines
   end
@@ -2032,7 +2032,7 @@ module Buffer
       end
       frozen_line.freeze
       @@buffer.push(frozen_line)
-      while (@@buffer.length > @@max_size)
+      while @@buffer.length > @@max_size
         @@buffer.shift
         @@offset += 1
       end
@@ -2077,7 +2077,7 @@ class SharedBuffer
       @buffer_mutex.synchronize { @buffer_index[thread_id] = (@buffer_offset + @buffer.length) }
     end
     if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
-      sleep 0.05 while ((@buffer_index[thread_id] - @buffer_offset) >= @buffer.length)
+      sleep 0.05 while (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
     end
     line = nil
     @buffer_mutex.synchronize {
@@ -2141,7 +2141,7 @@ class SharedBuffer
       fline = line.dup
       fline.freeze
       @buffer.push(fline)
-      while (@buffer.length > @max_size)
+      while @buffer.length > @max_size
         @buffer.shift
         @buffer_offset += 1
       end
@@ -2349,7 +2349,7 @@ module Games
                   $_SERVERSTRING_.sub!('<pushStream id="familiar" />', '')
                 elsif $_SERVERSTRING_ =~ /<pushStream id="atmospherics" \/><prompt time="[0-9]+">&gt;<\/prompt>/ # pet pigs in DragonRealms are broken...
                   $_SERVERSTRING_.sub!('<pushStream id="atmospherics" />', '')
-                elsif ($_SERVERSTRING_ =~ /<pushStream id="atmospherics" \/>/)
+                elsif $_SERVERSTRING_ =~ /<pushStream id="atmospherics" \/>/
                   atmospherics = true
                 end
                 #                        while $_SERVERSTRING_.scan('<pushStream').length > $_SERVERSTRING_.scan('<popStream').length
@@ -2375,7 +2375,7 @@ module Games
                 if alt_string = DownstreamHook.run($_SERVERSTRING_)
                   #                           Buffer.update(alt_string, Buffer::DOWNSTREAM_MOD)
                   if (Lich.display_lichid == true or Lich.display_uid == true) and XMLData.game =~ /^GS/ and alt_string =~ /<resource picture=.*roomName/
-                    if (Lich.display_lichid == true and Lich.display_uid == true)
+                    if Lich.display_lichid == true and Lich.display_uid == true
                       alt_string.sub!(']') { " - #{Map.current.id}] (u#{XMLData.room_id})" }
                     elsif Lich.display_lichid == true
                       alt_string.sub!(']') { " - #{Map.current.id}]" }
@@ -4309,7 +4309,7 @@ def fetchloot(userbagchoice = UserVars.lootsack)
   GameObj.loot.each { |loot|
     unless not regexpstr.nil? and loot.name =~ /#{regexpstr}/
       fput "get #{loot.noun}"
-      fput("put my #{loot.noun} in my #{userbagchoice}") if (checkright || checkleft)
+      fput("put my #{loot.noun} in my #{userbagchoice}") if checkright || checkleft
     end
   }
   if stowed
@@ -4319,7 +4319,7 @@ end
 
 def take(*items)
   items.flatten!
-  if (righthand? && lefthand?)
+  if righthand? && lefthand?
     weap = checkright
     fput "put my #{checkright} in my #{UserVars.lootsack}"
     unsh = true
@@ -4328,7 +4328,7 @@ def take(*items)
   end
   items.each { |trinket|
     fput "take #{trinket}"
-    fput("put my #{trinket} in my #{UserVars.lootsack}") if (righthand? || lefthand?)
+    fput("put my #{trinket} in my #{UserVars.lootsack}") if righthand? || lefthand?
   }
   if unsh then fput("take my #{weap} from my #{UserVars.lootsack}") end
 end
@@ -4356,7 +4356,7 @@ def stop_script(*target_names)
 end
 
 def running?(*snames)
-  snames.each { |checking| (return false) unless (Script.running.find { |lscr| lscr.name =~ /^#{checking}$/i } || Script.running.find { |lscr| lscr.name =~ /^#{checking}/i } || Script.hidden.find { |lscr| lscr.name =~ /^#{checking}$/i } || Script.hidden.find { |lscr| lscr.name =~ /^#{checking}/i }) }
+  snames.each { |checking| (return false) unless Script.running.find { |lscr| lscr.name =~ /^#{checking}$/i } || Script.running.find { |lscr| lscr.name =~ /^#{checking}/i } || Script.hidden.find { |lscr| lscr.name =~ /^#{checking}$/i } || Script.hidden.find { |lscr| lscr.name =~ /^#{checking}/i } }
   true
 end
 

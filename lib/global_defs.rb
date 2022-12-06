@@ -100,7 +100,7 @@ def pause_script(*names)
   else
     names.each { |scr|
       fnd = Script.list.find { |nm| nm.name =~ /^#{scr}/i }
-      fnd.pause unless (fnd.paused || fnd.nil?)
+      fnd.pause unless fnd.paused || fnd.nil?
     }
   end
 end
@@ -109,7 +109,7 @@ def unpause_script(*names)
   names.flatten!
   names.each { |scr|
     fnd = Script.list.find { |nm| nm.name =~ /^#{scr}/i }
-    fnd.unpause if (fnd.paused and not fnd.nil?)
+    fnd.unpause if fnd.paused and not fnd.nil?
   }
 end
 
@@ -1273,7 +1273,7 @@ end
 
 def matchtimeout(secs, *strings)
   unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
-  unless (secs.class == Float || secs.class == Integer)
+  unless secs.class == Float || secs.class == Integer
     echo('matchtimeout error! You appear to have given it a string, not a #! Syntax:  matchtimeout(30, "You stand up")')
     return false
   end
@@ -1292,7 +1292,7 @@ def matchtimeout(secs, *strings)
     elsif line =~ /#{regexpstr}/i
       return line
     end
-    if (Time.now.to_f > end_time)
+    if Time.now.to_f > end_time
       return false
     end
   }
@@ -1366,7 +1366,7 @@ def waitfor(*strings)
   regexpstr = strings.join('|')
   while true
     line_in = script.gets
-    if (line_in =~ /#{regexpstr}/i) then return line_in end
+    if line_in =~ /#{regexpstr}/i then return line_in end
   end
 end
 
@@ -1885,11 +1885,11 @@ def sf_to_wiz(line)
       $sftowiz_multiline = $sftowiz_multiline + line
       line = $sftowiz_multiline
     end
-    if (line.scan(/<pushStream[^>]*\/>/).length > line.scan(/<popStream[^>]*\/>/).length)
+    if line.scan(/<pushStream[^>]*\/>/).length > line.scan(/<popStream[^>]*\/>/).length
       $sftowiz_multiline = line
       return nil
     end
-    if (line.scan(/<style id="\w+"[^>]*\/>/).length > line.scan(/<style id=""[^>]*\/>/).length)
+    if line.scan(/<style id="\w+"[^>]*\/>/).length > line.scan(/<style id=""[^>]*\/>/).length
       $sftowiz_multiline = line
       return nil
     end
@@ -1959,7 +1959,7 @@ def strip_xml(line)
     $strip_xml_multiline = $strip_xml_multiline + line
     line = $strip_xml_multiline
   end
-  if (line.scan(/<pushStream[^>]*\/>/).length > line.scan(/<popStream[^>]*\/>/).length)
+  if line.scan(/<pushStream[^>]*\/>/).length > line.scan(/<popStream[^>]*\/>/).length
     $strip_xml_multiline = line
     return nil
   end
@@ -2195,7 +2195,7 @@ def do_client(client_string)
       respond "   #{$clean_lich_char}execq <code>              same as #{$clean_lich_char}exec but without the script active and exited messages"
       respond "   #{$clean_lich_char}eq <code>                 ''"
       respond
-      if (RUBY_VERSION =~ /^2\.[012]\./)
+      if RUBY_VERSION =~ /^2\.[012]\./
         respond "   #{$clean_lich_char}trust <script name>       let the script do whatever it wants"
         respond "   #{$clean_lich_char}distrust <script name>    restrict the script from doing things that might harm your computer"
         respond "   #{$clean_lich_char}list trusted              show what scripts are trusted"

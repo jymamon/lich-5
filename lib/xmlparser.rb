@@ -256,7 +256,7 @@ class XMLParser
         @bold = true
       elsif name == 'popBold'
         @bold = false
-      elsif (name == 'streamWindow')
+      elsif name == 'streamWindow'
         if (attributes['id'] == 'main') and attributes['subtitle']
           @room_title = '[' + attributes['subtitle'][3..-1] + ']'
         end
@@ -395,7 +395,7 @@ class XMLParser
               Thread.new {
                 wait_while { dead? }
                 action = proc { |server_string|
-                  if (@nerve_tracker_active == 'maybe')
+                  if @nerve_tracker_active == 'maybe'
                     if @nerve_tracker_active == 'maybe'
                       if server_string =~ /^You/
                         @nerve_tracker_active = 'yes'
@@ -477,11 +477,11 @@ class XMLParser
         end
       elsif (name == 'container') and (attributes['id'] == 'stow')
         @stow_container_id = attributes['target'].sub('#', '')
-      elsif (name == 'clearStream')
+      elsif name == 'clearStream'
         if attributes['id'] == 'bounty'
           @bounty_task = String.new
         end
-      elsif (name == 'playerID')
+      elsif name == 'playerID'
         @player_id = attributes['id']
         unless $frontend =~ /^(?:wizard|avalon)$/
           if Lich.inventory_boxes(@player_id)

@@ -97,8 +97,8 @@ else
         account_box.pack_start(char_box, :expand => false, :fill => false, :padding => 0)
 
         @play_button.signal_connect('button-release-event') { |owner, ev|
-          if (ev.event_type == Gdk::EventType::BUTTON_RELEASE)
-            if (ev.button == 1)
+          if ev.event_type == Gdk::EventType::BUTTON_RELEASE
+            if ev.button == 1
               @play_button.sensitive = false
               launch_data_hash = EAccess.auth(
                 account: login_info[:user_id],
@@ -121,7 +121,7 @@ else
               @launch_data = launch_data
               @window.destroy
               @done = true
-            elsif (ev.button == 3)
+            elsif ev.button == 3
               pp 'I would be adding to a team tab'
             end
           end
@@ -129,7 +129,7 @@ else
 
         @remove_button.signal_connect('button-release-event') { |owner, ev|
           if (ev.event_type == Gdk::EventType::BUTTON_RELEASE) and (ev.button == 1)
-            if (ev.state.inspect =~ /shift-mask/)
+            if ev.state.inspect =~ /shift-mask/
               @entry_data.delete(login_info)
               @save_entry_data = true
               char_box.visible = false
@@ -184,8 +184,8 @@ else
       char_box.pack_end(play_button, :expand => false, :fill => false, :padding => 0)
       quick_box.pack_start(char_box, :expand => false, :fill => false, :padding => 0)
       play_button.signal_connect('button-release-event') { |owner, ev|
-        if (ev.event_type == Gdk::EventType::BUTTON_RELEASE)
-          if (ev.button == 1)
+        if ev.event_type == Gdk::EventType::BUTTON_RELEASE
+          if ev.button == 1
             play_button.sensitive = false
             launch_data_hash = EAccess.auth(
               account: login_info[:user_id],
@@ -208,7 +208,7 @@ else
             @launch_data = launch_data
             @window.destroy
             @done = true
-          elsif (ev.button == 3)
+          elsif ev.button == 3
             pp 'I would be adding to a team tab'
           end
         end
@@ -216,7 +216,7 @@ else
 
       remove_button.signal_connect('button-release-event') { |owner, ev|
         if (ev.event_type == Gdk::EventType::BUTTON_RELEASE) and (ev.button == 1)
-          if (ev.state.inspect =~ /shift-mask/)
+          if ev.state.inspect =~ /shift-mask/
             @entry_data.delete(login_info)
             @save_entry_data = true
             char_box.visible = false

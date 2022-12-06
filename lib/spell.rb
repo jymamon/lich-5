@@ -421,7 +421,7 @@ module Games
           ranks = Society.rank
         elsif (circle_num == 99) and (Society.status == 'Council of Light')
           ranks = Society.rank
-        elsif (circle_num == 96)
+        elsif circle_num == 96
           return false
 
         #          deprecate CMan from Spell class .known?
@@ -511,7 +511,7 @@ module Games
           false
         elsif (spirit_cost(options) > 0) and not checkspirit(spirit_cost(options) + 1 + [9912, 9913, 9914, 9916, 9916, 9916].delete_if { |num| !Spell[num].active? }.length)
           false
-        elsif (mana_cost(options) > 0)
+        elsif mana_cost(options) > 0
           ## convert Spell[9699].active? to Effects::Debuffs test (if Debuffs is where it shows)
           if Feat.known?(:mental_acuity) and (Spell[9699].active? or not checkstamina(mana_cost(options) * 2))
             false
@@ -602,7 +602,7 @@ module Games
             else
               cast_cmd = 'cast'
             end
-            unless (arg_options.nil? || arg_options.empty?)
+            unless arg_options.nil? || arg_options.empty?
               if arg_options.split(' ')[0] =~ /incant|channel|evoke|cast/
                 cast_cmd = arg_options.split(' ')[0]
                 arg_options = arg_options.split(' ').drop(1)
@@ -622,7 +622,7 @@ module Games
               cast_cmd += " #{target}"
             end
 
-            unless (arg_options.nil? || arg_options.empty?)
+            unless arg_options.nil? || arg_options.empty?
               cast_cmd += " #{arg_options}"
             end
 
@@ -711,7 +711,7 @@ module Games
                 cast_cmd = cast_cmd.gsub(/^(?:evoke|channel)/, 'cast')
                 next
               end
-              break unless ((@circle.to_i == 10) && (cast_result =~ /^\[Spell Hindrance for/))
+              break unless (@circle.to_i == 10) && (cast_result =~ /^\[Spell Hindrance for/)
             }
             cast_result
           end

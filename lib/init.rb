@@ -369,7 +369,7 @@ if Dir.entries(TEMP_DIR).length > 20 # avoid NIL response
   }
 end
 
-if (RUBY_VERSION =~ /^2\.[012]\./)
+if RUBY_VERSION =~ /^2\.[012]\./
   begin
     did_trusted_defaults = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='did_trusted_defaults';")
   rescue SQLite3::BusyException
