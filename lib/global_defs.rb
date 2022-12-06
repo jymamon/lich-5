@@ -919,7 +919,7 @@ def checkstance(num = nil)
     if num =~ /off/i
       XMLData.stance_value == 0
     elsif num =~ /adv/i
-      XMLData.stance_value.between?(01, 20)
+      XMLData.stance_value.between?(1, 20)
     elsif num =~ /for/i
       XMLData.stance_value.between?(21, 40)
     elsif num =~ /neu/i
