@@ -3449,7 +3449,7 @@ module Games
           XMLData.dialogs.fetch(@dialog, {})
         end
 
-        def each()
+        def each
           to_h.each { |k, v| yield(k, v) }
         end
 

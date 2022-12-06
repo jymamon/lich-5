@@ -16,7 +16,7 @@ module Frontend
     end
   end
 
-  def self.cleanup_session_file()
+  def self.cleanup_session_file
     return if @session_file.nil?
 
     File.delete(@session_file) if File.exists? @session_file

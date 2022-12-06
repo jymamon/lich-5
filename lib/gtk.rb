@@ -26,7 +26,7 @@ if defined?(Gtk)
     end
 
     class Gtk::ComboBoxEntry < Gtk::ComboBoxText
-      def initialize()
+      def initialize
         respond "'Gtk::ComboBoxEntry' is deprecated; use 'Gtk::ComboBoxText(:entry => true)' instead"
         super(:entry => true)
       end
@@ -147,7 +147,7 @@ if defined?(Gtk)
       }
     end
   end
-  def gtk_sleep_while_idle()
+  def gtk_sleep_while_idle
     sleep 0.01
   end
 

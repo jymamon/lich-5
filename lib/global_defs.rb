@@ -878,7 +878,7 @@ def checkstamina(num = nil)
   end
 end
 
-def maxstamina()
+def maxstamina
   XMLData.max_stamina
 end
 
@@ -895,7 +895,7 @@ def percentstamina(num = nil)
   end
 end
 
-def maxconcentration()
+def maxconcentration
   XMLData.max_concentration
 end
 

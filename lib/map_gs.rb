@@ -47,7 +47,7 @@ class Map
     self.instance_variables.collect { |var| var.to_s + "=" + self.instance_variable_get(var).inspect }.join("\n")
   end
 
-  def Map.fuzzy_room_id()
+  def Map.fuzzy_room_id
     return @@fuzzy_room_id
   end
 
@@ -145,7 +145,7 @@ class Map
     return nil;
   end
 
-  def Map.match_no_uid() # returns Map/Room
+  def Map.match_no_uid # returns Map/Room
     if script = Script.current;
       return Map.set_current(Map.match_current(script))
     else
@@ -259,7 +259,7 @@ class Map
     }
   end
 
-  def Map.match_fuzzy() # returns id
+  def Map.match_fuzzy # returns id
     @@fuzzy_room_mutex.synchronize {
       @@fuzzy_room_count = XMLData.room_count
       1.times {
@@ -381,7 +381,7 @@ class Map
     end
   end
 
-  def Map.load_uids()
+  def Map.load_uids
     Map.load unless @@loaded
     @@uids.clear
     @@list.each { |r|
@@ -393,7 +393,7 @@ class Map
     return (@@uids[n].nil? ? [] : @@uids[n])
   end
 
-  def Map.uids()
+  def Map.uids
     return @@uids
   end
 

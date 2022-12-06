@@ -53,7 +53,7 @@ class Map
     self.instance_variables.collect { |var| var.to_s + "=" + self.instance_variable_get(var).inspect }.join("\n")
   end
 
-  def Map.fuzzy_room_id()
+  def Map.fuzzy_room_id
     return @@fuzzy_room_id
   end
 
@@ -400,7 +400,7 @@ class Map
     @@tags.dup
   end
 
-  def Map.load_uids()
+  def Map.load_uids
     Map.load unless @@loaded
     @@uids.clear
     @@list.each { |r|
