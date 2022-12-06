@@ -73,6 +73,10 @@ Layout/SpaceInsideParens:
   Enabled: true
   EnforcedStyle: no_space
 
+Style/NumericLiterals:
+  # Enabled is recommended.
+  Enabled: false
+
 Style/PerlBackrefs:
   # Enabled is recommended.
   Enabled: false
