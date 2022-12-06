@@ -11,7 +11,7 @@ module Lich
   @@track_dark_mode      = nil # boolean
   @@track_layout_state   = nil # boolean
 
-  def Lich.method_missing(arg1, arg2 = '')
+  def self.method_missing(arg1, arg2 = '')
     if (Time.now.to_i - @@last_warn_deprecated) > 300
       respond "--- warning: Lich.* variables will stop working in a future version of Lich.  Use Vars.* (offending script: #{Script.current.name || 'unknown'})"
       @@last_warn_deprecated = Time.now.to_i
@@ -19,7 +19,7 @@ module Lich
     Vars.method_missing(arg1, arg2)
   end
 
-  def Lich.seek(fe)
+  def self.seek(fe)
     if fe =~ /wizard/
       return $wiz_fe_loc
     elsif fe =~ /stormfront/
@@ -29,7 +29,7 @@ module Lich
     pp "Landed in get_simu_launcher method"
   end
 
-  def Lich.db
+  def self.db
     @@lich_db ||= SQLite3::Database.new(@@lich_db_file)
     # if $SAFE == 0
     #  @@lich_db ||= SQLite3::Database.new(@@lich_db_file)
@@ -38,7 +38,7 @@ module Lich
     # end
   end
 
-  def Lich.init_db(database_file)
+  def self.init_db(database_file)
     # TODO: Parameter validation
     @@lich_db_file = database_file
     begin
@@ -57,17 +57,17 @@ module Lich
     end
   end
 
-  def Lich.class_variable_get(*a); nil; end
+  def self.class_variable_get(*a); nil; end
 
-  def Lich.class_eval(*a);         nil; end
+  def self.class_eval(*a);         nil; end
 
-  def Lich.module_eval(*a);        nil; end
+  def self.module_eval(*a);        nil; end
 
-  def Lich.log(msg)
+  def self.log(msg)
     $stderr.puts "#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}: #{msg}"
   end
 
-  def Lich.msgbox(args)
+  def self.msgbox(args)
     if defined?(Win32)
       if args[:buttons] == :ok_cancel
         buttons = Win32::MB_OKCANCEL
@@ -140,7 +140,7 @@ module Lich
     end
   end
 
-  def Lich.get_simu_launcher
+  def self.get_simu_launcher
     if defined?(Win32)
       begin
         launcher_key = Win32.RegOpenKeyEx(:hKey => Win32::HKEY_LOCAL_MACHINE, :lpSubKey => 'Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command', :samDesired => (Win32::KEY_ALL_ACCESS | Win32::KEY_WOW64_32KEY))[:phkResult]
@@ -164,7 +164,7 @@ module Lich
     end
   end
 
-  def Lich.link_to_sge
+  def self.link_to_sge
     if defined?(Win32)
       if Win32.admin?
         begin
@@ -232,7 +232,7 @@ module Lich
     end
   end
 
-  def Lich.unlink_from_sge
+  def self.unlink_from_sge
     if defined?(Win32)
       if Win32.admin?
         begin
@@ -282,7 +282,7 @@ module Lich
     end
   end
 
-  def Lich.link_to_sal
+  def self.link_to_sal
     if defined?(Win32)
       if Win32.admin?
         begin
@@ -351,7 +351,7 @@ module Lich
     end
   end
 
-  def Lich.unlink_from_sal
+  def self.unlink_from_sal
     if defined?(Win32)
       if Win32.admin?
         begin
@@ -401,12 +401,12 @@ module Lich
     end
   end
 
-  def Lich.hosts_file
+  def self.hosts_file
     Lich.find_hosts_file if @@hosts_file.nil?
     return @@hosts_file
   end
 
-  def Lich.find_hosts_file
+  def self.find_hosts_file
     if defined?(Win32)
       begin
         key = Win32.RegOpenKeyEx(:hKey => Win32::HKEY_LOCAL_MACHINE, :lpSubKey => 'System\\CurrentControlSet\\Services\\Tcpip\\Parameters', :samDesired => Win32::KEY_READ)[:phkResult]
@@ -446,7 +446,7 @@ module Lich
     return (@@hosts_file = false)
   end
 
-  def Lich.modify_hosts(game_host)
+  def self.modify_hosts(game_host)
     if Lich.hosts_file and File.exists?(Lich.hosts_file)
       at_exit { Lich.restore_hosts }
       Lich.restore_hosts
@@ -468,7 +468,7 @@ module Lich
     end
   end
 
-  def Lich.restore_hosts
+  def self.restore_hosts
     if Lich.hosts_file and File.exists?(Lich.hosts_file)
       begin
         # fixme: use rename instead?  test rename on windows
@@ -488,7 +488,7 @@ module Lich
     end
   end
 
-  def Lich.inventory_boxes(player_id)
+  def self.inventory_boxes(player_id)
     begin
       v = Lich.db.get_first_value('SELECT player_id FROM enable_inventory_boxes WHERE player_id=?;', player_id.to_i)
     rescue SQLite3::BusyException
@@ -502,7 +502,7 @@ module Lich
     end
   end
 
-  def Lich.set_inventory_boxes(player_id, enabled)
+  def self.set_inventory_boxes(player_id, enabled)
     if enabled
       begin
         Lich.db.execute('INSERT OR REPLACE INTO enable_inventory_boxes values(?);', player_id.to_i)
@@ -521,7 +521,7 @@ module Lich
     nil
   end
 
-  def Lich.win32_launch_method
+  def self.win32_launch_method
     begin
       val = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='win32_launch_method';")
     rescue SQLite3::BusyException
@@ -531,7 +531,7 @@ module Lich
     val
   end
 
-  def Lich.win32_launch_method=(val)
+  def self.win32_launch_method=(val)
     begin
       Lich.db.execute("INSERT OR REPLACE INTO lich_settings(name,value) values('win32_launch_method',?);", val.to_s.encode('UTF-8'))
     rescue SQLite3::BusyException
@@ -541,7 +541,7 @@ module Lich
     nil
   end
 
-  def Lich.fix_game_host_port(gamehost, gameport)
+  def self.fix_game_host_port(gamehost, gameport)
     if (gamehost == 'gs-plat.simutronics.net') and (gameport.to_i == 10121)
       gamehost = 'storm.gs4.game.play.net'
       gameport = 10124
@@ -558,7 +558,7 @@ module Lich
     [gamehost, gameport]
   end
 
-  def Lich.break_game_host_port(gamehost, gameport)
+  def self.break_game_host_port(gamehost, gameport)
     if (gamehost == 'storm.gs4.game.play.net') and (gameport.to_i == 10324)
       gamehost = 'gs4.simutronics.net'
       gameport = 10321
@@ -580,7 +580,7 @@ module Lich
 
   # new feature GUI / internal settings states
 
-  def Lich.debug_messaging
+  def self.debug_messaging
     if @@debug_messaging.nil?
       begin
         val = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='debug_messaging';")
@@ -594,7 +594,7 @@ module Lich
     return @@debug_messaging
   end
 
-  def Lich.debug_messaging=(val)
+  def self.debug_messaging=(val)
     @@debug_messaging = (val.to_s =~ /on|true|yes/ ? true : false)
     begin
       Lich.db.execute("INSERT OR REPLACE INTO lich_settings(name,value) values('debug_messaging',?);", @@debug_messaging.to_s.encode('UTF-8'))
@@ -605,7 +605,7 @@ module Lich
     return nil
   end
 
-  def Lich.display_lichid
+  def self.display_lichid
     if @@display_lichid.nil?
       begin
         val = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='display_lichid';")
@@ -619,7 +619,7 @@ module Lich
     return @@display_lichid
   end
 
-  def Lich.display_lichid=(val)
+  def self.display_lichid=(val)
     @@display_lichid = (val.to_s =~ /on|true|yes/ ? true : false)
     begin
       Lich.db.execute("INSERT OR REPLACE INTO lich_settings(name,value) values('display_lichid',?);", @@display_lichid.to_s.encode('UTF-8'))
@@ -630,7 +630,7 @@ module Lich
     return nil
   end
 
-  def Lich.display_uid
+  def self.display_uid
     if @@display_uid.nil?
       begin
         val = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='display_uid';")
@@ -644,7 +644,7 @@ module Lich
     return @@display_uid
   end
 
-  def Lich.display_uid=(val)
+  def self.display_uid=(val)
     @@display_uid = (val.to_s =~ /on|true|yes/ ? true : false)
     begin
       Lich.db.execute("INSERT OR REPLACE INTO lich_settings(name,value) values('display_uid',?);", @@display_uid.to_s.encode('UTF-8'))
@@ -655,7 +655,7 @@ module Lich
     return nil
   end
 
-  def Lich.track_autosort_state
+  def self.track_autosort_state
     if @@track_autosort_state.nil?
       begin
         val = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='track_autosort_state';")
@@ -668,7 +668,7 @@ module Lich
     return @@track_autosort_state
   end
 
-  def Lich.track_autosort_state=(val)
+  def self.track_autosort_state=(val)
     @@track_autosort_state = (val.to_s =~ /on|true|yes/ ? true : false)
     begin
       Lich.db.execute("INSERT OR REPLACE INTO lich_settings(name,value) values('track_autosort_state',?);", @@track_autosort_state.to_s.encode('UTF-8'))
@@ -679,7 +679,7 @@ module Lich
     return nil
   end
 
-  def Lich.track_dark_mode
+  def self.track_dark_mode
     if @@track_dark_mode.nil?
       begin
         val = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='track_dark_mode';")
@@ -692,7 +692,7 @@ module Lich
     return @@track_dark_mode
   end
 
-  def Lich.track_dark_mode=(val)
+  def self.track_dark_mode=(val)
     @@track_dark_mode = (val.to_s =~ /on|true|yes/ ? true : false)
     begin
       Lich.db.execute("INSERT OR REPLACE INTO lich_settings(name,value) values('track_dark_mode',?);", @@track_dark_mode.to_s.encode('UTF-8'))
@@ -703,7 +703,7 @@ module Lich
     return nil
   end
 
-  def Lich.track_layout_state
+  def self.track_layout_state
     if @@track_layout_state.nil?
       begin
         val = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='track_layout_state';")
@@ -716,7 +716,7 @@ module Lich
     return @@track_layout_state
   end
 
-  def Lich.track_layout_state=(val)
+  def self.track_layout_state=(val)
     @@track_layout_state = (val.to_s =~ /on|true|yes/ ? true : false)
     begin
       Lich.db.execute("INSERT OR REPLACE INTO lich_settings(name,value) values('track_layout_state',?);", @@track_layout_state.to_s.encode('UTF-8'))

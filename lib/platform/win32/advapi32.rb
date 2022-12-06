@@ -13,7 +13,7 @@ module Win32
     extern 'int RegCloseKey(int)'
   end
 
-  def Win32.GetTokenInformation(args)
+  def self.GetTokenInformation(args)
     if args[:TokenInformationClass] == TokenElevation
       token_information_length = SIZEOF_LONG
       token_information = [0].pack('L')
@@ -28,19 +28,19 @@ module Win32
     end
   end
 
-  def Win32.OpenProcessToken(args)
+  def self.OpenProcessToken(args)
     token_handle = [0].pack('L')
     r = Advapi32.OpenProcessToken(args[:ProcessHandle].to_i, args[:DesiredAccess].to_i, token_handle)
     return :return => r, :TokenHandle => token_handle.unpack('L')[0]
   end
 
-  def Win32.RegOpenKeyEx(args)
+  def self.RegOpenKeyEx(args)
     phkResult = [0].pack('L')
     r = Advapi32.RegOpenKeyEx(args[:hKey].to_i, args[:lpSubKey].to_s, 0, args[:samDesired].to_i, phkResult)
     return :return => r, :phkResult => phkResult.unpack('L')[0]
   end
 
-  def Win32.RegQueryValueEx(args)
+  def self.RegQueryValueEx(args)
     args[:lpValueName] ||= 0
     lpcbData = [0].pack('L')
     r = Advapi32.RegQueryValueEx(args[:hKey].to_i, args[:lpValueName], 0, 0, 0, lpcbData)
@@ -73,7 +73,7 @@ module Win32
     end
   end
 
-  def Win32.RegSetValueEx(args)
+  def self.RegSetValueEx(args)
     if [REG_EXPAND_SZ, REG_SZ, REG_LINK].include?(args[:dwType]) and (args[:lpData].class == String)
       lpData = args[:lpData].dup
       lpData.concat("\x00")
@@ -101,12 +101,12 @@ module Win32
     return Advapi32.RegSetValueEx(args[:hKey].to_i, args[:lpValueName], 0, args[:dwType], lpData, cbData)
   end
 
-  def Win32.RegDeleteValue(args)
+  def self.RegDeleteValue(args)
     args[:lpValueName] ||= 0
     return Advapi32.RegDeleteValue(args[:hKey].to_i, args[:lpValueName])
   end
 
-  def Win32.RegCloseKey(args)
+  def self.RegCloseKey(args)
     return Advapi32.RegCloseKey(args[:hKey])
   end
 end

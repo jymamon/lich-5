@@ -52,11 +52,11 @@ module Win32
   REG_QWORD = 11
   REG_QWORD_LITTLE_ENDIAN = 11
 
-  def Win32.isXP?
+  def self.isXP?
     return (Win32.GetVersionEx[:dwMajorVersion] < 6)
   end
 
-  def Win32.admin?
+  def self.admin?
     if Win32.isXP?
       return true
     else

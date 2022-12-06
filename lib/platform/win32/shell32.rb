@@ -8,7 +8,7 @@ module Win32
     extern 'int ShellExecute(int, char*, char*, char*, char*, int)'
   end
 
-  def Win32.ShellExecuteEx(args)
+  def self.ShellExecuteEx(args)
     struct = [(SIZEOF_LONG * 15), 0, 0, 0, 0, 0, 0, SW_SHOW, 0, 0, 0, 0, 0, 0, 0]
     struct_index = {
       :cbSize => 0,
@@ -52,7 +52,7 @@ module Win32
     return :return => result, :hProcess => struct[struct_index[:hProcess]], :hInstApp => struct[struct_index[:hInstApp]]
   end
 
-  def Win32.ShellExecute(args)
+  def self.ShellExecute(args)
     args[:lpDirectory] ||= LICH_DIR.tr("/", "\\")
     args[:lpOperation] ||= 0
     args[:lpParameters] ||= 0

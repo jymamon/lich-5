@@ -216,7 +216,7 @@ require_relative("./lib/xmlparser.rb")
 
 class UpstreamHook
   @@upstream_hooks ||= Hash.new
-  def UpstreamHook.add(name, action)
+  def self.add(name, action)
     unless action.class == Proc
       echo "UpstreamHook: not a Proc (#{action})"
       return false
@@ -224,7 +224,7 @@ class UpstreamHook
     @@upstream_hooks[name] = action
   end
 
-  def UpstreamHook.run(client_string)
+  def self.run(client_string)
     for key in @@upstream_hooks.keys
       begin
         client_string = @@upstream_hooks[key].call(client_string)
@@ -238,18 +238,18 @@ class UpstreamHook
     return client_string
   end
 
-  def UpstreamHook.remove(name)
+  def self.remove(name)
     @@upstream_hooks.delete(name)
   end
 
-  def UpstreamHook.list
+  def self.list
     @@upstream_hooks.keys.dup
   end
 end
 
 class DownstreamHook
   @@downstream_hooks ||= Hash.new
-  def DownstreamHook.add(name, action)
+  def self.add(name, action)
     unless action.class == Proc
       echo "DownstreamHook: not a Proc (#{action})"
       return false
@@ -257,7 +257,7 @@ class DownstreamHook
     @@downstream_hooks[name] = action
   end
 
-  def DownstreamHook.run(server_string)
+  def self.run(server_string)
     for key in @@downstream_hooks.keys
       return nil if server_string.nil?
 
@@ -272,11 +272,11 @@ class DownstreamHook
     return server_string
   end
 
-  def DownstreamHook.remove(name)
+  def self.remove(name)
     @@downstream_hooks.delete(name)
   end
 
-  def DownstreamHook.list
+  def self.list
     @@downstream_hooks.keys.dup
   end
 end
@@ -418,25 +418,25 @@ module Setting
       next nil
     end
   }
-  def Setting.load(*args)
+  def self.load(*args)
     @@load.call(args)
   end
 
-  def Setting.save(hash)
+  def self.save(hash)
     @@save.call(hash)
   end
 
-  def Setting.list
+  def self.list
     @@list.call
   end
 end
 
 module GameSetting
-  def GameSetting.load(*args)
+  def self.load(*args)
     Setting.load(args.collect { |a| "#{XMLData.game}:#{a}" })
   end
 
-  def GameSetting.save(hash)
+  def self.save(hash)
     game_hash = Hash.new
     hash.each_pair { |k, v| game_hash["#{XMLData.game}:#{k}"] = v }
     Setting.save(game_hash)
@@ -444,11 +444,11 @@ module GameSetting
 end
 
 module CharSetting
-  def CharSetting.load(*args)
+  def self.load(*args)
     Setting.load(args.collect { |a| "#{XMLData.game}:#{XMLData.name}:#{a}" })
   end
 
-  def CharSetting.save(hash)
+  def self.save(hash)
     game_hash = Hash.new
     hash.each_pair { |k, v| game_hash["#{XMLData.game}:#{XMLData.name}:#{k}"] = v }
     Setting.save(game_hash)
@@ -549,51 +549,51 @@ module Settings
       end
     }
   }
-  def Settings.[](name)
+  def self.[](name)
     @@settings.call(':')[name]
   end
 
-  def Settings.[]=(name, value)
+  def self.[]=(name, value)
     @@settings.call(':')[name] = value
   end
 
-  def Settings.to_hash(scope = ':')
+  def self.to_hash(scope = ':')
     @@settings.call(scope)
   end
 
-  def Settings.char
+  def self.char
     @@settings.call("#{XMLData.game}:#{XMLData.name}")
   end
 
-  def Settings.save
+  def self.save
     @@save.call
   end
 end
 
 module GameSettings
-  def GameSettings.[](name)
+  def self.[](name)
     Settings.to_hash(XMLData.game)[name]
   end
 
-  def GameSettings.[]=(name, value)
+  def self.[]=(name, value)
     Settings.to_hash(XMLData.game)[name] = value
   end
 
-  def GameSettings.to_hash
+  def self.to_hash
     Settings.to_hash(XMLData.game)
   end
 end
 
 module CharSettings
-  def CharSettings.[](name)
+  def self.[](name)
     Settings.to_hash("#{XMLData.game}:#{XMLData.name}")[name]
   end
 
-  def CharSettings.[]=(name, value)
+  def self.[]=(name, value)
     Settings.to_hash("#{XMLData.game}:#{XMLData.name}")[name] = value
   end
 
-  def CharSettings.to_hash
+  def self.to_hash
     Settings.to_hash("#{XMLData.game}:#{XMLData.name}")
   end
 end
@@ -655,12 +655,12 @@ module Vars
       end
     }
   }
-  def Vars.[](name)
+  def self.[](name)
     @@load.call unless @@loaded
     @@vars[name]
   end
 
-  def Vars.[]=(name, val)
+  def self.[]=(name, val)
     @@load.call unless @@loaded
     if val.nil?
       @@vars.delete(name)
@@ -669,16 +669,16 @@ module Vars
     end
   end
 
-  def Vars.list
+  def self.list
     @@load.call unless @@loaded
     @@vars.dup
   end
 
-  def Vars.save
+  def self.save
     @@save.call
   end
 
-  def Vars.method_missing(arg1, arg2 = '')
+  def self.method_missing(arg1, arg2 = '')
     @@load.call unless @@loaded
     if arg1[-1, 1] == '='
       if arg2.nil?
@@ -987,7 +987,7 @@ class Script
   attr_reader :name, :vars, :safe, :file_name, :label_order, :at_exit_procs
   attr_accessor :quiet, :no_echo, :jump_label, :current_label, :want_downstream, :want_downstream_xml, :want_upstream, :want_script_output, :hidden, :paused, :silent, :no_pause_all, :no_kill_all, :downstream_buffer, :upstream_buffer, :unique_buffer, :die_with, :match_stack_labels, :match_stack_strings, :watchfor, :command_line, :ignore_pause
 
-  def Script.version(script_name, script_version_required = nil)
+  def self.version(script_name, script_version_required = nil)
     script_name = script_name.sub(/[.](lic|rb|cmd|wiz)$/, '')
     file_list = Dir.children(File.join(SCRIPT_DIR, "custom")).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend("/custom/") } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
     if file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i })
@@ -1025,11 +1025,11 @@ class Script
     end
   end
 
-  def Script.list
+  def self.list
     @@running.dup
   end
 
-  def Script.current
+  def self.current
     if script = @@running.find { |s| s.has_thread?(Thread.current) }
       sleep 0.2 while script.paused? and not script.ignore_pause
       script
@@ -1038,21 +1038,21 @@ class Script
     end
   end
 
-  def Script.start(*args)
+  def self.start(*args)
     @@elevated_script_start.call(args)
   end
 
-  def Script.run(*args)
+  def self.run(*args)
     if s = @@elevated_script_start.call(args)
       sleep 0.1 while @@running.include?(s)
     end
   end
 
-  def Script.running?(name)
+  def self.running?(name)
     @@running.any? { |i| (i.name =~ /^#{name}$/i) }
   end
 
-  def Script.pause(name = nil)
+  def self.pause(name = nil)
     if name.nil?
       Script.current.pause
       Script.current
@@ -1066,7 +1066,7 @@ class Script
     end
   end
 
-  def Script.unpause(name)
+  def self.unpause(name)
     if s = (@@running.find { |i| (i.name == name) and i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and i.paused? })
       s.unpause
       true
@@ -1075,7 +1075,7 @@ class Script
     end
   end
 
-  def Script.kill(name)
+  def self.kill(name)
     if s = (@@running.find { |i| i.name == name }) || (@@running.find { |i| i.name =~ /^#{name}$/i })
       s.kill
       true
@@ -1084,7 +1084,7 @@ class Script
     end
   end
 
-  def Script.paused?(name)
+  def self.paused?(name)
     if s = (@@running.find { |i| i.name == name }) || (@@running.find { |i| i.name =~ /^#{name}$/i })
       s.paused?
     else
@@ -1092,23 +1092,23 @@ class Script
     end
   end
 
-  def Script.exists?(script_name)
+  def self.exists?(script_name)
     @@elevated_exists.call(script_name)
   end
 
-  def Script.new_downstream_xml(line)
+  def self.new_downstream_xml(line)
     for script in @@running
       script.downstream_buffer.push(line.chomp) if script.want_downstream_xml
     end
   end
 
-  def Script.new_upstream(line)
+  def self.new_upstream(line)
     for script in @@running
       script.upstream_buffer.push(line.chomp) if script.want_upstream
     end
   end
 
-  def Script.new_downstream(line)
+  def self.new_downstream(line)
     @@running.each { |script|
       script.downstream_buffer.push(line.chomp) if script.want_downstream
       unless script.watchfor.empty?
@@ -1129,25 +1129,25 @@ class Script
     }
   end
 
-  def Script.new_script_output(line)
+  def self.new_script_output(line)
     for script in @@running
       script.downstream_buffer.push(line.chomp) if script.want_script_output
     end
   end
 
-  def Script.log(data)
+  def self.log(data)
     @@elevated_log.call(data)
   end
 
-  def Script.db
+  def self.db
     @@elevated_db.call
   end
 
-  def Script.open_file(ext, mode = 'r', &block)
+  def self.open_file(ext, mode = 'r', &block)
     @@elevated_open_file.call(ext, mode, block)
   end
 
-  def Script.at_exit(&block)
+  def self.at_exit(&block)
     if script = Script.current
       script.at_exit(&block)
     else
@@ -1156,7 +1156,7 @@ class Script
     end
   end
 
-  def Script.clear_exit_procs
+  def self.clear_exit_procs
     if script = Script.current
       script.clear_exit_procs
     else
@@ -1165,7 +1165,7 @@ class Script
     end
   end
 
-  def Script.exit!
+  def self.exit!
     if script = Script.current
       script.exit!
     else
@@ -1572,7 +1572,7 @@ class ExecScript < Script
   }
   attr_reader :cmd_data
 
-  def ExecScript.start(cmd_data, options = {})
+  def self.start(cmd_data, options = {})
     options = { :quiet => true } if options == true
     if ($SAFE < 2) and (options[:trusted] or (RUBY_VERSION !~ /^2\.[012]\./))
       unless new_script = ExecScript.new(cmd_data, options)
@@ -1915,7 +1915,7 @@ class Watchfor
     script.watchfor[line] = block
   end
 
-  def Watchfor.clear
+  def self.clear
     script.watchfor = Hash.new
   end
 end
@@ -1939,7 +1939,7 @@ module Buffer
   @@offset            = 0
   @@buffer            = Array.new
   @@max_size          = 3000
-  def Buffer.gets
+  def self.gets
     thread_id = Thread.current.object_id
     if @@index[thread_id].nil?
       @@mutex.synchronize {
@@ -1964,7 +1964,7 @@ module Buffer
     return line
   end
 
-  def Buffer.gets?
+  def self.gets?
     thread_id = Thread.current.object_id
     if @@index[thread_id].nil?
       @@mutex.synchronize {
@@ -1990,14 +1990,14 @@ module Buffer
     return line
   end
 
-  def Buffer.rewind
+  def self.rewind
     thread_id = Thread.current.object_id
     @@index[thread_id] = @@offset
     @@streams[thread_id] ||= DOWNSTREAM_STRIPPED
     return self
   end
 
-  def Buffer.clear
+  def self.clear
     thread_id = Thread.current.object_id
     if @@index[thread_id].nil?
       @@mutex.synchronize {
@@ -2024,7 +2024,7 @@ module Buffer
     return lines
   end
 
-  def Buffer.update(line, stream = nil)
+  def self.update(line, stream = nil)
     @@mutex.synchronize {
       frozen_line = line.dup
       unless stream.nil?
@@ -2040,11 +2040,11 @@ module Buffer
     return self
   end
 
-  def Buffer.streams
+  def self.streams
     @@streams[Thread.current.object_id]
   end
 
-  def Buffer.streams=(val)
+  def self.streams=(val)
     if (val.class != Integer) or ((val & 63) == 0)
       respond "--- Lich: error: invalid streams value\n\t#{$!.caller[0..2].join("\n\t")}"
       return nil
@@ -2052,7 +2052,7 @@ module Buffer
     @@streams[Thread.current.object_id] = val
   end
 
-  def Buffer.cleanup
+  def self.cleanup
     @@index.delete_if { |k, v| not Thread.list.any? { |t| t.object_id == k } }
     @@streams.delete_if { |k, v| not Thread.list.any? { |t| t.object_id == k } }
     return self
@@ -2164,7 +2164,7 @@ class SpellRanks
   attr_reader :name
   attr_accessor :minorspiritual, :majorspiritual, :cleric, :minorelemental, :majorelemental, :minormental, :ranger, :sorcerer, :wizard, :bard, :empath, :paladin, :arcanesymbols, :magicitemuse, :monk
 
-  def SpellRanks.load
+  def self.load
     if $SAFE == 0
       if File.exists?("#{DATA_DIR}/#{XMLData.game}/spell-ranks.dat")
         begin
@@ -2191,7 +2191,7 @@ class SpellRanks
     end
   end
 
-  def SpellRanks.save
+  def self.save
     if $SAFE == 0
       begin
         File.open("#{DATA_DIR}/#{XMLData.game}/spell-ranks.dat", 'wb') { |f|
@@ -2206,27 +2206,27 @@ class SpellRanks
     end
   end
 
-  def SpellRanks.timestamp
+  def self.timestamp
     SpellRanks.load unless @@loaded
     @@timestamp
   end
 
-  def SpellRanks.timestamp=(val)
+  def self.timestamp=(val)
     SpellRanks.load unless @@loaded
     @@timestamp = val
   end
 
-  def SpellRanks.[](name)
+  def self.[](name)
     SpellRanks.load unless @@loaded
     @@list.find { |n| n.name == name }
   end
 
-  def SpellRanks.list
+  def self.list
     SpellRanks.load unless @@loaded
     @@list
   end
 
-  def SpellRanks.method_missing(arg = nil)
+  def self.method_missing(arg = nil)
     echo "error: unknown method #{arg} for class SpellRanks"
     respond caller[0..1]
   end
@@ -2256,7 +2256,7 @@ module Games
       @@_buffer.max_size = 1000
       @@autostarted = false
       @@cli_scripts = false
-      def Game.open(host, port)
+      def self.open(host, port)
         @@socket = TCPSocket.open(host, port)
         begin
           @@socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, true)
@@ -2472,11 +2472,11 @@ module Games
         $_SERVER_ = @@socket # deprecated
       end
 
-      def Game.thread
+      def self.thread
         @@thread
       end
 
-      def Game.closed?
+      def self.closed?
         if @@socket.nil?
           true
         else
@@ -2484,20 +2484,20 @@ module Games
         end
       end
 
-      def Game.close
+      def self.close
         if @@socket
           @@socket.close rescue nil
           @@thread.kill rescue nil
         end
       end
 
-      def Game._puts(str)
+      def self._puts(str)
         @@mutex.synchronize {
           @@socket.puts(str)
         }
       end
 
-      def Game.puts(str)
+      def self.puts(str)
         $_SCRIPTIDLETIMESTAMP_ = Time.now
         if script = Script.current
           script_name = script.name
@@ -2512,19 +2512,19 @@ module Games
         $_LASTUPSTREAM_ = "[#{script_name}]#{$SEND_CHARACTER}#{str}"
       end
 
-      def Game.gets
+      def self.gets
         @@buffer.gets
       end
 
-      def Game.buffer
+      def self.buffer
         @@buffer
       end
 
-      def Game._gets
+      def self._gets
         @@_buffer.gets
       end
 
-      def Game._buffer
+      def self._buffer
         @@_buffer
       end
     end
@@ -2533,55 +2533,55 @@ module Games
       @@name ||= nil
       @@citizenship ||= nil
       private_class_method :new
-      def Char.init(blah)
+      def self.init(blah)
         echo 'Char.init is no longer used.  Update or fix your script.'
       end
 
-      def Char.name
+      def self.name
         XMLData.name
       end
 
-      def Char.name=(name)
+      def self.name=(name)
         nil
       end
 
-      def Char.health(*args)
+      def self.health(*args)
         health(*args)
       end
 
-      def Char.mana(*args)
+      def self.mana(*args)
         checkmana(*args)
       end
 
-      def Char.spirit(*args)
+      def self.spirit(*args)
         checkspirit(*args)
       end
 
-      def Char.maxhealth
+      def self.maxhealth
         Object.module_eval { maxhealth }
       end
 
-      def Char.maxmana
+      def self.maxmana
         Object.module_eval { maxmana }
       end
 
-      def Char.maxspirit
+      def self.maxspirit
         Object.module_eval { maxspirit }
       end
 
-      def Char.stamina(*args)
+      def self.stamina(*args)
         checkstamina(*args)
       end
 
-      def Char.maxstamina
+      def self.maxstamina
         Object.module_eval { maxstamina }
       end
 
-      def Char.cha(val = nil)
+      def self.cha(val = nil)
         nil
       end
 
-      def Char.dump_info
+      def self.dump_info
         Marshal.dump([
                        Spell.detailed?,
                        Spell.serialize,
@@ -2594,7 +2594,7 @@ module Games
                      ])
       end
 
-      def Char.load_info(string)
+      def self.load_info(string)
         save = Char.dump_info
         begin
           Spell.load_detailed,
@@ -2613,7 +2613,7 @@ module Games
         end
       end
 
-      def Char.method_missing(meth, *args)
+      def self.method_missing(meth, *args)
         [Stats, Skills, Spellsong, Society].each { |klass|
           begin
             result = klass.__send__(meth, *args)
@@ -2625,7 +2625,7 @@ module Games
         raise NoMethodError
       end
 
-      def Char.info
+      def self.info
         ary = []
         ary.push sprintf("Name: %s  Race: %s  Profession: %s", XMLData.name, Stats.race, Stats.prof)
         ary.push sprintf("Gender: %s    Age: %d    Expr: %d    Level: %d", Stats.gender, Stats.age, Stats.exp, Stats.level)
@@ -2640,7 +2640,7 @@ module Games
         ary
       end
 
-      def Char.skills
+      def self.skills
         ary = []
         ary.push sprintf("%s (at level %d), your current skill bonuses and ranks (including all modifiers) are:", XMLData.name, Stats.level)
         ary.push sprintf("  %-035s| Current Current", 'Skill Name')
@@ -2663,11 +2663,11 @@ module Games
         ary
       end
 
-      def Char.citizenship
+      def self.citizenship
         @@citizenship
       end
 
-      def Char.citizenship=(val)
+      def self.citizenship=(val)
         @@citizenship = val.to_s
       end
     end
@@ -2675,23 +2675,23 @@ module Games
     class Society
       @@status ||= String.new
       @@rank ||= 0
-      def Society.serialize
+      def self.serialize
         [@@status, @@rank]
       end
 
-      def Society.load_serialized=(val)
+      def self.load_serialized=(val)
         @@status, @@rank = val
       end
 
-      def Society.status=(val)
+      def self.status=(val)
         @@status = val
       end
 
-      def Society.status
+      def self.status
         @@status.dup
       end
 
-      def Society.rank=(val)
+      def self.rank=(val)
         if val =~ /Master/
           if @@status =~ /Voln/
             @@rank = 26
@@ -2705,46 +2705,46 @@ module Games
         end
       end
 
-      def Society.step
+      def self.step
         @@rank
       end
 
-      def Society.member
+      def self.member
         @@status.dup
       end
 
-      def Society.rank
+      def self.rank
         @@rank
       end
 
-      def Society.task
+      def self.task
         XMLData.society_task
       end
     end
 
     class Spellsong
       @@renewed ||= Time.at(Time.now.to_i - 1200)
-      def Spellsong.renewed
+      def self.renewed
         @@renewed = Time.now
       end
 
-      def Spellsong.renewed=(val)
+      def self.renewed=(val)
         @@renewed = val
       end
 
-      def Spellsong.renewed_at
+      def self.renewed_at
         @@renewed
       end
 
-      def Spellsong.timeleft
+      def self.timeleft
         (Spellsong.duration - ((Time.now - @@renewed) % Spellsong.duration)) / 60.to_f
       end
 
-      def Spellsong.serialize
+      def self.serialize
         Spellsong.timeleft
       end
 
-      def Spellsong.load_serialized=(old)
+      def self.load_serialized=(old)
         Thread.new {
           n = 0
           while Stats.level == 0
@@ -2761,7 +2761,7 @@ module Games
         nil
       end
 
-      def Spellsong.duration
+      def self.duration
         total = 120
         1.upto(Stats.level.to_i) { |n|
           if n < 26
@@ -2777,7 +2777,7 @@ module Games
         total + Stats.log[1].to_i + (Stats.inf[1].to_i * 3) + (Skills.mltelepathy.to_i * 2)
       end
 
-      def Spellsong.renew_cost
+      def self.renew_cost
         # fixme: multi-spell penalty?
         total = num_active = 0
         [1003, 1006, 1009, 1010, 1012, 1014, 1018, 1019, 1025].each { |song_num|
@@ -2793,41 +2793,41 @@ module Games
         return total
       end
 
-      def Spellsong.sonicarmordurability
+      def self.sonicarmordurability
         210 + (Stats.level / 2).round + Skills.to_bonus(Skills.elair)
       end
 
-      def Spellsong.sonicbladedurability
+      def self.sonicbladedurability
         160 + (Stats.level / 2).round + Skills.to_bonus(Skills.elair)
       end
 
-      def Spellsong.sonicweapondurability
+      def self.sonicweapondurability
         Spellsong.sonicbladedurability
       end
 
-      def Spellsong.sonicshielddurability
+      def self.sonicshielddurability
         125 + (Stats.level / 2).round + Skills.to_bonus(Skills.elair)
       end
 
-      def Spellsong.tonishastebonus
+      def self.tonishastebonus
         bonus = -1
         thresholds = [30, 75]
         thresholds.each { |val| if Skills.elair >= val then bonus -= 1 end }
         bonus
       end
 
-      def Spellsong.depressionpushdown
+      def self.depressionpushdown
         20 + Skills.mltelepathy
       end
 
-      def Spellsong.depressionslow
+      def self.depressionslow
         thresholds = [10, 25, 45, 70, 100]
         bonus = -2
         thresholds.each { |val| if Skills.mltelepathy >= val then bonus -= 1 end }
         bonus
       end
 
-      def Spellsong.holdingtargets
+      def self.holdingtargets
         1 + ((Spells.bard - 1) / 7).truncate
       end
     end
@@ -2881,203 +2881,203 @@ module Games
       @@trading ||= 0
       @@pickpocketing ||= 0
 
-      def Skills.twoweaponcombat;           @@twoweaponcombat; end
+      def self.twoweaponcombat;           @@twoweaponcombat; end
 
-      def Skills.twoweaponcombat=(val);     @@twoweaponcombat = val; end
+      def self.twoweaponcombat=(val);     @@twoweaponcombat = val; end
 
-      def Skills.armoruse;                  @@armoruse; end
+      def self.armoruse;                  @@armoruse; end
 
-      def Skills.armoruse=(val);            @@armoruse = val; end
+      def self.armoruse=(val);            @@armoruse = val; end
 
-      def Skills.shielduse;                 @@shielduse; end
+      def self.shielduse;                 @@shielduse; end
 
-      def Skills.shielduse=(val);           @@shielduse = val; end
+      def self.shielduse=(val);           @@shielduse = val; end
 
-      def Skills.combatmaneuvers;           @@combatmaneuvers; end
+      def self.combatmaneuvers;           @@combatmaneuvers; end
 
-      def Skills.combatmaneuvers=(val);     @@combatmaneuvers = val; end
+      def self.combatmaneuvers=(val);     @@combatmaneuvers = val; end
 
-      def Skills.edgedweapons;              @@edgedweapons; end
+      def self.edgedweapons;              @@edgedweapons; end
 
-      def Skills.edgedweapons=(val);        @@edgedweapons = val; end
+      def self.edgedweapons=(val);        @@edgedweapons = val; end
 
-      def Skills.bluntweapons;              @@bluntweapons; end
+      def self.bluntweapons;              @@bluntweapons; end
 
-      def Skills.bluntweapons=(val);        @@bluntweapons = val; end
+      def self.bluntweapons=(val);        @@bluntweapons = val; end
 
-      def Skills.twohandedweapons;          @@twohandedweapons; end
+      def self.twohandedweapons;          @@twohandedweapons; end
 
-      def Skills.twohandedweapons=(val);    @@twohandedweapons = val; end
+      def self.twohandedweapons=(val);    @@twohandedweapons = val; end
 
-      def Skills.rangedweapons;             @@rangedweapons; end
+      def self.rangedweapons;             @@rangedweapons; end
 
-      def Skills.rangedweapons=(val);       @@rangedweapons = val; end
+      def self.rangedweapons=(val);       @@rangedweapons = val; end
 
-      def Skills.thrownweapons;             @@thrownweapons; end
+      def self.thrownweapons;             @@thrownweapons; end
 
-      def Skills.thrownweapons=(val);       @@thrownweapons = val; end
+      def self.thrownweapons=(val);       @@thrownweapons = val; end
 
-      def Skills.polearmweapons;            @@polearmweapons; end
+      def self.polearmweapons;            @@polearmweapons; end
 
-      def Skills.polearmweapons=(val);      @@polearmweapons = val; end
+      def self.polearmweapons=(val);      @@polearmweapons = val; end
 
-      def Skills.brawling;                  @@brawling; end
+      def self.brawling;                  @@brawling; end
 
-      def Skills.brawling=(val);            @@brawling = val; end
+      def self.brawling=(val);            @@brawling = val; end
 
-      def Skills.ambush;                    @@ambush; end
+      def self.ambush;                    @@ambush; end
 
-      def Skills.ambush=(val);              @@ambush = val; end
+      def self.ambush=(val);              @@ambush = val; end
 
-      def Skills.multiopponentcombat;       @@multiopponentcombat; end
+      def self.multiopponentcombat;       @@multiopponentcombat; end
 
-      def Skills.multiopponentcombat=(val); @@multiopponentcombat = val; end
+      def self.multiopponentcombat=(val); @@multiopponentcombat = val; end
 
-      def Skills.combatleadership;          @@combatleadership; end
+      def self.combatleadership;          @@combatleadership; end
 
-      def Skills.combatleadership=(val);    @@combatleadership = val; end
+      def self.combatleadership=(val);    @@combatleadership = val; end
 
-      def Skills.physicalfitness;           @@physicalfitness; end
+      def self.physicalfitness;           @@physicalfitness; end
 
-      def Skills.physicalfitness=(val);     @@physicalfitness = val; end
+      def self.physicalfitness=(val);     @@physicalfitness = val; end
 
-      def Skills.dodging;                   @@dodging; end
+      def self.dodging;                   @@dodging; end
 
-      def Skills.dodging=(val);             @@dodging = val; end
+      def self.dodging=(val);             @@dodging = val; end
 
-      def Skills.arcanesymbols;             @@arcanesymbols; end
+      def self.arcanesymbols;             @@arcanesymbols; end
 
-      def Skills.arcanesymbols=(val);       @@arcanesymbols = val; end
+      def self.arcanesymbols=(val);       @@arcanesymbols = val; end
 
-      def Skills.magicitemuse;              @@magicitemuse; end
+      def self.magicitemuse;              @@magicitemuse; end
 
-      def Skills.magicitemuse=(val);        @@magicitemuse = val; end
+      def self.magicitemuse=(val);        @@magicitemuse = val; end
 
-      def Skills.spellaiming;               @@spellaiming; end
+      def self.spellaiming;               @@spellaiming; end
 
-      def Skills.spellaiming=(val);         @@spellaiming = val; end
+      def self.spellaiming=(val);         @@spellaiming = val; end
 
-      def Skills.harnesspower;              @@harnesspower; end
+      def self.harnesspower;              @@harnesspower; end
 
-      def Skills.harnesspower=(val);        @@harnesspower = val; end
+      def self.harnesspower=(val);        @@harnesspower = val; end
 
-      def Skills.emc;                       @@emc; end
+      def self.emc;                       @@emc; end
 
-      def Skills.emc=(val);                 @@emc = val; end
+      def self.emc=(val);                 @@emc = val; end
 
-      def Skills.mmc;                       @@mmc; end
+      def self.mmc;                       @@mmc; end
 
-      def Skills.mmc=(val);                 @@mmc = val; end
+      def self.mmc=(val);                 @@mmc = val; end
 
-      def Skills.smc;                       @@smc; end
+      def self.smc;                       @@smc; end
 
-      def Skills.smc=(val);                 @@smc = val; end
+      def self.smc=(val);                 @@smc = val; end
 
-      def Skills.elair;                     @@elair; end
+      def self.elair;                     @@elair; end
 
-      def Skills.elair=(val);               @@elair = val; end
+      def self.elair=(val);               @@elair = val; end
 
-      def Skills.elearth;                   @@elearth; end
+      def self.elearth;                   @@elearth; end
 
-      def Skills.elearth=(val);             @@elearth = val; end
+      def self.elearth=(val);             @@elearth = val; end
 
-      def Skills.elfire;                    @@elfire; end
+      def self.elfire;                    @@elfire; end
 
-      def Skills.elfire=(val);              @@elfire = val; end
+      def self.elfire=(val);              @@elfire = val; end
 
-      def Skills.elwater;                   @@elwater; end
+      def self.elwater;                   @@elwater; end
 
-      def Skills.elwater=(val);             @@elwater = val; end
+      def self.elwater=(val);             @@elwater = val; end
 
-      def Skills.slblessings;               @@slblessings; end
+      def self.slblessings;               @@slblessings; end
 
-      def Skills.slblessings=(val);         @@slblessings = val; end
+      def self.slblessings=(val);         @@slblessings = val; end
 
-      def Skills.slreligion;                @@slreligion; end
+      def self.slreligion;                @@slreligion; end
 
-      def Skills.slreligion=(val);          @@slreligion = val; end
+      def self.slreligion=(val);          @@slreligion = val; end
 
-      def Skills.slsummoning;               @@slsummoning; end
+      def self.slsummoning;               @@slsummoning; end
 
-      def Skills.slsummoning=(val);         @@slsummoning = val; end
+      def self.slsummoning=(val);         @@slsummoning = val; end
 
-      def Skills.sldemonology;              @@sldemonology; end
+      def self.sldemonology;              @@sldemonology; end
 
-      def Skills.sldemonology=(val);        @@sldemonology = val; end
+      def self.sldemonology=(val);        @@sldemonology = val; end
 
-      def Skills.slnecromancy;              @@slnecromancy; end
+      def self.slnecromancy;              @@slnecromancy; end
 
-      def Skills.slnecromancy=(val);        @@slnecromancy = val; end
+      def self.slnecromancy=(val);        @@slnecromancy = val; end
 
-      def Skills.mldivination;              @@mldivination; end
+      def self.mldivination;              @@mldivination; end
 
-      def Skills.mldivination=(val);        @@mldivination = val; end
+      def self.mldivination=(val);        @@mldivination = val; end
 
-      def Skills.mlmanipulation;            @@mlmanipulation; end
+      def self.mlmanipulation;            @@mlmanipulation; end
 
-      def Skills.mlmanipulation=(val);      @@mlmanipulation = val; end
+      def self.mlmanipulation=(val);      @@mlmanipulation = val; end
 
-      def Skills.mltelepathy;               @@mltelepathy; end
+      def self.mltelepathy;               @@mltelepathy; end
 
-      def Skills.mltelepathy=(val);         @@mltelepathy = val; end
+      def self.mltelepathy=(val);         @@mltelepathy = val; end
 
-      def Skills.mltransference;            @@mltransference; end
+      def self.mltransference;            @@mltransference; end
 
-      def Skills.mltransference=(val);      @@mltransference = val; end
+      def self.mltransference=(val);      @@mltransference = val; end
 
-      def Skills.mltransformation;          @@mltransformation; end
+      def self.mltransformation;          @@mltransformation; end
 
-      def Skills.mltransformation=(val);    @@mltransformation = val; end
+      def self.mltransformation=(val);    @@mltransformation = val; end
 
-      def Skills.survival;                  @@survival; end
+      def self.survival;                  @@survival; end
 
-      def Skills.survival=(val);            @@survival = val; end
+      def self.survival=(val);            @@survival = val; end
 
-      def Skills.disarmingtraps;            @@disarmingtraps; end
+      def self.disarmingtraps;            @@disarmingtraps; end
 
-      def Skills.disarmingtraps=(val);      @@disarmingtraps = val; end
+      def self.disarmingtraps=(val);      @@disarmingtraps = val; end
 
-      def Skills.pickinglocks;              @@pickinglocks; end
+      def self.pickinglocks;              @@pickinglocks; end
 
-      def Skills.pickinglocks=(val);        @@pickinglocks = val; end
+      def self.pickinglocks=(val);        @@pickinglocks = val; end
 
-      def Skills.stalkingandhiding;         @@stalkingandhiding; end
+      def self.stalkingandhiding;         @@stalkingandhiding; end
 
-      def Skills.stalkingandhiding=(val);   @@stalkingandhiding = val; end
+      def self.stalkingandhiding=(val);   @@stalkingandhiding = val; end
 
-      def Skills.perception;                @@perception; end
+      def self.perception;                @@perception; end
 
-      def Skills.perception=(val);          @@perception = val; end
+      def self.perception=(val);          @@perception = val; end
 
-      def Skills.climbing;                  @@climbing; end
+      def self.climbing;                  @@climbing; end
 
-      def Skills.climbing=(val);            @@climbing = val; end
+      def self.climbing=(val);            @@climbing = val; end
 
-      def Skills.swimming;                  @@swimming; end
+      def self.swimming;                  @@swimming; end
 
-      def Skills.swimming=(val);            @@swimming = val; end
+      def self.swimming=(val);            @@swimming = val; end
 
-      def Skills.firstaid;                  @@firstaid; end
+      def self.firstaid;                  @@firstaid; end
 
-      def Skills.firstaid=(val);            @@firstaid = val; end
+      def self.firstaid=(val);            @@firstaid = val; end
 
-      def Skills.trading;                   @@trading; end
+      def self.trading;                   @@trading; end
 
-      def Skills.trading=(val);             @@trading = val; end
+      def self.trading=(val);             @@trading = val; end
 
-      def Skills.pickpocketing;             @@pickpocketing; end
+      def self.pickpocketing;             @@pickpocketing; end
 
-      def Skills.pickpocketing=(val);       @@pickpocketing = val; end
+      def self.pickpocketing=(val);       @@pickpocketing = val; end
 
-      def Skills.serialize
+      def self.serialize
         [@@twoweaponcombat, @@armoruse, @@shielduse, @@combatmaneuvers, @@edgedweapons, @@bluntweapons, @@twohandedweapons, @@rangedweapons, @@thrownweapons, @@polearmweapons, @@brawling, @@ambush, @@multiopponentcombat, @@combatleadership, @@physicalfitness, @@dodging, @@arcanesymbols, @@magicitemuse, @@spellaiming, @@harnesspower, @@emc, @@mmc, @@smc, @@elair, @@elearth, @@elfire, @@elwater, @@slblessings, @@slreligion, @@slsummoning, @@sldemonology, @@slnecromancy, @@mldivination, @@mlmanipulation, @@mltelepathy, @@mltransference, @@mltransformation, @@survival, @@disarmingtraps, @@pickinglocks, @@stalkingandhiding, @@perception, @@climbing, @@swimming, @@firstaid, @@trading, @@pickpocketing]
       end
 
-      def Skills.load_serialized=(array)
+      def self.load_serialized=(array)
         @@twoweaponcombat, @@armoruse, @@shielduse, @@combatmaneuvers, @@edgedweapons, @@bluntweapons, @@twohandedweapons, @@rangedweapons, @@thrownweapons, @@polearmweapons, @@brawling, @@ambush, @@multiopponentcombat, @@combatleadership, @@physicalfitness, @@dodging, @@arcanesymbols, @@magicitemuse, @@spellaiming, @@harnesspower, @@emc, @@mmc, @@smc, @@elair, @@elearth, @@elfire, @@elwater, @@slblessings, @@slreligion, @@slsummoning, @@sldemonology, @@slnecromancy, @@mldivination, @@mlmanipulation, @@mltelepathy, @@mltransference, @@mltransformation, @@survival, @@disarmingtraps, @@pickinglocks, @@stalkingandhiding, @@perception, @@climbing, @@swimming, @@firstaid, @@trading, @@pickpocketing = array
       end
 
-      def Skills.to_bonus(ranks)
+      def self.to_bonus(ranks)
         bonus = 0
         while ranks > 0
           if ranks > 40
@@ -3114,63 +3114,63 @@ module Games
       @@empath         ||= 0
       @@cleric         ||= 0
       @@bard           ||= 0
-      def Spells.minorelemental=(val); @@minorelemental = val; end
+      def self.minorelemental=(val); @@minorelemental = val; end
 
-      def Spells.minorelemental;       @@minorelemental;       end
+      def self.minorelemental;       @@minorelemental;       end
 
-      def Spells.minormental=(val);    @@minormental = val;    end
+      def self.minormental=(val);    @@minormental = val;    end
 
-      def Spells.minormental;          @@minormental;          end
+      def self.minormental;          @@minormental;          end
 
-      def Spells.majorelemental=(val); @@majorelemental = val; end
+      def self.majorelemental=(val); @@majorelemental = val; end
 
-      def Spells.majorelemental;       @@majorelemental;       end
+      def self.majorelemental;       @@majorelemental;       end
 
-      def Spells.minorspiritual=(val); @@minorspiritual = val; end
+      def self.minorspiritual=(val); @@minorspiritual = val; end
 
-      def Spells.minorspiritual;       @@minorspiritual;       end
+      def self.minorspiritual;       @@minorspiritual;       end
 
-      def Spells.minorspirit=(val);    @@minorspiritual = val; end
+      def self.minorspirit=(val);    @@minorspiritual = val; end
 
-      def Spells.minorspirit;          @@minorspiritual;       end
+      def self.minorspirit;          @@minorspiritual;       end
 
-      def Spells.majorspiritual=(val); @@majorspiritual = val; end
+      def self.majorspiritual=(val); @@majorspiritual = val; end
 
-      def Spells.majorspiritual;       @@majorspiritual;       end
+      def self.majorspiritual;       @@majorspiritual;       end
 
-      def Spells.majorspirit=(val);    @@majorspiritual = val; end
+      def self.majorspirit=(val);    @@majorspiritual = val; end
 
-      def Spells.majorspirit;          @@majorspiritual;       end
+      def self.majorspirit;          @@majorspiritual;       end
 
-      def Spells.wizard=(val);         @@wizard = val;         end
+      def self.wizard=(val);         @@wizard = val;         end
 
-      def Spells.wizard;               @@wizard;               end
+      def self.wizard;               @@wizard;               end
 
-      def Spells.sorcerer=(val);       @@sorcerer = val;       end
+      def self.sorcerer=(val);       @@sorcerer = val;       end
 
-      def Spells.sorcerer;             @@sorcerer;             end
+      def self.sorcerer;             @@sorcerer;             end
 
-      def Spells.ranger=(val);         @@ranger = val;         end
+      def self.ranger=(val);         @@ranger = val;         end
 
-      def Spells.ranger;               @@ranger;               end
+      def self.ranger;               @@ranger;               end
 
-      def Spells.paladin=(val);        @@paladin = val;        end
+      def self.paladin=(val);        @@paladin = val;        end
 
-      def Spells.paladin;              @@paladin;              end
+      def self.paladin;              @@paladin;              end
 
-      def Spells.empath=(val);         @@empath = val;         end
+      def self.empath=(val);         @@empath = val;         end
 
-      def Spells.empath;               @@empath;               end
+      def self.empath;               @@empath;               end
 
-      def Spells.cleric=(val);         @@cleric = val;         end
+      def self.cleric=(val);         @@cleric = val;         end
 
-      def Spells.cleric;               @@cleric;               end
+      def self.cleric;               @@cleric;               end
 
-      def Spells.bard=(val);           @@bard = val;           end
+      def self.bard=(val);           @@bard = val;           end
 
-      def Spells.bard;                 @@bard;                 end
+      def self.bard;                 @@bard;                 end
 
-      def Spells.get_circle_name(num)
+      def self.get_circle_name(num)
         val = num.to_s
         if val == '1'
           'Minor Spirit'
@@ -3219,21 +3219,21 @@ module Games
         end
       end
 
-      def Spells.active
+      def self.active
         Spell.active
       end
 
-      def Spells.known
+      def self.known
         known_spells = Array.new
         Spell.list.each { |spell| known_spells.push(spell) if spell.known? }
         return known_spells
       end
 
-      def Spells.serialize
+      def self.serialize
         [@@minorelemental, @@majorelemental, @@minorspiritual, @@majorspiritual, @@wizard, @@sorcerer, @@ranger, @@paladin, @@empath, @@cleric, @@bard, @@minormental]
       end
 
-      def Spells.load_serialized=(val)
+      def self.load_serialized=(val)
         @@minorelemental, @@majorelemental, @@minorspiritual, @@majorspiritual, @@wizard, @@sorcerer, @@ranger, @@paladin, @@empath, @@cleric, @@bard, @@minormental = val
         # new spell circle added 2012-07-18; old data files will make @@minormental nil
         @@minormental ||= 0
@@ -3275,107 +3275,107 @@ module Games
       @@enhanced_int ||= [0, 0]
       @@enhanced_wis ||= [0, 0]
       @@enhanced_inf ||= [0, 0]
-      def Stats.race;         @@race; end
+      def self.race;         @@race; end
 
-      def Stats.race=(val);   @@race = val; end
+      def self.race=(val);   @@race = val; end
 
-      def Stats.prof;         @@prof; end
+      def self.prof;         @@prof; end
 
-      def Stats.prof=(val);   @@prof = val; end
+      def self.prof=(val);   @@prof = val; end
 
-      def Stats.gender;       @@gender; end
+      def self.gender;       @@gender; end
 
-      def Stats.gender=(val); @@gender = val; end
+      def self.gender=(val); @@gender = val; end
 
-      def Stats.age;          @@age; end
+      def self.age;          @@age; end
 
-      def Stats.age=(val);    @@age = val; end
+      def self.age=(val);    @@age = val; end
 
-      def Stats.level;        @@level; end
+      def self.level;        @@level; end
 
-      def Stats.level=(val);  @@level = val; end
+      def self.level=(val);  @@level = val; end
 
-      def Stats.str;          @@str; end
+      def self.str;          @@str; end
 
-      def Stats.str=(val);    @@str = val; end
+      def self.str=(val);    @@str = val; end
 
-      def Stats.con;          @@con; end
+      def self.con;          @@con; end
 
-      def Stats.con=(val);    @@con = val; end
+      def self.con=(val);    @@con = val; end
 
-      def Stats.dex;          @@dex; end
+      def self.dex;          @@dex; end
 
-      def Stats.dex=(val);    @@dex = val; end
+      def self.dex=(val);    @@dex = val; end
 
-      def Stats.agi;          @@agi; end
+      def self.agi;          @@agi; end
 
-      def Stats.agi=(val);    @@agi = val; end
+      def self.agi=(val);    @@agi = val; end
 
-      def Stats.dis;          @@dis; end
+      def self.dis;          @@dis; end
 
-      def Stats.dis=(val);    @@dis = val; end
+      def self.dis=(val);    @@dis = val; end
 
-      def Stats.aur;          @@aur; end
+      def self.aur;          @@aur; end
 
-      def Stats.aur=(val);    @@aur = val; end
+      def self.aur=(val);    @@aur = val; end
 
-      def Stats.log;          @@log; end
+      def self.log;          @@log; end
 
-      def Stats.log=(val);    @@log = val; end
+      def self.log=(val);    @@log = val; end
 
-      def Stats.int;          @@int; end
+      def self.int;          @@int; end
 
-      def Stats.int=(val);    @@int = val; end
+      def self.int=(val);    @@int = val; end
 
-      def Stats.wis;          @@wis; end
+      def self.wis;          @@wis; end
 
-      def Stats.wis=(val);    @@wis = val; end
+      def self.wis=(val);    @@wis = val; end
 
-      def Stats.inf;          @@inf; end
+      def self.inf;          @@inf; end
 
-      def Stats.inf=(val);    @@inf = val; end
+      def self.inf=(val);    @@inf = val; end
 
-      def Stats.enhanced_str;          @@enhanced_str; end
+      def self.enhanced_str;          @@enhanced_str; end
 
-      def Stats.enhanced_str=(val);    @@enhanced_str = val; end
+      def self.enhanced_str=(val);    @@enhanced_str = val; end
 
-      def Stats.enhanced_con;          @@enhanced_con; end
+      def self.enhanced_con;          @@enhanced_con; end
 
-      def Stats.enhanced_con=(val);    @@enhanced_con = val; end
+      def self.enhanced_con=(val);    @@enhanced_con = val; end
 
-      def Stats.enhanced_dex;          @@enhanced_dex; end
+      def self.enhanced_dex;          @@enhanced_dex; end
 
-      def Stats.enhanced_dex=(val);    @@enhanced_dex = val; end
+      def self.enhanced_dex=(val);    @@enhanced_dex = val; end
 
-      def Stats.enhanced_agi;          @@enhanced_agi; end
+      def self.enhanced_agi;          @@enhanced_agi; end
 
-      def Stats.enhanced_agi=(val);    @@enhanced_agi = val; end
+      def self.enhanced_agi=(val);    @@enhanced_agi = val; end
 
-      def Stats.enhanced_dis;          @@enhanced_dis; end
+      def self.enhanced_dis;          @@enhanced_dis; end
 
-      def Stats.enhanced_dis=(val);    @@enhanced_dis = val; end
+      def self.enhanced_dis=(val);    @@enhanced_dis = val; end
 
-      def Stats.enhanced_aur;          @@enhanced_aur; end
+      def self.enhanced_aur;          @@enhanced_aur; end
 
-      def Stats.enhanced_aur=(val);    @@enhanced_aur = val; end
+      def self.enhanced_aur=(val);    @@enhanced_aur = val; end
 
-      def Stats.enhanced_log;          @@enhanced_log; end
+      def self.enhanced_log;          @@enhanced_log; end
 
-      def Stats.enhanced_log=(val);    @@enhanced_log = val; end
+      def self.enhanced_log=(val);    @@enhanced_log = val; end
 
-      def Stats.enhanced_int;          @@enhanced_int; end
+      def self.enhanced_int;          @@enhanced_int; end
 
-      def Stats.enhanced_int=(val);    @@enhanced_int = val; end
+      def self.enhanced_int=(val);    @@enhanced_int = val; end
 
-      def Stats.enhanced_wis;          @@enhanced_wis; end
+      def self.enhanced_wis;          @@enhanced_wis; end
 
-      def Stats.enhanced_wis=(val);    @@enhanced_wis = val; end
+      def self.enhanced_wis=(val);    @@enhanced_wis = val; end
 
-      def Stats.enhanced_inf;          @@enhanced_inf; end
+      def self.enhanced_inf;          @@enhanced_inf; end
 
-      def Stats.enhanced_inf=(val);    @@enhanced_inf = val; end
+      def self.enhanced_inf=(val);    @@enhanced_inf = val; end
 
-      def Stats.exp
+      def self.exp
         if XMLData.next_level_text =~ /until next level/
           exp_threshold = [2500, 5000, 10000, 17500, 27500, 40000, 55000, 72500, 92500, 115000, 140000, 167000, 197500, 230000, 265000, 302000, 341000, 382000, 425000, 470000, 517000, 566000, 617000, 670000, 725000, 781500, 839500, 899000, 960000, 1022500, 1086500, 1152000, 1219000, 1287500, 1357500, 1429000, 1502000, 1576500, 1652500, 1730000, 1808500, 1888000, 1968500, 2050000, 2132500, 2216000, 2300500, 2386000, 2472500, 2560000, 2648000, 2736500, 2825500, 2915000, 3005000, 3095500, 3186500, 3278000, 3370000, 3462500, 3555500, 3649000, 3743000, 3837500, 3932500, 4028000, 4124000, 4220500, 4317500, 4415000, 4513000, 4611500, 4710500, 4810000, 4910000, 5010500, 5111500, 5213000, 5315000, 5417500, 5520500, 5624000, 5728000, 5832500, 5937500, 6043000, 6149000, 6255500, 6362500, 6470000, 6578000, 6686500, 6795500, 6905000, 7015000, 7125500, 7236500, 7348000, 7460000, 7572500]
           exp_threshold[XMLData.level] - XMLData.next_level_text.slice(/[0-9]+/).to_i
@@ -3384,13 +3384,13 @@ module Games
         end
       end
 
-      def Stats.exp=(val); nil; end
+      def self.exp=(val); nil; end
 
-      def Stats.serialize
+      def self.serialize
         [@@race, @@prof, @@gender, @@age, Stats.exp, @@level, @@str, @@con, @@dex, @@agi, @@dis, @@aur, @@log, @@int, @@wis, @@inf, @@enhanced_str, @@enhanced_con, @@enhanced_dex, @@enhanced_agi, @@enhanced_dis, @@enhanced_aur, @@enhanced_log, @@enhanced_int, @@enhanced_wis, @@enhanced_inf]
       end
 
-      def Stats.load_serialized=(array)
+      def self.load_serialized=(array)
         for i in 16..25
           array[i] ||= [0, 0]
         end
@@ -3402,37 +3402,37 @@ module Games
     class Gift
       @@gift_start ||= Time.now
       @@pulse_count ||= 0
-      def Gift.started
+      def self.started
         @@gift_start = Time.now
         @@pulse_count = 0
       end
 
-      def Gift.pulse
+      def self.pulse
         @@pulse_count += 1
       end
 
-      def Gift.remaining
+      def self.remaining
         ([360 - @@pulse_count, 0].max * 60).to_f
       end
 
-      def Gift.restarts_on
+      def self.restarts_on
         @@gift_start + 594000
       end
 
-      def Gift.serialize
+      def self.serialize
         [@@gift_start, @@pulse_count]
       end
 
-      def Gift.load_serialized=(array)
+      def self.load_serialized=(array)
         @@gift_start = array[0]
         @@pulse_count = array[1].to_i
       end
 
-      def Gift.ended
+      def self.ended
         @@pulse_count = 360
       end
 
-      def Gift.stopwatch
+      def self.stopwatch
         nil
       end
     end
@@ -3475,148 +3475,148 @@ module Games
     end
 
     class Wounds
-      def Wounds.leftEye;   fix_injury_mode; XMLData.injuries['leftEye']['wound'];   end
+      def self.leftEye;   fix_injury_mode; XMLData.injuries['leftEye']['wound'];   end
 
-      def Wounds.leye;      fix_injury_mode; XMLData.injuries['leftEye']['wound'];   end
+      def self.leye;      fix_injury_mode; XMLData.injuries['leftEye']['wound'];   end
 
-      def Wounds.rightEye;  fix_injury_mode; XMLData.injuries['rightEye']['wound'];  end
+      def self.rightEye;  fix_injury_mode; XMLData.injuries['rightEye']['wound'];  end
 
-      def Wounds.reye;      fix_injury_mode; XMLData.injuries['rightEye']['wound'];  end
+      def self.reye;      fix_injury_mode; XMLData.injuries['rightEye']['wound'];  end
 
-      def Wounds.head;      fix_injury_mode; XMLData.injuries['head']['wound'];      end
+      def self.head;      fix_injury_mode; XMLData.injuries['head']['wound'];      end
 
-      def Wounds.neck;      fix_injury_mode; XMLData.injuries['neck']['wound'];      end
+      def self.neck;      fix_injury_mode; XMLData.injuries['neck']['wound'];      end
 
-      def Wounds.back;      fix_injury_mode; XMLData.injuries['back']['wound'];      end
+      def self.back;      fix_injury_mode; XMLData.injuries['back']['wound'];      end
 
-      def Wounds.chest;     fix_injury_mode; XMLData.injuries['chest']['wound'];     end
+      def self.chest;     fix_injury_mode; XMLData.injuries['chest']['wound'];     end
 
-      def Wounds.abdomen;   fix_injury_mode; XMLData.injuries['abdomen']['wound'];   end
+      def self.abdomen;   fix_injury_mode; XMLData.injuries['abdomen']['wound'];   end
 
-      def Wounds.abs;       fix_injury_mode; XMLData.injuries['abdomen']['wound'];   end
+      def self.abs;       fix_injury_mode; XMLData.injuries['abdomen']['wound'];   end
 
-      def Wounds.leftArm;   fix_injury_mode; XMLData.injuries['leftArm']['wound'];   end
+      def self.leftArm;   fix_injury_mode; XMLData.injuries['leftArm']['wound'];   end
 
-      def Wounds.larm;      fix_injury_mode; XMLData.injuries['leftArm']['wound'];   end
+      def self.larm;      fix_injury_mode; XMLData.injuries['leftArm']['wound'];   end
 
-      def Wounds.rightArm;  fix_injury_mode; XMLData.injuries['rightArm']['wound'];  end
+      def self.rightArm;  fix_injury_mode; XMLData.injuries['rightArm']['wound'];  end
 
-      def Wounds.rarm;      fix_injury_mode; XMLData.injuries['rightArm']['wound'];  end
+      def self.rarm;      fix_injury_mode; XMLData.injuries['rightArm']['wound'];  end
 
-      def Wounds.rightHand; fix_injury_mode; XMLData.injuries['rightHand']['wound']; end
+      def self.rightHand; fix_injury_mode; XMLData.injuries['rightHand']['wound']; end
 
-      def Wounds.rhand;     fix_injury_mode; XMLData.injuries['rightHand']['wound']; end
+      def self.rhand;     fix_injury_mode; XMLData.injuries['rightHand']['wound']; end
 
-      def Wounds.leftHand;  fix_injury_mode; XMLData.injuries['leftHand']['wound'];  end
+      def self.leftHand;  fix_injury_mode; XMLData.injuries['leftHand']['wound'];  end
 
-      def Wounds.lhand;     fix_injury_mode; XMLData.injuries['leftHand']['wound'];  end
+      def self.lhand;     fix_injury_mode; XMLData.injuries['leftHand']['wound'];  end
 
-      def Wounds.leftLeg;   fix_injury_mode; XMLData.injuries['leftLeg']['wound'];   end
+      def self.leftLeg;   fix_injury_mode; XMLData.injuries['leftLeg']['wound'];   end
 
-      def Wounds.lleg;      fix_injury_mode; XMLData.injuries['leftLeg']['wound'];   end
+      def self.lleg;      fix_injury_mode; XMLData.injuries['leftLeg']['wound'];   end
 
-      def Wounds.rightLeg;  fix_injury_mode; XMLData.injuries['rightLeg']['wound'];  end
+      def self.rightLeg;  fix_injury_mode; XMLData.injuries['rightLeg']['wound'];  end
 
-      def Wounds.rleg;      fix_injury_mode; XMLData.injuries['rightLeg']['wound'];  end
+      def self.rleg;      fix_injury_mode; XMLData.injuries['rightLeg']['wound'];  end
 
-      def Wounds.leftFoot;  fix_injury_mode; XMLData.injuries['leftFoot']['wound'];  end
+      def self.leftFoot;  fix_injury_mode; XMLData.injuries['leftFoot']['wound'];  end
 
-      def Wounds.rightFoot; fix_injury_mode; XMLData.injuries['rightFoot']['wound']; end
+      def self.rightFoot; fix_injury_mode; XMLData.injuries['rightFoot']['wound']; end
 
-      def Wounds.nsys;      fix_injury_mode; XMLData.injuries['nsys']['wound'];      end
+      def self.nsys;      fix_injury_mode; XMLData.injuries['nsys']['wound'];      end
 
-      def Wounds.nerves;    fix_injury_mode; XMLData.injuries['nsys']['wound'];      end
+      def self.nerves;    fix_injury_mode; XMLData.injuries['nsys']['wound'];      end
 
-      def Wounds.arms
+      def self.arms
         fix_injury_mode
         [XMLData.injuries['leftArm']['wound'], XMLData.injuries['rightArm']['wound'], XMLData.injuries['leftHand']['wound'], XMLData.injuries['rightHand']['wound']].max
       end
 
-      def Wounds.limbs
+      def self.limbs
         fix_injury_mode
         [XMLData.injuries['leftArm']['wound'], XMLData.injuries['rightArm']['wound'], XMLData.injuries['leftHand']['wound'], XMLData.injuries['rightHand']['wound'], XMLData.injuries['leftLeg']['wound'], XMLData.injuries['rightLeg']['wound']].max
       end
 
-      def Wounds.torso
+      def self.torso
         fix_injury_mode
         [XMLData.injuries['rightEye']['wound'], XMLData.injuries['leftEye']['wound'], XMLData.injuries['chest']['wound'], XMLData.injuries['abdomen']['wound'], XMLData.injuries['back']['wound']].max
       end
 
-      def Wounds.method_missing(arg = nil)
+      def self.method_missing(arg = nil)
         echo "Wounds: Invalid area, try one of these: arms, limbs, torso, #{XMLData.injuries.keys.join(', ')}"
         nil
       end
     end
 
     class Scars
-      def Scars.leftEye;   fix_injury_mode; XMLData.injuries['leftEye']['scar'];   end
+      def self.leftEye;   fix_injury_mode; XMLData.injuries['leftEye']['scar'];   end
 
-      def Scars.leye;      fix_injury_mode; XMLData.injuries['leftEye']['scar'];   end
+      def self.leye;      fix_injury_mode; XMLData.injuries['leftEye']['scar'];   end
 
-      def Scars.rightEye;  fix_injury_mode; XMLData.injuries['rightEye']['scar'];  end
+      def self.rightEye;  fix_injury_mode; XMLData.injuries['rightEye']['scar'];  end
 
-      def Scars.reye;      fix_injury_mode; XMLData.injuries['rightEye']['scar'];  end
+      def self.reye;      fix_injury_mode; XMLData.injuries['rightEye']['scar'];  end
 
-      def Scars.head;      fix_injury_mode; XMLData.injuries['head']['scar'];      end
+      def self.head;      fix_injury_mode; XMLData.injuries['head']['scar'];      end
 
-      def Scars.neck;      fix_injury_mode; XMLData.injuries['neck']['scar'];      end
+      def self.neck;      fix_injury_mode; XMLData.injuries['neck']['scar'];      end
 
-      def Scars.back;      fix_injury_mode; XMLData.injuries['back']['scar'];      end
+      def self.back;      fix_injury_mode; XMLData.injuries['back']['scar'];      end
 
-      def Scars.chest;     fix_injury_mode; XMLData.injuries['chest']['scar'];     end
+      def self.chest;     fix_injury_mode; XMLData.injuries['chest']['scar'];     end
 
-      def Scars.abdomen;   fix_injury_mode; XMLData.injuries['abdomen']['scar'];   end
+      def self.abdomen;   fix_injury_mode; XMLData.injuries['abdomen']['scar'];   end
 
-      def Scars.abs;       fix_injury_mode; XMLData.injuries['abdomen']['scar'];   end
+      def self.abs;       fix_injury_mode; XMLData.injuries['abdomen']['scar'];   end
 
-      def Scars.leftArm;   fix_injury_mode; XMLData.injuries['leftArm']['scar'];   end
+      def self.leftArm;   fix_injury_mode; XMLData.injuries['leftArm']['scar'];   end
 
-      def Scars.larm;      fix_injury_mode; XMLData.injuries['leftArm']['scar'];   end
+      def self.larm;      fix_injury_mode; XMLData.injuries['leftArm']['scar'];   end
 
-      def Scars.rightArm;  fix_injury_mode; XMLData.injuries['rightArm']['scar'];  end
+      def self.rightArm;  fix_injury_mode; XMLData.injuries['rightArm']['scar'];  end
 
-      def Scars.rarm;      fix_injury_mode; XMLData.injuries['rightArm']['scar'];  end
+      def self.rarm;      fix_injury_mode; XMLData.injuries['rightArm']['scar'];  end
 
-      def Scars.rightHand; fix_injury_mode; XMLData.injuries['rightHand']['scar']; end
+      def self.rightHand; fix_injury_mode; XMLData.injuries['rightHand']['scar']; end
 
-      def Scars.rhand;     fix_injury_mode; XMLData.injuries['rightHand']['scar']; end
+      def self.rhand;     fix_injury_mode; XMLData.injuries['rightHand']['scar']; end
 
-      def Scars.leftHand;  fix_injury_mode; XMLData.injuries['leftHand']['scar'];  end
+      def self.leftHand;  fix_injury_mode; XMLData.injuries['leftHand']['scar'];  end
 
-      def Scars.lhand;     fix_injury_mode; XMLData.injuries['leftHand']['scar'];  end
+      def self.lhand;     fix_injury_mode; XMLData.injuries['leftHand']['scar'];  end
 
-      def Scars.leftLeg;   fix_injury_mode; XMLData.injuries['leftLeg']['scar'];   end
+      def self.leftLeg;   fix_injury_mode; XMLData.injuries['leftLeg']['scar'];   end
 
-      def Scars.lleg;      fix_injury_mode; XMLData.injuries['leftLeg']['scar'];   end
+      def self.lleg;      fix_injury_mode; XMLData.injuries['leftLeg']['scar'];   end
 
-      def Scars.rightLeg;  fix_injury_mode; XMLData.injuries['rightLeg']['scar'];  end
+      def self.rightLeg;  fix_injury_mode; XMLData.injuries['rightLeg']['scar'];  end
 
-      def Scars.rleg;      fix_injury_mode; XMLData.injuries['rightLeg']['scar'];  end
+      def self.rleg;      fix_injury_mode; XMLData.injuries['rightLeg']['scar'];  end
 
-      def Scars.leftFoot;  fix_injury_mode; XMLData.injuries['leftFoot']['scar'];  end
+      def self.leftFoot;  fix_injury_mode; XMLData.injuries['leftFoot']['scar'];  end
 
-      def Scars.rightFoot; fix_injury_mode; XMLData.injuries['rightFoot']['scar']; end
+      def self.rightFoot; fix_injury_mode; XMLData.injuries['rightFoot']['scar']; end
 
-      def Scars.nsys;      fix_injury_mode; XMLData.injuries['nsys']['scar'];      end
+      def self.nsys;      fix_injury_mode; XMLData.injuries['nsys']['scar'];      end
 
-      def Scars.nerves;    fix_injury_mode; XMLData.injuries['nsys']['scar'];      end
+      def self.nerves;    fix_injury_mode; XMLData.injuries['nsys']['scar'];      end
 
-      def Scars.arms
+      def self.arms
         fix_injury_mode
         [XMLData.injuries['leftArm']['scar'], XMLData.injuries['rightArm']['scar'], XMLData.injuries['leftHand']['scar'], XMLData.injuries['rightHand']['scar']].max
       end
 
-      def Scars.limbs
+      def self.limbs
         fix_injury_mode
         [XMLData.injuries['leftArm']['scar'], XMLData.injuries['rightArm']['scar'], XMLData.injuries['leftHand']['scar'], XMLData.injuries['rightHand']['scar'], XMLData.injuries['leftLeg']['scar'], XMLData.injuries['rightLeg']['scar']].max
       end
 
-      def Scars.torso
+      def self.torso
         fix_injury_mode
         [XMLData.injuries['rightEye']['scar'], XMLData.injuries['leftEye']['scar'], XMLData.injuries['chest']['scar'], XMLData.injuries['abdomen']['scar'], XMLData.injuries['back']['scar']].max
       end
 
-      def Scars.method_missing(arg = nil)
+      def self.method_missing(arg = nil)
         echo "Scars: Invalid area, try one of these: arms, limbs, torso, #{XMLData.injuries.keys.join(', ')}"
         nil
       end
@@ -3710,7 +3710,7 @@ module Games
         @@contents[@id].dup
       end
 
-      def GameObj.[](val)
+      def self.[](val)
         if val.class == String
           if val =~ /^\-?[0-9]+$/
             obj = @@inv.find { |o| o.id == val } || @@loot.find { |o| o.id == val } || @@npcs.find { |o| o.id == val } || @@pcs.find { |o| o.id == val } || [@@right_hand, @@left_hand].find { |o| o.id == val } || @@room_desc.find { |o| o.id == val }
@@ -3732,27 +3732,27 @@ module Games
         "#{@before_name}#{' ' unless @before_name.nil? or @before_name.empty?}#{name}#{' ' unless @after_name.nil? or @after_name.empty?}#{@after_name}"
       end
 
-      def GameObj.new_npc(id, noun, name, status = nil)
+      def self.new_npc(id, noun, name, status = nil)
         obj = GameObj.new(id, noun, name)
         @@npcs.push(obj)
         @@npc_status[id] = status
         obj
       end
 
-      def GameObj.new_loot(id, noun, name)
+      def self.new_loot(id, noun, name)
         obj = GameObj.new(id, noun, name)
         @@loot.push(obj)
         obj
       end
 
-      def GameObj.new_pc(id, noun, name, status = nil)
+      def self.new_pc(id, noun, name, status = nil)
         obj = GameObj.new(id, noun, name)
         @@pcs.push(obj)
         @@pc_status[id] = status
         obj
       end
 
-      def GameObj.new_inv(id, noun, name, container = nil, before = nil, after = nil)
+      def self.new_inv(id, noun, name, container = nil, before = nil, after = nil)
         obj = GameObj.new(id, noun, name, before, after)
         if container
           @@contents[container].push(obj)
@@ -3762,91 +3762,91 @@ module Games
         obj
       end
 
-      def GameObj.new_room_desc(id, noun, name)
+      def self.new_room_desc(id, noun, name)
         obj = GameObj.new(id, noun, name)
         @@room_desc.push(obj)
         obj
       end
 
-      def GameObj.new_fam_room_desc(id, noun, name)
+      def self.new_fam_room_desc(id, noun, name)
         obj = GameObj.new(id, noun, name)
         @@fam_room_desc.push(obj)
         obj
       end
 
-      def GameObj.new_fam_loot(id, noun, name)
+      def self.new_fam_loot(id, noun, name)
         obj = GameObj.new(id, noun, name)
         @@fam_loot.push(obj)
         obj
       end
 
-      def GameObj.new_fam_npc(id, noun, name)
+      def self.new_fam_npc(id, noun, name)
         obj = GameObj.new(id, noun, name)
         @@fam_npcs.push(obj)
         obj
       end
 
-      def GameObj.new_fam_pc(id, noun, name)
+      def self.new_fam_pc(id, noun, name)
         obj = GameObj.new(id, noun, name)
         @@fam_pcs.push(obj)
         obj
       end
 
-      def GameObj.new_right_hand(id, noun, name)
+      def self.new_right_hand(id, noun, name)
         @@right_hand = GameObj.new(id, noun, name)
       end
 
-      def GameObj.right_hand
+      def self.right_hand
         @@right_hand.dup
       end
 
-      def GameObj.new_left_hand(id, noun, name)
+      def self.new_left_hand(id, noun, name)
         @@left_hand = GameObj.new(id, noun, name)
       end
 
-      def GameObj.left_hand
+      def self.left_hand
         @@left_hand.dup
       end
 
-      def GameObj.clear_loot
+      def self.clear_loot
         @@loot.clear
       end
 
-      def GameObj.clear_npcs
+      def self.clear_npcs
         @@npcs.clear
         @@npc_status.clear
       end
 
-      def GameObj.clear_pcs
+      def self.clear_pcs
         @@pcs.clear
         @@pc_status.clear
       end
 
-      def GameObj.clear_inv
+      def self.clear_inv
         @@inv.clear
       end
 
-      def GameObj.clear_room_desc
+      def self.clear_room_desc
         @@room_desc.clear
       end
 
-      def GameObj.clear_fam_room_desc
+      def self.clear_fam_room_desc
         @@fam_room_desc.clear
       end
 
-      def GameObj.clear_fam_loot
+      def self.clear_fam_loot
         @@fam_loot.clear
       end
 
-      def GameObj.clear_fam_npcs
+      def self.clear_fam_npcs
         @@fam_npcs.clear
       end
 
-      def GameObj.clear_fam_pcs
+      def self.clear_fam_pcs
         @@fam_pcs.clear
       end
 
-      def GameObj.npcs
+      def self.npcs
         if @@npcs.empty?
           nil
         else
@@ -3854,7 +3854,7 @@ module Games
         end
       end
 
-      def GameObj.loot
+      def self.loot
         if @@loot.empty?
           nil
         else
@@ -3862,7 +3862,7 @@ module Games
         end
       end
 
-      def GameObj.pcs
+      def self.pcs
         if @@pcs.empty?
           nil
         else
@@ -3870,7 +3870,7 @@ module Games
         end
       end
 
-      def GameObj.inv
+      def self.inv
         if @@inv.empty?
           nil
         else
@@ -3878,7 +3878,7 @@ module Games
         end
       end
 
-      def GameObj.room_desc
+      def self.room_desc
         if @@room_desc.empty?
           nil
         else
@@ -3886,7 +3886,7 @@ module Games
         end
       end
 
-      def GameObj.fam_room_desc
+      def self.fam_room_desc
         if @@fam_room_desc.empty?
           nil
         else
@@ -3894,7 +3894,7 @@ module Games
         end
       end
 
-      def GameObj.fam_loot
+      def self.fam_loot
         if @@fam_loot.empty?
           nil
         else
@@ -3902,7 +3902,7 @@ module Games
         end
       end
 
-      def GameObj.fam_npcs
+      def self.fam_npcs
         if @@fam_npcs.empty?
           nil
         else
@@ -3910,7 +3910,7 @@ module Games
         end
       end
 
-      def GameObj.fam_pcs
+      def self.fam_pcs
         if @@fam_pcs.empty?
           nil
         else
@@ -3918,15 +3918,15 @@ module Games
         end
       end
 
-      def GameObj.clear_container(container_id)
+      def self.clear_container(container_id)
         @@contents[container_id] = Array.new
       end
 
-      def GameObj.delete_container(container_id)
+      def self.delete_container(container_id)
         @@contents.delete(container_id)
       end
 
-      def GameObj.targets
+      def self.targets
         a = Array.new
         XMLData.current_target_ids.each { |id|
           if (npc = @@npcs.find { |n| n.id == id }) and (npc.status !~ /dead|gone/)
@@ -3936,7 +3936,7 @@ module Games
         a
       end
 
-      def GameObj.dead
+      def self.dead
         dead_list = Array.new
         for obj in @@npcs
           dead_list.push(obj) if obj.status == "dead"
@@ -3946,11 +3946,11 @@ module Games
         return dead_list
       end
 
-      def GameObj.containers
+      def self.containers
         @@contents.dup
       end
 
-      def GameObj.load_data(filename = nil)
+      def self.load_data(filename = nil)
         if $SAFE == 0
           if filename.nil?
             if File.exists?("#{DATA_DIR}/gameobj-data.xml")
@@ -4003,11 +4003,11 @@ module Games
         end
       end
 
-      def GameObj.type_data
+      def self.type_data
         @@type_data
       end
 
-      def GameObj.sellable_data
+      def self.sellable_data
         @@sellable_data
       end
     end
@@ -4142,11 +4142,11 @@ $psinet = false
 $stormfront = true
 
 class Script
-  def Script.self
+  def self.self
     Script.current
   end
 
-  def Script.running
+  def self.running
     list = Array.new
     for script in @@running
       list.push(script) unless script.hidden
@@ -4154,11 +4154,11 @@ class Script
     return list
   end
 
-  def Script.index
+  def self.index
     Script.running
   end
 
-  def Script.hidden
+  def self.hidden
     list = Array.new
     for script in @@running
       list.push(script) if script.hidden
@@ -4166,84 +4166,84 @@ class Script
     return list
   end
 
-  def Script.namescript_incoming(line)
+  def self.namescript_incoming(line)
     Script.new_downstream(line)
   end
 end
 
 class Spellsong
-  def Spellsong.cost
+  def self.cost
     Spellsong.renew_cost
   end
 
-  def Spellsong.tonisdodgebonus
+  def self.tonisdodgebonus
     thresholds = [1, 2, 3, 5, 8, 10, 14, 17, 21, 26, 31, 36, 42, 49, 55, 63, 70, 78, 87, 96]
     bonus = 20
     thresholds.each { |val| if Skills.elair >= val then bonus += 1 end }
     bonus
   end
 
-  def Spellsong.mirrorsdodgebonus
+  def self.mirrorsdodgebonus
     20 + ((Spells.bard - 19) / 2).round
   end
 
-  def Spellsong.mirrorscost
+  def self.mirrorscost
     [19 + ((Spells.bard - 19) / 5).truncate, 8 + ((Spells.bard - 19) / 10).truncate]
   end
 
-  def Spellsong.sonicbonus
+  def self.sonicbonus
     (Spells.bard / 2).round
   end
 
-  def Spellsong.sonicarmorbonus
+  def self.sonicarmorbonus
     Spellsong.sonicbonus + 15
   end
 
-  def Spellsong.sonicbladebonus
+  def self.sonicbladebonus
     Spellsong.sonicbonus + 10
   end
 
-  def Spellsong.sonicweaponbonus
+  def self.sonicweaponbonus
     Spellsong.sonicbladebonus
   end
 
-  def Spellsong.sonicshieldbonus
+  def self.sonicshieldbonus
     Spellsong.sonicbonus + 10
   end
 
-  def Spellsong.valorbonus
+  def self.valorbonus
     10 + (([Spells.bard, Stats.level].min - 10) / 2).round
   end
 
-  def Spellsong.valorcost
+  def self.valorcost
     [10 + (Spellsong.valorbonus / 2), 3 + (Spellsong.valorbonus / 5)]
   end
 
-  def Spellsong.luckcost
+  def self.luckcost
     [6 + ((Spells.bard - 6) / 4), (6 + ((Spells.bard - 6) / 4) / 2).round]
   end
 
-  def Spellsong.manacost
+  def self.manacost
     [18, 15]
   end
 
-  def Spellsong.fortcost
+  def self.fortcost
     [3, 1]
   end
 
-  def Spellsong.shieldcost
+  def self.shieldcost
     [9, 4]
   end
 
-  def Spellsong.weaponcost
+  def self.weaponcost
     [12, 4]
   end
 
-  def Spellsong.armorcost
+  def self.armorcost
     [14, 5]
   end
 
-  def Spellsong.swordcost
+  def self.swordcost
     [25, 15]
   end
 end
@@ -4361,77 +4361,77 @@ def running?(*snames)
 end
 
 module Settings
-  def Settings.load; end
+  def self.load; end
 
-  def Settings.save_all; end
+  def self.save_all; end
 
-  def Settings.clear; end
+  def self.clear; end
 
-  def Settings.auto=(val); end
+  def self.auto=(val); end
 
-  def Settings.auto; end
+  def self.auto; end
 
-  def Settings.autoload; end
+  def self.autoload; end
 end
 
 module GameSettings
-  def GameSettings.load; end
+  def self.load; end
 
-  def GameSettings.save; end
+  def self.save; end
 
-  def GameSettings.save_all; end
+  def self.save_all; end
 
-  def GameSettings.clear; end
+  def self.clear; end
 
-  def GameSettings.auto=(val); end
+  def self.auto=(val); end
 
-  def GameSettings.auto; end
+  def self.auto; end
 
-  def GameSettings.autoload; end
+  def self.autoload; end
 end
 
 module CharSettings
-  def CharSettings.load; end
+  def self.load; end
 
-  def CharSettings.save; end
+  def self.save; end
 
-  def CharSettings.save_all; end
+  def self.save_all; end
 
-  def CharSettings.clear; end
+  def self.clear; end
 
-  def CharSettings.auto=(val); end
+  def self.auto=(val); end
 
-  def CharSettings.auto; end
+  def self.auto; end
 
-  def CharSettings.autoload; end
+  def self.autoload; end
 end
 
 module UserVars
-  def UserVars.list
+  def self.list
     Vars.list
   end
 
-  def UserVars.method_missing(arg1, arg2 = '')
+  def self.method_missing(arg1, arg2 = '')
     Vars.method_missing(arg1, arg2)
   end
 
-  def UserVars.change(var_name, value, t = nil)
+  def self.change(var_name, value, t = nil)
     Vars[var_name] = value
   end
 
-  def UserVars.add(var_name, value, t = nil)
+  def self.add(var_name, value, t = nil)
     Vars[var_name] = Vars[var_name].split(', ').push(value).join(', ')
   end
 
-  def UserVars.delete(var_name, t = nil)
+  def self.delete(var_name, t = nil)
     Vars[var_name] = nil
   end
 
-  def UserVars.list_global
+  def self.list_global
     Array.new
   end
 
-  def UserVars.list_char
+  def self.list_char
     Vars.list
   end
 end
@@ -4441,49 +4441,49 @@ def start_exec_script(cmd_data, options = Hash.new)
 end
 
 module Setting
-  def Setting.[](name)
+  def self.[](name)
     Settings[name]
   end
 
-  def Setting.[]=(name, value)
+  def self.[]=(name, value)
     Settings[name] = value
   end
 
-  def Setting.to_hash(scope = ':')
+  def self.to_hash(scope = ':')
     Settings.to_hash
   end
 end
 
 module GameSetting
-  def GameSetting.[](name)
+  def self.[](name)
     GameSettings[name]
   end
 
-  def GameSetting.[]=(name, value)
+  def self.[]=(name, value)
     GameSettings[name] = value
   end
 
-  def GameSetting.to_hash(scope = ':')
+  def self.to_hash(scope = ':')
     GameSettings.to_hash
   end
 end
 
 module CharSetting
-  def CharSetting.[](name)
+  def self.[](name)
     CharSettings[name]
   end
 
-  def CharSetting.[]=(name, value)
+  def self.[]=(name, value)
     CharSettings[name] = value
   end
 
-  def CharSetting.to_hash(scope = ':')
+  def self.to_hash(scope = ':')
     CharSettings.to_hash
   end
 end
 
 class StringProc
-  def StringProc._load(string)
+  def self._load(string)
     StringProc.new(string)
   end
 end

@@ -501,26 +501,6 @@ Style/ClassEqualityComparison:
     - 'lib/spell.rb'
     - 'lich.rbw'
 
-# Offense count: 972
-# This cop supports safe autocorrection (--autocorrect).
-Style/ClassMethods:
-  Exclude:
-    - 'lib/armor.rb'
-    - 'lib/cman.rb'
-    - 'lib/feat.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/platform/win32.rb'
-    - 'lib/platform/win32/advapi32.rb'
-    - 'lib/platform/win32/kernel32.rb'
-    - 'lib/platform/win32/shell32.rb'
-    - 'lib/platform/wine.rb'
-    - 'lib/shield.rb'
-    - 'lib/spell.rb'
-    - 'lib/weapon.rb'
-    - 'lich.rbw'
-
 # Offense count: 831
 Style/ClassVars:
   Exclude:

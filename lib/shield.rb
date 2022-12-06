@@ -36,71 +36,71 @@ class Shield
   @@tortoise_stance               ||= 0
   @@tower_shield_focus            ||= 0
 
-  def Shield.adamantine_bulwark;        @@aadamantine_bulwark;          end
-  def Shield.block_the_elements;        @@block_the_elements;           end
-  def Shield.deflect_magic;             @@deflect_magic;                end
-  def Shield.deflect_missiles;          @@deflect_missiles;             end
-  def Shield.deflect_the_elements;      @@deflect_the_elements;         end
-  def Shield.disarming_presence;        @@disarming_presence;           end
-  def Shield.guard_mastery;             @@guard_mastery;                end
-  def Shield.large_shield_focus;        @@large_shield_focus;           end
-  def Shield.medium_shield_focus;       @@medium_shield_focus;          end
-  def Shield.phalanx;                   @@phalanx;                      end
-  def Shield.prop_up;                   @@prop_up;                      end
-  def Shield.protective_wall;           @@protective_wall;              end
-  def Shield.shield_bash;               @@shield_bash;                  end
-  def Shield.shield_charge;             @@shield_charge;                end
-  def Shield.shield_forward;            @@shield_forward;               end
-  def Shield.shield_mind;               @@shield_mind;                  end
-  def Shield.shield_pin;                @@shield_pin;                   end
-  def Shield.shield_push;               @@shield_push;                  end
-  def Shield.shield_riposte;            @@shield_riposte;               end
-  def Shield.shield_spike_mastery;      @@shield_spike_mastery;         end
-  def Shield.shield_strike;             @@shield_strike;                end
-  def Shield.shield_strike_mastery;     @@shield_strike_mastery;        end
-  def Shield.shield_swiftness;          @@shield_swiftness;             end
-  def Shield.shield_throw;              @@shield_throw;                 end
-  def Shield.shield_trample;            @@shield_trample;               end
-  def Shield.shielded_brawler;          @@shielded_brawler;             end
-  def Shield.small_shield_focus;        @@small_shield_focus;           end
-  def Shield.spell_block;               @@spell_block;                  end
-  def Shield.steady_shield;             @@steady_shield;                end
-  def Shield.steely_resolve;            @@steely_resolve;               end
-  def Shield.tortoise_stance;           @@tortoise_stance;              end
-  def Shield.tower_shield_focus;        @@tower_shield_focus;           end
+  def self.adamantine_bulwark;        @@aadamantine_bulwark;          end
+  def self.block_the_elements;        @@block_the_elements;           end
+  def self.deflect_magic;             @@deflect_magic;                end
+  def self.deflect_missiles;          @@deflect_missiles;             end
+  def self.deflect_the_elements;      @@deflect_the_elements;         end
+  def self.disarming_presence;        @@disarming_presence;           end
+  def self.guard_mastery;             @@guard_mastery;                end
+  def self.large_shield_focus;        @@large_shield_focus;           end
+  def self.medium_shield_focus;       @@medium_shield_focus;          end
+  def self.phalanx;                   @@phalanx;                      end
+  def self.prop_up;                   @@prop_up;                      end
+  def self.protective_wall;           @@protective_wall;              end
+  def self.shield_bash;               @@shield_bash;                  end
+  def self.shield_charge;             @@shield_charge;                end
+  def self.shield_forward;            @@shield_forward;               end
+  def self.shield_mind;               @@shield_mind;                  end
+  def self.shield_pin;                @@shield_pin;                   end
+  def self.shield_push;               @@shield_push;                  end
+  def self.shield_riposte;            @@shield_riposte;               end
+  def self.shield_spike_mastery;      @@shield_spike_mastery;         end
+  def self.shield_strike;             @@shield_strike;                end
+  def self.shield_strike_mastery;     @@shield_strike_mastery;        end
+  def self.shield_swiftness;          @@shield_swiftness;             end
+  def self.shield_throw;              @@shield_throw;                 end
+  def self.shield_trample;            @@shield_trample;               end
+  def self.shielded_brawler;          @@shielded_brawler;             end
+  def self.small_shield_focus;        @@small_shield_focus;           end
+  def self.spell_block;               @@spell_block;                  end
+  def self.steady_shield;             @@steady_shield;                end
+  def self.steely_resolve;            @@steely_resolve;               end
+  def self.tortoise_stance;           @@tortoise_stance;              end
+  def self.tower_shield_focus;        @@tower_shield_focus;           end
 
-  def Shield.adamantine_bulwark=(val);    @@adamantine_bulwark = val;     end
-  def Shield.block_the_elements=(val);    @@block_the_elements = val;     end
-  def Shield.deflect_magic=(val);         @@deflect_magic = val;          end
-  def Shield.deflect_missiles=(val);      @@deflect_missiles = val;       end
-  def Shield.deflect_the_elements=(val);  @@deflect_the_elements = val;   end
-  def Shield.disarming_presence=(val);    @@disarming_presence = val;     end
-  def Shield.guard_mastery=(val);         @@guard_mastery = val;          end
-  def Shield.large_shield_focus=(val);    @@large_shield_focus = val;     end
-  def Shield.medium_shield_focus=(val);   @@medium_shield_focus = val;    end
-  def Shield.phalanx=(val);               @@phalanx = val;                end
-  def Shield.prop_up=(val);               @@prop_up = val;                end
-  def Shield.protective_wall=(val);       @@protective_wall = val;        end
-  def Shield.shield_bash=(val);           @@shield_bash = val;            end
-  def Shield.shield_charge=(val);         @@shield_charge = val;          end
-  def Shield.shield_forward=(val);        @@shield_forward = val;         end
-  def Shield.shield_mind=(val);           @@shield_mind = val;            end
-  def Shield.shield_pin=(val);            @@shield_pin = val;             end
-  def Shield.shield_push=(val);           @@shield_push = val;            end
-  def Shield.shield_riposte=(val);        @@shield_riposte = val;         end
-  def Shield.shield_spike_mastery=(val);  @@shield_spike_mastery = val;   end
-  def Shield.shield_strike=(val);         @@shield_strike = val;          end
-  def Shield.shield_strike_mastery=(val); @@shield_strike_mastery = val;  end
-  def Shield.shield_swiftness=(val);      @@shield_swiftness = val;       end
-  def Shield.shield_throw=(val);          @@shield_throw = val;           end
-  def Shield.shield_trample=(val);        @@shield_trample = val;         end
-  def Shield.shielded_brawler=(val);      @@shielded_brawler = val;       end
-  def Shield.small_shield_focus=(val);    @@small_shield_focus = val;     end
-  def Shield.spell_block=(val);           @@spell_block = val;            end
-  def Shield.steady_shield=(val);         @@steady_shield = val;          end
-  def Shield.steely_resolve=(val);        @@steely_resolve = val;         end
-  def Shield.tortoise_stance=(val);       @@tortoise_stance = val;        end
-  def Shield.tower_shield_focus=(val);    @@tower_shield_focus = val;     end
+  def self.adamantine_bulwark=(val);    @@adamantine_bulwark = val;     end
+  def self.block_the_elements=(val);    @@block_the_elements = val;     end
+  def self.deflect_magic=(val);         @@deflect_magic = val;          end
+  def self.deflect_missiles=(val);      @@deflect_missiles = val;       end
+  def self.deflect_the_elements=(val);  @@deflect_the_elements = val;   end
+  def self.disarming_presence=(val);    @@disarming_presence = val;     end
+  def self.guard_mastery=(val);         @@guard_mastery = val;          end
+  def self.large_shield_focus=(val);    @@large_shield_focus = val;     end
+  def self.medium_shield_focus=(val);   @@medium_shield_focus = val;    end
+  def self.phalanx=(val);               @@phalanx = val;                end
+  def self.prop_up=(val);               @@prop_up = val;                end
+  def self.protective_wall=(val);       @@protective_wall = val;        end
+  def self.shield_bash=(val);           @@shield_bash = val;            end
+  def self.shield_charge=(val);         @@shield_charge = val;          end
+  def self.shield_forward=(val);        @@shield_forward = val;         end
+  def self.shield_mind=(val);           @@shield_mind = val;            end
+  def self.shield_pin=(val);            @@shield_pin = val;             end
+  def self.shield_push=(val);           @@shield_push = val;            end
+  def self.shield_riposte=(val);        @@shield_riposte = val;         end
+  def self.shield_spike_mastery=(val);  @@shield_spike_mastery = val;   end
+  def self.shield_strike=(val);         @@shield_strike = val;          end
+  def self.shield_strike_mastery=(val); @@shield_strike_mastery = val;  end
+  def self.shield_swiftness=(val);      @@shield_swiftness = val;       end
+  def self.shield_throw=(val);          @@shield_throw = val;           end
+  def self.shield_trample=(val);        @@shield_trample = val;         end
+  def self.shielded_brawler=(val);      @@shielded_brawler = val;       end
+  def self.small_shield_focus=(val);    @@small_shield_focus = val;     end
+  def self.spell_block=(val);           @@spell_block = val;            end
+  def self.steady_shield=(val);         @@steady_shield = val;          end
+  def self.steely_resolve=(val);        @@steely_resolve = val;         end
+  def self.tortoise_stance=(val);       @@tortoise_stance = val;        end
+  def self.tower_shield_focus=(val);    @@tower_shield_focus = val;     end
 
   @@shield_techniques = {
     "adamantine_bulwark" => {
@@ -265,32 +265,32 @@ class Shield
     },
   }
 
-  def Shield.method_missing(arg1, arg2 = nil)
+  def self.method_missing(arg1, arg2 = nil)
     echo "#{arg1} is not a defined Shield type.  Is it another Ability type?"
   end
 
-  def Shield.[](name)
+  def self.[](name)
     Shield.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)
   end
 
-  def Shield.[]=(name, val)
+  def self.[]=(name, val)
     Shield.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase}=", val.to_i)
   end
 
-  def Shield.known?(name)
+  def self.known?(name)
     Shield.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase) > 0
   end
 
-  def Shield.affordable?(name)
+  def self.affordable?(name)
     @@shield_techniques.fetch(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)[:cost] < XMLData.stamina
   end
 
-  def Shield.available?(name)
+  def self.available?(name)
     Shield.known?(name) and Shield.affordable?(name) and
       !Lich::Util.normalize_lookup('Cooldowns', name) and !Lich::Util.normalize_lookup('Debuffs', 'Overexerted')
   end
 
-  def Shield.use(name, target = "")
+  def self.use(name, target = "")
     return unless Shield.available?(name)
 
     usage = @@shield_techniques.fetch(name.to_s.gsub(/[\s\-]/, '_').gsub("'", "").downcase)[:usage]

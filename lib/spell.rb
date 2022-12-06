@@ -115,11 +115,11 @@ module Games
         self
       end
 
-      def Spell.after_stance=(val)
+      def self.after_stance=(val)
         @@after_stance = val
       end
 
-      def Spell.load(filename = nil)
+      def self.load(filename = nil)
         if $SAFE == 0
           if filename.nil?
             if File.exists?("#{DATA_DIR}/spell-list.xml")
@@ -170,7 +170,7 @@ module Games
         end
       end
 
-      def Spell.[](val)
+      def self.[](val)
         Spell.load unless @@loaded
         if val.class == Spell
           val
@@ -182,29 +182,29 @@ module Games
         end
       end
 
-      def Spell.active
+      def self.active
         Spell.load unless @@loaded
         active = Array.new
         @@list.each { |spell| active.push(spell) if spell.active? }
         active
       end
 
-      def Spell.active?(val)
+      def self.active?(val)
         Spell.load unless @@loaded
         Spell[val].active?
       end
 
-      def Spell.list
+      def self.list
         Spell.load unless @@loaded
         @@list
       end
 
-      def Spell.upmsgs
+      def self.upmsgs
         Spell.load unless @@loaded
         @@list.collect { |spell| spell.msgup }.compact
       end
 
-      def Spell.dnmsgs
+      def self.dnmsgs
         Spell.load unless @@loaded
         @@list.collect { |spell| spell.msgdn }.compact
       end
@@ -525,7 +525,7 @@ module Games
         end
       end
 
-      def Spell.lock_cast
+      def self.lock_cast
         script = Script.current
         @@cast_lock.push(script)
         until (@@cast_lock.first == script) or @@cast_lock.empty?
@@ -535,7 +535,7 @@ module Games
         end
       end
 
-      def Spell.unlock_cast
+      def self.unlock_cast
         @@cast_lock.delete(Script.current)
       end
 

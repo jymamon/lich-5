@@ -44,11 +44,11 @@ module Win32
     end
   end
 
-  def Win32.GetLastError
+  def self.GetLastError
     return Kernel32.GetLastError()
   end
 
-  def Win32.CreateProcess(args)
+  def self.CreateProcess(args)
     if args[:lpCommandLine]
       lpCommandLine = args[:lpCommandLine].dup
     else
@@ -117,24 +117,24 @@ module Win32
     return :return => (r > 0 ? true : false), :hProcess => lpProcessInformation[0], :hThread => lpProcessInformation[1], :dwProcessId => lpProcessInformation[2], :dwThreadId => lpProcessInformation[3]
   end
 
-  def Win32.GetCurrentProcess
+  def self.GetCurrentProcess
     return Kernel32.GetCurrentProcess
   end
 
-  def Win32.GetExitCodeProcess(args)
+  def self.GetExitCodeProcess(args)
     lpExitCode = [0].pack('L')
     r = Kernel32.GetExitCodeProcess(args[:hProcess].to_i, lpExitCode)
     return :return => r, :lpExitCode => lpExitCode.unpack('L')[0]
   end
 
-  def Win32.GetModuleFileName(args = {})
+  def self.GetModuleFileName(args = {})
     args[:nSize] ||= 256
     buffer = "\0" * args[:nSize].to_i
     r = Kernel32.GetModuleFileName(args[:hModule].to_i, buffer, args[:nSize].to_i)
     return :return => r, :lpFilename => buffer.gsub("\0", '')
   end
 
-  def Win32.GetVersionEx
+  def self.GetVersionEx
     a = [156, 0, 0, 0, 0, ("\0" * 128), 0, 0, 0, 0, 0].pack('LLLLLa128SSSCC')
     r = Kernel32.GetVersionEx(a)
     a = a.unpack('LLLLLa128SSSCC')

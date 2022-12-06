@@ -27,8 +27,8 @@ class Map
     @@list[@id] = self
   end
 
-  def Map.current_room_id; return @@current_room_id; end
-  def Map.current_room_id=(id); return @@current_room_id = id; end
+  def self.current_room_id; return @@current_room_id; end
+  def self.current_room_id=(id); return @@current_room_id = id; end
   def fuzzy_room_id; return @@current_room_id; end
 
   def outside?
@@ -47,21 +47,21 @@ class Map
     self.instance_variables.collect { |var| var.to_s + "=" + self.instance_variable_get(var).inspect }.join("\n")
   end
 
-  def Map.fuzzy_room_id
+  def self.fuzzy_room_id
     return @@fuzzy_room_id
   end
 
-  def Map.get_free_id
+  def self.get_free_id
     Map.load unless @@loaded
     return @@list.compact.max_by { |r| r.id }.id + 1
   end
 
-  def Map.list
+  def self.list
     Map.load unless @@loaded
     @@list
   end
 
-  def Map.[](val)
+  def self.[](val)
     Map.load unless @@loaded
     if (val.class == Integer) or (val.class == Bignum) or val =~ /^[0-9]+$/
       @@list[val.to_i]
@@ -75,7 +75,7 @@ class Map
     end
   end
 
-  def Map.get_location
+  def self.get_location
     unless XMLData.room_count == @@current_location_count
       if script = Script.current
         save_want_downstream = script.want_downstream
@@ -96,17 +96,17 @@ class Map
     @@current_location
   end
 
-  def Map.previous
+  def self.previous
     return nil if @@previous_room_id.nil?
 
     return @@list[@@previous_room_id]
   end
 
-  def Map.previous_uid
+  def self.previous_uid
     return XMLData.previous_nav_rm
   end
 
-  def Map.current # returns Map/Room
+  def self.current # returns Map/Room
     Map.load unless @@loaded
     if script = Script.current
       return @@list[@@current_room_id] if XMLData.room_count == @@current_room_count and !@@current_room_id.nil?;
@@ -122,7 +122,7 @@ class Map
     return Map.match_no_uid()
   end
 
-  def Map.set_current(id) # returns Map/Room
+  def self.set_current(id) # returns Map/Room
     @@previous_room_id = @@current_room_id if id != @@current_room_id;
     @@current_room_id  = id
     return nil if id.nil?
@@ -130,7 +130,7 @@ class Map
     return @@list[id]
   end
 
-  def Map.set_fuzzy(id) # returns Map/Room
+  def self.set_fuzzy(id) # returns Map/Room
     @@previous_room_id = @@current_room_id if !id.nil? and id != @@current_room_id;
     @@current_room_id  = id
     return nil if id.nil?
@@ -138,14 +138,14 @@ class Map
     return @@list[id]
   end
 
-  def Map.match_multi_ids(ids) # returns id
+  def self.match_multi_ids(ids) # returns id
     matches = ids.find_all { |s| @@list[@@current_room_id].wayto.keys.include?(s.to_s) }
     return matches[0] if matches.size == 1;
 
     return nil;
   end
 
-  def Map.match_no_uid # returns Map/Room
+  def self.match_no_uid # returns Map/Room
     if script = Script.current;
       return Map.set_current(Map.match_current(script))
     else
@@ -153,7 +153,7 @@ class Map
     end
   end
 
-  def Map.match_current(script) # returns id
+  def self.match_current(script) # returns id
     @@current_room_mutex.synchronize {
       peer_history = Hash.new
       need_set_desc_off = false
@@ -259,7 +259,7 @@ class Map
     }
   end
 
-  def Map.match_fuzzy # returns id
+  def self.match_fuzzy # returns id
     @@fuzzy_room_mutex.synchronize {
       @@fuzzy_room_count = XMLData.room_count
       1.times {
@@ -300,7 +300,7 @@ class Map
     }
   end
 
-  def Map.current_or_new # returns Map/Room
+  def self.current_or_new # returns Map/Room
     return nil unless Script.current
 
     Map.load unless @@loaded
@@ -361,7 +361,7 @@ class Map
     return Map.set_current(id)
   end
 
-  def Map.tags
+  def self.tags
     Map.load unless @@loaded
     if @@tags.empty?
       @@list.each { |r|
@@ -373,7 +373,7 @@ class Map
     @@tags.dup
   end
 
-  def Map.uids_add(uid, id)
+  def self.uids_add(uid, id)
     if @@uids[uid].nil?
       @@uids[uid] = [id]
     else
@@ -381,7 +381,7 @@ class Map
     end
   end
 
-  def Map.load_uids
+  def self.load_uids
     Map.load unless @@loaded
     @@uids.clear
     @@list.each { |r|
@@ -389,15 +389,15 @@ class Map
     }
   end
 
-  def Map.ids_from_uid(n)
+  def self.ids_from_uid(n)
     return (@@uids[n].nil? ? [] : @@uids[n])
   end
 
-  def Map.uids
+  def self.uids
     return @@uids
   end
 
-  def Map.clear
+  def self.clear
     @@load_mutex.synchronize {
       @@list.clear
       @@tags.clear
@@ -407,12 +407,12 @@ class Map
     true
   end
 
-  def Map.reload
+  def self.reload
     Map.clear
     Map.load
   end
 
-  def Map.load(filename = nil)
+  def self.load(filename = nil)
     if filename.nil?
       file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map\-[0-9]+\.(?:dat|xml|json)$/i }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
     else
@@ -440,7 +440,7 @@ class Map
     return false
   end
 
-  def Map.load_json(filename = nil)
+  def self.load_json(filename = nil)
     if $SAFE == 0
       @@load_mutex.synchronize {
         if @@loaded
@@ -495,7 +495,7 @@ class Map
     end
   end
 
-  def Map.load_dat(filename = nil)
+  def self.load_dat(filename = nil)
     if $SAFE == 0
       @@load_mutex.synchronize {
         if @@loaded
@@ -537,7 +537,7 @@ class Map
     end
   end
 
-  def Map.load_xml(filename = "#{DATA_DIR}/#{XMLData.game}/map.xml")
+  def self.load_xml(filename = "#{DATA_DIR}/#{XMLData.game}/map.xml")
     if $SAFE == 0
       @@load_mutex.synchronize {
         if @@loaded
@@ -659,7 +659,7 @@ class Map
     end
   end
 
-  def Map.save(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.dat")
+  def self.save(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.dat")
     if $SAFE == 0
       if File.exists?(filename)
         respond "--- Backing up map database"
@@ -686,7 +686,7 @@ class Map
     end
   end
 
-  def Map.to_json(*args)
+  def self.to_json(*args)
     @@list.delete_if { |r| r.nil? }
     @@list.to_json(args)
   end
@@ -712,7 +712,7 @@ class Map
     JSON.pretty_generate(mapjson);
   end
 
-  def Map.save_json(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")
+  def self.save_json(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.json")
     if File.exists?(filename)
       respond "File exists!  Backing it up before proceeding..."
       begin
@@ -732,7 +732,7 @@ class Map
     respond "#{filename} saved"
   end
 
-  def Map.save_xml(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.xml")
+  def self.save_xml(filename = "#{DATA_DIR}/#{XMLData.game}/map-#{Time.now.to_i}.xml")
     if $SAFE == 0
       if File.exists?(filename)
         respond "File exists!  Backing it up before proceeding..."
@@ -806,7 +806,7 @@ class Map
     end
   end
 
-  def Map.estimate_time(array)
+  def self.estimate_time(array)
     Map.load unless @@loaded
     unless array.class == Array
       raise Exception.exception("MapError"), "Map.estimate_time was given something not an array!"
@@ -828,7 +828,7 @@ class Map
     time
   end
 
-  def Map.dijkstra(source, destination = nil)
+  def self.dijkstra(source, destination = nil)
     if source.class == Map
       source.dijkstra(destination)
     elsif room = Map[source]
@@ -941,7 +941,7 @@ class Map
     end
   end
 
-  def Map.findpath(source, destination)
+  def self.findpath(source, destination)
     if source.class == Map
       source.path_to(destination)
     elsif room = Map[source]
@@ -998,7 +998,7 @@ class Map
 end
 
 class Room < Map
-  def Room.method_missing(*args)
+  def self.method_missing(*args)
     super(*args)
   end
 end
