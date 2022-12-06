@@ -165,6 +165,7 @@ Lint/UnreachableLoop:
 # Offense count: 15
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
+# The "autofix" just prepend '_' to the parameters. Manual cleanup to actually remove them would be better.
 Lint/UnusedBlockArgument:
   Exclude:
     - 'lib/gui-login.rb'
@@ -176,6 +177,7 @@ Lint/UnusedBlockArgument:
 # Offense count: 38
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
+# The "autofix" just prepend '_' to the parameters. Manual cleanup to actually remove them would be better.
 Lint/UnusedMethodArgument:
   Exclude:
     - 'lib/armor.rb'
@@ -281,12 +283,6 @@ Naming/AccessorMethodName:
     - 'lib/lich.rb'
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
-    - 'lich.rbw'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Naming/BinaryOperatorParameterName:
-  Exclude:
     - 'lich.rbw'
 
 # Offense count: 1

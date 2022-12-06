@@ -85,8 +85,8 @@ class NilClass
     ''
   end
 
-  def +(val)
-    val
+  def +(other)
+    other
   end
 
   def closed?
