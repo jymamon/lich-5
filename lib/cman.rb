@@ -253,19 +253,19 @@ class CMan
   end
 
   def self.[](name)
-    CMan.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase)
+    CMan.send(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)
   end
 
   def self.[]=(name, val)
-    CMan.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase}=", val.to_i)
+    CMan.send("#{name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase}=", val.to_i)
   end
 
   def self.known?(name)
-    CMan.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase) > 0
+    CMan.send(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase) > 0
   end
 
   def self.affordable?(name)
-    @@cost_hash.fetch(name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase) < XMLData.stamina
+    @@cost_hash.fetch(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase) < XMLData.stamina
   end
 
   def self.available?(name)

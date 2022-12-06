@@ -165,7 +165,7 @@ class Shield
     },
     'shield_bash' => {
       :cost => 9,
-      :regex => /Shield Bash what?|You lunge forward at (.*) with your (.*) and attempt a shield bash\!/i,
+      :regex => /Shield Bash what?|You lunge forward at (.*) with your (.*) and attempt a shield bash!/i,
       :usage => 'bash',
     },
     'shield_charge' => {
@@ -185,7 +185,7 @@ class Shield
     },
     'shield_pin' => {
       :cost => 15,
-      :regex => /You attempt to expose a vulnerability with a diversionary shield bash on (.*)\!/i,
+      :regex => /You attempt to expose a vulnerability with a diversionary shield bash on (.*)!/i,
       :usage => 'pin',
     },
     'shield_push' => {
@@ -195,7 +195,7 @@ class Shield
     },
     'shield_riposte' => {
       :cost => 20,
-      :regex => /You assume the Shield Riposte Stance, preparing yourself to lash out at a moment's notice.|You re\-settle into the Shield Riposte Stance, preparing yourself to lash out at a moment's notice./i,
+      :regex => /You assume the Shield Riposte Stance, preparing yourself to lash out at a moment's notice.|You re-settle into the Shield Riposte Stance, preparing yourself to lash out at a moment's notice./i,
       :usage => 'riposte',
     },
     'shield_spike_mastery' => {
@@ -205,7 +205,7 @@ class Shield
     },
     'shield_strike' => {
       :cost => 15,
-      :regex => /You launch a quick bash with your (.*) at (.*)\!/i,
+      :regex => /You launch a quick bash with your (.*) at (.*)!/i,
       :usage => 'strike',
     },
     'shield_strike_mastery' => {
@@ -220,12 +220,12 @@ class Shield
     },
     'shield_throw' => {
       :cost => 20,
-      :regex => /You snap your arm forward, hurling your (.*) at (.*) with all your might\!/i,
+      :regex => /You snap your arm forward, hurling your (.*) at (.*) with all your might!/i,
       :usage => 'throw',
     },
     'shield_trample' => {
       :cost => 14,
-      :regex => /You raise your (.*) before you and charge headlong towards (.*)\!/i,
+      :regex => /You raise your (.*) before you and charge headlong towards (.*)!/i,
       :usage => 'trample',
     },
     'shielded_brawler' => {
@@ -255,7 +255,7 @@ class Shield
     },
     'tortoise_stance' => {
       :cost => 20,
-      :regex => /You assume the Stance of the Tortoise, holding back some of your offensive power in order to maximize your defense.|You re\-settle into the Stance of the Tortoise, holding back your offensive power in order to maximize your defense./i,
+      :regex => /You assume the Stance of the Tortoise, holding back some of your offensive power in order to maximize your defense.|You re-settle into the Stance of the Tortoise, holding back your offensive power in order to maximize your defense./i,
       :usage => 'tortoise',
     },
     'tower_shield_focus' => {
@@ -270,19 +270,19 @@ class Shield
   end
 
   def self.[](name)
-    Shield.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase)
+    Shield.send(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)
   end
 
   def self.[]=(name, val)
-    Shield.send("#{name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase}=", val.to_i)
+    Shield.send("#{name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase}=", val.to_i)
   end
 
   def self.known?(name)
-    Shield.send(name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase) > 0
+    Shield.send(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase) > 0
   end
 
   def self.affordable?(name)
-    @@shield_techniques.fetch(name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase)[:cost] < XMLData.stamina
+    @@shield_techniques.fetch(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)[:cost] < XMLData.stamina
   end
 
   def self.available?(name)
@@ -293,11 +293,11 @@ class Shield
   def self.use(name, target = '')
     return unless Shield.available?(name)
 
-    usage = @@shield_techniques.fetch(name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase)[:usage]
+    usage = @@shield_techniques.fetch(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)[:usage]
     return if usage.nil?
 
     results_regex = Regexp.union(
-      @@shield_techniques.fetch(name.to_s.gsub(/[\s\-]/, '_').gsub("'", '').downcase)[:regex],
+      @@shield_techniques.fetch(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)[:regex],
       /^#{name} what\?$/i,
       /^Roundtime: [0-9]+ sec\.$/,
       /^And give yourself away!  Never!$/,

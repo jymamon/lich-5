@@ -155,8 +155,8 @@ module Lich
       name = anon_hook
       filter = false
 
-      start_pattern = /^\s*Name\:/
-      end_pattern = /^\s*Mana\:\s+\-?[0-9]+\s+Silver\:\s+([0-9,]+)/
+      start_pattern = /^\s*Name:/
+      end_pattern = /^\s*Mana:\s+-?[0-9]+\s+Silver:\s+([0-9,]+)/
       ttl = Time.now + timeout
       begin
         # main thread

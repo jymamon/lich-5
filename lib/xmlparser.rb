@@ -181,7 +181,7 @@ class XMLParser
       elsif str = @buffer.slice!(/^<[^<]+>/)
         element = /^<([^\s>\/]+)/.match(str).captures.first
         attributes = Hash.new
-        str.scan(/([A-z][A-z0-9_\-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2] }
+        str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2] }
         tag_start(element, attributes)
         tag_end(element) if str =~ /\/>$/
       else
@@ -349,11 +349,11 @@ class XMLParser
         if attributes['id'] == 'dDBTarget'
           @current_target_ids.clear
           attributes['content_value'].split(',').each { |t|
-            if t =~ /^\#(\-?\d+)(?:,|$)/
+            if t =~ /^\#(-?\d+)(?:,|$)/
               @current_target_ids.push($1)
             end
           }
-          if attributes['content_value'] =~ /^\#(\-?\d+)(?:,|$)/
+          if attributes['content_value'] =~ /^\#(-?\d+)(?:,|$)/
             @current_target_id = $1
           else
             @current_target_id = nil
@@ -577,7 +577,7 @@ class XMLParser
             else
               GameObj.new_loot(@obj_exist, @obj_noun, text_string)
             end
-          elsif (text_string =~ /that (?:is|appears) ([\w\s]+)(?:,| and|\.)/) or (text_string =~ / \(([^\(]+)\)/)
+          elsif (text_string =~ /that (?:is|appears) ([\w\s]+)(?:,| and|\.)/) or (text_string =~ / \(([^(]+)\)/)
             GameObj.npcs[-1].status = $1
           end
         elsif @active_ids.include?('room players')
@@ -587,7 +587,7 @@ class XMLParser
           else
             if @game =~ /^DR/
               GameObj.clear_pcs
-              text_string.sub(/^Also here\: /, '').sub(/ and ([^,]+)\./) { ", #{$1}" }.split(', ').each { |player|
+              text_string.sub(/^Also here: /, '').sub(/ and ([^,]+)\./) { ", #{$1}" }.split(', ').each { |player|
                 if player =~ / who is (.+)/
                   status = $1
                   player.sub!(/ who is .+/, '')
@@ -625,7 +625,7 @@ class XMLParser
                 end
                 @pc.status.concat " #{$2}" if $2
               end
-              if text_string =~ /(?:^Also here: |, )(?:a )?([a-z\s]+)?([\w\s\-!\?',]+)?$/
+              if text_string =~ /(?:^Also here: |, )(?:a )?([a-z\s]+)?([\w\s\-!?',]+)?$/
                 @player_status = ($1.strip.gsub('the body of', 'dead')) if $1
                 @player_title = $2
               end

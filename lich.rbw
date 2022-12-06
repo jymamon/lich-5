@@ -464,7 +464,7 @@ module Settings
       respond '--- error: Settings: unknown calling script'
       next nil
     end
-    unless scope =~ /^#{XMLData.game}\:#{XMLData.name}$|^#{XMLData.game}$|^\:$/
+    unless scope =~ /^#{XMLData.game}:#{XMLData.name}$|^#{XMLData.game}$|^:$/
       respond '--- error: Settings: invalid scope'
       next nil
     end
@@ -1014,7 +1014,7 @@ class Script
       }
     end
     for line in comments
-      if line =~ /^[\s\t#]*version:[\s\t]*([\w,\s\.\d]+)/i
+      if line =~ /^[\s\t#]*version:[\s\t]*([\w,\s.\d]+)/i
         script_version = $1.sub(/\s\(.*?\)/, '').strip
       end
     end
@@ -1235,7 +1235,7 @@ class Script
   end
   def initialize(args)
     @file_name = args[:file]
-    @name = /.*[\/\\]+([^\.]+)\./.match(@file_name).captures.first
+    @name = /.*[\/\\]+([^.]+)\./.match(@file_name).captures.first
     if args[:args].class == String
       if args[:args].empty?
         @vars = Array.new
@@ -1692,7 +1692,7 @@ end
 
 class WizardScript < Script
   def initialize(file_name, cli_vars = [])
-    @name = /.*[\/\\]+([^\.]+)\./.match(file_name).captures.first
+    @name = /.*[\/\\]+([^.]+)\./.match(file_name).captures.first
     @file_name = file_name
     @vars = Array.new
     @killer_mutex = Mutex.new
@@ -3650,7 +3650,7 @@ module Games
         @noun = 'lapis' if @noun == 'lapis lazuli'
         @noun = 'hammer' if @noun == 'Hammer of Kai'
         @noun = 'ball' if @noun == 'ball and chain' # DR item 'ball and chain' doesn't work.
-        @noun = 'mother-of-pearl' if (@noun == 'pearl') and (@name =~ /mother\-of\-pearl/)
+        @noun = 'mother-of-pearl' if (@noun == 'pearl') and (@name =~ /mother-of-pearl/)
         @name = name
         @before_name = before
         @after_name = after
@@ -3712,7 +3712,7 @@ module Games
 
       def self.[](val)
         if val.class == String
-          if val =~ /^\-?[0-9]+$/
+          if val =~ /^-?[0-9]+$/
             obj = @@inv.find { |o| o.id == val } || @@loot.find { |o| o.id == val } || @@npcs.find { |o| o.id == val } || @@pcs.find { |o| o.id == val } || [@@right_hand, @@left_hand].find { |o| o.id == val } || @@room_desc.find { |o| o.id == val }
           elsif val.split(' ').length == 1
             obj = @@inv.find { |o| o.noun == val } || @@loot.find { |o| o.noun == val } || @@npcs.find { |o| o.noun == val } || @@pcs.find { |o| o.noun == val } || [@@right_hand, @@left_hand].find { |o| o.noun == val } || @@room_desc.find { |o| o.noun == val }
@@ -4915,7 +4915,7 @@ main_thread = Thread.new {
       exit(1)
     end
     if custom_launch = @launch_data.find { |opt| opt =~ /CUSTOMLAUNCH=/ }
-      custom_launch.sub!(/^.*?\=/, '')
+      custom_launch.sub!(/^.*?=/, '')
       Lich.log "info: using custom launch command: #{custom_launch}"
     elsif (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
       Lich.log('info: Working against a Windows Platform for FE Executable')
@@ -4935,7 +4935,7 @@ main_thread = Thread.new {
       end
     end
     if custom_launch_dir = @launch_data.find { |opt| opt =~ /CUSTOMLAUNCHDIR=/ }
-      custom_launch_dir.sub!(/^.*?\=/, '')
+      custom_launch_dir.sub!(/^.*?=/, '')
       Lich.log "info: using working directory for custom launch command: #{custom_launch_dir}"
     elsif (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
       Lich.log 'info: Working against a Windows Platform for FE Location'
@@ -5023,8 +5023,8 @@ main_thread = Thread.new {
       localport = listener.addr[1]
       if custom_launch
         sal_filename = nil
-        launcher_cmd = custom_launch.sub(/\%port\%/, localport.to_s).sub(/\%key\%/, game_key.to_s)
-        scrubbed_launcher_cmd = custom_launch.sub(/\%port\%/, localport.to_s).sub(/\%key\%/, '[scrubbed key]')
+        launcher_cmd = custom_launch.sub(/%port%/, localport.to_s).sub(/%key%/, game_key.to_s)
+        scrubbed_launcher_cmd = custom_launch.sub(/%port%/, localport.to_s).sub(/%key%/, '[scrubbed key]')
         Lich.log "info: launcher_cmd: #{scrubbed_launcher_cmd}"
       else
         if RUBY_PLATFORM =~ /darwin/i

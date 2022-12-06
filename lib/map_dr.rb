@@ -435,7 +435,7 @@ class Map
 
   def self.load(filename = nil)
     if filename.nil?
-      file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map\-[0-9]+\.(?:dat|xml|json)$/i }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
+      file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map-[0-9]+\.(?:dat|xml|json)$/i }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
     else
       file_list = [filename]
     end
@@ -472,7 +472,7 @@ class Map
             # respond "--- loading #{filename}" #if error
           else
             file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename|
-              filename =~ /^map\-[0-9]+\.json$/i
+              filename =~ /^map-[0-9]+\.json$/i
             }.collect { |filename|
               "#{DATA_DIR}/#{XMLData.game}/#{filename}"
             }.sort.reverse
@@ -523,7 +523,7 @@ class Map
           return true
         else
           if filename.nil?
-            file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map\-[0-9]+\.dat$/ }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
+            file_list = Dir.entries("#{DATA_DIR}/#{XMLData.game}").find_all { |filename| filename =~ /^map-[0-9]+\.dat$/ }.collect { |filename| "#{DATA_DIR}/#{XMLData.game}/#{filename}" }.sort.reverse
           else
             file_list = [filename]
             respond "--- file_list = #{filename.inspect}"
@@ -614,7 +614,7 @@ class Map
                 room['wayto'][current_attributes['target']] = text_string
               elsif room['wayto'][current_attributes['target']] = StringProc.new(text_string)
               end
-              if current_attributes['cost'] =~ /^[0-9\.]+$/
+              if current_attributes['cost'] =~ /^[0-9.]+$/
                 room['timeto'][current_attributes['target']] = current_attributes['cost'].to_f
               elsif current_attributes['cost'].length > 0
                 room['timeto'][current_attributes['target']] = StringProc.new(current_attributes['cost'])
@@ -652,7 +652,7 @@ class Map
                       else
                         element = /^<([^\s>\/]+)/.match(str).captures.first
                         attributes = Hash.new
-                        str.scan(/([A-z][A-z0-9_\-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2].gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] } }
+                        str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2].gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] } }
                         tag_start.call(element, attributes)
                         tag_end.call(element) if str[-2, 1] == '/'
                       end
