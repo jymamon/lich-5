@@ -87,6 +87,9 @@ Style/ConditionalAssignment:
   SingleLineConditionsOnly: true
   IncludeTernaryExpressions: false
 
+Style/EmptyElse:
+  Enabled: false
+
 Style/NumericLiterals:
   # Enabled is recommended.
   Enabled: false
