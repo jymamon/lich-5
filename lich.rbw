@@ -2630,7 +2630,7 @@ module Games
         ary.push sprintf("Name: %s  Race: %s  Profession: %s", XMLData.name, Stats.race, Stats.prof)
         ary.push sprintf("Gender: %s    Age: %d    Expr: %d    Level: %d", Stats.gender, Stats.age, Stats.exp, Stats.level)
         ary.push sprintf("%017.17s Normal (Bonus)  ...  Enhanced (Bonus)", "")
-        %w[Strength Constitution Dexterity Agility Discipline Aura Logic Intuition Wisdom Influence].each { |stat|
+        ['Strength', 'Constitution', 'Dexterity', 'Agility', 'Discipline', 'Aura', 'Logic', 'Intuition', 'Wisdom', 'Influence'].each { |stat|
           val, bon = Stats.send(stat[0..2].downcase)
           enh_val, enh_bon = Stats.send("enhanced_#{stat[0..2].downcase}")
           spc = " " * (4 - bon.to_s.length)
