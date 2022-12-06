@@ -135,6 +135,10 @@ Style/SingleLineMethods:
   Enabled: false
   AllowIfMethodIsEmpty: true
 
+Style/SymbolArray:
+  Enabled: true
+  EnforcedStyle: brackets
+
 Style/TrailingCommaInArrayLiteral:
   Enabled: true
   EnforcedStyleForMultiline: comma
