@@ -309,23 +309,19 @@ module Games
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
           if options[:target] and (options[:target].downcase == options[:caster].downcase)
             @duration['self'][:stackable]
+          elsif @duration['target'][:stackable].nil?
+            @duration['self'][:stackable]
           else
-            if @duration['target'][:stackable].nil?
-              @duration['self'][:stackable]
-            else
-              @duration['target'][:stackable]
-            end
+            @duration['target'][:stackable]
+          end
+        elsif options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
+          if @duration['target'][:stackable].nil?
+            @duration['self'][:stackable]
+          else
+            @duration['target'][:stackable]
           end
         else
-          if options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
-            if @duration['target'][:stackable].nil?
-              @duration['self'][:stackable]
-            else
-              @duration['target'][:stackable]
-            end
-          else
-            @duration['self'][:stackable]
-          end
+          @duration['self'][:stackable]
         end
       end
 
@@ -333,23 +329,19 @@ module Games
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
           if options[:target] and (options[:target].downcase == options[:caster].downcase)
             @duration['self'][:refreshable]
+          elsif @duration['target'][:refreshable].nil?
+            @duration['self'][:refreshable]
           else
-            if @duration['target'][:refreshable].nil?
-              @duration['self'][:refreshable]
-            else
-              @duration['target'][:refreshable]
-            end
+            @duration['target'][:refreshable]
+          end
+        elsif options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
+          if @duration['target'][:refreshable].nil?
+            @duration['self'][:refreshable]
+          else
+            @duration['target'][:refreshable]
           end
         else
-          if options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
-            if @duration['target'][:refreshable].nil?
-              @duration['self'][:refreshable]
-            else
-              @duration['target'][:refreshable]
-            end
-          else
-            @duration['self'][:refreshable]
-          end
+          @duration['self'][:refreshable]
         end
       end
 
@@ -357,23 +349,19 @@ module Games
         if options[:caster] and (options[:caster] !~ /^(?:self|#{XMLData.name})$/i)
           if options[:target] and (options[:target].downcase == options[:caster].downcase)
             @duration['self'][:multicastable]
+          elsif @duration['target'][:multicastable].nil?
+            @duration['self'][:multicastable]
           else
-            if @duration['target'][:multicastable].nil?
-              @duration['self'][:multicastable]
-            else
-              @duration['target'][:multicastable]
-            end
+            @duration['target'][:multicastable]
+          end
+        elsif options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
+          if @duration['target'][:multicastable].nil?
+            @duration['self'][:multicastable]
+          else
+            @duration['target'][:multicastable]
           end
         else
-          if options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
-            if @duration['target'][:multicastable].nil?
-              @duration['self'][:multicastable]
-            else
-              @duration['target'][:multicastable]
-            end
-          else
-            @duration['self'][:multicastable]
-          end
+          @duration['self'][:multicastable]
         end
       end
 
@@ -445,12 +433,10 @@ module Games
             else
               @availability == 'all'
             end
+          elsif options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
+            @availability == 'all'
           else
-            if options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
-              @availability == 'all'
-            else
-              true
-            end
+            true
           end
         else
           false
@@ -476,12 +462,10 @@ module Games
           else
             @duration['target'][:max_duration] || @duration['self'][:max_duration]
           end
+        elsif options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
+          @duration['target'][:max_duration] || @duration['self'][:max_duration]
         else
-          if options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
-            @duration['target'][:max_duration] || @duration['self'][:max_duration]
-          else
-            @duration['self'][:max_duration]
-          end
+          @duration['self'][:max_duration]
         end
       end
 
@@ -785,12 +769,10 @@ module Games
             end
             skills = { 'Spells.minorelemental' => "SpellRanks['#{options[:caster]}'].minorelemental.to_i", 'Spells.majorelemental' => "SpellRanks['#{options[:caster]}'].majorelemental.to_i", 'Spells.minorspiritual' => "SpellRanks['#{options[:caster]}'].minorspiritual.to_i", 'Spells.majorspiritual' => "SpellRanks['#{options[:caster]}'].majorspiritual.to_i", 'Spells.wizard' => "SpellRanks['#{options[:caster]}'].wizard.to_i", 'Spells.sorcerer' => "SpellRanks['#{options[:caster]}'].sorcerer.to_i", 'Spells.ranger' => "SpellRanks['#{options[:caster]}'].ranger.to_i", 'Spells.paladin' => "SpellRanks['#{options[:caster]}'].paladin.to_i", 'Spells.empath' => "SpellRanks['#{options[:caster]}'].empath.to_i", 'Spells.cleric' => "SpellRanks['#{options[:caster]}'].cleric.to_i", 'Spells.bard' => "SpellRanks['#{options[:caster]}'].bard.to_i", 'Stats.level' => '100' }
             skills.each_pair { |a, b| formula.gsub!(a, b) }
+          elsif options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
+            formula = @cost[args[0].to_s.sub(/_formula$/, '').sub(/_cost$/, '')]['target'].dup || @cost[args[0].to_s.gsub('_', '-')]['self'].dup
           else
-            if options[:target] and (options[:target] !~ /^(?:self|#{XMLData.name})$/i)
-              formula = @cost[args[0].to_s.sub(/_formula$/, '').sub(/_cost$/, '')]['target'].dup || @cost[args[0].to_s.gsub('_', '-')]['self'].dup
-            else
-              formula = @cost[args[0].to_s.sub(/_formula$/, '').sub(/_cost$/, '')]['self'].dup
-            end
+            formula = @cost[args[0].to_s.sub(/_formula$/, '').sub(/_cost$/, '')]['self'].dup
           end
           if args[0].to_s =~ /mana/ and Spell[597].active? # Rapid Fire Penalty
             formula = "#{formula}+5"
@@ -800,13 +782,11 @@ module Games
           end
           if args[0].to_s =~ /_formula$/
             formula.dup
+          elsif formula
+            formula.untaint if formula.tainted?
+            proc { begin; $SAFE = 3; rescue; nil; end; eval(formula) }.call.to_i
           else
-            if formula
-              formula.untaint if formula.tainted?
-              proc { begin; $SAFE = 3; rescue; nil; end; eval(formula) }.call.to_i
-            else
-              0
-            end
+            0
           end
         else
           respond 'missing method: ' + args.inspect.to_s

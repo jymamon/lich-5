@@ -169,15 +169,13 @@ module Lich
         for action in $fill_right_hand_actions.pop
           action.call
         end
-      else
-        if $fill_right_hand_actions.length > 0
-          for action in $fill_right_hand_actions.pop
-            action.call
+      elsif $fill_right_hand_actions.length > 0
+        for action in $fill_right_hand_actions.pop
+          action.call
           end
-        elsif $fill_left_hand_actions.length > 0
-          for action in $fill_left_hand_actions.pop
-            action.call
-          end
+      elsif $fill_left_hand_actions.length > 0
+        for action in $fill_left_hand_actions.pop
+          action.call
         end
       end
     end

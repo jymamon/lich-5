@@ -436,12 +436,10 @@ module Lich
         end
       end
 
-    else # Linux/Mac
-      if File.exist?('/etc/hosts')
-        return (@@hosts_file = '/etc/hosts')
-      elsif File.exist?('/private/etc/hosts')
-        return (@@hosts_file = '/private/etc/hosts')
-      end
+    elsif File.exist?('/etc/hosts') # Linux/Mac
+      return (@@hosts_file = '/etc/hosts')
+    elsif File.exist?('/private/etc/hosts')
+      return (@@hosts_file = '/private/etc/hosts')
     end
     return (@@hosts_file = false)
   end

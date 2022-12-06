@@ -953,13 +953,11 @@ def checkencumbrance(string = nil)
     XMLData.encumbrance_text
   elsif string.instance_of?(Integer) or (string =~ /^[0-9]+$/ and string = string.to_i)
     string <= XMLData.encumbrance_value
-  else
+  elsif string =~ /#{XMLData.encumbrance_text}/i
     # fixme
-    if string =~ /#{XMLData.encumbrance_text}/i
-      true
-    else
-      false
-    end
+    true
+  else
+    false
   end
 end
 
@@ -1031,12 +1029,10 @@ def checkfamnpcs(*strings)
     else
       return parsed
     end
+  elsif mtch = strings.find { |lookfor| parsed.find { |critter| critter =~ /#{lookfor}/ } }
+    return mtch
   else
-    if mtch = strings.find { |lookfor| parsed.find { |critter| critter =~ /#{lookfor}/ } }
-      return mtch
-    else
-      return false
-    end
+    return false
   end
 end
 
@@ -1460,20 +1456,18 @@ def fput(message, *waitingfor)
       clear
       put(message)
       next
+    elsif waitingfor.empty?
+      script.downstream_buffer.unshift(string)
+      return string
     else
-      if waitingfor.empty?
+      if foundit = waitingfor.find { |val| string =~ /#{val}/i }
         script.downstream_buffer.unshift(string)
-        return string
-      else
-        if foundit = waitingfor.find { |val| string =~ /#{val}/i }
-          script.downstream_buffer.unshift(string)
-          return foundit
-        end
-        sleep 1
-        clear
-        put(message)
-        next
+        return foundit
       end
+      sleep 1
+      clear
+      put(message)
+      next
     end
   end
 end
@@ -2089,14 +2083,12 @@ def do_client(client_string)
           respond "--- Lich: '#{cmd.split[2].chomp.strip}' does not match any active script!"
         end
         script = nil
+      elsif Script.running.empty? and Script.hidden.empty?
+        respond('--- Lich: no active scripts to send to.')
       else
-        if Script.running.empty? and Script.hidden.empty?
-          respond('--- Lich: no active scripts to send to.')
-        else
-          msg = cmd.split[1..-1].join(' ').chomp
-          respond("--- sent: #{msg}")
-          Script.new_downstream(msg)
-        end
+        msg = cmd.split[1..-1].join(' ').chomp
+        respond("--- sent: #{msg}")
+        Script.new_downstream(msg)
       end
     elsif cmd =~ /^(?:exec|e)(q)?(n)? (.+)$/
       cmd_data = $3
@@ -2218,12 +2210,10 @@ def do_client(client_string)
       respond "   #{$clean_lich_char}vars help"
       respond "   #{$clean_lich_char}autostart help"
       respond
+    elsif cmd =~ /^([^\s]+)\s+(.+)/
+      Script.start($1, $2)
     else
-      if cmd =~ /^([^\s]+)\s+(.+)/
-        Script.start($1, $2)
-      else
-        Script.start(cmd)
-      end
+      Script.start(cmd)
     end
   else
     if $offline_mode

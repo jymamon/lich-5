@@ -44,14 +44,12 @@ module Lich
       if $frontend =~ /stormfront|profanity/i && allowed_streams.include?(window)
         stream_window_before_txt = "<pushStream id=\"#{window}\" ifClosedStyle=\"watching\"/>"
         stream_window_after_txt = "<popStream/>\r\n"
-      else
-        if window =~ /familiar/i
-          stream_window_before_txt = "\034GSe\r\n"
-          stream_window_after_txt = "\034GSf\r\n"
-        elsif window =~ /thoughts/i
-          stream_window_before_txt = "You hear the faint thoughts of LICH-MESSAGE echo in your mind:\r\n"
-          stream_window_after_txt = ''
-        end
+      elsif window =~ /familiar/i
+        stream_window_before_txt = "\034GSe\r\n"
+        stream_window_after_txt = "\034GSf\r\n"
+      elsif window =~ /thoughts/i
+        stream_window_before_txt = "You hear the faint thoughts of LICH-MESSAGE echo in your mind:\r\n"
+        stream_window_after_txt = ''
       end
 
       _respond stream_window_before_txt + xml_encode(msg) + stream_window_after_txt

@@ -1056,13 +1056,11 @@ class Script
     if name.nil?
       Script.current.pause
       Script.current
+    elsif s = (@@running.find { |i| (i.name == name) and !i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and !i.paused? })
+      s.pause
+      true
     else
-      if s = (@@running.find { |i| (i.name == name) and !i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and !i.paused? })
-        s.pause
-        true
-      else
-        false
-      end
+      false
     end
   end
 

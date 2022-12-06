@@ -124,8 +124,8 @@ class Map
     Map.load unless @@loaded
     if script = Script.current
       return @@list[@@current_room_id] if XMLData.room_count == @@current_room_count and !@@current_room_id.nil?
-    else
-      return @@list[@@current_room_id] if XMLData.room_count == @@fuzzy_room_count and !@@current_room_id.nil?
+    elsif XMLData.room_count == @@fuzzy_room_count and !@@current_room_id.nil?
+      return @@list[@@current_room_id]
     end
     ids = Map.ids_from_uid(XMLData.room_id)
     return Map.set_current(ids[0]) if ids.size == 1
@@ -445,10 +445,8 @@ class Map
         if Map.load_xml(filename)
           return true
         end
-      else
-        if Map.load_dat(filename)
-          return true
-        end
+      elsif Map.load_dat(filename)
+        return true
       end
     end
     return false
@@ -634,19 +632,17 @@ class Map
                     if str[1, 1] == '/'
                       element = /^<\/([^\s>\/]+)/.match(str).captures.first
                       tag_end.call(element)
+                    elsif str =~ /^<([^>]+)><\/\1>/
+                      element = $1
+                      tag_start.call(element)
+                      text.call('')
+                      tag_end.call(element)
                     else
-                      if str =~ /^<([^>]+)><\/\1>/
-                        element = $1
-                        tag_start.call(element)
-                        text.call('')
-                        tag_end.call(element)
-                      else
-                        element = /^<([^\s>\/]+)/.match(str).captures.first
-                        attributes = {}
-                        str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2].gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] } }
-                        tag_start.call(element, attributes)
-                        tag_end.call(element) if str[-2, 1] == '/'
-                      end
+                      element = /^<([^\s>\/]+)/.match(str).captures.first
+                      attributes = {}
+                      str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2].gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] } }
+                      tag_start.call(element, attributes)
+                      tag_end.call(element) if str[-2, 1] == '/'
                     end
                   else
                     text.call(str.gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] })

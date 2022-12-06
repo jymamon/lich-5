@@ -466,10 +466,8 @@ class Map
         if Map.load_xml(filename)
           return true
         end
-      else
-        if Map.load_dat(filename)
-          return true
-        end
+      elsif Map.load_dat(filename)
+        return true
       end
     end
     return false
@@ -657,19 +655,17 @@ class Map
                     if str[1, 1] == '/'
                       element = /^<\/([^\s>\/]+)/.match(str).captures.first
                       tag_end.call(element)
+                    elsif str =~ /^<([^>]+)><\/\1>/
+                      element = $1
+                      tag_start.call(element)
+                      text.call('')
+                      tag_end.call(element)
                     else
-                      if str =~ /^<([^>]+)><\/\1>/
-                        element = $1
-                        tag_start.call(element)
-                        text.call('')
-                        tag_end.call(element)
-                      else
-                        element = /^<([^\s>\/]+)/.match(str).captures.first
-                        attributes = {}
-                        str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2].gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] } }
-                        tag_start.call(element, attributes)
-                        tag_end.call(element) if str[-2, 1] == '/'
-                      end
+                      element = /^<([^\s>\/]+)/.match(str).captures.first
+                      attributes = {}
+                      str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2].gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] } }
+                      tag_start.call(element, attributes)
+                      tag_end.call(element) if str[-2, 1] == '/'
                     end
                   else
                     text.call(str.gsub(/&(#{unescape.keys.join('|')});/) { unescape[$1] })

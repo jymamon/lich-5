@@ -136,8 +136,8 @@ class XMLParser
         when /Cooldowns/
           if k =~ /Recovery/
             z.merge!(k => v) if k.instance_of?(String)
-          else
-            z.merge!("#{k} Cooldown" => v) if k.instance_of?(String)
+          elsif k.instance_of?(String)
+            z.merge!("#{k} Cooldown" => v)
           end
         when /Debuffs/
           z.merge!("#{k} Debuff" => v) if k.instance_of?(String)
@@ -584,51 +584,49 @@ class XMLParser
           if @active_tags.include?('a')
             @pc = GameObj.new_pc(@obj_exist, @obj_noun, "#{@player_title}#{text_string}", @player_status)
             @player_status = nil
+          elsif @game =~ /^DR/
+            GameObj.clear_pcs
+            text_string.sub(/^Also here: /, '').sub(/ and ([^,]+)\./) { ", #{$1}" }.split(', ').each { |player|
+              if player =~ / who is (.+)/
+                status = $1
+                player.sub!(/ who is .+/, '')
+              elsif player =~ / \((.+)\)/
+                status = $1
+                player.sub!(/ \(.+\)/, '')
+              else
+                status = nil
+              end
+              noun = player.slice(/\b[A-Z][a-z]+$/)
+              if player =~ /the body of /
+                player.sub!('the body of ', '')
+                if status
+                  status.concat ' dead'
+                else
+                  status = 'dead'
+                end
+              end
+              if player =~ /a stunned /
+                player.sub!('a stunned ', '')
+                if status
+                  status.concat ' stunned'
+                else
+                  status = 'stunned'
+                end
+              end
+              GameObj.new_pc(nil, noun, player, status)
+            }
           else
-            if @game =~ /^DR/
-              GameObj.clear_pcs
-              text_string.sub(/^Also here: /, '').sub(/ and ([^,]+)\./) { ", #{$1}" }.split(', ').each { |player|
-                if player =~ / who is (.+)/
-                  status = $1
-                  player.sub!(/ who is .+/, '')
-                elsif player =~ / \((.+)\)/
-                  status = $1
-                  player.sub!(/ \(.+\)/, '')
-                else
-                  status = nil
-                end
-                noun = player.slice(/\b[A-Z][a-z]+$/)
-                if player =~ /the body of /
-                  player.sub!('the body of ', '')
-                  if status
-                    status.concat ' dead'
-                  else
-                    status = 'dead'
-                  end
-                end
-                if player =~ /a stunned /
-                  player.sub!('a stunned ', '')
-                  if status
-                    status.concat ' stunned'
-                  else
-                    status = 'stunned'
-                  end
-                end
-                GameObj.new_pc(nil, noun, player, status)
-              }
-            else
-              if (text_string =~ /^ who (?:is|appears) ([\w\s]+)(?:,| and|\.|$)/) or (text_string =~ / \(([\w\s]+)\)(?: \(([\w\s]+)\))?/)
-                if @pc.status
-                  @pc.status.concat " #{$1}"
-                else
-                  @pc.status = $1
-                end
-                @pc.status.concat " #{$2}" if $2
+            if (text_string =~ /^ who (?:is|appears) ([\w\s]+)(?:,| and|\.|$)/) or (text_string =~ / \(([\w\s]+)\)(?: \(([\w\s]+)\))?/)
+              if @pc.status
+                @pc.status.concat " #{$1}"
+              else
+                @pc.status = $1
               end
-              if text_string =~ /(?:^Also here: |, )(?:a )?([a-z\s]+)?([\w\s\-!?',]+)?$/
-                @player_status = $1.strip.gsub('the body of', 'dead') if $1
-                @player_title = $2
-              end
+              @pc.status.concat " #{$2}" if $2
+            end
+            if text_string =~ /(?:^Also here: |, )(?:a )?([a-z\s]+)?([\w\s\-!?',]+)?$/
+              @player_status = $1.strip.gsub('the body of', 'dead') if $1
+              @player_title = $2
             end
           end
         elsif @active_ids.include?('room desc')
