@@ -114,8 +114,8 @@ connect_button.signal_connect('clicked') {
   Gtk.queue {
     begin
       login_info = EAccess.auth(
-        account: user_id_entry.text || argv.account,
-        password: pass_entry.text || argv.password,
+        account: user_id_entry.text || options.account,
+        password: pass_entry.text || options.password,
         legacy: true
       )
     end
