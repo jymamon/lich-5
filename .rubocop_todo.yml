@@ -19,12 +19,6 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'lich.rbw'
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Lint/AmbiguousOperator:
-  Exclude:
-    - 'lich.rbw'
-
 # Offense count: 153
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:

@@ -164,14 +164,14 @@ class SynchronizedSocket
 
   def puts(*args, &block)
     @mutex.synchronize {
-      @delegate.puts *args, &block
+      @delegate.puts(*args, &block)
     }
   end
 
   def puts_if(*args)
     @mutex.synchronize {
       if yield
-        @delegate.puts *args
+        @delegate.puts(*args)
         return true
       else
         return false
@@ -181,7 +181,7 @@ class SynchronizedSocket
 
   def write(*args, &block)
     @mutex.synchronize {
-      @delegate.write *args, &block
+      @delegate.write(*args, &block)
     }
   end
 
