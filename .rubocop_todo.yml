@@ -1356,13 +1356,6 @@ Style/UnpackFirst:
 
 # Offense count: 8
 # This cop supports safe autocorrection (--autocorrect).
-Style/WhileUntilModifier:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lich.rbw'
-
-# Offense count: 8
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, MinSize, WordRegex.
 # SupportedStyles: percent, brackets
 Style/WordArray:

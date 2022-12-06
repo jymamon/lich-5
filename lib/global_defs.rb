@@ -659,9 +659,7 @@ def wait_until(announce = nil)
   unless announce.nil? or yield
     respond(announce)
   end
-  until yield
-    sleep 0.25
-  end
+  sleep 0.25 until yield
   Thread.current.priority = priosave
 end
 
@@ -671,9 +669,7 @@ def wait_while(announce = nil)
   unless announce.nil? or !yield
     respond(announce)
   end
-  while yield
-    sleep 0.25
-  end
+  sleep 0.25 while yield
   Thread.current.priority = priosave
 end
 
@@ -1451,13 +1447,9 @@ def fput(message, *waitingfor)
         script.downstream_buffer.unshift(string)
         return false
       elsif checkstunned
-        while checkstunned
-          sleep("0.25".to_f)
-        end
+        sleep("0.25".to_f) while checkstunned
       elsif checkwebbed
-        while checkwebbed
-          sleep("0.25".to_f)
-        end
+        sleep("0.25".to_f) while checkwebbed
       elsif string =~ /Sorry, you may only type ahead/
         sleep 1
       else

@@ -1759,14 +1759,10 @@ class WizardScript < Script
     has_nextroom = data.find { |line| line =~ /nextroom/i }
 
     fixstring = proc { |str|
-      while not setvars.empty? and str =~ /%(#{setvars.join('|')})%/io
-        str.gsub!('%' + $1 + '%', '#{' + $1.downcase + '}')
-      end
+      str.gsub!('%' + $1 + '%', '#{' + $1.downcase + '}') while not setvars.empty? and str =~ /%(#{setvars.join('|')})%/io
       str.gsub!(/%c(?:%)?/i, '#{c}')
       str.gsub!(/%s(?:%)?/i, '#{sav}')
-      while str =~ /%([0-9])(?:%)?/
-        str.gsub!(/%#{$1}(?:%)?/, '#{script.vars[' + $1 + ']}')
-      end
+      str.gsub!(/%#{$1}(?:%)?/, '#{script.vars[' + $1 + ']}') while str =~ /%([0-9])(?:%)?/
       str
     }
 
@@ -2323,9 +2319,7 @@ module Games
                 end
 
                 ## Fix duplicate pushStrings
-                while $_SERVERSTRING_.include?("<pushStream id=\"combat\" /><pushStream id=\"combat\" />")
-                  $_SERVERSTRING_ = $_SERVERSTRING_.gsub("<pushStream id=\"combat\" /><pushStream id=\"combat\" />", "<pushStream id=\"combat\" />")
-                end
+                $_SERVERSTRING_ = $_SERVERSTRING_.gsub("<pushStream id=\"combat\" /><pushStream id=\"combat\" />", "<pushStream id=\"combat\" />") while $_SERVERSTRING_.include?("<pushStream id=\"combat\" /><pushStream id=\"combat\" />")
 
                 if combat_count > 0
                   end_combat_tags.each do |tag|
@@ -5040,9 +5034,7 @@ main_thread = Thread.new {
         end
         @launch_data.collect! { |line| line.sub(/GAMEPORT=.+/, "GAMEPORT=#{localport}").sub(/GAMEHOST=.+/, "GAMEHOST=#{localhost}") }
         sal_filename = "#{TEMP_DIR}/lich#{rand(10000)}.sal"
-        while File.exists?(sal_filename)
-          sal_filename = "#{TEMP_DIR}/lich#{rand(10000)}.sal"
-        end
+        sal_filename = "#{TEMP_DIR}/lich#{rand(10000)}.sal" while File.exists?(sal_filename)
         File.open(sal_filename, 'w') { |f| f.puts @launch_data }
         launcher_cmd = launcher_cmd.sub('%1', sal_filename)
         launcher_cmd = launcher_cmd.tr('/', "\\") if (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
