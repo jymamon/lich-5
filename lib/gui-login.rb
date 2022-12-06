@@ -92,7 +92,7 @@ def gui_login(entry_data_file)
   end
   @entry_data = nil
 
-  unless !@launch_data.nil?
+  if @launch_data.nil?
     Gtk.queue { Gtk.main_quit }
     Lich.log 'info: exited without selection'
     exit
