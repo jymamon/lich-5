@@ -131,7 +131,7 @@ class StringProc
   end
 
   def kind_of?(type)
-    Proc.new {}.kind_of? type
+    Proc.new {}.is_a? type
   end
 
   def class

@@ -285,10 +285,10 @@ def idle?(time = 60)
 end
 
 def selectput(string, success, failure, timeout = nil)
-  timeout = timeout.to_f if timeout and !timeout.kind_of?(Numeric)
-  success = [success] if success.kind_of? String
-  failure = [failure] if failure.kind_of? String
-  if !string.kind_of?(String) or !success.kind_of?(Array) or !failure.kind_of?(Array) or timeout && !timeout.kind_of?(Numeric)
+  timeout = timeout.to_f if timeout and !timeout.is_a?(Numeric)
+  success = [success] if success.is_a? String
+  failure = [failure] if failure.is_a? String
+  if !string.is_a?(String) or !success.is_a?(Array) or !failure.is_a?(Array) or timeout && !timeout.is_a?(Numeric)
     raise ArgumentError, 'usage is: selectput(game_command,success_array,failure_array[,timeout_in_secs])'
   end
 
@@ -1338,7 +1338,7 @@ def matchwait(*strings)
       end
     end
   else
-    regexpstr = strings.collect { |str| str.kind_of?(Regexp) ? str.source : str }.join('|')
+    regexpstr = strings.collect { |str| str.is_a?(Regexp) ? str.source : str }.join('|')
     regexobj = /#{regexpstr}/
     while line_in = script.gets
       return line_in if line_in =~ regexobj
@@ -1401,7 +1401,7 @@ def reget(*lines)
     history.gsub!('&lt;', '<')
   end
   history = history.split("\n").delete_if { |line| line.nil? or line.empty? or line =~ /^[\r\n\s\t]*$/ }
-  if lines.first.kind_of?(Numeric) or lines.first.to_i.nonzero?
+  if lines.first.is_a?(Numeric) or lines.first.to_i.nonzero?
     history = history[-([lines.shift.to_i, history.length].min)..-1]
   end
   unless lines.empty? or lines.nil?
