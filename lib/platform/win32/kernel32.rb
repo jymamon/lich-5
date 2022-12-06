@@ -114,7 +114,7 @@ module Win32
     )
 
     lpProcessInformation = lpProcessInformation.unpack('LLLL')
-    return :return => (r > 0 ? true : false), :hProcess => lpProcessInformation[0], :hThread => lpProcessInformation[1], :dwProcessId => lpProcessInformation[2], :dwThreadId => lpProcessInformation[3]
+    return :return => (r > 0), :hProcess => lpProcessInformation[0], :hThread => lpProcessInformation[1], :dwProcessId => lpProcessInformation[2], :dwThreadId => lpProcessInformation[3]
   end
 
   def self.GetCurrentProcess

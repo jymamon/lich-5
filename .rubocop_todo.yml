@@ -681,6 +681,7 @@ Style/Proc:
 
 # Offense count: 9
 # This cop supports safe autocorrection (--autocorrect).
+# Do this with more careful review.
 Style/RedundantBegin:
   Exclude:
     - 'lib/global_defs.rb'
@@ -688,12 +689,6 @@ Style/RedundantBegin:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
     - 'lib/xmlparser.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantConditional:
-  Exclude:
-    - 'lib/platform/win32/kernel32.rb'
 
 # Offense count: 14
 # This cop supports unsafe autocorrection (--autocorrect-all).
