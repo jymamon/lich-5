@@ -212,7 +212,7 @@ class LimitedArray < Array
   end
 end
 
-require_relative('./lib/xmlparser.rb')
+require_relative('./lib/xmlparser')
 
 class UpstreamHook
   @@upstream_hooks ||= Hash.new
@@ -1922,9 +1922,9 @@ end
 
 ## adding util to the list of defs
 
-require 'lib/util.rb'
-require 'lib/messaging.rb'
-require 'lib/global_defs.rb'
+require 'lib/util'
+require 'lib/messaging'
+require 'lib/global_defs'
 
 module Buffer
   DOWNSTREAM_STRIPPED = 1
@@ -2358,7 +2358,7 @@ module Games
                 $_SERVERBUFFER_.push($_SERVERSTRING_)
 
                 if !@@autostarted and $_SERVERSTRING_ =~ /<app char/
-                  require 'lib/map.rb'
+                  require 'lib/map'
                   Script.start('autostart') if Script.exists?('autostart')
                   @@autostarted = true
                 end
@@ -3240,14 +3240,14 @@ module Games
       end
     end
 
-    require_relative('./lib/spell.rb')
+    require_relative('./lib/spell')
 
     # #updating PSM3 abilities via breakout - 20210801
-    require_relative('./lib/armor.rb')
-    require_relative('./lib/cman.rb')
-    require_relative('./lib/feat.rb')
-    require_relative('./lib/shield.rb')
-    require_relative('./lib/weapon.rb')
+    require_relative('./lib/armor')
+    require_relative('./lib/cman')
+    require_relative('./lib/feat')
+    require_relative('./lib/shield')
+    require_relative('./lib/weapon')
 
     class Stats
       @@race ||= 'unknown'
@@ -4766,7 +4766,7 @@ main_thread = Thread.new {
   $lich_char_regex = Regexp.union(',', ';')
 
   @launch_data = nil
-  require_relative('./lib/eaccess.rb')
+  require_relative('./lib/eaccess')
 
   if @options.login_character
     if File.exists?(@options.entryfile)

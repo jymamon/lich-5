@@ -1682,7 +1682,7 @@ def unnoded_pulse
   return (maxmana * 15 / 100) + (stats.max / 10) + (stats.min / 20)
 end
 
-require './lib/stash.rb'
+require './lib/stash'
 
 def empty_hands
   waitrt?
@@ -2155,10 +2155,10 @@ def do_client(client_string)
       nil
     elsif cmd =~ /^(?:lich5-update|l5u)\s+(.*)/i
       update_parameter = $1.dup
-      require 'lib/update.rb'
+      require 'lib/update'
       Lich::Util::Update.request("#{update_parameter}")
     elsif cmd =~ /^(?:lich5-update|l5u)/i
-      require 'lib/update.rb'
+      require 'lib/update'
       Lich::Util::Update.request('--help')
     elsif cmd =~ /^help$/i
       respond

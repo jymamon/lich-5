@@ -3,10 +3,10 @@
 # rubocop:disable Naming/VariableName
 require 'fiddle'
 require 'fiddle/import'
-require 'lib/platform/win32/advapi32.rb'
-require 'lib/platform/win32/kernel32.rb'
-require 'lib/platform/win32/shell32.rb'
-require 'lib/platform/win32/user32.rb'
+require 'lib/platform/win32/advapi32'
+require 'lib/platform/win32/kernel32'
+require 'lib/platform/win32/shell32'
+require 'lib/platform/win32/user32'
 
 module Win32
   SIZEOF_LONG = Fiddle::SIZEOF_LONG

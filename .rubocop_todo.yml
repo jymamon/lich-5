@@ -990,15 +990,6 @@ Style/RedundantConditional:
   Exclude:
     - 'lib/platform/win32/kernel32.rb'
 
-# Offense count: 21
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantFileExtensionInRequire:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/map.rb'
-    - 'lib/platform/win32.rb'
-    - 'lich.rbw'
-
 # Offense count: 14
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RedundantInterpolation:
