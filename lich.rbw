@@ -625,16 +625,14 @@ module Vars
   }
   @@save = proc {
     mutex.synchronize {
-      if @@loaded
-        if Digest::MD5.hexdigest(@@vars.to_s) != md5
-          md5 = Digest::MD5.hexdigest(@@vars.to_s)
-          blob = SQLite3::Blob.new(Marshal.dump(@@vars))
-          begin
-            Lich.db.execute('INSERT OR REPLACE INTO uservars(scope,hash) VALUES(?,?);', "#{XMLData.game}:#{XMLData.name}".encode('UTF-8'), blob)
-          rescue SQLite3::BusyException
-            sleep 0.1
-            retry
-          end
+      if @@loaded && (Digest::MD5.hexdigest(@@vars.to_s) != md5)
+        md5 = Digest::MD5.hexdigest(@@vars.to_s)
+        blob = SQLite3::Blob.new(Marshal.dump(@@vars))
+        begin
+          Lich.db.execute('INSERT OR REPLACE INTO uservars(scope,hash) VALUES(?,?);', "#{XMLData.game}:#{XMLData.name}".encode('UTF-8'), blob)
+        rescue SQLite3::BusyException
+          sleep 0.1
+          retry
         end
       end
     }
@@ -2431,9 +2429,7 @@ module Games
                     if defined?(Map) and Map.method_defined?(:last_seen_objects) and !Map.last_seen_objects and line =~ /(You also see .*)$/
                       Map.last_seen_objects = $1 # DR only: copy loot line to Map.last_seen_objects
                     end
-                    unless line =~ /^\s\*\s[A-Z][a-z]+ (?:returns home from a hard day of adventuring\.|joins the adventure\.|(?:is off to a rough start!  (?:H|She) )?just bit the dust!|was just incinerated!|was just vaporized!|has been vaporized!|has disconnected\.)$|^ \* The death cry of [A-Z][a-z]+ echoes in your mind!$|^\r*\n*$/
-                      Script.new_downstream(line) unless line.empty?
-                    end
+                    Script.new_downstream(line) if !line =~ (/^\s\*\s[A-Z][a-z]+ (?:returns home from a hard day of adventuring\.|joins the adventure\.|(?:is off to a rough start!  (?:H|She) )?just bit the dust!|was just incinerated!|was just vaporized!|has been vaporized!|has disconnected\.)$|^ \* The death cry of [A-Z][a-z]+ echoes in your mind!$|^\r*\n*$/) && !line.empty?
                   }
                 end
               rescue

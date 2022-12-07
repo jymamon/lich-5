@@ -180,11 +180,9 @@ class Map
             need_desc, peer_direction, peer_requirement = /^(set desc on; )?peer ([a-z]+) =~ \/(.+)\/$/.match(peer_tag).captures
             need_desc = need_desc ? true : false
             if peer_history[peer_room_count][peer_direction][need_desc].nil?
-              if need_desc
-                unless last_roomdesc = $_SERVERBUFFER_.reverse.find { |line| line =~ /<style id="roomDesc"\/>/ } and (last_roomdesc =~ /<style id="roomDesc"\/>[^<]/)
-                  put 'set description on'
-                  need_set_desc_off = true
-                end
+              if need_desc && !(last_roomdesc = $_SERVERBUFFER_.reverse.find { |line| line =~ /<style id="roomDesc"\/>/ } and (last_roomdesc =~ /<style id="roomDesc"\/>[^<]/))
+                put 'set description on'
+                need_set_desc_off = true
               end
               save_want_downstream = script.want_downstream
               script.want_downstream = true

@@ -580,12 +580,10 @@ module Games
             else
               cast_cmd = 'cast'
             end
-            unless arg_options.nil? || arg_options.empty?
-              if arg_options.split(' ')[0] =~ /incant|channel|evoke|cast/
-                cast_cmd = arg_options.split(' ')[0]
-                arg_options = arg_options.split(' ').drop(1)
-                arg_options = arg_options.join(' ') unless arg_options.empty?
-              end
+            if !(arg_options.nil? || arg_options.empty?) && (arg_options.split(' ')[0] =~ /incant|channel|evoke|cast/)
+              cast_cmd = arg_options.split(' ')[0]
+              arg_options = arg_options.split(' ').drop(1)
+              arg_options = arg_options.join(' ') unless arg_options.empty?
             end
 
             if (((target.nil? || target.to_s.empty?) && !@no_incant) && (cast_cmd == 'cast' && arg_options.nil?) || cast_cmd == 'incant') && cast_cmd !~ /^(?:channel|evoke)/

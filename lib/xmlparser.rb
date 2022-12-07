@@ -241,11 +241,9 @@ class XMLParser
         @current_stream = attributes['id'].to_s
         GameObj.clear_inv if attributes['id'].to_s == 'inv'
       elsif name == 'popStream'
-        if attributes['id'] == 'room'
-          unless @room_window_disabled
-            @room_count += 1
-            $room_count += 1
-          end
+        if attributes['id'] == 'room' && !@room_window_disabled
+          @room_count += 1
+          $room_count += 1
         end
         @in_stream = false
         @bounty_task.strip! if attributes['id'] == 'bounty'
@@ -387,15 +385,13 @@ class XMLParser
               Thread.new {
                 wait_while { dead? }
                 action = proc { |server_string|
-                  if @nerve_tracker_active == 'maybe'
-                    if @nerve_tracker_active == 'maybe'
-                      if server_string =~ /^You/
-                        @nerve_tracker_active = 'yes'
-                        @injuries['nsys']['wound'] = 0
-                        @injuries['nsys']['scar'] = 0
-                      else
-                        @nerve_tracker_active = 'no'
-                      end
+                  if @nerve_tracker_active == 'maybe' && (@nerve_tracker_active == 'maybe')
+                    if server_string =~ /^You/
+                      @nerve_tracker_active = 'yes'
+                      @injuries['nsys']['wound'] = 0
+                      @injuries['nsys']['scar'] = 0
+                    else
+                      @nerve_tracker_active = 'no'
                     end
                   end
                   if @nerve_tracker_active == 'yes'
@@ -471,9 +467,7 @@ class XMLParser
         @bounty_task = String.new if attributes['id'] == 'bounty'
       elsif name == 'playerID'
         @player_id = attributes['id']
-        unless $frontend =~ /^(?:wizard|avalon)$/
-          DownstreamHook.remove('inventory_boxes_off') if Lich.inventory_boxes(@player_id)
-        end
+        DownstreamHook.remove('inventory_boxes_off') if !$frontend =~ (/^(?:wizard|avalon)$/) && Lich.inventory_boxes(@player_id)
       elsif name == 'settingsInfo'
         if game = attributes['instance']
           if game == 'GS4'
