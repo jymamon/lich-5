@@ -32,11 +32,6 @@ Lint/AssignmentInCondition:
     - 'lich.rbw'
 
 # Offense count: 2
-Lint/BinaryOperatorWithIdenticalOperands:
-  Exclude:
-    - 'lib/spell.rb'
-
-# Offense count: 2
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: enums
 Lint/ConstantDefinitionInBlock:
