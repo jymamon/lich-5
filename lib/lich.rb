@@ -145,7 +145,6 @@ module Lich
         launcher_cmd = Win32.RegQueryValueEx(:hKey => launcher_key, :lpValueName => 'RealCommand')[:lpData]
         launcher_cmd = Win32.RegQueryValueEx(:hKey => launcher_key)[:lpData] if launcher_cmd.nil? or launcher_cmd.empty?
         return launcher_cmd
-        Lich.log 'returned #{launcher_cmd}'
       ensure
         Win32.RegCloseKey(:hKey => launcher_key) rescue nil
       end

@@ -4689,7 +4689,6 @@ elsif @options.dragonrealms
       $stdout.puts 'fixme'
       Lich.log 'fixme'
       exit
-      $frontend = 'stormfront'
     elsif @options.genie
       game_host = 'dr.simutronics.net'
       game_port = 11124
@@ -4702,7 +4701,6 @@ elsif @options.dragonrealms
       $stdout.puts 'fixme'
       Lich.log 'fixme'
       exit
-      $frontend = 'wizard'
     end
   else
     $platinum = false
