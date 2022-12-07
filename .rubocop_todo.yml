@@ -38,15 +38,6 @@ Lint/ConstantDefinitionInBlock:
   Exclude:
     - 'lib/gtk.rb'
 
-# Offense count: 4
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: AllowComments.
-Lint/EmptyConditionalBody:
-  Exclude:
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/xmlparser.rb'
-
 # Offense count: 3
 Lint/EmptyExpression:
   Exclude:

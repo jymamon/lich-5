@@ -588,7 +588,8 @@ class Map
             elsif current_tag == 'exit' and current_attributes['target']
               if current_attributes['type'].downcase == 'string'
                 room['wayto'][current_attributes['target']] = text_string
-              elsif room['wayto'][current_attributes['target']] = StringProc.new(text_string)
+              else
+                room['wayto'][current_attributes['target']] = StringProc.new(text_string)
               end
               if current_attributes['cost'] =~ /^[0-9.]+$/
                 room['timeto'][current_attributes['target']] = current_attributes['cost'].to_f
