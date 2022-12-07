@@ -146,7 +146,7 @@ module Lich
     end
 
     def self.silver_count(timeout = 3)
-      silence_me unless undo_silence = silence_me
+      silence_me unless (undo_silence = silence_me)
       result = ''
       name = anon_hook
       filter = false

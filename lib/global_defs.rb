@@ -16,12 +16,12 @@ def no_pause_all
 end
 
 def toggle_upstream
-  unless script = Script.current then echo 'toggle_upstream: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'toggle_upstream: cannot identify calling script.'; return nil; end
   script.want_upstream = !script.want_upstream
 end
 
 def silence_me
-  unless script = Script.current then echo 'silence_me: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'silence_me: cannot identify calling script.'; return nil; end
   if script.safe? then echo("WARNING: 'safe' script attempted to silence itself.  Ignoring the request.")
                        sleep 1
                        return true
@@ -30,22 +30,22 @@ def silence_me
 end
 
 def toggle_echo
-  unless script = Script.current then respond('--- toggle_echo: Unable to identify calling script.'); return nil; end
+  unless (script = Script.current) then respond('--- toggle_echo: Unable to identify calling script.'); return nil; end
   script.no_echo = !script.no_echo
 end
 
 def echo_on
-  unless script = Script.current then respond('--- echo_on: Unable to identify calling script.'); return nil; end
+  unless (script = Script.current) then respond('--- echo_on: Unable to identify calling script.'); return nil; end
   script.no_echo = false
 end
 
 def echo_off
-  unless script = Script.current then respond('--- echo_off: Unable to identify calling script.'); return nil; end
+  unless (script = Script.current) then respond('--- echo_off: Unable to identify calling script.'); return nil; end
   script.no_echo = true
 end
 
 def upstream_get
-  unless script = Script.current then echo 'upstream_get: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'upstream_get: cannot identify calling script.'; return nil; end
   unless script.want_upstream
     echo("This script wants to listen to the upstream, but it isn't set as receiving the upstream! This will cause a permanent hang, aborting (ask for the upstream with 'toggle_upstream' in the script)")
     sleep 0.3
@@ -55,7 +55,7 @@ def upstream_get
 end
 
 def upstream_get?
-  unless script = Script.current then echo 'upstream_get: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'upstream_get: cannot identify calling script.'; return nil; end
   unless script.want_upstream
     echo("This script wants to listen to the upstream, but it isn't set as receiving the upstream! This will cause a permanent hang, aborting (ask for the upstream with 'toggle_upstream' in the script)")
     return false
@@ -65,7 +65,7 @@ end
 
 def echo(*messages)
   respond if messages.empty?
-  if script = Script.current
+  if (script = Script.current)
     messages.each { |message| respond("[#{script.name}: #{message.to_s.chomp}]") } unless script.no_echo
   else
     messages.each { |message| respond("[(unknown script): #{message.to_s.chomp}]") }
@@ -75,7 +75,7 @@ end
 
 def _echo(*messages)
   _respond if messages.empty?
-  if script = Script.current
+  if (script = Script.current)
     messages.each { |message| _respond("[#{script.name}: #{message.to_s.chomp}]") } unless script.no_echo
   else
     messages.each { |message| _respond("[(unknown script): #{message.to_s.chomp}]") }
@@ -119,7 +119,7 @@ end
 def hide_script(*args)
   args.flatten!
   args.each { |name|
-    if script = Script.running.find { |scr| scr.name == name }
+    if (script = Script.running.find { |scr| scr.name == name })
       script.hidden = !script.hidden
     end
   }
@@ -245,7 +245,7 @@ def checkloot
 end
 
 def i_stand_alone
-  unless script = Script.current then echo 'i_stand_alone: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'i_stand_alone: cannot identify calling script.'; return nil; end
   script.want_downstream = !script.want_downstream
   return !script.want_downstream
 end
@@ -310,12 +310,12 @@ def selectput(string, success, failure, timeout = nil)
 end
 
 def toggle_unique
-  unless script = Script.current then echo 'toggle_unique: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'toggle_unique: cannot identify calling script.'; return nil; end
   script.want_downstream = !script.want_downstream
 end
 
 def die_with_me(*vals)
-  unless script = Script.current then echo 'die_with_me: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'die_with_me: cannot identify calling script.'; return nil; end
   script.die_with.push vals
   script.die_with.flatten!
   echo("The following script(s) will now die when I do: #{script.die_with.join(', ')}") unless script.die_with.empty?
@@ -326,14 +326,14 @@ def upstream_waitfor(*strings)
   script = Script.current
   unless script.want_upstream then echo("This script wants to listen to the upstream, but it isn't set as receiving the upstream! This will cause a permanent hang, aborting (ask for the upstream with 'toggle_upstream' in the script)"); return false end
   regexpstr = strings.join('|')
-  while line = script.upstream_gets
+  while (line = script.upstream_gets)
     return line if line =~ /#{regexpstr}/i
   end
 end
 
 def send_to_script(*values)
   values.flatten!
-  if script = Script.list.find { |val| val.name =~ /^#{values.first}/i }
+  if (script = Script.list.find { |val| val.name =~ /^#{values.first}/i })
     if script.want_downstream
       values[1..].each { |val| script.downstream_buffer.push(val) }
     else
@@ -349,7 +349,7 @@ end
 
 def unique_send_to_script(*values)
   values.flatten!
-  if script = Script.list.find { |val| val.name =~ /^#{values.first}/i }
+  if (script = Script.list.find { |val| val.name =~ /^#{values.first}/i })
     values[1..].each { |val| script.unique_buffer.push(val) }
     echo("sent to #{script}: #{values[1..].join(' ; ')}")
     return true
@@ -360,7 +360,7 @@ def unique_send_to_script(*values)
 end
 
 def unique_waitfor(*strings)
-  unless script = Script.current then echo 'unique_waitfor: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'unique_waitfor: cannot identify calling script.'; return nil; end
   strings.flatten!
   regexp = /#{strings.join('|')}/
   loop {
@@ -370,12 +370,12 @@ def unique_waitfor(*strings)
 end
 
 def unique_get
-  unless script = Script.current then echo 'unique_get: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'unique_get: cannot identify calling script.'; return nil; end
   script.unique_gets
 end
 
 def unique_get?
-  unless script = Script.current then echo 'unique_get: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'unique_get: cannot identify calling script.'; return nil; end
   script.unique_gets?
 end
 
@@ -700,7 +700,7 @@ end
 def walk(*boundaries, &block)
   boundaries.flatten!
   unless block.nil?
-    until val = yield
+    until (val = yield)
       walk(*boundaries)
     end
     return val
@@ -914,7 +914,7 @@ def checkstance(num = nil)
       echo "checkstance: invalid argument (#{num}).  Must be off/adv/for/neu/gua/def or 0-100"
       nil
     end
-  elsif num.instance_of?(Integer) or (num =~ /^[0-9]+$/ and num = num.to_i)
+  elsif num.instance_of?(Integer) or (num =~ /^[0-9]+$/ and (num = num.to_i))
     XMLData.stance_value == num.to_i
   else
     echo "checkstance: invalid argument (#{num}).  Must be off/adv/for/neu/gua/def or 0-100"
@@ -933,7 +933,7 @@ end
 def checkencumbrance(string = nil)
   if string.nil?
     XMLData.encumbrance_text
-  elsif string.instance_of?(Integer) or (string =~ /^[0-9]+$/ and string = string.to_i)
+  elsif string.instance_of?(Integer) or (string =~ /^[0-9]+$/ and (string = string.to_i))
     string <= XMLData.encumbrance_value
   elsif string =~ /#{XMLData.encumbrance_text}/i
     # fixme
@@ -1011,7 +1011,7 @@ def checkfamnpcs(*strings)
     else
       return parsed
     end
-  elsif mtch = strings.find { |lookfor| parsed.find { |critter| critter =~ /#{lookfor}/ } }
+  elsif (mtch = strings.find { |lookfor| parsed.find { |critter| critter =~ /#{lookfor}/ } })
     return mtch
   else
     return false
@@ -1192,7 +1192,7 @@ def cutthroat?
 end
 
 def variable
-  unless script = Script.current then echo 'variable: cannot identify calling script.'; return nil; end
+  unless (script = Script.current) then echo 'variable: cannot identify calling script.'; return nil; end
   script.vars
 end
 
@@ -1222,7 +1222,7 @@ def cast(spell, target = nil, results_of_interest = nil)
 end
 
 def clear(opt = 0)
-  unless script = Script.current then respond('--- clear: Unable to identify calling script.'); return false; end
+  unless (script = Script.current) then respond('--- clear: Unable to identify calling script.'); return false; end
   to_return = script.downstream_buffer.dup
   script.downstream_buffer.clear
   to_return
@@ -1231,7 +1231,7 @@ end
 def match(label, string)
   strings = [label, string]
   strings.flatten!
-  unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
+  unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo("Error! 'match' was given no strings to look for!"); sleep 1; return false end
   if strings.length == 2
     if script.respond_to?(:match_stack_add)
@@ -1241,7 +1241,7 @@ def match(label, string)
       script.match_stack_strings.push(strings[1])
     end
   else
-    while line_in = script.gets
+    while (line_in = script.gets)
       strings.each { |string|
         return $~.to_s if line_in =~ /#{string}/
       }
@@ -1250,7 +1250,7 @@ def match(label, string)
 end
 
 def matchtimeout(secs, *strings)
-  unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
+  unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   unless secs.instance_of?(Float) || secs.instance_of?(Integer)
     echo('matchtimeout error! You appear to have given it a string, not a #! Syntax:  matchtimeout(30, "You stand up")')
     return false
@@ -1276,7 +1276,7 @@ end
 
 def matchbefore(*strings)
   strings.flatten!
-  unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
+  unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo('matchbefore without any strings to wait for!'); return false end
   regexpstr = strings.join('|')
   loop { if (line_in = script.gets) =~ /#{regexpstr}/ then return $`.to_s end }
@@ -1284,7 +1284,7 @@ end
 
 def matchafter(*strings)
   strings.flatten!
-  unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
+  unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo('matchafter without any strings to wait for!'); return end
   regexpstr = strings.join('|')
   loop { if (line_in = script.gets) =~ /#{regexpstr}/ then return $'.to_s end }
@@ -1292,7 +1292,7 @@ end
 
 def matchboth(*strings)
   strings.flatten!
-  unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
+  unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo('matchboth without any strings to wait for!'); return end
   regexpstr = strings.join('|')
   loop { if (line_in = script.gets) =~ /#{regexpstr}/ then break end }
@@ -1300,14 +1300,14 @@ def matchboth(*strings)
 end
 
 def matchwait(*strings)
-  unless script = Script.current then respond('--- matchwait: Unable to identify calling script.'); return false; end
+  unless (script = Script.current) then respond('--- matchwait: Unable to identify calling script.'); return false; end
   strings.flatten!
   if strings.empty?
     strings = script.match_stack_strings
     labels = script.match_stack_labels
     regexpstr = /#{strings.join('|')}/i
-    while line_in = script.gets
-      if mdata = regexpstr.match(line_in)
+    while (line_in = script.gets)
+      if (mdata = regexpstr.match(line_in))
         jmp = labels[strings.index(mdata.to_s) || strings.index(strings.find { |str| line_in =~ /#{str}/i })]
         script.match_stack_clear
         goto jmp
@@ -1316,20 +1316,20 @@ def matchwait(*strings)
   else
     regexpstr = strings.collect { |str| str.is_a?(Regexp) ? str.source : str }.join('|')
     regexobj = /#{regexpstr}/
-    while line_in = script.gets
+    while (line_in = script.gets)
       return line_in if line_in =~ regexobj
     end
   end
 end
 
 def waitforre(regexp)
-  unless script = Script.current then respond('--- waitforre: Unable to identify calling script.'); return false; end
+  unless (script = Script.current) then respond('--- waitforre: Unable to identify calling script.'); return false; end
   unless regexp.instance_of?(Regexp) then echo("Script error! You have given 'waitforre' something to wait for, but it isn't a Regular Expression! Use 'waitfor' if you want to wait for a string."); sleep 1; return nil end
   regobj = regexp.match(script.gets) until regobj
 end
 
 def waitfor(*strings)
-  unless script = Script.current then respond('--- waitfor: Unable to identify calling script.'); return false; end
+  unless (script = Script.current) then respond('--- waitfor: Unable to identify calling script.'); return false; end
   strings.flatten!
   return script.gets if script.instance_of?(WizardScript) and (strings.length == 1) and (strings.first.strip == '>')
 
@@ -1345,7 +1345,7 @@ def waitfor(*strings)
 end
 
 def wait
-  unless script = Script.current then respond('--- wait: unable to identify calling script.'); return false; end
+  unless (script = Script.current) then respond('--- wait: unable to identify calling script.'); return false; end
   script.clear
   return script.gets
 end
@@ -1359,7 +1359,7 @@ def get?
 end
 
 def reget(*lines)
-  unless script = Script.current then respond('--- reget: Unable to identify calling script.'); return false; end
+  unless (script = Script.current) then respond('--- reget: Unable to identify calling script.'); return false; end
   lines.flatten!
   if caller.find { |c| c =~ /regetall/ }
     history = ($_SERVERBUFFER_.history + $_SERVERBUFFER_).join("\n")
@@ -1396,12 +1396,12 @@ def multifput(*cmds)
 end
 
 def fput(message, *waitingfor)
-  unless script = Script.current then respond('--- waitfor: Unable to identify calling script.'); return false; end
+  unless (script = Script.current) then respond('--- waitfor: Unable to identify calling script.'); return false; end
   waitingfor.flatten!
   clear
   put(message)
 
-  while string = get
+  while (string = get)
     if string =~ /(?:\.\.\.wait |Wait )[0-9]+/
       hold_up = string.slice(/[0-9]+/).to_i
       sleep(hold_up) unless hold_up.nil?
@@ -1436,7 +1436,7 @@ def fput(message, *waitingfor)
       script.downstream_buffer.unshift(string)
       return string
     else
-      if foundit = waitingfor.find { |val| string =~ /#{val}/i }
+      if (foundit = waitingfor.find { |val| string =~ /#{val}/i })
         script.downstream_buffer.unshift(string)
         return foundit
       end
@@ -1459,14 +1459,14 @@ end
 
 def matchfindexact(*strings)
   strings.flatten!
-  unless script = Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
+  unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo("error! 'matchfind' with no strings to look for!"); sleep 1; return false end
   looking = []
   strings.each { |str| looking.push(str.gsub('?', '(\b.+\b)')) }
   if looking.empty? then echo('matchfind without any strings to wait for!'); return false end
   regexpstr = looking.join('|')
-  while line_in = script.gets
-    if gotit = line_in.slice(/#{regexpstr}/)
+  while (line_in = script.gets)
+    if (gotit = line_in.slice(/#{regexpstr}/))
       matches = []
       looking.each_with_index { |str, idx|
         strings[idx].count('?').times { |n| matches.push(eval("$#{n + 1}")) } if gotit =~ /#{str}/i
@@ -1483,12 +1483,12 @@ end
 
 def matchfind(*strings)
   regex = /#{strings.flatten.join('|').gsub('?', '(.+)')}/i
-  unless script = Script.current
+  unless (script = Script.current)
     respond 'Unknown script is asking to use matchfind!  Cannot process request without identifying the calling script; killing this thread.'
     Thread.current.kill
   end
   loop {
-    if reobj = regex.match(script.gets)
+    if (reobj = regex.match(script.gets))
       ret = reobj.captures.compact
       if ret.length < 2
         return ret.first
@@ -1501,12 +1501,12 @@ end
 
 def matchfindword(*strings)
   regex = /#{strings.flatten.join('|').gsub('?', '([\w\d]+)')}/i
-  unless script = Script.current
+  unless (script = Script.current)
     respond 'Unknown script is asking to use matchfindword!  Cannot process request without identifying the calling script; killing this thread.'
     Thread.current.kill
   end
   loop {
-    if reobj = regex.match(script.gets)
+    if (reobj = regex.match(script.gets))
       ret = reobj.captures.compact
       if ret.length < 2
         return ret.first
@@ -1663,7 +1663,7 @@ def empty_hand
 
   unless (right_hand.id.nil? and ([Wounds.rightArm, Wounds.rightHand, Scars.rightArm, Scars.rightHand].max < 3)) or (left_hand.id.nil? and ([Wounds.leftArm, Wounds.leftHand, Scars.leftArm, Scars.leftHand].max < 3))
     # rubocop: disable Style/IdenticalConditionalBranches
-    if right_hand.id and ([Wounds.rightArm, Wounds.rightHand, Scars.rightArm, Scars.rightHand].max < 3 or [Wounds.leftArm, Wounds.leftHand, Scars.leftArm, Scars.leftHand].max = 3)
+    if right_hand.id and ([Wounds.rightArm, Wounds.rightHand, Scars.rightArm, Scars.rightHand].max < 3 or [Wounds.leftArm, Wounds.leftHand, Scars.leftArm, Scars.leftHand].max == 3)
       waitrt?
       Lich::Stash.stash_hands(:right => true)
     else
@@ -1727,7 +1727,7 @@ def dothis(action, success_line)
         break
       elsif line == 'That is impossible to do while unconscious!'
         100.times {
-          if line = get?
+          if (line = get?)
             break if line =~ /Your thoughts slowly come back to you as you find yourself lying on the ground\.  You must have been sleeping\.$|^You wake up from your slumber\.$/
           else
             sleep 0.1
@@ -1736,7 +1736,7 @@ def dothis(action, success_line)
         break
       elsif line == "You don't seem to be able to move to do that."
         100.times {
-          if line = get?
+          if (line = get?)
             break if line == 'The restricting force that envelops you dissolves away.'
           else
             sleep 0.1
@@ -1748,7 +1748,7 @@ def dothis(action, success_line)
         break
       elsif line == 'You find that impossible under the effects of the lullabye.'
         100.times {
-          if line = get?
+          if (line = get?)
             # fixme
             break if line == 'You shake off the effects of the lullabye.'
           else
@@ -1791,7 +1791,7 @@ def dothistimeout(action, timeout, success_line)
         break
       elsif line == 'That is impossible to do while unconscious!'
         100.times {
-          if line = get?
+          if (line = get?)
             break if line =~ /Your thoughts slowly come back to you as you find yourself lying on the ground\.  You must have been sleeping\.$|^You wake up from your slumber\.$/
           else
             sleep 0.1
@@ -1800,7 +1800,7 @@ def dothistimeout(action, timeout, success_line)
         break
       elsif line == "You don't seem to be able to move to do that."
         100.times {
-          if line = get?
+          if (line = get?)
             break if line == 'The restricting force that envelops you dissolves away.'
           else
             sleep 0.1
@@ -1812,7 +1812,7 @@ def dothistimeout(action, timeout, success_line)
         break
       elsif line == 'You find that impossible under the effects of the lullabye.'
         100.times {
-          if line = get?
+          if (line = get?)
             # fixme
             break if line == 'You shake off the effects of the lullabye.'
           else
@@ -1971,14 +1971,14 @@ def do_client(client_string)
         Script.running.last.kill
       end
     elsif cmd =~ /^p$|^pause$/
-      if s = Script.running.reverse.find { |s| !s.paused? }
+      if (s = Script.running.reverse.find { |s| !s.paused? })
         s.pause
       else
         respond '--- Lich: no scripts to pause'
       end
       s = nil
     elsif cmd =~ /^u$|^unpause$/
-      if s = Script.running.reverse.find { |s| s.paused? }
+      if (s = Script.running.reverse.find { |s| s.paused? })
         s.unpause
       else
         respond '--- Lich: no scripts to unpause'

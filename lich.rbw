@@ -281,7 +281,7 @@ end
 
 module Setting
   @@load = proc { |args|
-    unless script = Script.current
+    unless (script = Script.current)
       respond '--- error: Setting.load: calling script is unknown'
       respond $!.backtrace[0..2]
       next nil
@@ -328,7 +328,7 @@ module Setting
     end
   }
   @@save = proc { |hash|
-    unless script = Script.current
+    unless (script = Script.current)
       respond '--- error: Setting.save: calling script is unknown'
       respond $!.backtrace[0..2]
       next nil
@@ -392,7 +392,7 @@ module Setting
     true
   }
   @@list = proc {
-    unless script = Script.current
+    unless (script = Script.current)
       respond '--- error: Setting: unknown calling script'
       next nil
     end
@@ -456,7 +456,7 @@ module Settings
   md5_at_load = {}
   mutex       = Mutex.new
   @@settings = proc { |scope|
-    unless script = Script.current
+    unless (script = Script.current)
       respond '--- error: Settings: unknown calling script'
       next nil
     end
@@ -748,7 +748,7 @@ class Script
     # FIXME: look in wizard script directory
     # fixme: allow subdirectories?
     file_list = Dir.children(File.join(SCRIPT_DIR, 'custom')).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend('/custom/') } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
-    if file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i })
+    if (file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i }))
       script_name = file_name.sub(/\..{1,3}$/, '')
     end
     file_list = nil
@@ -796,7 +796,7 @@ class Script
     new_thread = Thread.new {
       100.times { break if Script.current == script_obj; sleep 0.01 }
 
-      if script = Script.current
+      if (script = Script.current)
         eval('script = Script.current', script_binding, script.name)
         Thread.current.priority = 1
         respond("--- Lich: #{script.name} active.") unless script.quiet
@@ -865,7 +865,7 @@ class Script
             Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
           rescue SecurityError
             respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            if name = Script.current.name
+            if (name = Script.current.name)
               respond "--- Lich: review this script (#{name}) to make sure it isn't malicious, and type #{$clean_lich_char}trust #{name}"
             end
             Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
@@ -918,7 +918,7 @@ class Script
     end
   }
   @@elevated_log = proc { |data|
-    if script = Script.current
+    if (script = Script.current)
       if script.name =~ /\\|\//
         nil
       else
@@ -937,7 +937,7 @@ class Script
     end
   }
   @@elevated_db = proc {
-    if script = Script.current
+    if (script = Script.current)
       if script.name =~ /^lich$/i
         respond '--- error: Script.db cannot be used by a script named lich'
         nil
@@ -953,7 +953,7 @@ class Script
     end
   }
   @@elevated_open_file = proc { |ext, mode, block|
-    if script = Script.current
+    if (script = Script.current)
       if script.name =~ /^lich$/i
         respond '--- error: Script.open_file cannot be used by a script named lich'
         nil
@@ -984,7 +984,7 @@ class Script
   def self.version(script_name, script_version_required = nil)
     script_name = script_name.sub(/[.](lic|rb|cmd|wiz)$/, '')
     file_list = Dir.children(File.join(SCRIPT_DIR, 'custom')).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }.map { |s| s.prepend('/custom/') } + Dir.children(SCRIPT_DIR).sort_by { |fn| fn.sub(/[.](lic|rb|cmd|wiz)$/, '') }
-    if file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i })
+    if (file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i }))
       script_name = file_name.sub(/\..{1,3}$/, '')
     end
     file_list = nil
@@ -1022,7 +1022,7 @@ class Script
   end
 
   def self.current
-    if script = @@running.find { |s| s.has_thread?(Thread.current) }
+    if (script = @@running.find { |s| s.has_thread?(Thread.current) })
       sleep 0.2 while script.paused? and !script.ignore_pause
       script
     else
@@ -1035,7 +1035,7 @@ class Script
   end
 
   def self.run(*args)
-    if s = @@elevated_script_start.call(args)
+    if (s = @@elevated_script_start.call(args))
       sleep 0.1 while @@running.include?(s)
     end
   end
@@ -1048,7 +1048,7 @@ class Script
     if name.nil?
       Script.current.pause
       Script.current
-    elsif s = (@@running.find { |i| (i.name == name) and !i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and !i.paused? })
+    elsif (s = (@@running.find { |i| (i.name == name) and !i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and !i.paused? }))
       s.pause
       true
     else
@@ -1057,7 +1057,7 @@ class Script
   end
 
   def self.unpause(name)
-    if s = (@@running.find { |i| (i.name == name) and i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and i.paused? })
+    if (s = (@@running.find { |i| (i.name == name) and i.paused? }) || (@@running.find { |i| (i.name =~ /^#{name}$/i) and i.paused? }))
       s.unpause
       true
     else
@@ -1066,7 +1066,7 @@ class Script
   end
 
   def self.kill(name)
-    if s = (@@running.find { |i| i.name == name }) || (@@running.find { |i| i.name =~ /^#{name}$/i })
+    if (s = (@@running.find { |i| i.name == name }) || (@@running.find { |i| i.name =~ /^#{name}$/i }))
       s.kill
       true
     else
@@ -1075,7 +1075,7 @@ class Script
   end
 
   def self.paused?(name)
-    if s = (@@running.find { |i| i.name == name }) || (@@running.find { |i| i.name =~ /^#{name}$/i })
+    if (s = (@@running.find { |i| i.name == name }) || (@@running.find { |i| i.name =~ /^#{name}$/i }))
       s.paused?
     else
       nil
@@ -1138,7 +1138,7 @@ class Script
   end
 
   def self.at_exit(&block)
-    if script = Script.current
+    if (script = Script.current)
       script.at_exit(&block)
     else
       respond "--- Lich: error: Script.at_exit: can't identify calling script"
@@ -1147,7 +1147,7 @@ class Script
   end
 
   def self.clear_exit_procs
-    if script = Script.current
+    if (script = Script.current)
       script.clear_exit_procs
     else
       respond "--- Lich: error: Script.clear_exit_procs: can't identify calling script"
@@ -1156,7 +1156,7 @@ class Script
   end
 
   def self.exit!
-    if script = Script.current
+    if (script = Script.current)
       script.exit!
     else
       respond "--- Lich: error: Script.exit!: can't identify calling script"
@@ -1387,11 +1387,11 @@ class Script
     if !@jump_label
       @current_label = @label_order[@label_order.index(@current_label) + 1]
     else
-      if label = @labels.keys.find { |val| val =~ /^#{@jump_label}$/ }
+      if (label = @labels.keys.find { |val| val =~ /^#{@jump_label}$/ })
         @current_label = label
-      elsif label = @labels.keys.find { |val| val =~ /^#{@jump_label}$/i }
+      elsif (label = @labels.keys.find { |val| val =~ /^#{@jump_label}$/i })
         @current_label = label
-      elsif label = @labels.keys.find { |val| val =~ /^labelerror$/i }
+      elsif (label = @labels.keys.find { |val| val =~ /^labelerror$/i })
         @current_label = label
       else
         @current_label = nil
@@ -1487,14 +1487,14 @@ class ExecScript < Script
   @@name_exec_mutex = Mutex.new
   @@elevated_start = proc { |cmd_data, options|
     options[:trusted] = false
-    unless new_script = ExecScript.new(cmd_data, options)
+    unless (new_script = ExecScript.new(cmd_data, options))
       respond '--- Lich: failed to start exec script'
       return false
     end
     new_thread = Thread.new {
       100.times { break if Script.current == new_script; sleep 0.01 }
 
-      if script = Script.current
+      if (script = Script.current)
         Thread.current.priority = 1
         respond("--- Lich: #{script.name} active.") unless script.quiet
         begin
@@ -1563,14 +1563,14 @@ class ExecScript < Script
   def self.start(cmd_data, options = {})
     options = { :quiet => true } if options == true
     if ($SAFE < 2) and (options[:trusted] or (RUBY_VERSION !~ /^2\.[012]\./))
-      unless new_script = ExecScript.new(cmd_data, options)
+      unless (new_script = ExecScript.new(cmd_data, options))
         respond '--- Lich: failed to start exec script'
         return false
       end
       new_thread = Thread.new {
         100.times { break if Script.current == new_script; sleep 0.01 }
 
-        if script = Script.current
+        if (script = Script.current)
           Thread.current.priority = 1
           respond("--- Lich: #{script.name} active.") unless script.quiet
           begin
@@ -1902,7 +1902,7 @@ end
 
 class Watchfor
   def initialize(line, theproc = nil, &block)
-    return nil unless script = Script.current
+    return nil unless (script = Script.current)
 
     if line.instance_of?(String)
       line = Regexp.new(Regexp.escape(line))
@@ -2265,7 +2265,7 @@ module Games
             atmospherics = false
             combat_count = 0
             end_combat_tags = ['<prompt', '<clearStream', '<component', '<pushStream id="percWindow']
-            while $_SERVERSTRING_ = @@socket.gets
+            while ($_SERVERSTRING_ = @@socket.gets)
               @@last_recv = Time.now
               @@_buffer.update($_SERVERSTRING_) if TESTING
               begin
@@ -2360,7 +2360,7 @@ module Games
                   @@cli_scripts = true
                 end
 
-                if alt_string = DownstreamHook.run($_SERVERSTRING_)
+                if (alt_string = DownstreamHook.run($_SERVERSTRING_))
                   #                           Buffer.update(alt_string, Buffer::DOWNSTREAM_MOD)
                   if (Lich.display_lichid == true or Lich.display_uid == true) and XMLData.game =~ /^GS/ and alt_string =~ /<resource picture=.*roomName/
                     if Lich.display_lichid == true and Lich.display_uid == true
@@ -2405,7 +2405,7 @@ module Games
                       # <link id='2' value='Ever wondered about the time you've spent in Elanthia?  Check the PLAYED verb!' cmd='played' echo='played' />
                       # From GS
                       # <d cmd='forage Imaera's Lace'>Imaera's Lace</d>, <d cmd='forage stalk burdock'>stalk of burdock</d>
-                      while data = $_SERVERSTRING_.match(/'([^=>]*'[^=>]*)'/)
+                      while (data = $_SERVERSTRING_.match(/'([^=>]*'[^=>]*)'/))
                         Lich.log "Invalid nested single quotes XML tags detected: #{$_SERVERSTRING_.inspect}"
                         $_SERVERSTRING_.gsub!(data[1], data[1].gsub!(/'/, '&apos;'))
                         Lich.log "Invalid nested single quotes XML tags fixed to: #{$_SERVERSTRING_.inspect}"
@@ -2413,7 +2413,7 @@ module Games
                       end
                       # Fixes invalid XML with nested double quotes in it such as:
                       # <subtitle=" - [Avlea's Bows, "The Straight and Arrow"]">
-                      while data = $_SERVERSTRING_.match(/"([^=]*"[^=]*)"/)
+                      while (data = $_SERVERSTRING_.match(/"([^=]*"[^=]*)"/))
                         Lich.log "Invalid nested double quotes XML tags detected: #{$_SERVERSTRING_.inspect}"
                         $_SERVERSTRING_.gsub!(data[1], data[1].gsub!(/"/, '&quot;'))
                         Lich.log "Invalid nested double quotes XML tags fixed to: #{$_SERVERSTRING_.inspect}"
@@ -2483,7 +2483,7 @@ module Games
 
       def self.puts(str)
         $_SCRIPTIDLETIMESTAMP_ = Time.now
-        if script = Script.current
+        if (script = Script.current)
           script_name = script.name
         else
           script_name = '(unknown script)'
@@ -2763,7 +2763,7 @@ module Games
         # FIXME: multi-spell penalty?
         total = num_active = 0
         [1003, 1006, 1009, 1010, 1012, 1014, 1018, 1019, 1025].each { |song_num|
-          if song = Spell[song_num]
+          if (song = Spell[song_num])
             if song.active?
               total += song.renew_cost
               num_active += 1
@@ -3950,7 +3950,7 @@ module Games
               File.open(filename) { |file|
                 doc = REXML::Document.new(file.read)
                 doc.elements.each('data/type') { |e|
-                  if type = e.attributes['name']
+                  if (type = e.attributes['name'])
                     @@type_data[type] = {}
                     @@type_data[type][:name]    = Regexp.new(e.elements['name'].text) unless e.elements['name'].text.nil? or e.elements['name'].text.empty?
                     @@type_data[type][:noun]    = Regexp.new(e.elements['noun'].text) unless e.elements['noun'].text.nil? or e.elements['noun'].text.empty?
@@ -3958,7 +3958,7 @@ module Games
                   end
                 }
                 doc.elements.each('data/sellable') { |e|
-                  if sellable = e.attributes['name']
+                  if (sellable = e.attributes['name'])
                     @@sellable_data[sellable] = {}
                     @@sellable_data[sellable][:name]    = Regexp.new(e.elements['name'].text) unless e.elements['name'].text.nil? or e.elements['name'].text.empty?
                     @@sellable_data[sellable][:noun]    = Regexp.new(e.elements['noun'].text) unless e.elements['noun'].text.nil? or e.elements['noun'].text.empty?
@@ -4566,7 +4566,7 @@ if @options.sal
   end
   Lich.log "info: launch file: #{@options.sal}"
   if @options.sal =~ /SGE\.sal/i
-    unless launcher_cmd = Lich.get_simu_launcher
+    unless (launcher_cmd = Lich.get_simu_launcher)
       $stdout.puts 'error: failed to find the Simutronics launcher'
       Lich.log 'error: failed to find the Simutronics launcher'
       exit
@@ -4863,27 +4863,27 @@ main_thread = Thread.new {
     else
       gamecodeshort = 'GS'
     end
-    unless gamecode = @launch_data.find { |line| line =~ /GAMECODE=/ }
+    unless (gamecode = @launch_data.find { |line| line =~ /GAMECODE=/ })
       $stdout.puts 'error: launch_data contains no GAMECODE info'
       Lich.log 'error: launch_data contains no GAMECODE info'
       exit(1)
     end
-    unless gameport = @launch_data.find { |line| line =~ /GAMEPORT=/ }
+    unless (gameport = @launch_data.find { |line| line =~ /GAMEPORT=/ })
       $stdout.puts 'error: launch_data contains no GAMEPORT info'
       Lich.log 'error: launch_data contains no GAMEPORT info'
       exit(1)
     end
-    unless gamehost = @launch_data.find { |opt| opt =~ /GAMEHOST=/ }
+    unless (gamehost = @launch_data.find { |opt| opt =~ /GAMEHOST=/ })
       $stdout.puts 'error: launch_data contains no GAMEHOST info'
       Lich.log 'error: launch_data contains no GAMEHOST info'
       exit(1)
     end
-    unless game = @launch_data.find { |opt| opt =~ /GAME=/ }
+    unless (game = @launch_data.find { |opt| opt =~ /GAME=/ })
       $stdout.puts 'error: launch_data contains no GAME info'
       Lich.log 'error: launch_data contains no GAME info'
       exit(1)
     end
-    if custom_launch = @launch_data.find { |opt| opt =~ /CUSTOMLAUNCH=/ }
+    if (custom_launch = @launch_data.find { |opt| opt =~ /CUSTOMLAUNCH=/ })
       custom_launch.sub!(/^.*?=/, '')
       Lich.log "info: using custom launch command: #{custom_launch}"
     elsif (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
@@ -4903,7 +4903,7 @@ main_thread = Thread.new {
         custom_launch = "Stormfront.exe /G#{gamecodeshort}/Hlocalhost/P%port%/K%key%" if $sf_fe_loc =~ /STORM/
       end
     end
-    if custom_launch_dir = @launch_data.find { |opt| opt =~ /CUSTOMLAUNCHDIR=/ }
+    if (custom_launch_dir = @launch_data.find { |opt| opt =~ /CUSTOMLAUNCHDIR=/ })
       custom_launch_dir.sub!(/^.*?=/, '')
       Lich.log "info: using working directory for custom launch command: #{custom_launch_dir}"
     elsif (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
@@ -4948,7 +4948,7 @@ main_thread = Thread.new {
         exit(1)
       end
     else
-      unless launcher_cmd = Lich.get_simu_launcher
+      unless (launcher_cmd = Lich.get_simu_launcher)
         $stdout.puts 'error: failed to find the Simutronics launcher'
         Lich.log 'error: failed to find the Simutronics launcher'
         exit(1)
@@ -5345,7 +5345,7 @@ main_thread = Thread.new {
       end
 
       begin
-        while client_string = $_CLIENT_.gets
+        while (client_string = $_CLIENT_.gets)
           if $frontend =~ /^(?:wizard|avalon)$/
             client_string = "#{$cmd_prefix}#{client_string}"
           elsif $frontend =~ /^(?:frostbite)$/
@@ -5424,7 +5424,7 @@ main_thread = Thread.new {
                 init_str.concat '<compass>'
                 shorten_dir = { 'north' => 'n', 'northeast' => 'ne', 'east' => 'e', 'southeast' => 'se', 'south' => 's', 'southwest' => 'sw', 'west' => 'w', 'northwest' => 'nw', 'up' => 'up', 'down' => 'down', 'out' => 'out' }
                 XMLData.room_exits.each { |dir|
-                  if short_dir = shorten_dir[dir]
+                  if (short_dir = shorten_dir[dir])
                     init_str.concat "<dir value='#{short_dir}'/>"
                   end
                 }
@@ -5433,7 +5433,7 @@ main_thread = Thread.new {
                 init_str = nil
               }
             end
-            while client_string = $_DETACHABLE_CLIENT_.gets
+            while (client_string = $_DETACHABLE_CLIENT_.gets)
               client_string = "#{$cmd_prefix}#{client_string}" # if $frontend =~ /^(?:wizard|avalon)$/
               begin
                 $_IDLETIMESTAMP_ = Time.now

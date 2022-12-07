@@ -91,7 +91,7 @@ class Map
 
   def self.get_location
     unless XMLData.room_count == @@current_location_count
-      if script = Script.current
+      if (script = Script.current)
         save_want_downstream = script.want_downstream
         script.want_downstream = true
         waitrt?
@@ -122,14 +122,14 @@ class Map
 
   def self.current # returns Map/Room
     Map.load unless @@loaded
-    if script = Script.current
+    if (script = Script.current)
       return @@list[@@current_room_id] if XMLData.room_count == @@current_room_count and !@@current_room_id.nil?
     elsif XMLData.room_count == @@fuzzy_room_count and !@@current_room_id.nil?
       return @@list[@@current_room_id]
     end
     ids = Map.ids_from_uid(XMLData.room_id)
     return Map.set_current(ids[0]) if ids.size == 1
-    if ids.size > 1 and !@@current_room_id.nil? and id = Map.match_multi_ids(ids)
+    if ids.size > 1 and !@@current_room_id.nil? and (id = Map.match_multi_ids(ids))
       return Map.set_current(id)
     end
 
@@ -160,7 +160,7 @@ class Map
   end
 
   def self.match_no_uid # returns Map/Room
-    if script = Script.current
+    if (script = Script.current)
       return Map.set_current(Map.match_current(script))
     else
       return Map.set_fuzzy(Map.match_fuzzy)
@@ -175,7 +175,7 @@ class Map
         begin
           script.ignore_pause = true
           peer_room_count = XMLData.room_count
-          if peer_tag = r.tags.find { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }
+          if (peer_tag = r.tags.find { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ })
             good = false
             need_desc, peer_direction, peer_requirement = /^(set desc on; )?peer ([a-z]+) =~ \/(.+)\/$/.match(peer_tag).captures
             need_desc = need_desc ? true : false
@@ -203,7 +203,7 @@ class Map
               if result =~ /^You peer/
                 peer_results = []
                 5.times {
-                  if line = get?
+                  if (line = get?)
                     peer_results.push line
                     break if line =~ /^Obvious/
                   end
@@ -234,23 +234,23 @@ class Map
         1.times {
           @@current_room_count = XMLData.room_count
           foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
-          if room = @@list.find { |r| r.title.include?(XMLData.room_title) and
+          if (room = @@list.find { |r| r.title.include?(XMLData.room_title) and
               r.description.include?(XMLData.room_description.strip) and
               (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
               (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
               (!r.check_location or r.location == Map.get_location) and check_peer_tag.call(r)
-          }
+          })
             redo unless @@current_room_count == XMLData.room_count
             return room.id
           else
             redo unless @@current_room_count == XMLData.room_count
             desc_regex = /#{Regexp.escape(XMLData.room_description.strip.sub(/\.+$/, '')).gsub(/\\\.(?:\\\.\\\.)?/, '|')}/
-            if room = @@list.find { |r| r.title.include?(XMLData.room_title) and
+            if (room = @@list.find { |r| r.title.include?(XMLData.room_title) and
                 (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                 (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
                 (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
                 (!r.check_location or r.location == Map.get_location) and check_peer_tag.call(r)
-            }
+            })
               redo unless @@current_room_count == XMLData.room_count
               return room.id
             else
@@ -285,12 +285,12 @@ class Map
         else
           redo unless @@fuzzy_room_count == XMLData.room_count
           desc_regex = /#{Regexp.escape(XMLData.room_description.strip.sub(/\.+$/, '')).gsub(/\\\.(?:\\\.\\\.)?/, '|')}/
-          if room = @@list.find { |r| r.title.include?(XMLData.room_title) and
+          if (room = @@list.find { |r| r.title.include?(XMLData.room_title) and
               (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
               (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
               (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
               (!r.check_location or r.location == Map.get_location)
-          }
+          })
             redo unless @@fuzzy_room_count == XMLData.room_count
             if room.tags.any? { |tag| tag =~ /^(set desc on; )?peer [a-z]+ =~ \/.+\/$/ }
               return nil
@@ -428,7 +428,7 @@ class Map
       respond '--- Lich: error: no map database found'
       return false
     end
-    while filename = file_list.shift
+    while (filename = file_list.shift)
       if filename =~ /\.json$/i
         return true if Map.load_json(filename)
       elsif filename =~ /\.xml$/
@@ -462,7 +462,7 @@ class Map
             return false
           end
           error = false
-          while filename = file_list.shift
+          while (filename = file_list.shift)
             if File.exist?(filename)
               File.open(filename) { |f|
                 JSON.parse(f.read).each { |room|
@@ -508,7 +508,7 @@ class Map
             return false
           end
           error = false
-          while filename = file_list.shift
+          while (filename = file_list.shift)
             begin
               @@list = File.open(filename, 'rb') { |f| Marshal.load(f.read) }
               respond "--- Map loaded #{filename}" # if error
@@ -607,10 +607,10 @@ class Map
           }
           begin
             File.open(filename) { |file|
-              while line = file.gets
+              while (line = file.gets)
                 buffer.concat(line)
                 # FIXME: remove   (?=<)   ?
-                while str = buffer.slice!(/^<([^>]+)><\/\1>|^[^<]+(?=<)|^<[^<]+>/)
+                while (str = buffer.slice!(/^<([^>]+)><\/\1>|^[^<]+(?=<)|^<[^<]+>/))
                   if str[0, 1] == '<'
                     if str[1, 1] == '/'
                       element = /^<\/([^\s>\/]+)/.match(str).captures.first
@@ -806,7 +806,7 @@ class Map
     time = 0.to_f
     until array.length < 2
       room = array.shift
-      if t = Map[room].timeto[array.first.to_s]
+      if (t = Map[room].timeto[array.first.to_s])
         if t.instance_of?(Proc)
           time += t.call.to_f
         else
@@ -822,7 +822,7 @@ class Map
   def self.dijkstra(source, destination = nil)
     if source.instance_of?(Map)
       source.dijkstra(destination)
-    elsif room = Map[source]
+    elsif (room = Map[source])
       room.dijkstra(destination)
     else
       echo 'Map.dijkstra: error: invalid source room'
@@ -935,7 +935,7 @@ class Map
   def self.findpath(source, destination)
     if source.instance_of?(Map)
       source.path_to(destination)
-    elsif room = Map[source]
+    elsif (room = Map[source])
       room.path_to(destination)
     else
       echo 'Map.findpath: error: invalid source room'

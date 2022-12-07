@@ -62,7 +62,7 @@ module EAccess
     password = password.map { |c| c.chr }.join
     conn.puts "A\t#{account}\t#{password}\n"
     response = EAccess.read(conn)
-    unless login = /KEY\t(?<key>.*)\t/.match(response)
+    unless (login = /KEY\t(?<key>.*)\t/.match(response))
       eaccess_error = sprintf('Error(%s)', response.split(/\s+/).last)
       return eaccess_error
     end

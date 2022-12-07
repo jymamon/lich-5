@@ -173,12 +173,12 @@ class XMLParser
   def parse(line)
     @buffer.concat(line)
     loop {
-      if str = @buffer.slice!(/^[^<]+/)
+      if (str = @buffer.slice!(/^[^<]+/))
         text(str.gsub(/&(lt|gt|quot|apos|amp)/) { @unescape[$1] })
-      elsif str = @buffer.slice!(/^<\/[^<]+>/)
+      elsif (str = @buffer.slice!(/^<\/[^<]+>/))
         element = /^<\/([^\s>\/]+)/.match(str).captures.first
         tag_end(element)
-      elsif str = @buffer.slice!(/^<[^<]+>/)
+      elsif (str = @buffer.slice!(/^<[^<]+>/))
         element = /^<([^\s>\/]+)/.match(str).captures.first
         attributes = {}
         str.scan(/([A-z][A-z0-9_-]*)=(["'])(.*?)\2/).each { |attr| attributes[attr[0]] = attr[2] }
@@ -462,7 +462,7 @@ class XMLParser
         @player_id = attributes['id']
         DownstreamHook.remove('inventory_boxes_off') if !$frontend =~ (/^(?:wizard|avalon)$/) && Lich.inventory_boxes(@player_id)
       elsif name == 'settingsInfo'
-        if game = attributes['instance']
+        if (game = attributes['instance'])
           if game == 'GS4'
             @game = 'GSIV'
           elsif (game == 'GSX') or (game == 'GS4X')
@@ -710,7 +710,7 @@ class XMLParser
   def spellfront
     if (Time.now.to_i - @@warned_deprecated_spellfront) > 300
       @@warned_deprecated_spellfront = Time.now.to_i
-      unless script_name = Script.current.name
+      unless (script_name = Script.current.name)
         script_name = 'unknown script'
       end
       respond "--- warning: #{script_name} is using deprecated method XMLData.spellfront; this method will be removed in a future version of Lich"
