@@ -73,6 +73,12 @@ Layout/SpaceInsideParens:
   Enabled: true
   EnforcedStyle: no_space
 
+Naming/VariableName:
+  Enabled: true
+  Exclude:
+    - 'lib/platform/win32/advapi32.rb'
+    - 'lib/platform/win32/kernel32.rb'
+
 Style/Alias:
   Enabled: true
   EnforcedStyle: prefer_alias

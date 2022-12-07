@@ -297,14 +297,6 @@ Naming/PredicateName:
     - 'spec/**/*'
     - 'lich.rbw'
 
-# Offense count: 93
-# Configuration parameters: EnforcedStyle, AllowedIdentifiers, AllowedPatterns.
-# SupportedStyles: snake_case, camelCase
-Naming/VariableName:
-  Exclude:
-    - 'lib/platform/win32/advapi32.rb'
-    - 'lib/platform/win32/kernel32.rb'
-
 # Offense count: 13
 Security/Eval:
   Exclude:
