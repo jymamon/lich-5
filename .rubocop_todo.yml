@@ -465,12 +465,6 @@ Style/IdenticalConditionalBranches:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 4
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/InfiniteLoop:
-  Exclude:
-    - 'lib/global_defs.rb'
-
 # Offense count: 6
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: InverseMethods, InverseBlocks.

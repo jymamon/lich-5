@@ -363,10 +363,10 @@ def unique_waitfor(*strings)
   unless script = Script.current then echo 'unique_waitfor: cannot identify calling script.'; return nil; end
   strings.flatten!
   regexp = /#{strings.join('|')}/
-  while true
+  loop {
     str = script.unique_gets
     return str if str =~ regexp
-  end
+  }
 end
 
 def unique_get
@@ -1338,10 +1338,10 @@ def waitfor(*strings)
     return false
   end
   regexpstr = strings.join('|')
-  while true
+  loop {
     line_in = script.gets
     return line_in if line_in =~ /#{regexpstr}/i
-  end
+  }
 end
 
 def wait
@@ -1487,7 +1487,7 @@ def matchfind(*strings)
     respond 'Unknown script is asking to use matchfind!  Cannot process request without identifying the calling script; killing this thread.'
     Thread.current.kill
   end
-  while true
+  loop {
     if reobj = regex.match(script.gets)
       ret = reobj.captures.compact
       if ret.length < 2
@@ -1496,7 +1496,7 @@ def matchfind(*strings)
         return ret
       end
     end
-  end
+  }
 end
 
 def matchfindword(*strings)
@@ -1505,7 +1505,7 @@ def matchfindword(*strings)
     respond 'Unknown script is asking to use matchfindword!  Cannot process request without identifying the calling script; killing this thread.'
     Thread.current.kill
   end
-  while true
+  loop {
     if reobj = regex.match(script.gets)
       ret = reobj.captures.compact
       if ret.length < 2
@@ -1514,7 +1514,7 @@ def matchfindword(*strings)
         return ret
       end
     end
-  end
+  }
 end
 
 def send_scripts(*messages)
