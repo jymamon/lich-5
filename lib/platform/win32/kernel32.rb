@@ -33,6 +33,7 @@ module Win32
       extern 'int EnumProcesses(void*, int, void*)'
     end
 
+    # rubocop:disable Lint/DuplicateMethods
     def Win32.EnumProcesses(args = {})
       args[:cb] ||= 400
       pProcessIds = Array.new((args[:cb] / SIZEOF_LONG), 0).pack(''.rjust((args[:cb] / SIZEOF_LONG), 'L'))
@@ -42,6 +43,7 @@ module Win32
       return :return => r, :pProcessIds => pProcessIds.unpack(''.rjust((args[:cb] / SIZEOF_LONG),
                                                                        'L'))[0...(pBytesReturned / SIZEOF_LONG)], :pBytesReturned => pBytesReturned
     end
+    # rubocop:enable Lint/DuplicateMethods
   end
 
   def self.GetLastError

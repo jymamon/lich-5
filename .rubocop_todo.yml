@@ -39,14 +39,6 @@ Lint/ConstantDefinitionInBlock:
     - 'lib/gtk.rb'
 
 # Offense count: 4
-Lint/DuplicateMethods:
-  Exclude:
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/platform/win32/kernel32.rb'
-    - 'lib/xmlparser.rb'
-
-# Offense count: 4
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: AllowComments.
 Lint/EmptyConditionalBody:

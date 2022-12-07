@@ -27,7 +27,7 @@ class XMLParser
               :prepared_spell, :encumbrance_text, :encumbrance_full_text, :encumbrance_value,
               :indicator, :injuries, :injury_mode, :room_count, :room_title, :room_description,
               :room_exits, :room_exits_string, :familiar_room_title, :familiar_room_description,
-              :familiar_room_exits, :bounty_task, :injury_mode, :server_time, :server_time_offset,
+              :familiar_room_exits, :bounty_task, :server_time, :server_time_offset,
               :roundtime_end, :cast_roundtime_end, :last_pulse, :level, :next_level_value,
               :next_level_text, :society_task, :stow_container_id, :name, :game, :in_stream,
               :player_id, :prompt, :current_target_ids, :current_target_id, :room_window_disabled,
