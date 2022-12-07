@@ -553,9 +553,6 @@ module Lich
     elsif (gamehost == 'storm.gs4.game.play.net') and (gameport.to_i == 10024)
       gamehost = 'gs3.simutronics.net'
       gameport = 4900
-    elsif (gamehost == 'storm.gs4.game.play.net') and (gameport.to_i == 10324)
-      game_host = 'gs4.simutronics.net'
-      game_port = 10321
     elsif (gamehost == 'dr.simutronics.net') and (gameport.to_i == 11024)
       gamehost = 'prime.dr.game.play.net'
       gameport = 4901

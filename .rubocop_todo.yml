@@ -38,11 +38,6 @@ Lint/ConstantDefinitionInBlock:
   Exclude:
     - 'lib/gtk.rb'
 
-# Offense count: 1
-Lint/DuplicateElsifCondition:
-  Exclude:
-    - 'lib/lich.rb'
-
 # Offense count: 4
 Lint/DuplicateMethods:
   Exclude:
