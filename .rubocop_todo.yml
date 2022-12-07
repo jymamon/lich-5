@@ -408,13 +408,6 @@ Style/FloatDivision:
   Exclude:
     - 'lib/global_defs.rb'
 
-# Offense count: 36
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: each, for
-Style/For:
-  Enabled: true
-
 # Offense count: 107
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: MaxUnannotatedPlaceholdersAllowed, AllowedMethods, AllowedPatterns, IgnoredMethods.
@@ -464,15 +457,6 @@ Style/GuardClause:
     - 'lib/util.rb'
     - 'lib/xmlparser.rb'
     - 'lich.rbw'
-
-# Offense count: 14
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: AllowedReceivers.
-Style/HashEachMethods:
-  Exclude:
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/xmlparser.rb'
 
 # Offense count: 27
 # This cop supports unsafe autocorrection (--autocorrect-all).

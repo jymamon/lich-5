@@ -361,7 +361,7 @@ class XMLParser
               $_CLIENT_.puts "\034GSK0000000000000000000000000000000\r\n"
             end
           else
-            gsl_prompt = String.new; ICONMAP.keys.each { |icon| gsl_prompt += ICONMAP[icon] if @indicator[icon] == 'y' }
+            gsl_prompt = String.new; ICONMAP.each_key { |icon| gsl_prompt += ICONMAP[icon] if @indicator[icon] == 'y' }
             $_CLIENT_.puts "\034GSP#{sprintf('%-30s', gsl_prompt)}\r\n"
           end
         end
@@ -490,7 +490,7 @@ class XMLParser
           $_CLIENT_.puts "\034GSg#{sprintf('%010d', @stance_value)}\r\n"
           $_CLIENT_.puts "\034GSr#{MINDMAP[@mind_text]}\r\n"
           gsl_prompt = String.new
-          @indicator.keys.each { |icon| gsl_prompt += ICONMAP[icon] if @indicator[icon] == 'y' }
+          @indicator.each_key { |icon| gsl_prompt += ICONMAP[icon] if @indicator[icon] == 'y' }
           $_CLIENT_.puts "\034GSP#{sprintf('%-30s', gsl_prompt)}\r\n"
           gsl_prompt = nil
           gsl_exits = String.new

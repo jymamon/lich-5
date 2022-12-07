@@ -470,10 +470,10 @@ class Map
             if File.exist?(filename)
               File.open(filename) { |f|
                 JSON.parse(f.read).each { |room|
-                  room['wayto'].keys.each { |k|
+                  room['wayto'].each_key { |k|
                     room['wayto'][k] = StringProc.new(room['wayto'][k][3..]) if room['wayto'][k][0..2] == ';e '
                   }
-                  room['timeto'].keys.each { |k|
+                  room['timeto'].each_key { |k|
                     room['timeto'][k] = StringProc.new(room['timeto'][k][3..]) if room['timeto'][k].instance_of?(String) and (room['timeto'][k][0..2] == ';e ')
                   }
                   room['tags'] ||= []
@@ -774,7 +774,7 @@ class Map
             room.uid.each { |u| file.write "      <uid>#{u}</uid>\n" }
             room.unique_loot.to_a.each { |loot| file.write "      <unique_loot>#{loot.gsub(/(<|>|"|'|&)/) { escape[$1] }}</unique_loot>\n" }
             file.write "      <image name=\"#{room.image.gsub(/(<|>|"|'|&)/) { escape[$1] }}\" coords=\"#{room.image_coords.join(',')}\" />\n" if room.image and room.image_coords
-            room.wayto.keys.each { |target|
+            room.wayto.each_key { |target|
               if room.timeto[target].instance_of?(Proc)
                 cost = " cost=\"#{room.timeto[target]._dump.gsub(/(<|>|"|'|&)/) { escape[$1] }}\""
               elsif room.timeto[target]
@@ -857,7 +857,7 @@ class Map
         until pq.size.empty?
           v = pq.shift
           visited[v] = true
-          @@list[v].wayto.keys.each { |adj_room|
+          @@list[v].wayto.each_key { |adj_room|
             adj_room_i = adj_room.to_i
             unless visited[adj_room_i]
               if @@list[v].timeto[adj_room].instance_of?(Proc)
@@ -882,7 +882,7 @@ class Map
           break if v == destination
 
           visited[v] = true
-          @@list[v].wayto.keys.each { |adj_room|
+          @@list[v].wayto.each_key { |adj_room|
             adj_room_i = adj_room.to_i
             unless visited[adj_room_i]
               if @@list[v].timeto[adj_room].instance_of?(Proc)
@@ -908,7 +908,7 @@ class Map
           break if dest_list.include?(v) and (shortest_distances[v] < 20)
 
           visited[v] = true
-          @@list[v].wayto.keys.each { |adj_room|
+          @@list[v].wayto.each_key { |adj_room|
             adj_room_i = adj_room.to_i
             unless visited[adj_room_i]
               if @@list[v].timeto[adj_room].instance_of?(Proc)
