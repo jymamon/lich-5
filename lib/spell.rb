@@ -45,7 +45,7 @@ module Games
         @num = xml_spell.attributes['number'].to_i
         @name = xml_spell.attributes['name']
         @type = xml_spell.attributes['type']
-        @no_incant = ((xml_spell.attributes['incant'] == 'no') ? true : false)
+        @no_incant = (xml_spell.attributes['incant'] == 'no')
         if xml_spell.attributes['availability'] == 'all'
           @availability = 'all'
         elsif xml_spell.attributes['availability'] == 'group'
@@ -62,8 +62,8 @@ module Games
         @msgup = nil if @msgup.empty?
         @msgdn = xml_spell.elements.find_all { |e| (e.name == 'message') and (e.attributes['type'].downcase == 'end') }.collect { |e| e.text }.join('$|^')
         @msgdn = nil if @msgdn.empty?
-        @stance = ((xml_spell.attributes['stance'] =~ /^(yes|true)$/i) ? true : false)
-        @channel = ((xml_spell.attributes['channel'] =~ /^(yes|true)$/i) ? true : false)
+        @stance = (xml_spell.attributes['stance'] =~ /^(yes|true)$/i ? true : false)
+        @channel = (xml_spell.attributes['channel'] =~ /^(yes|true)$/i ? true : false)
         @cost = {}
         xml_spell.elements.find_all { |e| e.name == 'cost' }.each { |xml_cost|
           @cost[xml_cost.attributes['type'].downcase] ||= {}

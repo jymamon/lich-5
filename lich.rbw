@@ -1362,11 +1362,11 @@ class Script
   def instance_eval(*a);         nil; end
 
   def labels
-    ($SAFE == 0) ? @labels : nil
+    $SAFE == 0 ? @labels : nil
   end
 
   def thread_group
-    ($SAFE == 0) ? @thread_group : nil
+    $SAFE == 0 ? @thread_group : nil
   end
 
   def has_thread?(t)

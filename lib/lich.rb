@@ -188,7 +188,7 @@ module Lich
       else
         begin
           r = Win32.GetModuleFileName
-          file = ((r[:return] > 0) ? r[:lpFilename] : 'rubyw.exe')
+          file = (r[:return] > 0 ? r[:lpFilename] : 'rubyw.exe')
           params = "#{$PROGRAM_NAME.split(/\/|\\/).last} --link-to-sge"
           r = Win32.ShellExecuteEx(:lpFile => file, :lpParameters => params)
           if r[:return] > 0
@@ -247,7 +247,7 @@ module Lich
       else
         begin
           r = Win32.GetModuleFileName
-          file = ((r[:return] > 0) ? r[:lpFilename] : 'rubyw.exe')
+          file = (r[:return] > 0 ? r[:lpFilename] : 'rubyw.exe')
           params = "#{$PROGRAM_NAME.split(/\/|\\/).last} --unlink-from-sge"
           r = Win32.ShellExecuteEx(:lpFile => file, :lpParameters => params)
           if r[:return] > 0
@@ -307,7 +307,7 @@ module Lich
       else
         begin
           r = Win32.GetModuleFileName
-          file = ((r[:return] > 0) ? r[:lpFilename] : 'rubyw.exe')
+          file = (r[:return] > 0 ? r[:lpFilename] : 'rubyw.exe')
           params = "#{$PROGRAM_NAME.split(/\/|\\/).last} --link-to-sal"
           r = Win32.ShellExecuteEx(:lpFile => file, :lpParameters => params)
           if r[:return] > 0
@@ -366,7 +366,7 @@ module Lich
       else
         begin
           r = Win32.GetModuleFileName
-          file = ((r[:return] > 0) ? r[:lpFilename] : 'rubyw.exe')
+          file = (r[:return] > 0 ? r[:lpFilename] : 'rubyw.exe')
           params = "#{$PROGRAM_NAME.split(/\/|\\/).last} --unlink-from-sal"
           r = Win32.ShellExecuteEx(:lpFile => file, :lpParameters => params)
           if r[:return] > 0
