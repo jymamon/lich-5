@@ -465,12 +465,6 @@ Style/IdenticalConditionalBranches:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/IfWithSemicolon:
-  Exclude:
-    - 'lib/map_gs.rb'
-
 # Offense count: 4
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/InfiniteLoop:
