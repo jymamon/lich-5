@@ -112,9 +112,9 @@ connect_button.signal_connect('clicked') {
   Gtk.queue {
     begin
       login_info = EAccess.auth(
-        account: user_id_entry.text || @options.account,
-        password: pass_entry.text || @options.password,
-        legacy: true
+        :account => user_id_entry.text || @options.account,
+        :password => pass_entry.text || @options.password,
+        :legacy => true
       )
     end
     if login_info =~ /error/i
