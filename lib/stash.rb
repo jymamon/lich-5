@@ -161,11 +161,11 @@ module Lich
         for action in $fill_right_hand_actions.pop
           action.call
         end
-      elsif $fill_right_hand_actions.length > 0
+      elsif !$fill_right_hand_actions.empty?
         for action in $fill_right_hand_actions.pop
           action.call
           end
-      elsif $fill_left_hand_actions.length > 0
+      elsif !$fill_left_hand_actions.empty?
         for action in $fill_left_hand_actions.pop
           action.call
         end

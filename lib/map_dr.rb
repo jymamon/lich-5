@@ -383,7 +383,7 @@ class Map
           (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
           !r.uid.include?(XMLData.room_id)
         }
-        if identical_rooms.length > 0
+        unless identical_rooms.empty?
           room.check_location = true
           identical_rooms.each { |r| r.check_location = true }
         end
@@ -609,7 +609,7 @@ class Map
               end
               if current_attributes['cost'] =~ /^[0-9.]+$/
                 room['timeto'][current_attributes['target']] = current_attributes['cost'].to_f
-              elsif current_attributes['cost'].length > 0
+              elsif !current_attributes['cost'].empty?
                 room['timeto'][current_attributes['target']] = StringProc.new(current_attributes['cost'])
               else
                 room['timeto'][current_attributes['target']] = 0.2
@@ -872,7 +872,7 @@ class Map
       visited[source] = true
       shortest_distances[source] = 0
       if destination.nil?
-        until pq.size == 0
+        until pq.size.empty?
           v = pq.shift
           visited[v] = true
           @@list[v].wayto.keys.each { |adj_room|
@@ -895,7 +895,7 @@ class Map
           }
         end
       elsif destination.instance_of?(Integer)
-        until pq.size == 0
+        until pq.size.empty?
           v = pq.shift
           break if v == destination
 
@@ -921,7 +921,7 @@ class Map
         end
       elsif destination.instance_of?(Array)
         dest_list = destination.collect { |dest| dest.to_i }
-        until pq.size == 0
+        until pq.size.empty?
           v = pq.shift
           break if dest_list.include?(v) and (shortest_distances[v] < 20)
 

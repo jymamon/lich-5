@@ -1834,7 +1834,7 @@ def fb_to_sf(line)
     return line if line == "\r\n"
 
     line = line.gsub(/<c>/, '')
-    return nil if line.gsub("\r\n", '').length < 1
+    return nil if line.gsub("\r\n", '').empty?
 
     return line
   rescue
@@ -1890,7 +1890,7 @@ def sf_to_wiz(line)
     line = line.gsub('&gt;', '>')
     line = line.gsub('&lt;', '<')
     line = line.gsub('&amp;', '&')
-    return nil if line.gsub("\r\n", '').length < 1
+    return nil if line.gsub("\r\n", '').empty?
 
     return line
   rescue
@@ -1924,7 +1924,7 @@ def strip_xml(line)
   line = line.gsub('&gt;', '>')
   line = line.gsub('&lt;', '<')
 
-  return nil if line.gsub("\n", '').gsub("\r", '').gsub(' ', '').length < 1
+  return nil if line.gsub("\n", '').gsub("\r", '').gsub(' ', '').empty?
 
   return line
 end

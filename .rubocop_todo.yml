@@ -361,6 +361,9 @@ Style/ClassAndModuleChildren:
     - 'lib/gtk.rb'
 
 # Offense count: 831
+# A bunch of these are trigger by classes that would be static in other languages
+# but which ruby doesn't really have the concept of.  In context, these make sense
+# even if there are ways to work around the rubocop warning.
 Style/ClassVars:
   Exclude:
     - 'lib/armor.rb'
@@ -741,15 +744,6 @@ Style/SymbolProc:
     - 'lib/spell.rb'
     - 'lib/xmlparser.rb'
     - 'lich.rbw'
-
-# Offense count: 15
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/stash.rb'
 
 # Offense count: 409
 # This cop supports safe autocorrection (--autocorrect).
