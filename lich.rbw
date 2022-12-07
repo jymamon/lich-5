@@ -2147,10 +2147,14 @@ class SpellRanks
           File.open("#{DATA_DIR}/#{XMLData.game}/spell-ranks.dat", 'rb') { |f|
             @@timestamp, @@list = Marshal.load(f.read)
           }
-          # minor mental circle added 2012-07-18; old data files will have @minormental as nil
-          @@list.each { |rank_info| rank_info.minormental ||= 0 }
-          # monk circle added 2013-01-15; old data files will have @minormental as nil
-          @@list.each { |rank_info| rank_info.monk ||= 0 }
+
+          @@list.each { |rank_info|
+            # minor mental circle added 2012-07-18; old data files will have @minormental as nil
+            rank_info.minormental ||= 0
+            # monk circle added 2013-01-15; old data files will have @minormental as nil
+            rank_info.monk ||= 0
+          }
+
           @@loaded = true
         rescue
           respond "--- Lich: error: SpellRanks.load: #{$!}"
