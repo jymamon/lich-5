@@ -77,8 +77,6 @@ module Lich
         when 'green', 'speech', 'debug', 'light green'
           preset_color_before = "<preset id='speech'>"
           preset_color_after = '</preset>'
-        when 'link', 'command', 'selectedLink', 'watching', 'roomName'
-
         end
       elsif $frontend =~ /^(?:wizard)$/
         case type
@@ -94,8 +92,6 @@ module Lich
         when 'green', 'speech', 'debug', 'light green'
           preset_color_before = wizard_color['bright green'].chr.force_encoding(Encoding::ASCII_8BIT)
           preset_color_after = "\217".force_encoding(Encoding::ASCII_8BIT)
-        when 'link', 'command', 'selectedLink', 'watching', 'roomName'
-
         end
       else
         case type
@@ -111,8 +107,6 @@ module Lich
         when 'green', 'speech', 'debug', 'light green'
           preset_color_before = '>> '
           preset_color_after = ''
-        when 'link', 'command', 'selectedLink', 'watching', 'roomName'
-
         end
       end
 

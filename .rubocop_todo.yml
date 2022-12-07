@@ -44,12 +44,6 @@ Lint/EmptyExpression:
     - 'lich.rbw'
 
 # Offense count: 3
-# Configuration parameters: AllowComments.
-Lint/EmptyWhen:
-  Exclude:
-    - 'lib/messaging.rb'
-
-# Offense count: 3
 Lint/HashCompareByIdentity:
   Exclude:
     - 'lich.rbw'
