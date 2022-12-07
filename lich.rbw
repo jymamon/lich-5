@@ -115,9 +115,7 @@ class String
     dup
   end
 
-  def stream
-    @stream
-  end
+  attr_reader :stream
 
   def stream=(val)
     @stream ||= val
