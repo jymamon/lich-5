@@ -177,12 +177,8 @@ class Map
                     if XMLData.room_count == peer_room_count
                       peer_history[peer_room_count] ||= {}
                       peer_history[peer_room_count][peer_direction] ||= {}
-                      if need_desc
-                        peer_history[peer_room_count][peer_direction][true] = peer_results
-                        peer_history[peer_room_count][peer_direction][false] = peer_results
-                      else
-                        peer_history[peer_room_count][peer_direction][false] = peer_results
-                      end
+                      peer_history[peer_room_count][peer_direction][true] = peer_results if need_desc
+                      peer_history[peer_room_count][peer_direction][false] = peer_results
                     end
                   end
                   script.want_downstream = save_want_downstream
@@ -361,7 +357,7 @@ class Map
           (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
           check_peer_tag.call(r)
       }
-        return room
+        # Just return the room
       elsif room = @@list.find { |r| r.location.nil? and r.title.include?(XMLData.room_title) and
           r.description.include?(XMLData.room_description.strip) and
           (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
@@ -369,7 +365,6 @@ class Map
           check_peer_tag.call(r)
       }
         room.location = current_location
-        return room
       else
         title       = [XMLData.room_title]
         description = [XMLData.room_description.strip]
@@ -387,8 +382,9 @@ class Map
           room.check_location = true
           identical_rooms.each { |r| r.check_location = true }
         end
-        return room
       end
+
+      return room
     end
   end
 

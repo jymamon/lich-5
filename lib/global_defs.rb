@@ -1136,11 +1136,11 @@ def setpriority(val = nil)
 
   if val.to_i > 3
     echo("You're trying to set a script's priority as being higher than the send/recv threads (this is telling Lich to run the script before it even gets data to give the script, and is useless); the limit is 3")
-    return Thread.current.priority
   else
     Thread.current.group.list.each { |thr| thr.priority = val.to_i }
-    return Thread.current.priority
   end
+
+  return Thread.current.priority
 end
 
 def checkbounty
@@ -1662,6 +1662,7 @@ def empty_hand
   left_hand = GameObj.left_hand
 
   unless (right_hand.id.nil? and ([Wounds.rightArm, Wounds.rightHand, Scars.rightArm, Scars.rightHand].max < 3)) or (left_hand.id.nil? and ([Wounds.leftArm, Wounds.leftHand, Scars.leftArm, Scars.leftHand].max < 3))
+    # rubocop: disable Style/IdenticalConditionalBranches
     if right_hand.id and ([Wounds.rightArm, Wounds.rightHand, Scars.rightArm, Scars.rightHand].max < 3 or [Wounds.leftArm, Wounds.leftHand, Scars.leftArm, Scars.leftHand].max = 3)
       waitrt?
       Lich::Stash.stash_hands(:right => true)
@@ -1669,6 +1670,7 @@ def empty_hand
       waitrt?
       Lich::Stash.stash_hands(:left => true)
     end
+    # rubocop: enable Style/IdenticalConditionalBranches
   end
 end
 

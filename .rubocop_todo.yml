@@ -458,11 +458,10 @@ Style/GuardClause:
     - 'lib/xmlparser.rb'
     - 'lich.rbw'
 
-# Offense count: 27
+# Offense count: 16
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/IdenticalConditionalBranches:
   Exclude:
-    - 'lib/global_defs.rb'
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 

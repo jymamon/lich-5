@@ -211,12 +211,8 @@ class Map
                 if XMLData.room_count == peer_room_count
                   peer_history[peer_room_count] ||= {}
                   peer_history[peer_room_count][peer_direction] ||= {}
-                  if need_desc
-                    peer_history[peer_room_count][peer_direction][true] = peer_results
-                    peer_history[peer_room_count][peer_direction][false] = peer_results
-                  else
-                    peer_history[peer_room_count][peer_direction][false] = peer_results
-                  end
+                  peer_history[peer_room_count][peer_direction][true] = peer_results if need_desc
+                  peer_history[peer_room_count][peer_direction][false] = peer_results
                 end
               end
               script.want_downstream = save_want_downstream
