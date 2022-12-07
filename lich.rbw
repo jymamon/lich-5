@@ -1687,7 +1687,7 @@ class WizardScript < Script
     unless cli_vars.empty?
       cli_vars = cli_vars.split(' ') if cli_vars.is_a?(String)
       cli_vars.each_index { |idx| @vars[idx + 1] = cli_vars[idx] }
-      @vars[0] = @vars[1..-1].join(' ')
+      @vars[0] = @vars[1..].join(' ')
       cli_vars = nil
     end
     if @vars.first =~ /^quiet$/i
@@ -1778,7 +1778,7 @@ class WizardScript < Script
         indent = $1
         arg = $2
         if arg.include?(' ')
-          line = "#{indent}start_script(#{Regexp.escape(fixstring.call(arg.split[0].inspect))}, #{fixstring.call(arg.split[1..-1].join(' ').scan(/"[^"]+"|[^"\s]+/).inspect)})\n#{indent}exit"
+          line = "#{indent}start_script(#{Regexp.escape(fixstring.call(arg.split[0].inspect))}, #{fixstring.call(arg.split[1..].join(' ').scan(/"[^"]+"|[^"\s]+/).inspect)})\n#{indent}exit"
         else
           line = "#{indent}start_script(#{Regexp.escape(fixstring.call(arg.inspect))})\n#{indent}exit"
         end
@@ -1786,7 +1786,7 @@ class WizardScript < Script
         indent = $1
         arg = $2
         if arg.include?(' ')
-          line = "#{indent}start_script(#{Regexp.escape(fixstring.call(arg.split[0].inspect))}, #{fixstring.call(arg.split[1..-1].join(' ').scan(/"[^"]+"|[^"\s]+/).inspect)})"
+          line = "#{indent}start_script(#{Regexp.escape(fixstring.call(arg.split[0].inspect))}, #{fixstring.call(arg.split[1..].join(' ').scan(/"[^"]+"|[^"\s]+/).inspect)})"
         else
           line = "#{indent}start_script(#{Regexp.escape(fixstring.call(arg.inspect))})"
         end
@@ -2101,7 +2101,7 @@ class SharedBuffer
     lines = []
     @buffer_mutex.synchronize {
       @buffer_index[thread_id] = @buffer_offset if @buffer_index[thread_id] < @buffer_offset
-      lines = @buffer[(@buffer_index[thread_id] - @buffer_offset)..-1]
+      lines = @buffer[(@buffer_index[thread_id] - @buffer_offset)..]
       @buffer_index[thread_id] = (@buffer_offset + @buffer.length)
     }
     return lines
@@ -4543,7 +4543,7 @@ if @options.hostsdirectory
   # TODO: Extra logic here can move to when the option is being set
   if hosts_dir and File.exist?(hosts_dir)
     hosts_dir = hosts_dir.tr('\\', '/')
-    hosts_dir += '/' unless hosts_dir[-1..-1] == '/'
+    hosts_dir += '/' unless hosts_dir[-1] == '/'
   else
     $stdout.puts "warning: given hosts directory does not exist: #{hosts_dir}"
     hosts_dir = nil

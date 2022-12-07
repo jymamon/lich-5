@@ -680,17 +680,6 @@ Style/SignalException:
     - 'lib/stash.rb'
     - 'lib/util.rb'
 
-# Offense count: 20
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/SlicingWithRange:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/init.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/xmlparser.rb'
-    - 'lich.rbw'
-
 # Offense count: 422
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: RequireEnglish, EnforcedStyle.

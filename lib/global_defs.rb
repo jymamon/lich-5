@@ -269,7 +269,7 @@ def dec2bin(n)
 end
 
 def bin2dec(n)
-  [('0' * 32 + n.to_s)[-32..-1]].pack('B32').unpack1('N')
+  [('0' * 32 + n.to_s)[-32..]].pack('B32').unpack1('N')
 end
 
 def idle?(time = 60)
@@ -335,11 +335,11 @@ def send_to_script(*values)
   values.flatten!
   if script = Script.list.find { |val| val.name =~ /^#{values.first}/i }
     if script.want_downstream
-      values[1..-1].each { |val| script.downstream_buffer.push(val) }
+      values[1..].each { |val| script.downstream_buffer.push(val) }
     else
-      values[1..-1].each { |val| script.unique_buffer.push(val) }
+      values[1..].each { |val| script.unique_buffer.push(val) }
     end
-    echo("Sent to #{script.name} -- '#{values[1..-1].join(' ; ')}'")
+    echo("Sent to #{script.name} -- '#{values[1..].join(' ; ')}'")
     return true
   else
     echo("'#{values.first}' does not match any active scripts!")
@@ -350,8 +350,8 @@ end
 def unique_send_to_script(*values)
   values.flatten!
   if script = Script.list.find { |val| val.name =~ /^#{values.first}/i }
-    values[1..-1].each { |val| script.unique_buffer.push(val) }
-    echo("sent to #{script}: #{values[1..-1].join(' ; ')}")
+    values[1..].each { |val| script.unique_buffer.push(val) }
+    echo("sent to #{script}: #{values[1..].join(' ; ')}")
     return true
   else
     echo("'#{values.first}' does not match any active scripts!")
@@ -1375,7 +1375,7 @@ def reget(*lines)
     history.gsub!('&lt;', '<')
   end
   history = history.split("\n").delete_if { |line| line.nil? or line.empty? or line =~ /^[\r\n\s\t]*$/ }
-  history = history[-[lines.shift.to_i, history.length].min..-1] if lines.first.is_a?(Numeric) or lines.first.to_i.nonzero?
+  history = history[-[lines.shift.to_i, history.length].min..] if lines.first.is_a?(Numeric) or lines.first.to_i.nonzero?
   unless lines.empty? or lines.nil?
     regex = /#{lines.join('|')}/i
     history = history.find_all { |line| line =~ regex }
@@ -2030,7 +2030,7 @@ def do_client(client_string)
       if cmd.split[1] == 'to'
         script = (Script.running + Script.hidden).find { |scr| scr.name == cmd.split[2].chomp.strip } || script = (Script.running + Script.hidden).find { |scr| scr.name =~ /^#{cmd.split[2].chomp.strip}/i }
         if script
-          msg = cmd.split[3..-1].join(' ').chomp
+          msg = cmd.split[3..].join(' ').chomp
           if script.want_downstream
             script.downstream_buffer.push(msg)
           else
@@ -2044,7 +2044,7 @@ def do_client(client_string)
       elsif Script.running.empty? and Script.hidden.empty?
         respond('--- Lich: no active scripts to send to.')
       else
-        msg = cmd.split[1..-1].join(' ').chomp
+        msg = cmd.split[1..].join(' ').chomp
         respond("--- sent: #{msg}")
         Script.new_downstream(msg)
       end

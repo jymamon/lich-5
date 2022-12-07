@@ -471,10 +471,10 @@ class Map
               File.open(filename) { |f|
                 JSON.parse(f.read).each { |room|
                   room['wayto'].keys.each { |k|
-                    room['wayto'][k] = StringProc.new(room['wayto'][k][3..-1]) if room['wayto'][k][0..2] == ';e '
+                    room['wayto'][k] = StringProc.new(room['wayto'][k][3..]) if room['wayto'][k][0..2] == ';e '
                   }
                   room['timeto'].keys.each { |k|
-                    room['timeto'][k] = StringProc.new(room['timeto'][k][3..-1]) if room['timeto'][k].instance_of?(String) and (room['timeto'][k][0..2] == ';e ')
+                    room['timeto'][k] = StringProc.new(room['timeto'][k][3..]) if room['timeto'][k].instance_of?(String) and (room['timeto'][k][0..2] == ';e ')
                   }
                   room['tags'] ||= []
                   room['uid'] ||= []
