@@ -352,7 +352,7 @@ Lich.init_db("#{@options.datadir}/lich.db3")
 # only keep the last 20 debug files
 #
 if Dir.entries(TEMP_DIR).length > 20 # avoid NIL response
-  Dir.entries(TEMP_DIR).find_all { |fn| fn =~ /^debug-\d+-\d+-\d+-\d+-\d+-\d+\.log$/ }.sort.reverse[20..-1].each { |oldfile|
+  Dir.entries(TEMP_DIR).find_all { |fn| fn =~ /^debug-\d+-\d+-\d+-\d+-\d+-\d+\.log$/ }.sort.reverse[19..].each { |oldfile|
     begin
       File.delete("#{TEMP_DIR}/#{oldfile}")
     rescue
