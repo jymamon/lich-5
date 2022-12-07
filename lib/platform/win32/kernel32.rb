@@ -87,16 +87,16 @@ module Win32
       :hStdError => 17,
     }
 
-    for sym in [:lpDesktop, :lpTitle]
+    [:lpDesktop, :lpTitle].each { |sym|
       if args[sym]
         args[sym] = "#{args[sym]}\0" unless args[sym][-1, 1] == "\0"
         lpStartupInfo[lpStartupInfo_index[sym]] = Fiddle::Pointer.to_ptr(args[sym]).to_i
       end
-    end
+    }
 
-    for sym in [:dwX, :dwY, :dwXSize, :dwYSize, :dwXCountChars, :dwYCountChars, :dwFillAttribute, :dwFlags, :wShowWindow, :hStdInput, :hStdOutput, :hStdError]
+    [:dwX, :dwY, :dwXSize, :dwYSize, :dwXCountChars, :dwYCountChars, :dwFillAttribute, :dwFlags, :wShowWindow, :hStdInput, :hStdOutput, :hStdError].each { |sym|
       lpStartupInfo[lpStartupInfo_index[sym]] = args[sym] if args[sym]
-    end
+    }
 
     lpStartupInfo = lpStartupInfo.pack('LLLLLLLLLLLLSSLLLL')
     lpProcessInformation = [0, 0, 0, 0].pack('LLLL')

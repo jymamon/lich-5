@@ -107,10 +107,10 @@ module Lich
             result = nil
           end
           if result.nil? or !result
-            for container in other_containers.call
+            other_containers.call.each { |container|
               result = Lich::Stash.add_to_bag(container, GameObj.left_hand)
               break if result
-            end
+            }
           end
         end
       end
@@ -137,10 +137,10 @@ module Lich
         end
         sleep 0.1
         if result.nil? or !result
-          for container in other_containers.call
+          other_containers.call.each { |container|
             result = Lich::Stash.add_to_bag(container, GameObj.right_hand)
             break if result
-          end
+          }
         end
       end
       $fill_hands_actions.push(actions) if both
@@ -150,23 +150,23 @@ module Lich
 
     def self.equip_hands(left: false, right: false, both: false)
       if both
-        for action in $fill_hands_actions.pop
+        while (action = $fill_hands_actions.pop)
           action.call
         end
       elsif left
-        for action in $fill_left_hand_actions.pop
+        while (action = $fill_left_hand_actions.pop)
           action.call
         end
       elsif right
-        for action in $fill_right_hand_actions.pop
+        while (action = $fill_right_hand_actions.pop)
           action.call
         end
       elsif !$fill_right_hand_actions.empty?
-        for action in $fill_right_hand_actions.pop
+        while (action = $fill_right_hand_actions.pop)
           action.call
-          end
+        end
       elsif !$fill_left_hand_actions.empty?
-        for action in $fill_left_hand_actions.pop
+        while (action = $fill_left_hand_actions.pop)
           action.call
         end
       end

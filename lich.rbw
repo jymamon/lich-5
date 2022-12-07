@@ -223,7 +223,7 @@ class UpstreamHook
   end
 
   def self.run(client_string)
-    for key in @@upstream_hooks.keys
+    @@upstream_hooks.each_key { |key|
       begin
         client_string = @@upstream_hooks[key].call(client_string)
       rescue
@@ -232,7 +232,7 @@ class UpstreamHook
         respond $!.backtrace.first
       end
       return nil if client_string.nil?
-    end
+    }
     return client_string
   end
 
@@ -256,7 +256,7 @@ class DownstreamHook
   end
 
   def self.run(server_string)
-    for key in @@downstream_hooks.keys
+    @@downstream_hooks.each_key { |key|
       return nil if server_string.nil?
 
       begin
@@ -266,7 +266,7 @@ class DownstreamHook
         respond "--- Lich: DownstreamHook: #{$!}"
         respond $!.backtrace.first
       end
-    end
+    }
     return server_string
   end
 
@@ -302,7 +302,7 @@ module Setting
       exit
     end
     values = []
-    for setting in args
+    args.each { |setting|
       begin
         v = Lich.db.get_first_value('SELECT value FROM script_setting WHERE script=? AND name=?;', script.name.encode('UTF-8'), setting.encode('UTF-8'))
       rescue SQLite3::BusyException
@@ -320,7 +320,7 @@ module Setting
           exit
         end
       end
-    end
+    }
     if args.length == 1
       next values[0]
     else
@@ -1007,9 +1007,9 @@ class Script
         end
       }
     end
-    for line in comments
+    comments.each { |line|
       script_version = $1.sub(/\s\(.*?\)/, '').strip if line =~ /^[\s\t#]*version:[\s\t]*([\w,\s.\d]+)/i
-    end
+    }
     if script_version_required
       Gem::Version.new(script_version) < Gem::Version.new(script_version_required)
     else
@@ -1087,15 +1087,15 @@ class Script
   end
 
   def self.new_downstream_xml(line)
-    for script in @@running
+    @@running.each { |script|
       script.downstream_buffer.push(line.chomp) if script.want_downstream_xml
-    end
+    }
   end
 
   def self.new_upstream(line)
-    for script in @@running
+    @@running.each { |script|
       script.upstream_buffer.push(line.chomp) if script.want_upstream
-    end
+    }
   end
 
   def self.new_downstream(line)
@@ -1120,9 +1120,9 @@ class Script
   end
 
   def self.new_script_output(line)
-    for script in @@running
+    @@running.each { |script|
       script.downstream_buffer.push(line.chomp) if script.want_script_output
-    end
+    }
   end
 
   def self.log(data)
@@ -1287,7 +1287,7 @@ class Script
     @current_label = '~start'
     @labels[@current_label] = String.new
     @label_order.push(@current_label)
-    for line in data
+    data.each { |line|
       if line =~ /^([\d_\w]+):$/
         @current_label = $1
         @label_order.push(@current_label)
@@ -1295,7 +1295,7 @@ class Script
       else
         @labels[@current_label].concat "#{line}\n"
       end
-    end
+    }
     data = nil
     @current_label = @label_order[0]
     @thread_group = ThreadGroup.new
@@ -1883,7 +1883,7 @@ class WizardScript < Script
     @current_label = '~start'
     @labels[@current_label] = String.new
     @label_order.push(@current_label)
-    for line in data
+    data.each { |line|
       if line =~ /^([\d_\w]+):$/
         @current_label = $1
         @label_order.push(@current_label)
@@ -1891,7 +1891,7 @@ class WizardScript < Script
       else
         @labels[@current_label] += "#{line}\n"
       end
-    end
+    }
     data = nil
     @current_label = @label_order[0]
     @thread_group = ThreadGroup.new
@@ -2353,11 +2353,10 @@ module Games
                 end
 
                 if @@autostarted and $_SERVERSTRING_ =~ /roomDesc/ and !@@cli_scripts
-                  if @options.start_scripts
-                    for script_name in @options.start_scripts
-                      Script.start(script_name)
-                    end
-                  end
+                  @options.start_scripts&.each { |script_name|
+                    Script.start(script_name)
+                  }
+
                   @@cli_scripts = true
                 end
 
@@ -3374,9 +3373,9 @@ module Games
       end
 
       def self.load_serialized=(array)
-        for i in 16..25
+        16.upto(25) { |i|
           array[i] ||= [0, 0]
-        end
+        }
         @@race, @@prof, @@gender, @@age = array[0..3]
         @@level, @@str, @@con, @@dex, @@agi, @@dis, @@aur, @@log, @@int, @@wis, @@inf, @@enhanced_str, @@enhanced_con, @@enhanced_dex, @@enhanced_agi, @@enhanced_dis, @@enhanced_aur, @@enhanced_log, @@enhanced_int, @@enhanced_wis, @@enhanced_inf = array[5..25]
       end
@@ -3921,9 +3920,9 @@ module Games
 
       def self.dead
         dead_list = []
-        for obj in @@npcs
+        @@npcs.each { |obj|
           dead_list.push(obj) if obj.status == 'dead'
-        end
+        }
         return nil if dead_list.empty?
 
         return dead_list
@@ -4131,9 +4130,9 @@ class Script
 
   def self.running
     list = []
-    for script in @@running
+    @@running.each { |script|
       list.push(script) unless script.hidden
-    end
+    }
     return list
   end
 
@@ -4143,9 +4142,9 @@ class Script
 
   def self.hidden
     list = []
-    for script in @@running
+    @@running.each { |script|
       list.push(script) if script.hidden
-    end
+    }
     return list
   end
 
@@ -5254,10 +5253,10 @@ main_thread = Thread.new {
         #
         # set up some stuff
         #
-        for client_string in ["#{$cmd_prefix}_injury 2", "#{$cmd_prefix}_flag Display Inventory Boxes 1", "#{$cmd_prefix}_flag Display Dialog Boxes 0"]
+        ["#{$cmd_prefix}_injury 2", "#{$cmd_prefix}_flag Display Inventory Boxes 1", "#{$cmd_prefix}_flag Display Dialog Boxes 0"].each { |client_string|
           $_CLIENTBUFFER_.push(client_string)
           Game._puts(client_string)
-        end
+        }
         #
         # client wants to send "GOOD", xml server won't recognize it
         #
@@ -5287,10 +5286,10 @@ main_thread = Thread.new {
         #
         # set up some stuff
         #
-        for client_string in ["#{$cmd_prefix}_injury 2", "#{$cmd_prefix}_flag Display Inventory Boxes 1", "#{$cmd_prefix}_flag Display Dialog Boxes 0"]
+        ["#{$cmd_prefix}_injury 2", "#{$cmd_prefix}_flag Display Inventory Boxes 1", "#{$cmd_prefix}_flag Display Dialog Boxes 0"].each { |client_string|
           $_CLIENTBUFFER_.push(client_string)
           Game._puts(client_string)
-        end
+        }
       else
         inv_off_proc = proc { |server_string|
           if server_string =~ /^<(?:container|clearContainer|exposeContainer)/
@@ -5412,23 +5411,23 @@ main_thread = Thread.new {
                 init_str.concat "<spell>#{XMLData.prepared_spell}</spell>"
                 init_str.concat "<right>#{GameObj.right_hand.name}</right>"
                 init_str.concat "<left>#{GameObj.left_hand.name}</left>"
-                for indicator in ['IconBLEEDING', 'IconPOISONED', 'IconDISEASED', 'IconSTANDING', 'IconKNEELING', 'IconSITTING', 'IconPRONE']
+                ['IconBLEEDING', 'IconPOISONED', 'IconDISEASED', 'IconSTANDING', 'IconKNEELING', 'IconSITTING', 'IconPRONE'].each { |indicator|
                   init_str.concat "<indicator id='#{indicator}' visible='#{XMLData.indicator[indicator]}'/>"
-                end
-                for area in ['back', 'leftHand', 'rightHand', 'head', 'rightArm', 'abdomen', 'leftEye', 'leftArm', 'chest', 'rightLeg', 'neck', 'leftLeg', 'nsys', 'rightEye']
+                }
+                ['back', 'leftHand', 'rightHand', 'head', 'rightArm', 'abdomen', 'leftEye', 'leftArm', 'chest', 'rightLeg', 'neck', 'leftLeg', 'nsys', 'rightEye'].each { |area|
                   if Wounds.send(area) > 0
                     init_str.concat "<image id=\"#{area}\" name=\"Injury#{Wounds.send(area)}\"/>"
                   elsif Scars.send(area) > 0
                     init_str.concat "<image id=\"#{area}\" name=\"Scar#{Scars.send(area)}\"/>"
                   end
-                end
+                }
                 init_str.concat '<compass>'
                 shorten_dir = { 'north' => 'n', 'northeast' => 'ne', 'east' => 'e', 'southeast' => 'se', 'south' => 's', 'southwest' => 'sw', 'west' => 'w', 'northwest' => 'nw', 'up' => 'up', 'down' => 'down', 'out' => 'out' }
-                for dir in XMLData.room_exits
+                XMLData.room_exits.each { |dir|
                   if short_dir = shorten_dir[dir]
                     init_str.concat "<dir value='#{short_dir}'/>"
                   end
-                end
+                }
                 init_str.concat '</compass>'
                 $_DETACHABLE_CLIENT_.puts init_str
                 init_str = nil

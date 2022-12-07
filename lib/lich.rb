@@ -419,11 +419,11 @@ module Lich
         return (@@hosts_file = "#{windir}\\system32\\drivers\\etc\\hosts")
       end
 
-      for drive in ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-        for windir in ['winnt', 'windows']
+      ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'].each { |drive|
+        ['winnt', 'windows'].each { |windir|
           return (@@hosts_file = "#{drive}:\\#{windir}\\system32\\drivers\\etc\\hosts") if File.exist?("#{drive}:\\#{windir}\\system32\\drivers\\etc\\hosts")
-        end
-      end
+        }
+      }
 
     elsif File.exist?('/etc/hosts') # Linux/Mac
       return (@@hosts_file = '/etc/hosts')

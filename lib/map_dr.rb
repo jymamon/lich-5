@@ -861,12 +861,12 @@ class Map
       previous = []
       pq = [source]
       pq_push = proc { |val|
-        for i in 0...pq.size
+        0.upto(pq.size) { |i|
           if shortest_distances[val] <= shortest_distances[pq[i]]
             pq.insert(i, val)
             break
           end
-        end
+        }
         pq.push(val) if i.nil? or (i == pq.size - 1)
       }
       visited[source] = true

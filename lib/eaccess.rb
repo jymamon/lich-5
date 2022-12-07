@@ -75,7 +75,7 @@ module EAccess
 
     if legacy
       login_info = []
-      for game in response.sub(/^M\t/, '').scan(/[^\t]+\t[^\t^\n]+/)
+      response.sub(/^M\t/, '').scan(/[^\t]+\t[^\t^\n]+/).each { |game|
         game_code, game_name = game.split("\t")
         # pp "M:response = %s" % response
         conn.puts "N\t#{game_code}\n"
@@ -90,15 +90,15 @@ module EAccess
             EAccess.read(conn)
             conn.puts "C\n"
             response = EAccess.read(conn)
-            for code_name in response.sub(/^C\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+[\t\n]/, '').scan(/[^\t]+\t[^\t^\n]+/)
+            response.sub(/^C\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+[\t\n]/, '').scan(/[^\t]+\t[^\t^\n]+/).each { |code_name|
               char_code, char_name = code_name.split("\t")
               hash = { :game_code => "#{game_code}", :game_name => "#{game_name}",
                        :char_code => "#{char_code}", :char_name => "#{char_name}" }
               login_info.push(hash)
-            end
+            }
           end
         end
-      end
+      }
     else
       conn.puts "F\t#{game_code}\n"
       response = EAccess.read(conn)

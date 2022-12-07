@@ -33,16 +33,16 @@ module Win32
     args[:lpDirectory] ||= LICH_DIR.tr('/', '\\')
     args[:lpVerb] ||= 'runas'
 
-    for sym in [:lpVerb, :lpFile, :lpParameters, :lpDirectory, :lpIDList, :lpClass]
+    [:lpVerb, :lpFile, :lpParameters, :lpDirectory, :lpIDList, :lpClass].each { |sym|
       if args[sym]
         args[sym] = "#{args[sym]}\0" unless args[sym][-1, 1] == "\0"
         struct[struct_index[sym]] = Fiddle::Pointer.to_ptr(args[sym]).to_i
       end
-    end
+    }
 
-    for sym in [:fMask, :hwnd, :nShow, :hkeyClass, :dwHotKey, :hIcon, :hMonitor, :hProcess]
+    [:fMask, :hwnd, :nShow, :hkeyClass, :dwHotKey, :hIcon, :hMonitor, :hProcess].each { |sym|
       struct[struct_index[sym]] = args[sym] if args[sym]
-    end
+    }
 
     struct = struct.pack('LLLLLLLLLLLLLLL')
     result = Shell32.ShellExecuteEx(struct)
