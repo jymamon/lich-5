@@ -1270,14 +1270,14 @@ class Script
     data = nil
     if @file_name =~ /\.gz$/i
       begin
-        Zlib::GzipReader.open(@file_name) { |f| data = f.readlines.collect { |line| line.chomp } }
+        Zlib::GzipReader.open(@file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
         respond "--- Lich: error reading script file (#{@file_name}): #{$!}"
         return nil
       end
     else
       begin
-        File.open(@file_name) { |f| data = f.readlines.collect { |line| line.chomp } }
+        File.open(@file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
         respond "--- Lich: error reading script file (#{@file_name}): #{$!}"
         return nil
@@ -1718,10 +1718,10 @@ class WizardScript < Script
     @labels = {}
     data = nil
     begin
-      Zlib::GzipReader.open(file_name) { |f| data = f.readlines.collect { |line| line.chomp } }
+      Zlib::GzipReader.open(file_name) { |f| data = f.readlines.collect(&:chomp) }
     rescue
       begin
-        File.open(file_name) { |f| data = f.readlines.collect { |line| line.chomp } }
+        File.open(file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
         respond "--- Lich: error reading script file (#{file_name}): #{$!}"
         return nil
@@ -4474,7 +4474,7 @@ class String
   def split_as_list
     string = self
     string.sub!(/^You (?:also see|notice) |^In the .+ you see /, ',')
-    string.sub('.', '').sub(/ and (an?|some|the)/, ', \1').split(',').reject { |str| str.strip.empty? }.collect { |str| str.lstrip }
+    string.sub('.', '').sub(/ and (an?|some|the)/, ', \1').split(',').reject { |str| str.strip.empty? }.collect(&:lstrip)
   end
 end
 #
@@ -4848,7 +4848,7 @@ main_thread = Thread.new {
   # TODO: Why is @options.sal logic appearing again. Should this have been done upfront/
   if @options.sal
     begin
-      @launch_data = File.open(@options.sal) { |file| file.readlines }.collect { |line| line.chomp }
+      @launch_data = File.open(@options.sal, &:readlines).collect(&:chomp)
     rescue
       $stdout.puts "error: failed to read launch_file: #{$!}"
       Lich.log "info: launch_file: #{@options.sal}"
@@ -5480,8 +5480,8 @@ main_thread = Thread.new {
   detachable_client_thread.kill rescue nil
 
   Lich.log 'info: stopping scripts...'
-  Script.running.each { |script| script.kill }
-  Script.hidden.each { |script| script.kill }
+  Script.running.each(&:kill)
+  Script.hidden.each(&:kill)
   200.times { sleep 0.1; break if Script.running.empty? and Script.hidden.empty? }
   Lich.log 'info: saving script settings...'
   Settings.save

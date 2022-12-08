@@ -73,7 +73,7 @@ class Map
 
   def self.get_free_id
     Map.load unless @@loaded
-    return @@list.compact.max_by { |r| r.id }.id + 1
+    return @@list.compact.max_by(&:id).id + 1
   end
 
   def self.list
@@ -203,7 +203,7 @@ class Map
               if (room = @@list.find { |r|
                 r.title.include?(XMLData.room_title) and
                 r.description.include?(XMLData.room_description.strip) and
-                (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+                (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect(&:name)).empty?) and
                 (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                 (!r.check_location or r.location == Map.get_location) and check_peer_tag.call(r) and
                 (r.room_objects.nil? || r.room_objects.all? { |obj| /\b#{obj}\b/ =~ Map.last_seen_objects })
@@ -219,7 +219,7 @@ class Map
                   r.title.include?(XMLData.room_title) and
                   (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                   (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
-                  (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+                  (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect(&:name)).empty?) and
                   (!r.check_location or r.location == Map.get_location) and check_peer_tag.call(r) and
                   (r.room_objects.nil? || r.room_objects.all? { |obj| /\b#{obj}\b/ =~ Map.last_seen_objects })
                 })
@@ -261,7 +261,7 @@ class Map
             if (room = @@list.find { |r|
               r.title.include?(XMLData.room_title) and
               r.description.include?(XMLData.room_description.strip) and
-              (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+              (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect(&:name)).empty?) and
               (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
               (!r.check_location or r.location == Map.get_location) and
               (r.room_objects.nil? || r.room_objects.all? { |obj| /\b#{obj}\b/ =~ Map.last_seen_objects })
@@ -281,7 +281,7 @@ class Map
                 r.title.include?(XMLData.room_title) and
                 (foggy_exits or r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
                 (XMLData.room_window_disabled or r.description.any? { |desc| desc =~ desc_regex }) and
-                (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+                (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect(&:name)).empty?) and
                 (!r.check_location or r.location == Map.get_location) and
                 (r.room_objects.nil? || r.room_objects.all? { |obj| /\b#{obj}\b/ =~ Map.last_seen_objects })
               })
@@ -358,7 +358,7 @@ class Map
       if (room = @@list.find { |r|
         (r.location == current_location) and r.title.include?(XMLData.room_title) and
         r.description.include?(XMLData.room_description.strip) and
-        (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+        (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect(&:name)).empty?) and
         (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
         check_peer_tag.call(r)
       })
@@ -366,7 +366,7 @@ class Map
       elsif (room = @@list.find { |r|
         r.location.nil? and r.title.include?(XMLData.room_title) and
         r.description.include?(XMLData.room_description.strip) and
-        (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+        (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect(&:name)).empty?) and
         (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
         check_peer_tag.call(r)
       })
@@ -380,7 +380,7 @@ class Map
         identical_rooms = @@list.find_all { |r| (r.location != current_location) and
           r.title.include?(XMLData.room_title) and
           r.description.include?(XMLData.room_description.strip) and
-          (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect { |obj| obj.name }).empty?) and
+          (r.unique_loot.nil? or (r.unique_loot.to_a - GameObj.loot.to_a.collect(&:name)).empty?) and
           (r.paths.include?(XMLData.room_exits_string.strip) or r.tags.include?('random-paths')) and
           !r.uid.include?(XMLData.room_id)
         }
@@ -591,7 +591,7 @@ class Map
               room['image_coords'] = [(attributes['x'].to_i - (attributes['size'] / 2.0).round), (attributes['y'].to_i - (attributes['size'] / 2.0).round), (attributes['x'].to_i + (attributes['size'] / 2.0).round), (attributes['y'].to_i + (attributes['size'] / 2.0).round)]
             elsif (element == 'image') and attributes['name'] and attributes['coords'] and (attributes['coords'] =~ /[0-9]+,[0-9]+,[0-9]+,[0-9]+/)
               room['image'] = attributes['name']
-              room['image_coords'] = attributes['coords'].split(',').collect { |num| num.to_i }
+              room['image_coords'] = attributes['coords'].split(',').collect(&:to_i)
             elsif element == 'map'
               missing_end = true
             end
@@ -703,7 +703,7 @@ class Map
   end
 
   def self.to_json(*args)
-    @@list.delete_if { |r| r.nil? }
+    @@list.delete_if(&:nil?)
     @@list.to_json(args)
   end
 
@@ -922,7 +922,7 @@ class Map
           }
         end
       elsif destination.instance_of?(Array)
-        dest_list = destination.collect { |dest| dest.to_i }
+        dest_list = destination.collect(&:to_i)
         until pq.size.empty?
           v = pq.shift
           break if dest_list.include?(v) and (shortest_distances[v] < 20)
@@ -1001,7 +1001,7 @@ class Map
   end
 
   def find_nearest(target_list)
-    target_list = target_list.collect { |num| num.to_i }
+    target_list = target_list.collect(&:to_i)
     if target_list.include?(@id)
       @id
     else

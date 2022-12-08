@@ -59,7 +59,7 @@ module EAccess
     password = password.split('').map { |c| c.getbyte(0) }
     hashkey = hashkey.split('').map { |c| c.getbyte(0) }
     password.each_index { |i| password[i] = ((password[i] - 32) ^ hashkey[i]) + 32 }
-    password = password.map { |c| c.chr }.join
+    password = password.map(&:chr).join
     conn.puts "A\t#{account}\t#{password}\n"
     response = EAccess.read(conn)
     unless (login = /KEY\t(?<key>.*)\t/.match(response))

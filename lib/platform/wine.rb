@@ -12,7 +12,7 @@ module Wine
           thingie = "\"#{thingie}\""
         end
         lookin = result = false
-        File.open(PREFIX + '/system.reg') { |f| f.readlines }.each { |line|
+        File.open(PREFIX + '/system.reg', &:readlines).each { |line|
           if line[0...subkey.length] == subkey
             lookin = true
           elsif line =~ /^\[/

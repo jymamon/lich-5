@@ -288,7 +288,7 @@ class XMLParser
           $_CLIENT_.puts "\034GSg#{sprintf('%010d', @stance_value)}\r\n" if @send_fake_tags
         elsif attributes['id'] == 'mana'
           last_mana = @mana
-          @mana, @max_mana = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
+          @mana, @max_mana = attributes['text'].scan(/-?\d+/).collect(&:to_i)
           difference = @mana - last_mana
           # FIXME: enhancives screw this up
           if (difference == noded_pulse) or (difference == unnoded_pulse) or ((@mana == @max_mana) and (last_mana + noded_pulse > @max_mana))
@@ -300,17 +300,17 @@ class XMLParser
           end
           $_CLIENT_.puts "\034GSV#{sprintf('%010d%010d%010d%010d%010d%010d%010d%010d', @max_health.to_i, @health.to_i, @max_spirit.to_i, @spirit.to_i, @max_mana.to_i, @mana.to_i, @wound_gsl, @scar_gsl)}\r\n" if @send_fake_tags
         elsif attributes['id'] == 'stamina'
-          @stamina, @max_stamina = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
+          @stamina, @max_stamina = attributes['text'].scan(/-?\d+/).collect(&:to_i)
         elsif attributes['id'] == 'mindState'
           @mind_text = attributes['text']
           @mind_value = attributes['value'].to_i
           $_CLIENT_.puts "\034GSr#{MINDMAP[@mind_text]}\r\n" if @send_fake_tags
         elsif attributes['id'] == 'health'
-          @health, @max_health = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
+          @health, @max_health = attributes['text'].scan(/-?\d+/).collect(&:to_i)
           $_CLIENT_.puts "\034GSV#{sprintf('%010d%010d%010d%010d%010d%010d%010d%010d', @max_health.to_i, @health.to_i, @max_spirit.to_i, @spirit.to_i, @max_mana.to_i, @mana.to_i, @wound_gsl, @scar_gsl)}\r\n" if @send_fake_tags
         elsif attributes['id'] == 'spirit'
           @last_spirit = @spirit if @last_spirit
-          @spirit, @max_spirit = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
+          @spirit, @max_spirit = attributes['text'].scan(/-?\d+/).collect(&:to_i)
           @last_spirit ||= @spirit
           $_CLIENT_.puts "\034GSV#{sprintf('%010d%010d%010d%010d%010d%010d%010d%010d', @max_health.to_i, @health.to_i, @max_spirit.to_i, @spirit.to_i, @max_mana.to_i, @mana.to_i, @wound_gsl, @scar_gsl)}\r\n" if @send_fake_tags
         elsif attributes['id'] == 'nextLvlPB'
@@ -321,7 +321,7 @@ class XMLParser
           @encumbrance_value = attributes['value'].to_i
           @encumbrance_text = attributes['text']
         elsif attributes['id'] == 'concentration'
-          @concentration, @max_concentration = attributes['text'].scan(/-?\d+/).collect { |num| num.to_i }
+          @concentration, @max_concentration = attributes['text'].scan(/-?\d+/).collect(&:to_i)
         elsif PSM_3_DIALOG_IDS.include?(@active_ids[-2])
           # puts "kind=(%s) name=%s attributes=%s" % [@active_ids[-2], name, attributes]
           parse_psm3_progressbar(@active_ids[-2], attributes)

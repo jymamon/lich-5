@@ -241,7 +241,7 @@ def checkname(*strings)
 end
 
 def checkloot
-  GameObj.loot.collect { |item| item.noun }
+  GameObj.loot.collect(&:noun)
 end
 
 def i_stand_alone
@@ -1037,7 +1037,7 @@ def checkfampcs(*strings)
 end
 
 def checkpcs(*strings)
-  pcs = GameObj.pcs.collect { |pc| pc.noun }
+  pcs = GameObj.pcs.collect(&:noun)
   if pcs.empty?
     strings.empty? ? (return nil) : (return false)
   end
@@ -1051,7 +1051,7 @@ def checkpcs(*strings)
 end
 
 def checknpcs(*strings)
-  npcs = GameObj.npcs.collect { |npc| npc.noun }
+  npcs = GameObj.npcs.collect(&:noun)
   if npcs.empty?
     strings.empty? ? (return nil) : (return false)
   end
@@ -1978,7 +1978,7 @@ def do_client(client_string)
       end
       s = nil
     elsif cmd =~ /^u$|^unpause$/
-      if (s = Script.running.reverse.find { |s| s.paused? })
+      if (s = Script.running.reverse.find(&:paused?))
         s.unpause
       else
         respond '--- Lich: no scripts to unpause'

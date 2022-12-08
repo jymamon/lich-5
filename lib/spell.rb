@@ -58,9 +58,9 @@ module Games
           @bonus[e.attributes['type']] = e.text
           @bonus[e.attributes['type']].untaint
         }
-        @msgup = xml_spell.elements.find_all { |e| (e.name == 'message') and (e.attributes['type'].downcase == 'start') }.collect { |e| e.text }.join('$|^')
+        @msgup = xml_spell.elements.find_all { |e| (e.name == 'message') and (e.attributes['type'].downcase == 'start') }.collect(&:text).join('$|^')
         @msgup = nil if @msgup.empty?
-        @msgdn = xml_spell.elements.find_all { |e| (e.name == 'message') and (e.attributes['type'].downcase == 'end') }.collect { |e| e.text }.join('$|^')
+        @msgdn = xml_spell.elements.find_all { |e| (e.name == 'message') and (e.attributes['type'].downcase == 'end') }.collect(&:text).join('$|^')
         @msgdn = nil if @msgdn.empty?
         @stance = (xml_spell.attributes['stance'] =~ /^(yes|true)$/i ? true : false)
         @channel = (xml_spell.attributes['channel'] =~ /^(yes|true)$/i ? true : false)
@@ -201,12 +201,12 @@ module Games
 
       def self.upmsgs
         Spell.load unless @@loaded
-        @@list.collect { |spell| spell.msgup }.compact
+        @@list.collect(&:msgup).compact
       end
 
       def self.dnmsgs
         Spell.load unless @@loaded
-        @@list.collect { |spell| spell.msgdn }.compact
+        @@list.collect(&:msgdn).compact
       end
 
       def time_per_formula(options = {})
