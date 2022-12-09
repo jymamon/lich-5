@@ -3475,57 +3475,34 @@ module Games
     end
 
     class Wounds
+      # rubocop:disable Naming/MethodName for compatiblity
       def self.leftEye;   fix_injury_mode; XMLData.injuries['leftEye']['wound'];   end
-
       def self.leye;      fix_injury_mode; XMLData.injuries['leftEye']['wound'];   end
-
       def self.rightEye;  fix_injury_mode; XMLData.injuries['rightEye']['wound'];  end
-
       def self.reye;      fix_injury_mode; XMLData.injuries['rightEye']['wound'];  end
-
       def self.head;      fix_injury_mode; XMLData.injuries['head']['wound'];      end
-
       def self.neck;      fix_injury_mode; XMLData.injuries['neck']['wound'];      end
-
       def self.back;      fix_injury_mode; XMLData.injuries['back']['wound'];      end
-
       def self.chest;     fix_injury_mode; XMLData.injuries['chest']['wound'];     end
-
       def self.abdomen;   fix_injury_mode; XMLData.injuries['abdomen']['wound'];   end
-
       def self.abs;       fix_injury_mode; XMLData.injuries['abdomen']['wound'];   end
-
       def self.leftArm;   fix_injury_mode; XMLData.injuries['leftArm']['wound'];   end
-
       def self.larm;      fix_injury_mode; XMLData.injuries['leftArm']['wound'];   end
-
       def self.rightArm;  fix_injury_mode; XMLData.injuries['rightArm']['wound'];  end
-
       def self.rarm;      fix_injury_mode; XMLData.injuries['rightArm']['wound'];  end
-
       def self.rightHand; fix_injury_mode; XMLData.injuries['rightHand']['wound']; end
-
       def self.rhand;     fix_injury_mode; XMLData.injuries['rightHand']['wound']; end
-
       def self.leftHand;  fix_injury_mode; XMLData.injuries['leftHand']['wound'];  end
-
       def self.lhand;     fix_injury_mode; XMLData.injuries['leftHand']['wound'];  end
-
       def self.leftLeg;   fix_injury_mode; XMLData.injuries['leftLeg']['wound'];   end
-
       def self.lleg;      fix_injury_mode; XMLData.injuries['leftLeg']['wound'];   end
-
       def self.rightLeg;  fix_injury_mode; XMLData.injuries['rightLeg']['wound'];  end
-
       def self.rleg;      fix_injury_mode; XMLData.injuries['rightLeg']['wound'];  end
-
       def self.leftFoot;  fix_injury_mode; XMLData.injuries['leftFoot']['wound'];  end
-
       def self.rightFoot; fix_injury_mode; XMLData.injuries['rightFoot']['wound']; end
-
       def self.nsys;      fix_injury_mode; XMLData.injuries['nsys']['wound'];      end
-
       def self.nerves;    fix_injury_mode; XMLData.injuries['nsys']['wound'];      end
+      # rubocop:enable Naming/MethodName
 
       def self.arms
         fix_injury_mode
@@ -3549,57 +3526,34 @@ module Games
     end
 
     class Scars
+      # rubocop:disable Naming/MethodName for compatiblity
       def self.leftEye;   fix_injury_mode; XMLData.injuries['leftEye']['scar'];   end
-
       def self.leye;      fix_injury_mode; XMLData.injuries['leftEye']['scar'];   end
-
       def self.rightEye;  fix_injury_mode; XMLData.injuries['rightEye']['scar'];  end
-
       def self.reye;      fix_injury_mode; XMLData.injuries['rightEye']['scar'];  end
-
       def self.head;      fix_injury_mode; XMLData.injuries['head']['scar'];      end
-
       def self.neck;      fix_injury_mode; XMLData.injuries['neck']['scar'];      end
-
       def self.back;      fix_injury_mode; XMLData.injuries['back']['scar'];      end
-
       def self.chest;     fix_injury_mode; XMLData.injuries['chest']['scar'];     end
-
       def self.abdomen;   fix_injury_mode; XMLData.injuries['abdomen']['scar'];   end
-
       def self.abs;       fix_injury_mode; XMLData.injuries['abdomen']['scar'];   end
-
       def self.leftArm;   fix_injury_mode; XMLData.injuries['leftArm']['scar'];   end
-
       def self.larm;      fix_injury_mode; XMLData.injuries['leftArm']['scar'];   end
-
       def self.rightArm;  fix_injury_mode; XMLData.injuries['rightArm']['scar'];  end
-
       def self.rarm;      fix_injury_mode; XMLData.injuries['rightArm']['scar'];  end
-
       def self.rightHand; fix_injury_mode; XMLData.injuries['rightHand']['scar']; end
-
       def self.rhand;     fix_injury_mode; XMLData.injuries['rightHand']['scar']; end
-
       def self.leftHand;  fix_injury_mode; XMLData.injuries['leftHand']['scar'];  end
-
       def self.lhand;     fix_injury_mode; XMLData.injuries['leftHand']['scar'];  end
-
       def self.leftLeg;   fix_injury_mode; XMLData.injuries['leftLeg']['scar'];   end
-
       def self.lleg;      fix_injury_mode; XMLData.injuries['leftLeg']['scar'];   end
-
       def self.rightLeg;  fix_injury_mode; XMLData.injuries['rightLeg']['scar'];  end
-
       def self.rleg;      fix_injury_mode; XMLData.injuries['rightLeg']['scar'];  end
-
       def self.leftFoot;  fix_injury_mode; XMLData.injuries['leftFoot']['scar'];  end
-
       def self.rightFoot; fix_injury_mode; XMLData.injuries['rightFoot']['scar']; end
-
       def self.nsys;      fix_injury_mode; XMLData.injuries['nsys']['scar'];      end
-
       def self.nerves;    fix_injury_mode; XMLData.injuries['nsys']['scar'];      end
+      # rubocop:enable Naming/MethodName
 
       def self.arms
         fix_injury_mode
@@ -3724,9 +3678,11 @@ module Games
         end
       end
 
+      # rubocop:disable Naming/MethodName for compatibility
       def GameObj
         @noun
       end
+      # rubocop:enable Naming/MethodName
 
       def full_name
         "#{@before_name}#{' ' unless @before_name.nil? or @before_name.empty?}#{name}#{' ' unless @after_name.nil? or @after_name.empty?}#{@after_name}"

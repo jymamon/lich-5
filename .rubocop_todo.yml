@@ -246,8 +246,6 @@ Naming/MethodName:
     - 'lib/platform/win32/kernel32.rb'
     - 'lib/platform/win32/shell32.rb'
     - 'lib/platform/win32/user32.rb'
-    - 'lib/spell.rb'
-    - 'lich.rbw'
 
 # Offense count: 18
 # Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.

@@ -784,7 +784,7 @@ module Games
         !@persist_on_death
       end
 
-      # for backwards compatiblity
+      # rubocop:disable Naming/MethodName for backwards compatiblity
       def duration;      time_per_formula;            end
       def cost;          mana_cost_formula    || '0'; end
       def manaCost;      mana_cost_formula    || '0'; end
@@ -807,6 +807,7 @@ module Games
       def command;       nil; end
       def circlename;    circle_name; end
       def selfonly;      @availability != 'all'; end
+      # rubocop:enable Naming/MethodName
     end # class
   end # mod
 end # mod
