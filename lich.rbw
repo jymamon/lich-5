@@ -4611,6 +4611,9 @@ if @options.sal
   end
 end
 
+# TODO: gs3.simutronics.net and storm.gs4.game.play.net both appear
+#       to be aliases to chimera.simutronics.com. This logic can
+#       probably be simplified especially due to fake_stormfront.
 if @options.game
   game_host = @options.game.host
   game_port = @options.game.port
@@ -4645,13 +4648,19 @@ elsif @options.gemstone
     end
   else
     $platinum = false
-    if @options.stormfront.stormfront
+    if @options.stormfront
       game_host = 'storm.gs4.game.play.net'
-      game_port = 10024
+      game_port = @options.test ? 10624 : 10024
       $frontend = 'stormfront'
     else
-      game_host = 'gs3.simutronics.net'
-      game_port = 4900
+      if @options.test
+        game_host = 'storm.gs4.game.play.net'
+        game_port = 10624
+      else
+        game_host = 'gs3.simutronics.net'
+        game_port = 4900
+      end
+
       if @options.avalon
         $frontend = 'avalon'
       else
