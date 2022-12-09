@@ -514,10 +514,8 @@ class Parser
     end
 
     args.entryfile ||= "#{args.datadir}/entry.dat"
-    
-    unless args.gemstone || args.dragonrealms || args.game
-      args.gemstone = true
-    end
+
+    args.gemstone = true unless args.gemstone || args.dragonrealms || args.game
 
     # TODO: Check for invalid combinations. For example, '-s -w' doesn't make sense.
     # if gamecode.gemstone
