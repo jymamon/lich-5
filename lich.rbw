@@ -1309,7 +1309,13 @@ class Script
         if @@running.include?(self)
           begin
             @thread_group.list.dup.each { |t|
-              t.kill rescue nil unless t == Thread.current
+              unless t == Thread.current
+                begin
+                  t.kill
+                rescue
+                  nil
+                end
+              end
             }
             @thread_group.add(Thread.current)
             @die_with.each { |script_name| Script.kill(script_name) }
@@ -2376,7 +2382,11 @@ module Games
                     begin
                       $_DETACHABLE_CLIENT_.write(alt_string)
                     rescue
-                      $_DETACHABLE_CLIENT_.close rescue nil
+                      begin
+                        $_DETACHABLE_CLIENT_.close
+                      rescue
+                        nil
+                      end
                       $_DETACHABLE_CLIENT_ = nil
                       respond "--- Lich: error: client_thread: #{$!}"
                       respond $!.backtrace.first
@@ -2470,8 +2480,16 @@ module Games
 
       def self.close
         if @@socket
-          @@socket.close rescue nil
-          @@thread.kill rescue nil
+          begin
+            @@socket.close
+          rescue
+            nil
+          end
+          begin
+            @@thread.kill
+          rescue
+            nil
+          end
         end
       end
 
@@ -5033,9 +5051,23 @@ main_thread = Thread.new {
         #        else
         Lich.msgbox(:message => 'error: timeout waiting for client to connect', :icon => :error)
         #        end
-        File.delete(sal_filename) rescue() if sal_filename
-        listener.close rescue()
-        $_CLIENT_.close rescue()
+        if sal_filename
+          begin
+            File.delete(sal_filename)
+          rescue
+            ()
+          end
+        end
+        begin
+          listener.close
+        rescue
+          ()
+        end
+        begin
+          $_CLIENT_.close
+        rescue
+          ()
+        end
         reconnect_if_wanted.call
         Lich.log 'info: exiting...'
         Gtk.queue { Gtk.main_quit } if defined?(Gtk)
@@ -5045,8 +5077,18 @@ main_thread = Thread.new {
       #        Lich.win32_launch_method = "#{method_num}:success"
       #      end
       Lich.log 'info: connected'
-      listener.close rescue nil
-      File.delete(sal_filename) rescue nil if sal_filename
+      begin
+        listener.close
+      rescue
+        nil
+      end
+      if sal_filename
+        begin
+          File.delete(sal_filename)
+        rescue
+          nil
+        end
+      end
     end
     gamehost, gameport = Lich.fix_game_host_port(gamehost, gameport)
     Lich.log "info: connecting to game server (#{gamehost}:#{gameport})"
@@ -5059,7 +5101,11 @@ main_thread = Thread.new {
         break unless connect_thread.status
       }
       if connect_thread.status
-        connect_thread.kill rescue nil
+        begin
+          connect_thread.kill
+        rescue
+          nil
+        end
         raise "error: timed out connecting to #{gamehost}:#{gameport}"
       end
     rescue
@@ -5075,12 +5121,20 @@ main_thread = Thread.new {
           break unless connect_thread.status
         }
         if connect_thread.status
-          connect_thread.kill rescue nil
+          begin
+            connect_thread.kill
+          rescue
+            nil
+          end
           raise "error: timed out connecting to #{gamehost}:#{gameport}"
         end
       rescue
         Lich.log "error: #{$!}"
-        $_CLIENT_.close rescue nil
+        begin
+          $_CLIENT_.close
+        rescue
+          nil
+        end
         reconnect_if_wanted.call
         Lich.log 'info: exiting...'
         Gtk.queue { Gtk.main_quit } if defined?(Gtk)
@@ -5124,7 +5178,11 @@ main_thread = Thread.new {
 
     timeout_thread = Thread.new {
       sleep 120
-      listener.close rescue nil
+      begin
+        listener.close
+      rescue
+        nil
+      end
       $stdout.puts 'error: timed out waiting for client to connect'
       Lich.log 'error: timed out waiting for client to connect'
       Lich.restore_hosts
@@ -5132,7 +5190,11 @@ main_thread = Thread.new {
     }
     #      $_CLIENT_ = listener.accept
     $_CLIENT_ = SynchronizedSocket.new(listener.accept)
-    listener.close rescue nil
+    begin
+      listener.close
+    rescue
+      nil
+    end
     timeout_thread.kill
     $stdout.puts 'Connection with the local game client is open.'
     Lich.log 'info: connection with the game client is open'
@@ -5157,7 +5219,11 @@ main_thread = Thread.new {
           $stdout.puts "error: #{$!}"
           exit
         end
-        timeout_thread.kill rescue nil
+        begin
+          timeout_thread.kill
+        rescue
+          nil
+        end
         Lich.log 'info: connection with the game host is open'
       end
     end
@@ -5386,13 +5452,25 @@ main_thread = Thread.new {
           $_DETACHABLE_CLIENT_.sync = true
         rescue
           Lich.log "#{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          server.close rescue nil
-          $_DETACHABLE_CLIENT_.close rescue nil
+          begin
+            server.close
+          rescue
+            nil
+          end
+          begin
+            $_DETACHABLE_CLIENT_.close
+          rescue
+            nil
+          end
           $_DETACHABLE_CLIENT_ = nil
           sleep 5
           next
         ensure
-          server.close rescue nil
+          begin
+            server.close
+          rescue
+            nil
+          end
           Frontend.cleanup_session_file
         end
         if $_DETACHABLE_CLIENT_
@@ -5448,10 +5526,18 @@ main_thread = Thread.new {
             respond "--- Lich: error: client_thread: #{$!}"
             respond $!.backtrace.first
             Lich.log "error: client_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-            $_DETACHABLE_CLIENT_.close rescue nil
+            begin
+              $_DETACHABLE_CLIENT_.close
+            rescue
+              nil
+            end
             $_DETACHABLE_CLIENT_ = nil
           ensure
-            $_DETACHABLE_CLIENT_.close rescue nil
+            begin
+              $_DETACHABLE_CLIENT_.close
+            rescue
+              nil
+            end
             $_DETACHABLE_CLIENT_ = nil
           end
         end
@@ -5476,8 +5562,16 @@ main_thread = Thread.new {
   $_CLIENT_.puts "\n--- Lich v#{LICH_VERSION} is active.  Type #{$clean_lich_char}help for usage info.\n\n"
 
   Game.thread.join
-  client_thread.kill rescue nil
-  detachable_client_thread.kill rescue nil
+  begin
+    client_thread.kill
+  rescue
+    nil
+  end
+  begin
+    detachable_client_thread.kill
+  rescue
+    nil
+  end
 
   Lich.log 'info: stopping scripts...'
   Script.running.each(&:kill)

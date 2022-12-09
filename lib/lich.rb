@@ -146,7 +146,11 @@ module Lich
         launcher_cmd = Win32.RegQueryValueEx(:hKey => launcher_key)[:lpData] if launcher_cmd.nil? or launcher_cmd.empty?
         return launcher_cmd
       ensure
-        Win32.RegCloseKey(:hKey => launcher_key) rescue nil
+        begin
+          Win32.RegCloseKey(:hKey => launcher_key)
+        rescue
+          nil
+        end
       end
     elsif defined?(Wine)
       launcher_cmd = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\RealCommand')
@@ -183,7 +187,11 @@ module Lich
           r = Win32.RegSetValueEx(:hKey => launcher_key, :lpValueName => 'Directory', :dwType => Win32::REG_SZ, :lpData => new_launcher_dir)
           return (r == 0)
         ensure
-          Win32.RegCloseKey(:hKey => launcher_key) rescue nil
+          begin
+            Win32.RegCloseKey(:hKey => launcher_key)
+          rescue
+            nil
+          end
         end
       else
         begin
@@ -242,7 +250,11 @@ module Lich
           r = Win32.RegDeleteValue(:hKey => launcher_key, :lpValueName => 'RealDirectory')
           return (r == 0)
         ensure
-          Win32.RegCloseKey(:hKey => launcher_key) rescue nil
+          begin
+            Win32.RegCloseKey(:hKey => launcher_key)
+          rescue
+            nil
+          end
         end
       else
         begin
@@ -302,7 +314,11 @@ module Lich
           r = Win32.RegSetValueEx(:hKey => launcher_key, :dwType => Win32::REG_SZ, :lpData => new_launcher_cmd)
           return (r == 0)
         ensure
-          Win32.RegCloseKey(:hKey => launcher_key) rescue nil
+          begin
+            Win32.RegCloseKey(:hKey => launcher_key)
+          rescue
+            nil
+          end
         end
       else
         begin
@@ -361,7 +377,11 @@ module Lich
           r = Win32.RegDeleteValue(:hKey => launcher_key, :lpValueName => 'RealCommand')
           return (r == 0)
         ensure
-          Win32.RegCloseKey(:hKey => launcher_key) rescue nil
+          begin
+            Win32.RegCloseKey(:hKey => launcher_key)
+          rescue
+            nil
+          end
         end
       else
         begin
@@ -405,7 +425,11 @@ module Lich
         key = Win32.RegOpenKeyEx(:hKey => Win32::HKEY_LOCAL_MACHINE, :lpSubKey => 'System\\CurrentControlSet\\Services\\Tcpip\\Parameters', :samDesired => Win32::KEY_READ)[:phkResult]
         hosts_path = Win32.RegQueryValueEx(:hKey => key, :lpValueName => 'DataBasePath')[:lpData]
       ensure
-        Win32.RegCloseKey(:hKey => key) rescue nil
+        begin
+          Win32.RegCloseKey(:hKey => key)
+        rescue
+          nil
+        end
       end
 
       if hosts_path
