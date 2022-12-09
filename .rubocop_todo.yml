@@ -587,23 +587,6 @@ Style/StderrPuts:
   Exclude:
     - 'lib/lich.rb'
 
-# Offense count: 28
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: Mode.
-Style/StringConcatenation:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/gui-saved-login.rb'
-    - 'lib/init.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/platform/wine.rb'
-    - 'lib/spell.rb'
-    - 'lib/update.rb'
-    - 'lib/xmlparser.rb'
-    - 'lich.rbw'
-
 # Offense count: 409
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns, IgnoredPatterns.

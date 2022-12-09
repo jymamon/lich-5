@@ -265,7 +265,7 @@ def timetest(*contestants)
 end
 
 def dec2bin(n)
-  '0' + [n].pack('N').unpack1('B32').sub(/^0+(?=\d)/, '')
+  "0#{[n].pack('N').unpack1('B32').sub(/^0+(?=\d)/, '')}"
 end
 
 def bin2dec(n)
@@ -1840,7 +1840,7 @@ def fb_to_sf(line)
   return line
 rescue
   $_CLIENT_.puts "--- Error: fb_to_sf: #{$!}"
-  $_CLIENT_.puts '$_SERVERSTRING_: ' + $_SERVERSTRING_.to_s
+  $_CLIENT_.puts "$_SERVERSTRING_: #{$_SERVERSTRING_}"
 end
 
 def sf_to_wiz(line)
@@ -1894,7 +1894,7 @@ def sf_to_wiz(line)
   return line
 rescue
   $_CLIENT_.puts "--- Error: sf_to_wiz: #{$!}"
-  $_CLIENT_.puts '$_SERVERSTRING_: ' + $_SERVERSTRING_.to_s
+  $_CLIENT_.puts "$_SERVERSTRING_: #{$_SERVERSTRING_}"
 end
 
 def strip_xml(line)
@@ -1904,7 +1904,7 @@ def strip_xml(line)
     if $strip_xml_multiline =~ /^<pushStream id="atmospherics" \/>/ && line =~ /^<prompt time=/
       # Dragonrealms serves up malformed atmospherics, a lot.
       # If this multiline is for an atmospheric the next occurence of a prompt SHOULD be closing the stream.
-      line = '<popStream id="atmospherics" />' + line
+      line = "<popStream id=\"atmospherics\" />#{line}"
     end
     $strip_xml_multiline = $strip_xml_multiline + line
     line = $strip_xml_multiline

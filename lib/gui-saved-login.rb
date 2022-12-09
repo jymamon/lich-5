@@ -158,7 +158,7 @@ else
     @entry_data.each { |login_info|
       if login_info[:user_id].downcase != last_user_id
         last_user_id = login_info[:user_id].downcase
-        quick_box.pack_start(Gtk::Label.new('Account: ' + last_user_id), :expand => false, :fill => false, :padding => 6)
+        quick_box.pack_start(Gtk::Label.new("Account: #{last_user_id}"), :expand => false, :fill => false, :padding => 6)
       end
 
       label = Gtk::Label.new("#{login_info[:char_name]} (#{login_info[:game_name]}, #{login_info[:frontend]})")

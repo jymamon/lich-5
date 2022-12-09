@@ -1751,10 +1751,12 @@ class WizardScript < Script
     has_nextroom = data.find { |line| line =~ /nextroom/i }
 
     fixstring = proc { |str|
+      # rubocop: disable Style/StringConcatenation This block is less readable with concatentation
       str.gsub!('%' + $1 + '%', '#{' + $1.downcase + '}') while !setvars.empty? and str =~ /%(#{setvars.join('|')})%/io
       str.gsub!(/%c(?:%)?/i, '#{c}')
       str.gsub!(/%s(?:%)?/i, '#{sav}')
       str.gsub!(/%#{$1}(?:%)?/, '#{script.vars[' + $1 + ']}') while str =~ /%([0-9])(?:%)?/
+      # rubocop: enable Style/StringConcatenation
       str
     }
 
@@ -1813,7 +1815,7 @@ class WizardScript < Script
         indent = $1
         arg = $2
         arg = '1' if arg.empty?
-        arg = '0' + arg.strip if arg.strip =~ /^\.[0-9]+$/
+        arg = "0#{arg.strip}" if arg.strip =~ /^\.[0-9]+$/
         line = "#{indent}pause #{arg}"
       elsif line =~ /^([\s\t]*)match[\s\t]+([^\s\t]+)[\s\t]+(.+)/i
         indent = $1
@@ -1845,7 +1847,7 @@ class WizardScript < Script
         line = "#{$1}script.vars.shift"
       else
         respond "--- Lich: unknown line: #{line}"
-        line = '#' + line
+        line = "# #{line}"
       end
     }
 
@@ -2324,7 +2326,7 @@ module Games
                   end_combat_tags.each { |tag|
                     # $_SERVERSTRING_ = "<!-- looking for tag: #{tag}" + $_SERVERSTRING_
                     if $_SERVERSTRING_.include?(tag)
-                      $_SERVERSTRING_ = $_SERVERSTRING_.gsub(tag, '<popStream id="combat" />' + tag) unless $_SERVERSTRING_.include?('<popStream id="combat" />')
+                      $_SERVERSTRING_ = $_SERVERSTRING_.gsub(tag, "<popStream id=\"combat\" />#{tag}") unless $_SERVERSTRING_.include?('<popStream id="combat" />')
                       combat_count -= 1
                     end
                     $_SERVERSTRING_ = $_SERVERSTRING_.gsub('<pushStream id="combat" />', '') if $_SERVERSTRING_.include?('<pushStream id="combat" />')
@@ -2621,7 +2623,7 @@ module Games
           rescue
           end
         }
-        respond 'missing method: ' + meth
+        respond "missing method: #{meth}"
         raise NoMethodError
       end
 
@@ -4067,7 +4069,7 @@ reconnect_if_wanted = proc {
     Lich.log 'info: reconnecting...'
     if (RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)
       if $frontend == 'stormfront'
-        system 'taskkill /FI "WINDOWTITLE eq [GSIV: ' + Char.name + '*"' # FIXME: window title changing to Gemstone IV: Char.name # name optional
+        system "taskkill /FI \"WINDOWTITLE eq [GSIV: #{Char.name}*\"" # FIXME: window title changing to Gemstone IV: Char.name # name optional
       end
       args = ['start rubyw.exe']
     else
@@ -4892,10 +4894,10 @@ main_thread = Thread.new {
       Lich.log 'Info: Working against a Linux | WINE Platform for FE location'
       if @launch_data.find { |opt| opt =~ /GAME=WIZ/ }
         custom_launch_dir_temp = Lich.seek('wizard') # #HERE I AM
-        custom_launch_dir = custom_launch_dir_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c')
+        custom_launch_dir = custom_launch_dir_temp.gsub('\\', '/').gsub('C:', "#{Wine::PREFIX}/drive_c")
       elsif @launch_data.find { |opt| opt =~ /GAME=STORM/ }
         custom_launch_dir_temp = Lich.seek('stormfront') # #HERE I AM
-        custom_launch_dir = custom_launch_dir_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c')
+        custom_launch_dir = custom_launch_dir_temp.gsub('\\', '/').gsub('C:', "#{Wine::PREFIX}/drive_c")
       end
       Lich.log "info: Current WINE working directory is #{custom_launch_dir}"
     end

@@ -771,7 +771,7 @@ module Games
             0
           end
         else
-          respond 'missing method: ' + args.inspect.to_s
+          respond "missing method: #{args.inspect}"
           raise NoMethodError
         end
       end

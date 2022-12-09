@@ -64,7 +64,7 @@ class Map
   end
 
   def inspect
-    instance_variables.collect { |var| var.to_s + '=' + instance_variable_get(var).inspect }.join("\n")
+    instance_variables.collect { |var| "#{var}=#{instance_variable_get(var).inspect}" }.join("\n")
   end
 
   def self.fuzzy_room_id

@@ -221,7 +221,7 @@ module Lich
         if launch_dir =~ /lich/i
           $stdout.puts '--- warning: Lich appears to already be installed to the registry'
           Lich.log 'warning: Lich appears to already be installed to the registry'
-          Lich.log 'info: launch_dir: ' + launch_dir
+          Lich.log "info: launch_dir: #{launch_dir}"
         else
           result &&= Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Simutronics\\Launcher\\RealDirectory', launch_dir)
           result &&= Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Simutronics\\Launcher\\Directory', lich_launch_dir)
@@ -348,7 +348,7 @@ module Lich
         if launch_cmd =~ /lich/i
           $stdout.puts '--- warning: Lich appears to already be installed to the registry'
           Lich.log 'warning: Lich appears to already be installed to the registry'
-          Lich.log 'info: launch_cmd: ' + launch_cmd
+          Lich.log "info: launch_cmd: #{launch_cmd}"
         else
           result &&= Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\RealCommand', launch_cmd)
           result &&= Wine.registry_puts('HKEY_LOCAL_MACHINE\\Software\\Classes\\Simutronics.Autolaunch\\Shell\\Open\\command\\', new_launch_cmd)

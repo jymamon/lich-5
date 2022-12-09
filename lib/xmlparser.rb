@@ -252,7 +252,7 @@ class XMLParser
     elsif name == 'popBold'
       @bold = false
     elsif name == 'streamWindow'
-      @room_title = '[' + attributes['subtitle'][3..] + ']' if (attributes['id'] == 'main') and attributes['subtitle']
+      @room_title = "[#{attributes['subtitle'][3..]}]" if (attributes['id'] == 'main') and attributes['subtitle']
     elsif name == 'style'
       @current_style = attributes['id']
     elsif name == 'prompt'

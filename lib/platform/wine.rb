@@ -3,7 +3,7 @@ module Wine
   PREFIX = $wine_prefix
   def self.registry_gets(key)
     hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # FIXME: stupid highlights ]/
-    if File.exist?(PREFIX + '/system.reg')
+    if File.exist?("#{PREFIX}/system.reg")
       if hkey == 'HKEY_LOCAL_MACHINE'
         subkey = "[#{subkey.gsub('\\', '\\\\\\')}]"
         if thingie.nil? or thingie.empty?
@@ -12,7 +12,7 @@ module Wine
           thingie = "\"#{thingie}\""
         end
         lookin = result = false
-        File.open(PREFIX + '/system.reg', &:readlines).each { |line|
+        File.open("#{PREFIX}/system.reg", &:readlines).each { |line|
           if line[0...subkey.length] == subkey
             lookin = true
           elsif line =~ /^\[/
