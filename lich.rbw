@@ -1644,6 +1644,7 @@ class ExecScript < Script
     end
   end
 
+  # rubocop:disable Lint/MissingSuper To be cleaned up during class refactoring
   def initialize(cmd_data, flags = {})
     @cmd_data = cmd_data
     @vars = []
@@ -1677,7 +1678,8 @@ class ExecScript < Script
     @@running.push(self)
     self
   end
-
+  # rubocop:enable Lint/MissingSuper
+  
   def get_next_label
     echo 'goto labels are not available in exec scripts.'
     nil
@@ -1685,6 +1687,7 @@ class ExecScript < Script
 end
 
 class WizardScript < Script
+  # rubocop:disable Lint/MissingSuper To be cleaned up during class refactoring
   def initialize(file_name, cli_vars = [])
     @name = /.*[\/\\]+([^.]+)\./.match(file_name).captures.first
     @file_name = file_name
@@ -1908,6 +1911,7 @@ class WizardScript < Script
     @@running.push(self)
     return self
   end
+  # rubocop:enable Lint/MissingSuper
 end
 
 class Watchfor

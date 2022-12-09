@@ -36,11 +36,6 @@ Lint/HashCompareByIdentity:
   Exclude:
     - 'lich.rbw'
 
-# Offense count: 2
-Lint/MissingSuper:
-  Exclude:
-    - 'lich.rbw'
-
 # Offense count: 3
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: AllowedImplicitNamespaces.
