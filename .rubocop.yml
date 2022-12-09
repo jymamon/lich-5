@@ -157,6 +157,9 @@ Style/TrailingCommaInArguments:
   Enabled: true
   EnforcedStyleForMultiline: no_comma
 
+Style/TrailingUnderscoreVariable:
+  Enabled: false
+
 Style/WordArray:
   Enabled: true
   EnforcedStyle: brackets
