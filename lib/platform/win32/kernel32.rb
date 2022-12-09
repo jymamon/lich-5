@@ -17,6 +17,7 @@ module Win32
       extern 'int EnumProcesses(void*, int, void*)'
     end
 
+    # rubocop:disable Naming/MethodName Allow Win32 naming
     def Win32.EnumProcesses(args = {})
       args[:cb] ||= 400
       pProcessIds = Array.new((args[:cb] / SIZEOF_LONG), 0).pack(''.rjust((args[:cb] / SIZEOF_LONG), 'L'))
@@ -141,4 +142,5 @@ module Win32
     # Other values available
     return :return => r, :dwOSVersionInfoSize => a[0], :dwMajorVersion => a[1], :dwMinorVersion => a[2], :dwBuildNumber => a[3], :dwPlatformId => a[4], :szCSDVersion => a[5].strip, :wServicePackMajor => a[6], :wServicePackMinor => a[7], :wSuiteMask => a[8], :wProductType => a[9]
   end
+  # rubocop:enable Naming/MethodName
 end

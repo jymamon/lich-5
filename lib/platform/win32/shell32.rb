@@ -8,6 +8,7 @@ module Win32
     extern 'int ShellExecute(int, char*, char*, char*, char*, int)'
   end
 
+  # rubocop:disable Naming/MethodName Allow Win32 naming
   def self.ShellExecuteEx(args)
     struct = [(SIZEOF_LONG * 15), 0, 0, 0, 0, 0, 0, SW_SHOW, 0, 0, 0, 0, 0, 0, 0]
     struct_index = {
@@ -66,4 +67,5 @@ module Win32
       args[:nShowCmd]
     )
   end
+  # rubocop:enable Naming/MethodName
 end

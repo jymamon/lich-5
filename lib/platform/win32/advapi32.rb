@@ -13,6 +13,7 @@ module Win32
     extern 'int RegCloseKey(int)'
   end
 
+  # rubocop:disable Naming/MethodName Allow Win32 naming
   def self.GetTokenInformation(args)
     if args[:TokenInformationClass] == TokenElevation
       token_information_length = SIZEOF_LONG
@@ -107,4 +108,5 @@ module Win32
   def self.RegCloseKey(args)
     return Advapi32.RegCloseKey(args[:hKey])
   end
+  # rubocop:enable Naming/MethodName
 end
