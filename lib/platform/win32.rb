@@ -31,7 +31,9 @@ module Win32
   KEY_WOW64_32KEY = 0x0200
   KEY_WOW64_64KEY = 0x0100
   KEY_WRITE = 0x20006
+  # rubocop:disable Naming/ConstantName Allow to match Win32 naming
   TokenElevation = 20
+  # rubocop:enable Naming/ConstantName
   TOKEN_QUERY = 8
   STILL_ACTIVE = 259
   SW_SHOWNORMAL = 1

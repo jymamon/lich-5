@@ -227,11 +227,6 @@ Naming/AccessorMethodName:
     - 'lib/map_gs.rb'
     - 'lich.rbw'
 
-# Offense count: 1
-Naming/ConstantName:
-  Exclude:
-    - 'lib/platform/win32.rb'
-
 # Offense count: 4
 # Configuration parameters: ExpectMatchingDefinition, CheckDefinitionPathHierarchy, CheckDefinitionPathHierarchyRoots, Regex, IgnoreExecutableScripts, AllowedAcronyms.
 # CheckDefinitionPathHierarchyRoots: lib, spec, test, src
