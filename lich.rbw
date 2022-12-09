@@ -4855,7 +4855,7 @@ main_thread = Thread.new {
   ## GUI starts here
 
   elsif defined?(Gtk) and (@options.force_gui)
-    gui_login
+    gui_login(@options.entryfile)
   end
 
   #
