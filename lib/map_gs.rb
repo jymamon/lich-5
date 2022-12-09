@@ -962,7 +962,7 @@ class Map
       @id
     else
       target_list.delete_if { |room_num| shortest_distances[room_num].nil? }
-      target_list.sort { |a, b| shortest_distances[a] <=> shortest_distances[b] }.first
+      target_list.min { |a, b| shortest_distances[a] <=> shortest_distances[b] }
     end
   end
 
@@ -981,7 +981,7 @@ class Map
     else
       previous, shortest_distances = Map.dijkstra(@id, target_list)
       target_list.delete_if { |room_num| shortest_distances[room_num].nil? }
-      target_list.sort { |a, b| shortest_distances[a] <=> shortest_distances[b] }.first
+      target_list.min { |a, b| shortest_distances[a] <=> shortest_distances[b] }
     end
   end
 end
