@@ -129,7 +129,7 @@ class StringProc
   end
 
   def kind_of?(type)
-    Proc.new {}.is_a? type
+    proc {}.is_a? type
   end
 
   def class
@@ -696,12 +696,12 @@ end
 #
 class Scripting
   def script
-    Proc.new {}.binding
+    proc {}.binding
   end
 end
 
 def _script
-  Proc.new {}.binding
+  proc {}.binding
 end
 
 TRUSTED_SCRIPT_BINDING = proc { _script }

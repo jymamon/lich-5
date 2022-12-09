@@ -522,12 +522,6 @@ Style/PercentLiteralDelimiters:
     - 'lib/stash.rb'
     - 'lich.rbw'
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Style/Proc:
-  Exclude:
-    - 'lich.rbw'
-
 # Offense count: 14
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RedundantInterpolation:
