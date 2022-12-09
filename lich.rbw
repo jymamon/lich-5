@@ -2365,8 +2365,8 @@ module Games
                 end
 
                 if @@autostarted and $_SERVERSTRING_ =~ /roomDesc/ and !@@cli_scripts
-                  if optios.start_scripts
-                    for script_name in optios.start_scripts
+                  if @options.start_scripts
+                    for script_name in @options.start_scripts
                       Script.start(script_name)
                     end
                   end
@@ -4781,6 +4781,8 @@ main_thread = Thread.new {
     #       the entry.dat file.
     # TODO: This can all be condesend down to a single match treating @options.gamecode as
     #       a regex against d[:game_code]
+    # TODO: This completely ignores d[:frontend] making --wizard and --stormfront options
+    #       meaningless for this code path.
     if @options.gemstone
       if @options.platinum
         data = entry_data.find { |d| (d[:char_name] == char_name) and (d[:game_code] == 'GSX') }
