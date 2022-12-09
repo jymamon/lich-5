@@ -855,105 +855,103 @@ class Map
   end
 
   def dijkstra(destination = nil)
-    begin
-      Map.load unless @@loaded
-      source = @id
-      visited = []
-      shortest_distances = []
-      previous = []
-      pq = [source]
-      pq_push = proc { |val|
-        0.upto(pq.size) { |i|
-          if shortest_distances[val] <= shortest_distances[pq[i]]
-            pq.insert(i, val)
-            break
+    Map.load unless @@loaded
+    source = @id
+    visited = []
+    shortest_distances = []
+    previous = []
+    pq = [source]
+    pq_push = proc { |val|
+      0.upto(pq.size) { |i|
+        if shortest_distances[val] <= shortest_distances[pq[i]]
+          pq.insert(i, val)
+          break
+        end
+      }
+      pq.push(val) if i.nil? or (i == pq.size - 1)
+    }
+    visited[source] = true
+    shortest_distances[source] = 0
+    if destination.nil?
+      until pq.size.empty?
+        v = pq.shift
+        visited[v] = true
+        @@list[v].wayto.each_key { |adj_room|
+          adj_room_i = adj_room.to_i
+          unless visited[adj_room_i]
+            if @@list[v].timeto[adj_room].instance_of?(Proc)
+              nd = @@list[v].timeto[adj_room].call
+            else
+              nd = @@list[v].timeto[adj_room]
+            end
+            if nd
+              nd += shortest_distances[v]
+              if shortest_distances[adj_room_i].nil? or (shortest_distances[adj_room_i] > nd)
+                shortest_distances[adj_room_i] = nd
+                previous[adj_room_i] = v
+                pq_push.call(adj_room_i)
+              end
+            end
           end
         }
-        pq.push(val) if i.nil? or (i == pq.size - 1)
-      }
-      visited[source] = true
-      shortest_distances[source] = 0
-      if destination.nil?
-        until pq.size.empty?
-          v = pq.shift
-          visited[v] = true
-          @@list[v].wayto.each_key { |adj_room|
-            adj_room_i = adj_room.to_i
-            unless visited[adj_room_i]
-              if @@list[v].timeto[adj_room].instance_of?(Proc)
-                nd = @@list[v].timeto[adj_room].call
-              else
-                nd = @@list[v].timeto[adj_room]
-              end
-              if nd
-                nd += shortest_distances[v]
-                if shortest_distances[adj_room_i].nil? or (shortest_distances[adj_room_i] > nd)
-                  shortest_distances[adj_room_i] = nd
-                  previous[adj_room_i] = v
-                  pq_push.call(adj_room_i)
-                end
-              end
-            end
-          }
-        end
-      elsif destination.instance_of?(Integer)
-        until pq.size.empty?
-          v = pq.shift
-          break if v == destination
-
-          visited[v] = true
-          @@list[v].wayto.each_key { |adj_room|
-            adj_room_i = adj_room.to_i
-            unless visited[adj_room_i]
-              if @@list[v].timeto[adj_room].instance_of?(Proc)
-                nd = @@list[v].timeto[adj_room].call
-              else
-                nd = @@list[v].timeto[adj_room]
-              end
-              if nd
-                nd += shortest_distances[v]
-                if shortest_distances[adj_room_i].nil? or (shortest_distances[adj_room_i] > nd)
-                  shortest_distances[adj_room_i] = nd
-                  previous[adj_room_i] = v
-                  pq_push.call(adj_room_i)
-                end
-              end
-            end
-          }
-        end
-      elsif destination.instance_of?(Array)
-        dest_list = destination.collect(&:to_i)
-        until pq.size.empty?
-          v = pq.shift
-          break if dest_list.include?(v) and (shortest_distances[v] < 20)
-
-          visited[v] = true
-          @@list[v].wayto.each_key { |adj_room|
-            adj_room_i = adj_room.to_i
-            unless visited[adj_room_i]
-              if @@list[v].timeto[adj_room].instance_of?(Proc)
-                nd = @@list[v].timeto[adj_room].call
-              else
-                nd = @@list[v].timeto[adj_room]
-              end
-              if nd
-                nd += shortest_distances[v]
-                if shortest_distances[adj_room_i].nil? or (shortest_distances[adj_room_i] > nd)
-                  shortest_distances[adj_room_i] = nd
-                  previous[adj_room_i] = v
-                  pq_push.call(adj_room_i)
-                end
-              end
-            end
-          }
-        end
       end
-      return previous, shortest_distances
-    rescue
-      echo "Map.dijkstra: error: #{$!}"
-      respond $!.backtrace
-      nil
+    elsif destination.instance_of?(Integer)
+      until pq.size.empty?
+        v = pq.shift
+        break if v == destination
+
+        visited[v] = true
+        @@list[v].wayto.each_key { |adj_room|
+          adj_room_i = adj_room.to_i
+          unless visited[adj_room_i]
+            if @@list[v].timeto[adj_room].instance_of?(Proc)
+              nd = @@list[v].timeto[adj_room].call
+            else
+              nd = @@list[v].timeto[adj_room]
+            end
+            if nd
+              nd += shortest_distances[v]
+              if shortest_distances[adj_room_i].nil? or (shortest_distances[adj_room_i] > nd)
+                shortest_distances[adj_room_i] = nd
+                previous[adj_room_i] = v
+                pq_push.call(adj_room_i)
+              end
+            end
+          end
+        }
+      end
+    elsif destination.instance_of?(Array)
+      dest_list = destination.collect(&:to_i)
+      until pq.size.empty?
+        v = pq.shift
+        break if dest_list.include?(v) and (shortest_distances[v] < 20)
+
+        visited[v] = true
+        @@list[v].wayto.each_key { |adj_room|
+          adj_room_i = adj_room.to_i
+          unless visited[adj_room_i]
+            if @@list[v].timeto[adj_room].instance_of?(Proc)
+              nd = @@list[v].timeto[adj_room].call
+            else
+              nd = @@list[v].timeto[adj_room]
+            end
+            if nd
+              nd += shortest_distances[v]
+              if shortest_distances[adj_room_i].nil? or (shortest_distances[adj_room_i] > nd)
+                shortest_distances[adj_room_i] = nd
+                previous[adj_room_i] = v
+                pq_push.call(adj_room_i)
+              end
+            end
+          end
+        }
+      end
     end
+    return previous, shortest_distances
+  rescue
+    echo "Map.dijkstra: error: #{$!}"
+    respond $!.backtrace
+    nil
   end
 
   def self.findpath(source, destination)

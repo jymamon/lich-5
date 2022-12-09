@@ -553,17 +553,6 @@ Style/Proc:
   Exclude:
     - 'lich.rbw'
 
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-# Do this with more careful review.
-Style/RedundantBegin:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/gui-manual-login.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/xmlparser.rb'
-
 # Offense count: 14
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RedundantInterpolation:

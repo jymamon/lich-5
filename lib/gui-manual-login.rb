@@ -110,13 +110,12 @@ connect_button.signal_connect('clicked') {
   iter = liststore.append
   iter[1] = 'working...'
   Gtk.queue {
-    begin
-      login_info = EAccess.auth(
-        :account => user_id_entry.text || @options.account,
-        :password => pass_entry.text || @options.password,
-        :legacy => true
-      )
-    end
+    login_info = EAccess.auth(
+      :account => user_id_entry.text || @options.account,
+      :password => pass_entry.text || @options.password,
+      :legacy => true
+    )
+
     if login_info =~ /error/i
       @msgbox.call "\nSomething went wrong... probably invalid \nuser id and / or password.\n\nserver response: #{login_info}"
       connect_button.sensitive = true

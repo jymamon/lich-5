@@ -1832,73 +1832,69 @@ $speech_highlight_start = ''
 $speech_highlight_end = ''
 
 def fb_to_sf(line)
-  begin
-    return line if line == "\r\n"
+  return line if line == "\r\n"
 
-    line = line.gsub(/<c>/, '')
-    return nil if line.gsub("\r\n", '').empty?
+  line = line.gsub(/<c>/, '')
+  return nil if line.gsub("\r\n", '').empty?
 
-    return line
-  rescue
-    $_CLIENT_.puts "--- Error: fb_to_sf: #{$!}"
-    $_CLIENT_.puts '$_SERVERSTRING_: ' + $_SERVERSTRING_.to_s
-  end
+  return line
+rescue
+  $_CLIENT_.puts "--- Error: fb_to_sf: #{$!}"
+  $_CLIENT_.puts '$_SERVERSTRING_: ' + $_SERVERSTRING_.to_s
 end
 
 def sf_to_wiz(line)
-  begin
-    return line if line == "\r\n"
+  return line if line == "\r\n"
 
-    if $sftowiz_multiline
-      $sftowiz_multiline = $sftowiz_multiline + line
-      line = $sftowiz_multiline
-    end
-    if line.scan(/<pushStream[^>]*\/>/).length > line.scan(/<popStream[^>]*\/>/).length
-      $sftowiz_multiline = line
-      return nil
-    end
-    if line.scan(/<style id="\w+"[^>]*\/>/).length > line.scan(/<style id=""[^>]*\/>/).length
-      $sftowiz_multiline = line
-      return nil
-    end
-    $sftowiz_multiline = nil
-    $_CLIENT_.puts "\034GSw00005\r\nhttps://www.play.net#{$1}\r\n" if line =~ /<LaunchURL src="(.*?)" \/>/
-    line = line.sub(/<preset id='speech'>.*?<\/preset>/m, "#{$speech_highlight_start}#{$1}#{$speech_highlight_end}") if line =~ /<preset id='speech'>(.*?)<\/preset>/m
-    if line =~ /<pushStream id="thoughts"[^>]*>\[([^\\]+?)\]\s*(.*?)<popStream\/>/m
-      thought_channel = $1
-      msg = $2
-      thought_channel.gsub!(' ', '-')
-      msg.gsub!('<pushBold/>', '')
-      msg.gsub!('<popBold/>', '')
-      line = line.sub(/<pushStream id="thoughts".*<popStream\/>/m, "You hear the faint thoughts of [#{thought_channel}]-ESP echo in your mind:\r\n#{msg}")
-    end
-    line = line.sub(/<pushStream id="voln"[^>]*>\[Voln - (?:<a[^>]*>)?([A-Z][a-z]+)(?:<\/a>)?\]\s*(".*")[\r\n]*<popStream\/>/m, "The Symbol of Thought begins to burn in your mind and you hear #{$1} thinking, #{$2}\r\n") if line =~ /<pushStream id="voln"[^>]*>\[Voln - (?:<a[^>]*>)?([A-Z][a-z]+)(?:<\/a>)?\]\s*(".*")[\r\n]*<popStream\/>/m
-    line = line.sub(/<stream id="thoughts"[^>]*>.*?<\/stream>/m, "You hear the faint thoughts of #{$1} echo in your mind:\r\n#{$2}") if line =~ /<stream id="thoughts"[^>]*>([^:]+): (.*?)<\/stream>/m
-    line = line.sub(/<pushStream id="familiar"[^>]*>.*<popStream\/>/m, "\034GSe\r\n#{$1}\034GSf\r\n") if line =~ /<pushStream id="familiar"[^>]*>(.*)<popStream\/>/m
-    line = line.sub(/<pushStream id="death"\/>.*?<popStream\/>/m, "\034GSw00003\r\n#{$1}\034GSw00004\r\n") if line =~ /<pushStream id="death"\/>(.*?)<popStream\/>/m
-    line = line.sub(/<style id="roomName" \/>.*?<style id=""\/>/m, "\034GSo\r\n#{$1}\034GSp\r\n") if line =~ /<style id="roomName" \/>(.*?)<style id=""\/>/m
-    line.gsub!(/<style id="roomDesc"\/><style id=""\/>\r?\n/, '')
-    if line =~ /<style id="roomDesc"\/>(.*?)<style id=""\/>/m
-      desc = $1.gsub(/<a[^>]*>/, $link_highlight_start).gsub('</a>', $link_highlight_end)
-      line = line.sub(/<style id="roomDesc"\/>.*?<style id=""\/>/m, "\034GSH\r\n#{desc}\034GSI\r\n")
-    end
-    line = line.gsub("</prompt>\r\n", '</prompt>')
-    line = line.gsub('<pushBold/>', "\034GSL\r\n")
-    line = line.gsub('<popBold/>', "\034GSM\r\n")
-    line = line.gsub(/<pushStream id=["'](?:spellfront|inv|bounty|society|speech|talk)["'][^>]*\/>.*?<popStream[^>]*>/m, '')
-    line = line.gsub(/<stream id="Spells">.*?<\/stream>/m, '')
-    line = line.gsub(/<(compDef|inv|component|right|left|spell|prompt)[^>]*>.*?<\/\1>/m, '')
-    line = line.gsub(/<[^>]+>/, '')
-    line = line.gsub('&gt;', '>')
-    line = line.gsub('&lt;', '<')
-    line = line.gsub('&amp;', '&')
-    return nil if line.gsub("\r\n", '').empty?
-
-    return line
-  rescue
-    $_CLIENT_.puts "--- Error: sf_to_wiz: #{$!}"
-    $_CLIENT_.puts '$_SERVERSTRING_: ' + $_SERVERSTRING_.to_s
+  if $sftowiz_multiline
+    $sftowiz_multiline = $sftowiz_multiline + line
+    line = $sftowiz_multiline
   end
+  if line.scan(/<pushStream[^>]*\/>/).length > line.scan(/<popStream[^>]*\/>/).length
+    $sftowiz_multiline = line
+    return nil
+  end
+  if line.scan(/<style id="\w+"[^>]*\/>/).length > line.scan(/<style id=""[^>]*\/>/).length
+    $sftowiz_multiline = line
+    return nil
+  end
+  $sftowiz_multiline = nil
+  $_CLIENT_.puts "\034GSw00005\r\nhttps://www.play.net#{$1}\r\n" if line =~ /<LaunchURL src="(.*?)" \/>/
+  line = line.sub(/<preset id='speech'>.*?<\/preset>/m, "#{$speech_highlight_start}#{$1}#{$speech_highlight_end}") if line =~ /<preset id='speech'>(.*?)<\/preset>/m
+  if line =~ /<pushStream id="thoughts"[^>]*>\[([^\\]+?)\]\s*(.*?)<popStream\/>/m
+    thought_channel = $1
+    msg = $2
+    thought_channel.gsub!(' ', '-')
+    msg.gsub!('<pushBold/>', '')
+    msg.gsub!('<popBold/>', '')
+    line = line.sub(/<pushStream id="thoughts".*<popStream\/>/m, "You hear the faint thoughts of [#{thought_channel}]-ESP echo in your mind:\r\n#{msg}")
+  end
+  line = line.sub(/<pushStream id="voln"[^>]*>\[Voln - (?:<a[^>]*>)?([A-Z][a-z]+)(?:<\/a>)?\]\s*(".*")[\r\n]*<popStream\/>/m, "The Symbol of Thought begins to burn in your mind and you hear #{$1} thinking, #{$2}\r\n") if line =~ /<pushStream id="voln"[^>]*>\[Voln - (?:<a[^>]*>)?([A-Z][a-z]+)(?:<\/a>)?\]\s*(".*")[\r\n]*<popStream\/>/m
+  line = line.sub(/<stream id="thoughts"[^>]*>.*?<\/stream>/m, "You hear the faint thoughts of #{$1} echo in your mind:\r\n#{$2}") if line =~ /<stream id="thoughts"[^>]*>([^:]+): (.*?)<\/stream>/m
+  line = line.sub(/<pushStream id="familiar"[^>]*>.*<popStream\/>/m, "\034GSe\r\n#{$1}\034GSf\r\n") if line =~ /<pushStream id="familiar"[^>]*>(.*)<popStream\/>/m
+  line = line.sub(/<pushStream id="death"\/>.*?<popStream\/>/m, "\034GSw00003\r\n#{$1}\034GSw00004\r\n") if line =~ /<pushStream id="death"\/>(.*?)<popStream\/>/m
+  line = line.sub(/<style id="roomName" \/>.*?<style id=""\/>/m, "\034GSo\r\n#{$1}\034GSp\r\n") if line =~ /<style id="roomName" \/>(.*?)<style id=""\/>/m
+  line.gsub!(/<style id="roomDesc"\/><style id=""\/>\r?\n/, '')
+  if line =~ /<style id="roomDesc"\/>(.*?)<style id=""\/>/m
+    desc = $1.gsub(/<a[^>]*>/, $link_highlight_start).gsub('</a>', $link_highlight_end)
+    line = line.sub(/<style id="roomDesc"\/>.*?<style id=""\/>/m, "\034GSH\r\n#{desc}\034GSI\r\n")
+  end
+  line = line.gsub("</prompt>\r\n", '</prompt>')
+  line = line.gsub('<pushBold/>', "\034GSL\r\n")
+  line = line.gsub('<popBold/>', "\034GSM\r\n")
+  line = line.gsub(/<pushStream id=["'](?:spellfront|inv|bounty|society|speech|talk)["'][^>]*\/>.*?<popStream[^>]*>/m, '')
+  line = line.gsub(/<stream id="Spells">.*?<\/stream>/m, '')
+  line = line.gsub(/<(compDef|inv|component|right|left|spell|prompt)[^>]*>.*?<\/\1>/m, '')
+  line = line.gsub(/<[^>]+>/, '')
+  line = line.gsub('&gt;', '>')
+  line = line.gsub('&lt;', '<')
+  line = line.gsub('&amp;', '&')
+  return nil if line.gsub("\r\n", '').empty?
+
+  return line
+rescue
+  $_CLIENT_.puts "--- Error: sf_to_wiz: #{$!}"
+  $_CLIENT_.puts '$_SERVERSTRING_: ' + $_SERVERSTRING_.to_s
 end
 
 def strip_xml(line)
@@ -2188,39 +2184,37 @@ def do_client(client_string)
 end
 
 def report_errors(&block)
-  begin
-    block.call
-  rescue
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue SyntaxError
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue SystemExit
-    nil
-  rescue SecurityError
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue ThreadError
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue SystemStackError
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue Exception
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue ScriptError
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue LoadError
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue NoMemoryError
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  rescue
-    respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-    Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-  end
+  block.call
+rescue
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue SyntaxError
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue SystemExit
+  nil
+rescue SecurityError
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue ThreadError
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue SystemStackError
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue Exception
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue ScriptError
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue LoadError
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue NoMemoryError
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+rescue
+  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
 end
