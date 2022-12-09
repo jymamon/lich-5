@@ -41,7 +41,7 @@ class Parser
       :avalon,
       :frostbite,
       :genie,
-      :storrmfront,
+      :stormfront,
       :without_frontend,
       :wizard,
       # Logon
@@ -518,6 +518,10 @@ class Parser
 
     args.entryfile ||= "#{args.datadir}/entry.dat"
     
+    unless args.gemstone || args.dragonrealms || args.game
+      args.gemstone = true
+    end
+
     # TODO: Check for invalid combinations. For example, '-s -w' doesn't make sense.
     #if gamecode.gemstone
     #  if gamecode.platinum
