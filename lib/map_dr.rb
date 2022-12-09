@@ -83,7 +83,7 @@ class Map
 
   def self.[](val)
     Map.load unless @@loaded
-    if val.instance_of?(Integer) or val.instance_of?(Bignum) or val =~ /^[0-9]+$/
+    if val.instance_of?(Integer) or val =~ /^[0-9]+$/
       @@list[val.to_i]
     elsif val =~ /^u(-?\d+)$/i
       uid_request = $1.dup.to_i

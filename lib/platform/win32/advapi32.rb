@@ -79,10 +79,10 @@ module Win32
     elsif (args[:dwType] == REG_MULTI_SZ) and args[:lpData].instance_of?(Array)
       lpData = args[:lpData].join("\x00").concat("\x00\x00")
       cbData = lpData.length
-    elsif (args[:dwType] == REG_DWORD) and args[:lpData].instance_of?(Fixnum)
+    elsif (args[:dwType] == REG_DWORD) and args[:lpData].instance_of?(Integer)
       lpData = [args[:lpData]].pack('L')
       cbData = 4
-    elsif (args[:dwType] == REG_QWORD) and (args[:lpData].instance_of?(Fixnum) or args[:lpData].instance_of?(Bignum))
+    elsif (args[:dwType] == REG_QWORD) and args[:lpData].instance_of?(Integer)
       lpData = [args[:lpData]].pack('Q')
       cbData = 8
     elsif args[:dwType] == REG_BINARY
