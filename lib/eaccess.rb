@@ -69,7 +69,7 @@ module EAccess
     # pp "A:response=%s" % response
     conn.puts "M\n"
     response = EAccess.read(conn)
-    fail Exception, response unless response =~ /^M\t/
+    raise Exception, response unless response =~ /^M\t/
 
     # pp "M:response=%s" % response
 
@@ -102,7 +102,7 @@ module EAccess
     else
       conn.puts "F\t#{game_code}\n"
       response = EAccess.read(conn)
-      fail Exception, response unless response =~ /NORMAL|PREMIUM|TRIAL|INTERNAL|FREE/
+      raise Exception, response unless response =~ /NORMAL|PREMIUM|TRIAL|INTERNAL|FREE/
 
       # pp "F:response=%s" % response
       conn.puts "G\t#{game_code}\n"
@@ -120,7 +120,7 @@ module EAccess
         .split("\t")[0]
       conn.puts "L\t#{char_code}\tSTORM\n"
       response = EAccess.read(conn)
-      fail Exception, response unless response =~ /^L\t/
+      raise Exception, response unless response =~ /^L\t/
 
       # pp "L:response=%s" % response
       conn.close unless conn.closed?

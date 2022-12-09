@@ -34,7 +34,7 @@ module Lich
       when Symbol
         (eval caller_type).to_h.transform_keys(&:to_s).transform_keys(&:downcase).include?(val.to_s.downcase.gsub('_', ' '))
       else
-        fail "invalid lookup case #{val.class.name}"
+        raise "invalid lookup case #{val.class.name}"
       end
     end
 

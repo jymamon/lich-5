@@ -23,7 +23,7 @@ module Lich
     def self.find_container(param)
       GameObj.inv.find { |container|
         container.name =~ /#{param}/
-      } or fail "could not find Container[name: #{param}]"
+      } or raise "could not find Container[name: #{param}]"
     end
 
     def self.container(param)
@@ -37,7 +37,7 @@ module Lich
       fput(command)
       expiry = Time.now + seconds
       wait_until { yield or Time.now > expiry }
-      fail "Error[command: #{command}, seconds: #{seconds}]" if Time.now > expiry
+      raise "Error[command: #{command}, seconds: #{seconds}]" if Time.now > expiry
     end
 
     def self.add_to_bag(bag, item)

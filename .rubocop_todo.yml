@@ -608,16 +608,6 @@ Style/RescueStandardError:
     - 'lib/xmlparser.rb'
     - 'lich.rbw'
 
-# Offense count: 6
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: only_raise, only_fail, semantic
-Style/SignalException:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/stash.rb'
-    - 'lib/util.rb'
-
 # Offense count: 422
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: RequireEnglish, EnforcedStyle.
