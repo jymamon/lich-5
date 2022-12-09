@@ -873,7 +873,7 @@ class Map
     visited[source] = true
     shortest_distances[source] = 0
     if destination.nil?
-      until pq.size.empty?
+      until pq.empty?
         v = pq.shift
         visited[v] = true
         @@list[v].wayto.each_key { |adj_room|
@@ -896,7 +896,7 @@ class Map
         }
       end
     elsif destination.instance_of?(Integer)
-      until pq.size.empty?
+      until pq.empty?
         v = pq.shift
         break if v == destination
 
@@ -922,7 +922,7 @@ class Map
       end
     elsif destination.instance_of?(Array)
       dest_list = destination.collect(&:to_i)
-      until pq.size.empty?
+      until pq.empty?
         v = pq.shift
         break if dest_list.include?(v) and (shortest_distances[v] < 20)
 
