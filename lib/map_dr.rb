@@ -354,7 +354,7 @@ class Map
         good
       }
       current_location = Map.get_location
-      foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
+
       if (room = @@list.find { |r|
         (r.location == current_location) and r.title.include?(XMLData.room_title) and
         r.description.include?(XMLData.room_description.strip) and
@@ -482,7 +482,7 @@ class Map
             respond '--- Lich: error: no map database found'
             return false
           end
-          error = false
+
           while (filename = file_list.shift)
             if File.exist?(filename)
               File.open(filename) { |f|
@@ -499,7 +499,7 @@ class Map
                 }
               }
               @@tags.clear
-              respond "--- Map loaded #{filename}" # if error
+              respond "--- Map loaded #{filename}"
               @@loaded = true
               Map.load_uids
               return true
@@ -528,17 +528,16 @@ class Map
             respond '--- Lich: error: no map database found'
             return false
           end
-          error = false
+
           while (filename = file_list.shift)
             begin
               @@list = File.open(filename, 'rb') { |f| Marshal.load(f.read) }
-              respond "--- Map loaded #{filename}" # if error
+              respond "--- Map loaded #{filename}"
 
               @@loaded = true
               Map.load_uids
               return true
             rescue
-              error = true
               if file_list.empty?
                 respond "--- Lich: error: failed to load #{filename}: #{$!}"
               else
@@ -968,7 +967,7 @@ class Map
   def path_to(destination)
     Map.load unless @@loaded
     destination = destination.to_i
-    previous, shortest_distances = dijkstra(destination)
+    previous, _ = dijkstra(destination)
     return nil unless previous[destination]
 
     path = [destination]
@@ -981,7 +980,7 @@ class Map
   def find_nearest_by_tag(tag_name)
     target_list = []
     @@list.each { |room| target_list.push(room.id) if room.tags.include?(tag_name) }
-    previous, shortest_distances = Map.dijkstra(@id, target_list)
+    _, shortest_distances = Map.dijkstra(@id, target_list)
     if target_list.include?(@id)
       @id
     else
@@ -993,7 +992,7 @@ class Map
   def find_all_nearest_by_tag(tag_name)
     target_list = []
     @@list.each { |room| target_list.push(room.id) if room.tags.include?(tag_name) }
-    previous, shortest_distances = Map.dijkstra(@id)
+    _, shortest_distances = Map.dijkstra(@id)
     target_list.delete_if { |room_num| shortest_distances[room_num].nil? }
     target_list.sort { |a, b| shortest_distances[a] <=> shortest_distances[b] }
   end
@@ -1003,7 +1002,7 @@ class Map
     if target_list.include?(@id)
       @id
     else
-      previous, shortest_distances = Map.dijkstra(@id, target_list)
+      _, shortest_distances = Map.dijkstra(@id, target_list)
       target_list.delete_if { |room_num| shortest_distances[room_num].nil? }
       target_list.min { |a, b| shortest_distances[a] <=> shortest_distances[b] }
     end

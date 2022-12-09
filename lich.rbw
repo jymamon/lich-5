@@ -751,7 +751,7 @@ class Script
     if (file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i }))
       script_name = file_name.sub(/\..{1,3}$/, '')
     end
-    file_list = nil
+
     if file_name.nil?
       respond "--- Lich: could not find script '#{script_name}' in directory #{SCRIPT_DIR} or #{SCRIPT_DIR}/custom"
       next nil
@@ -987,7 +987,7 @@ class Script
     if (file_name = (file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ || val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?i:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/ } || file_list.find { |val| val =~ /^(?:\/custom\/)?#{Regexp.escape(script_name)}[^.]+\.(?:lic|rb|cmd|wiz)(?:\.gz|\.Z)?$/i }))
       script_name = file_name.sub(/\..{1,3}$/, '')
     end
-    file_list = nil
+
     if file_name.nil?
       respond "--- Lich: could not find script '#{script_name}' in directory #{SCRIPT_DIR}"
       return nil
@@ -1679,7 +1679,7 @@ class ExecScript < Script
     self
   end
   # rubocop:enable Lint/MissingSuper
-  
+
   def get_next_label
     echo 'goto labels are not available in exec scripts.'
     nil
@@ -1765,6 +1765,7 @@ class WizardScript < Script
       str
     }
 
+    # rubocop:disable Lint/UselessAssignment Review during refactor
     fixline = proc { |line|
       if line =~ /^[\s\t]*[A-Za-z0-9_\-']+:/i
         line = line.downcase.strip
@@ -1855,6 +1856,7 @@ class WizardScript < Script
         line = "# #{line}"
       end
     }
+    # rubocop:enable Lint/UselessAssignment
 
     lich_block = false
 
@@ -3673,6 +3675,7 @@ module Games
       end
 
       def self.[](val)
+        # rubocop:disable Lint/UselessAssignment Review during refactor
         if val.instance_of?(String)
           if val =~ /^-?[0-9]+$/
             obj = @@inv.find { |o| o.id == val } || @@loot.find { |o| o.id == val } || @@npcs.find { |o| o.id == val } || @@pcs.find { |o| o.id == val } || [@@right_hand, @@left_hand].find { |o| o.id == val } || @@room_desc.find { |o| o.id == val }
@@ -3684,6 +3687,7 @@ module Games
         elsif val.instance_of?(Regexp)
           obj = @@inv.find { |o| o.name =~ val } || @@loot.find { |o| o.name =~ val } || @@npcs.find { |o| o.name =~ val } || @@pcs.find { |o| o.name =~ val } || [@@right_hand, @@left_hand].find { |o| o.name =~ val } || @@room_desc.find { |o| o.name =~ val }
         end
+        # rubocop:enable Lint/UselessAssignment
       end
 
       # rubocop:disable Naming/MethodName for compatibility
@@ -4523,6 +4527,7 @@ alias bounty? checkbounty
 # Program start
 #
 
+# rubocop:disable Lint/UselessAssignment Something was intented here, but it isn't currently used. Review.
 if @options.hostsdirectory
   hosts_dir = @options.hostsdirectory
   # TODO: Extra logic here can move to when the option is being set
@@ -4533,9 +4538,8 @@ if @options.hostsdirectory
     $stdout.puts "warning: given hosts directory does not exist: #{hosts_dir}"
     hosts_dir = nil
   end
-else
-  hosts_dir = nil
 end
+# rubocop:enable Lint/UselessAssignment
 
 detachable_client_port = @options.detachable_client
 
@@ -4772,22 +4776,6 @@ main_thread = Thread.new {
     end
     if data
       Lich.log "info: using quick game entry settings for #{char_name}"
-      msgbox = proc { |msg|
-        if defined?(Gtk)
-          done = false
-          Gtk.queue {
-            dialog = Gtk::MessageDialog.new(nil, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_CLOSE, msg)
-            dialog.run
-            dialog.destroy
-            done = true
-          }
-          sleep 0.1 until done
-        else
-          $stdout.puts(msg)
-          Lich.log(msg)
-        end
-      }
-
       launch_data_hash = EAccess.auth(
         :account => data[:user_id],
         :password => data[:password],
@@ -4845,11 +4833,13 @@ main_thread = Thread.new {
     else
       gamecodeshort = 'GS'
     end
+    # rubocop:disable Lint/UselessAssignment Something was intented here, but it isn't currently used. Review.
     unless (gamecode = @launch_data.find { |line| line =~ /GAMECODE=/ })
       $stdout.puts 'error: launch_data contains no GAMECODE info'
       Lich.log 'error: launch_data contains no GAMECODE info'
       exit(1)
     end
+    # rubocop:enable Lint/UselessAssignment
     unless (gameport = @launch_data.find { |line| line =~ /GAMEPORT=/ })
       $stdout.puts 'error: launch_data contains no GAMEPORT info'
       Lich.log 'error: launch_data contains no GAMEPORT info'
@@ -4936,7 +4926,7 @@ main_thread = Thread.new {
         exit(1)
       end
     end
-    gamecode = gamecode.split('=').last
+
     gameport = gameport.split('=').last
     gamehost = gamehost.split('=').last
     game     = game.split('=').last
@@ -5112,7 +5102,6 @@ main_thread = Thread.new {
       $stdout.puts 'error: cannot find hosts file'
       exit
     end
-    game_quad_ip = IPSocket.getaddress(game_host)
     error_count = 0
     begin
       listener = TCPServer.new('127.0.0.1', game_port)
@@ -5197,7 +5186,7 @@ main_thread = Thread.new {
     exit
   end
 
-  listener = timeout_thr = nil
+  listener = nil
 
   # backward compatibility
   if $frontend =~ /^(?:wizard|avalon)$/
@@ -5210,7 +5199,6 @@ main_thread = Thread.new {
 
   if @options.without_frontend
     Thread.new {
-      client_thread = nil
       #
       # send the login key
       #

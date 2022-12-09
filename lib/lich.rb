@@ -558,8 +558,8 @@ module Lich
       gamehost = 'storm.gs4.game.play.net'
       gameport = 10024
     elsif (gamehost == 'gs4.simutronics.net') and (gameport.to_i == 10321)
-      game_host = 'storm.gs4.game.play.net'
-      game_port = 10324
+      gamehost = 'storm.gs4.game.play.net'
+      gameport = 10324
     elsif (gamehost == 'prime.dr.game.play.net') and (gameport.to_i == 4901)
       gamehost = 'dr.simutronics.net'
       gameport = 11024

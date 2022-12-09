@@ -124,7 +124,6 @@ module Lich
       end
 
       def self.prep_update
-        installed = Gem::Version.new(@current)
         filename = 'https://api.github.com/repos/elanthia-online/lich-5/releases/latest'
         update_info = open(filename).read
 
@@ -269,7 +268,7 @@ module Lich
 
       def self.update_file(type, rf)
         requested_file = rf
-        requested_file_name = requested_file.sub(/\.(?:lic|rb|xml|ui)$/, '')
+
         case type
         when 'script'
           location = SCRIPT_DIR

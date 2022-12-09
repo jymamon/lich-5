@@ -130,7 +130,7 @@ module Games
               filename = "#{DATA_DIR}/spell-list.xml"
             end
           end
-          script = Script.current
+
           @@load_mutex.synchronize {
             return true if @loaded
 
@@ -264,7 +264,6 @@ module Games
 
       def time_per(options = {})
         formula = time_per_formula(options)
-        line = options[:line] if options[:line]
         proc { begin; $SAFE = 3; rescue; nil; end; eval(formula) }.call.to_f
       end
 

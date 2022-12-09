@@ -14,7 +14,6 @@ if @entry_data.empty?
   @quick_game_entry_tab.pack_start(box, :expand => true, :fill => true, :padding => 0)
 else
   last_user_id = nil
-  account_array = []
 
   if @tab_layout_state == true
 
@@ -63,7 +62,6 @@ else
                   button:hover { background-color: darkgrey; } ")
 
         @play_button = Gtk::Button.new
-        char_label = Gtk::Label.new("#{realm} - #{login_info[:char_name]}")
         char_label = Gtk::Label.new("#{login_info[:char_name]}")
         char_label.set_width_chars(15)
         fe_label = Gtk::Label.new("(#{login_info[:frontend].capitalize})")
@@ -134,7 +132,6 @@ else
               dialog = Gtk::MessageDialog.new(:parent => nil, :flags => :modal, :type => :question, :buttons => :yes_no, :message => 'Delete record?')
               dialog.title = 'Confirm'
               dialog.set_icon(@default_icon)
-              response = nil
               response = dialog.run
               dialog.destroy
               if response == Gtk::ResponseType::YES
@@ -218,7 +215,6 @@ else
             dialog = Gtk::MessageDialog.new(:parent => nil, :flags => :modal, :type => :question, :buttons => :yes_no, :message => 'Delete record?')
             dialog.title = 'Confirm'
             dialog.set_icon(@default_icon)
-            response = nil
             response = dialog.run
             dialog.destroy
             if response == Gtk::ResponseType::YES

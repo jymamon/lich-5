@@ -114,22 +114,6 @@ Lint/UnusedMethodArgument:
     - 'lib/weapon.rb'
     - 'lich.rbw'
 
-# Offense count: 89
-Lint/UselessAssignment:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/global_defs.rb'
-    - 'lib/gui-login.rb'
-    - 'lib/gui-manual-login.rb'
-    - 'lib/gui-saved-login.rb'
-    - 'lib/init.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/spell.rb'
-    - 'lib/update.rb'
-    - 'lich.rbw'
-
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Lint/UselessMethodDefinition:

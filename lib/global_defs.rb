@@ -286,7 +286,7 @@ def selectput(string, success, failure, timeout = nil)
   failure.flatten!
   regex = /#{(success + failure).join('|')}/i
   successre = /#{success.join('|')}/i
-  failurere = /#{failure.join('|')}/i
+
   thr = Thread.current
 
   timethr = Thread.new {
@@ -660,7 +660,7 @@ def checkpaths(dir = 'none')
     if XMLData.room_exits.empty?
       return false
     else
-      return XMLData.room_exits.collect { |dir| dir = SHORTDIR[dir] }
+      return XMLData.room_exits.collect { |dir| SHORTDIR[dir] }
     end
   else
     XMLData.room_exits.include?(dir) || XMLData.room_exits.include?(SHORTDIR[dir])
@@ -1250,7 +1250,7 @@ def match(label, string)
 end
 
 def matchtimeout(secs, *strings)
-  unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
+  unless Script.current then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   unless secs.instance_of?(Float) || secs.instance_of?(Integer)
     echo('matchtimeout error! You appear to have given it a string, not a #! Syntax:  matchtimeout(30, "You stand up")')
     return false
@@ -1279,7 +1279,7 @@ def matchbefore(*strings)
   unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo('matchbefore without any strings to wait for!'); return false end
   regexpstr = strings.join('|')
-  loop { if (line_in = script.gets) =~ /#{regexpstr}/ then return $`.to_s end }
+  loop { return $`.to_s if script.gets =~ /#{regexpstr}/ }
 end
 
 def matchafter(*strings)
@@ -1287,7 +1287,7 @@ def matchafter(*strings)
   unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo('matchafter without any strings to wait for!'); return end
   regexpstr = strings.join('|')
-  loop { if (line_in = script.gets) =~ /#{regexpstr}/ then return $'.to_s end }
+  loop { return $'.to_s if script.gets =~ /#{regexpstr}/ }
 end
 
 def matchboth(*strings)
@@ -1295,7 +1295,7 @@ def matchboth(*strings)
   unless (script = Script.current) then echo("An unknown script thread tried to fetch a game line from the queue, but Lich can't process the call without knowing which script is calling! Aborting..."); Thread.current.kill; return false end
   if strings.empty? then echo('matchboth without any strings to wait for!'); return end
   regexpstr = strings.join('|')
-  loop { if (line_in = script.gets) =~ /#{regexpstr}/ then break end }
+  loop { break if script.gets =~ /#{regexpstr}/ }
   return [$`.to_s, $'.to_s]
 end
 
@@ -1972,14 +1972,12 @@ def do_client(client_string)
       else
         respond '--- Lich: no scripts to pause'
       end
-      s = nil
     elsif cmd =~ /^u$|^unpause$/
       if (s = Script.running.reverse.find(&:paused?))
         s.unpause
       else
         respond '--- Lich: no scripts to unpause'
       end
-      s = nil
     elsif cmd =~ /^ka$|^kill\s?all$|^stop\s?all$/
       did_something = false
       Script.running.find_all { |s| !s.no_kill_all }.each { |s| s.kill; did_something = true }
@@ -2005,7 +2003,6 @@ def do_client(client_string)
       elsif action =~ /^(?:u|unpause)$/
         script.unpause
       end
-      action = target = script = nil
     elsif cmd =~ /^list\s?(?:all)?$|^l(?:a)?$/i
       if cmd =~ /a(?:ll)?/i
         list = Script.running + Script.hidden
@@ -2017,7 +2014,6 @@ def do_client(client_string)
       else
         respond "--- Lich: #{list.collect { |s| s.paused? ? "#{s.name} (paused)" : s.name }.join(', ')}"
       end
-      list = nil
     elsif cmd =~ /^force\s+[^\s]+/
       if cmd =~ /^force\s+([^\s]+)\s+(.+)$/
         Script.start($1, $2, :force => true)
@@ -2038,7 +2034,6 @@ def do_client(client_string)
         else
           respond "--- Lich: '#{cmd.split[2].chomp.strip}' does not match any active script!"
         end
-        script = nil
       elsif Script.running.empty? and Script.hidden.empty?
         respond('--- Lich: no active scripts to send to.')
       else
@@ -2048,7 +2043,9 @@ def do_client(client_string)
       end
     elsif cmd =~ /^(?:exec|e)(q)?(n)? (.+)$/
       cmd_data = $3
+      # rubocop:disable Lint/UselessAssignment Review what was intended here. ExecScript.new() with these flags?
       ExecScript.start(cmd_data, flags = { :quiet => $1, :trusted => ($2.nil? and RUBY_VERSION =~ /^2\.[012]\./) })
+      # rubocop:enable Lint/UselessAssignment
     elsif cmd =~ /^trust\s+(.*)/i
       script_name = $1
       if RUBY_VERSION =~ /^2\.[012]\./
@@ -2083,7 +2080,6 @@ def do_client(client_string)
         else
           respond "--- Lich: trusted scripts: #{list.join(', ')}"
         end
-        list = nil
       else
         respond "--- Lich: this feature isn't available in this version of Ruby "
       end

@@ -28,10 +28,8 @@ def gui_login(entry_data_file)
     @entry_data = []
   end
   @save_entry_data = false
-  done = false
 
   Gtk.queue {
-    login_server = nil
     @window = nil
     install_tab_loaded = false
 
