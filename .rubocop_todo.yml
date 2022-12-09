@@ -36,13 +36,6 @@ Lint/HashCompareByIdentity:
   Exclude:
     - 'lich.rbw'
 
-# Offense count: 3
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Lint/InterpolationCheck:
-  Exclude:
-    - 'lib/lich.rb'
-    - 'lich.rbw'
-
 # Offense count: 2
 Lint/MissingSuper:
   Exclude:

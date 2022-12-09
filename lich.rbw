@@ -1752,10 +1752,12 @@ class WizardScript < Script
 
     fixstring = proc { |str|
       # rubocop: disable Style/StringConcatenation This block is less readable with concatentation
+      # rubocop: disable Lint/InterpolationCheck Intentional
       str.gsub!('%' + $1 + '%', '#{' + $1.downcase + '}') while !setvars.empty? and str =~ /%(#{setvars.join('|')})%/io
       str.gsub!(/%c(?:%)?/i, '#{c}')
       str.gsub!(/%s(?:%)?/i, '#{sav}')
       str.gsub!(/%#{$1}(?:%)?/, '#{script.vars[' + $1 + ']}') while str =~ /%([0-9])(?:%)?/
+      # rubocop: enable Lint/InterpolationCheck
       # rubocop: enable Style/StringConcatenation
       str
     }
