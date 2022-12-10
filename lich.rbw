@@ -467,17 +467,17 @@ module Settings
     mutex.synchronize {
       unless settings[script.name] and settings[script.name][scope]
         begin
-          _hash = Lich.db.get_first_value('SELECT hash FROM script_auto_settings WHERE script=? AND scope=?;', script.name.encode('UTF-8'), scope.encode('UTF-8'))
+          hash = Lich.db.get_first_value('SELECT hash FROM script_auto_settings WHERE script=? AND scope=?;', script.name.encode('UTF-8'), scope.encode('UTF-8'))
         rescue SQLite3::BusyException
           sleep 0.1
           retry
         end
         settings[script.name] ||= {}
-        if _hash.nil?
+        if hash.nil?
           settings[script.name][scope] = {}
         else
           begin
-            hash = Marshal.load(_hash)
+            hash = Marshal.load(hash)
           rescue
             respond "--- Lich: error: #{$!}"
             respond $!.backtrace[0..1]
