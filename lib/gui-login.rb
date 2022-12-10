@@ -6,7 +6,7 @@ def gui_login(entry_data_file)
   @theme_state = Lich.track_dark_mode
 
   @launch_data = nil
-  if File.exists?(entry_data_file)
+  if File.exist?(entry_data_file)
     @entry_data = File.open(entry_data_file, 'r') { |file|
       begin
         if @autosort_state == true
