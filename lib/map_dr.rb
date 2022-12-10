@@ -71,10 +71,12 @@ class Map
     return @@fuzzy_room_id
   end
 
+  # rubocop:disable Naming/AccessorMethodName Allow legacy use
   def self.get_free_id
     Map.load unless @@loaded
     return @@list.compact.max_by(&:id).id + 1
   end
+  # rubocop:enable Naming/AccessorMethodName
 
   def self.list
     Map.load unless @@loaded
@@ -95,6 +97,7 @@ class Map
     end
   end
 
+  # rubocop:disable Naming/AccessorMethodName
   def self.get_location
     unless XMLData.room_count == @@current_location_count
       if (script = Script.current)
@@ -115,6 +118,7 @@ class Map
     end
     @@current_location
   end
+  # rubocop:enable Naming/AccessorMethodName
 
   def self.previous
     return @@list[@@previous_room_id]

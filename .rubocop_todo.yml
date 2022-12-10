@@ -169,15 +169,6 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 163
 
-# Offense count: 12
-Naming/AccessorMethodName:
-  Exclude:
-    - 'lib/gtk.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lich.rbw'
-
 # Offense count: 4
 # Configuration parameters: ExpectMatchingDefinition, CheckDefinitionPathHierarchy, CheckDefinitionPathHierarchyRoots, Regex, IgnoreExecutableScripts, AllowedAcronyms.
 # CheckDefinitionPathHierarchyRoots: lib, spec, test, src

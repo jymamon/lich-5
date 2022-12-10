@@ -33,6 +33,7 @@ if defined?(Gtk)
     end
 
     Gtk::Entry.class_eval {
+      # rubocop:disable Naming/AccessorMethodName Allow legacy use
       def set_text(text)
         if text.nil?
           respond "'Gtk::Entry#set_text' no longer accepts nil values; fix me"
@@ -41,6 +42,7 @@ if defined?(Gtk)
         parent.set_text(text)
         return self
       end
+      # rubocop:enable Naming/AccessorMethodName
     }
 
     Gtk::HBox.class_eval {
@@ -53,14 +55,17 @@ if defined?(Gtk)
     }
 
     Gtk::Notebook.class_eval {
+      # rubocop:disable Naming/AccessorMethodName Allow legacy use
       def set_tab_border(border)
         respond "'Gtk::Notebook:set_tab_border()' is deprecated; fix me"
         # noop
         return self
       end
+      # rubocop:enable Naming/AccessorMethodName
     }
 
     Gtk::ToggleButton.class_eval {
+      # rubocop:disable Naming/AccessorMethodName Allow legacy use
       def set_active(active)
         if active.nil?
           respond "'Gtk::ToggleButton#set_active' no longer accepts nil values; fix me"
@@ -69,6 +74,7 @@ if defined?(Gtk)
         parent.set_active(active)
         return self
       end
+      # rubocop:enable Naming/AccessorMethodName
     }
 
     class Gtk::Tooltips < Gtk::Tooltip

@@ -1389,6 +1389,7 @@ class Script
     @paused
   end
 
+  # rubocop:disable Naming/AccessorMethodName Allow legacy use
   def get_next_label
     if !@jump_label
       @current_label = @label_order[@label_order.index(@current_label) + 1]
@@ -1407,6 +1408,7 @@ class Script
       @current_label
     end
   end
+  # rubocop:enable Naming/AccessorMethodName
 
   def clear
     to_return = @downstream_buffer.dup
@@ -1680,10 +1682,12 @@ class ExecScript < Script
   end
   # rubocop:enable Lint/MissingSuper
 
+  # rubocop:disable Naming/AccessorMethodName Allow legacy use
   def get_next_label
     echo 'goto labels are not available in exec scripts.'
     nil
   end
+  # rubocop:enable Naming/AccessorMethodName
 end
 
 class WizardScript < Script

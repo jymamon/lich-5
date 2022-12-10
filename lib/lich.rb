@@ -138,6 +138,7 @@ module Lich
     end
   end
 
+  # rubocop:disable Naming/AccessorMethodName Allow legacy use
   def self.get_simu_launcher
     if defined?(Win32)
       begin
@@ -160,6 +161,7 @@ module Lich
       return nil
     end
   end
+  # rubocop:enable Naming/AccessorMethodName
 
   def self.link_to_sge
     if defined?(Win32)
