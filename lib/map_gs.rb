@@ -988,9 +988,6 @@ class Map
 end
 
 class Room < Map
-  def self.method_missing(*args)
-    super(*args)
-  end
 end
 
 # deprecated
