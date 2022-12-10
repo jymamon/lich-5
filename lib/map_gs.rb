@@ -769,14 +769,14 @@ class Map
             room.unique_loot.to_a.each { |loot| file.write "      <unique_loot>#{loot.gsub(/(<|>|"|'|&)/) { escape[$1] }}</unique_loot>\n" }
             file.write "      <image name=\"#{room.image.gsub(/(<|>|"|'|&)/) { escape[$1] }}\" coords=\"#{room.image_coords.join(',')}\" />\n" if room.image and room.image_coords
             room.wayto.each_key { |target|
-              if room.timeto[target].instance_of?(Proc)
+              if room.timeto[target].is_a?(StringProc)
                 cost = " cost=\"#{room.timeto[target]._dump.gsub(/(<|>|"|'|&)/) { escape[$1] }}\""
               elsif room.timeto[target]
                 cost = " cost=\"#{room.timeto[target]}\""
               else
                 cost = ''
               end
-              if room.wayto[target].instance_of?(Proc)
+              if room.wayto[target].is_a?(StringProc)
                 file.write "      <exit target=\"#{target}\" type=\"Proc\"#{cost}>#{room.wayto[target]._dump.gsub(/(<|>|"|'|&)/) { escape[$1] }}</exit>\n"
               else
                 file.write "      <exit target=\"#{target}\" type=\"#{room.wayto[target].class}\"#{cost}>#{room.wayto[target].gsub(/(<|>|"|'|&)/) { escape[$1] }}</exit>\n"
@@ -805,7 +805,7 @@ class Map
     until array.length < 2
       room = array.shift
       if (t = Map[room].timeto[array.first.to_s])
-        if t.instance_of?(Proc)
+        if t.is_a?(StringProc)
           time += t.call.to_f
         else
           time += t.to_f
@@ -836,13 +836,15 @@ class Map
     previous = []
     pq = [source]
     pq_push = proc { |val|
-      0.upto(pq.size) { |i|
+      # rubocop:disable Style/For Requires i accessible after loop completes
+      for i in 0...pq.size
         if shortest_distances[val] <= shortest_distances[pq[i]]
           pq.insert(i, val)
           break
         end
-      }
+      end
       pq.push(val) if i.nil? or (i == pq.size - 1)
+      # rubocop:enable Style/For
     }
     visited[source] = true
     shortest_distances[source] = 0
@@ -853,7 +855,7 @@ class Map
         @@list[v].wayto.each_key { |adj_room|
           adj_room_i = adj_room.to_i
           unless visited[adj_room_i]
-            if @@list[v].timeto[adj_room].instance_of?(Proc)
+            if @@list[v].timeto[adj_room].is_a?(StringProc)
               nd = @@list[v].timeto[adj_room].call
             else
               nd = @@list[v].timeto[adj_room]
@@ -878,7 +880,7 @@ class Map
         @@list[v].wayto.each_key { |adj_room|
           adj_room_i = adj_room.to_i
           unless visited[adj_room_i]
-            if @@list[v].timeto[adj_room].instance_of?(Proc)
+            if @@list[v].timeto[adj_room].is_a?(StringProc)
               nd = @@list[v].timeto[adj_room].call
             else
               nd = @@list[v].timeto[adj_room]
@@ -904,11 +906,12 @@ class Map
         @@list[v].wayto.each_key { |adj_room|
           adj_room_i = adj_room.to_i
           unless visited[adj_room_i]
-            if @@list[v].timeto[adj_room].instance_of?(Proc)
+            if @@list[v].timeto[adj_room].is_a?(StringProc)
               nd = @@list[v].timeto[adj_room].call
             else
               nd = @@list[v].timeto[adj_room]
             end
+
             if nd
               nd += shortest_distances[v]
               if shortest_distances[adj_room_i].nil? or (shortest_distances[adj_room_i] > nd)
