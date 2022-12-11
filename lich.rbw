@@ -117,9 +117,11 @@ class String
 
   attr_reader :stream
 
+  # rubocop: disable Naming/MemoizedInstanceVariableName Allow legacy use. Revisit when refactoring.
   def stream=(val)
     @stream ||= val
   end
+  # rubocop: enable Naming/MemoizedInstanceVariableName
 end
 
 class StringProc

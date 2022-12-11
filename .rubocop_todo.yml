@@ -169,13 +169,6 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 163
 
-# Offense count: 1
-# Configuration parameters: EnforcedStyleForLeadingUnderscores.
-# SupportedStylesForLeadingUnderscores: disallowed, required, optional
-Naming/MemoizedInstanceVariableName:
-  Exclude:
-    - 'lich.rbw'
-
 # Offense count: 18
 # Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.
 # AllowedNames: as, at, by, db, id, if, in, io, ip, of, on, os, pp, to
