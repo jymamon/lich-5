@@ -65,23 +65,21 @@ end
 # Let's go find out if we need to switch lich from updatable state
 
 def lich_no_update
-	script_name = "repository"
-	scope = ":"
-	blob = Hash.new
+    blob = Hash.new
 
-	begin
-  	blob = Lich.db.get_first_value('SELECT hash FROM script_auto_settings WHERE script=? AND scope=?;', script_name.encode('UTF-8'), scope.encode('UTF-8'))
-	rescue SQLite3::BusyException
-  	sleep 0.1
-  	retry
-	end
+    begin
+    blob = Lich.db.get_first_value('SELECT hash FROM script_auto_settings WHERE script=? AND scope=?;', 'repository'.encode('UTF-8'), ':'.encode('UTF-8'))
+    rescue SQLite3::BusyException
+    sleep 0.1
+    retry
+    end
 
-	hash = Marshal.load(blob) if blob
-	if hash['updatable'][:lich] || !hash
-		return true
-	else
-		return false
-	end
+    hash = Marshal.load(blob) if blob
+    if hash['updatable'][:lich] || !hash
+        return true
+    else
+        return false
+    end
 end
 
 if XMLData.game =~ /^DR/
@@ -117,8 +115,10 @@ end
 if script.vars.empty?
   sleep 0.5
   # Wait after login then unset lich updatable before any other action (GTK3 option only)
-  start_script 'repository', ['unset-lich-updatable'] if gtk_version > "3" && lich_no_update()
-	200.times { sleep 0.1; break if !running?('repository') }
+  #if Settings['scripts'].include?('repository') || CharSettings['scripts'].include?('repository')
+    start_script 'repository', ['unset-lich-updatable'] if gtk_version > "3" && lich_no_update()
+    200.times { sleep 0.1; break if !running?('repository') }
+  #end      
   did_something = false
   run_info = false
   run_repo = false
@@ -128,19 +128,19 @@ if script.vars.empty?
         # Run infomon
         unless XMLData.game =~ /^DR/
           Script.start("infomon")
-	end
+    end
         run_info = true
         sleep 0.5
       end
-      if run_repo == false
-        # Run repository
+      if run_repo == false && script_list.include?('repository')
+        Run repository
         start_script 'repository', ['download-updates']
         wait_while {running? 'repository'}
         run_repo = true
       end
       # Loop through list
       for script_info in script_list
-        if script_info[:name] == 'infomon' || script_info[:name] == 'repository'
+        if script_info[:name] == 'infomon'
           next
         elsif script_info[:name] == 'dependency' && XMLData.game =~ /^DR/
           respond "\n--- dependency found in autostart list. Attempting to remove it now. If unsuccessful, it can be safely removed with '#{$clean_lich_char}autostart remove --global dependency'"
@@ -217,7 +217,7 @@ elsif script.vars[1] =~ /^list$/i
   script_list = Settings['scripts']
   output = "\n--- Global autostart scripts: "
   if (script_list.class == Array) and not script_list.empty?
-    output.concat script_list.collect { |script_info| if script_info[:args].empty?; script_info[:name]; else; "#{script_info[:name]} (args: #{script_info[:args].join(' ')})"; end }.join(', ')
+    output.concat script_list.sort_by{|v| v[:name]}.collect { |script_info| if script_info[:args].empty?; script_info[:name]; else; "#{script_info[:name]} (args: #{script_info[:args].join(' ')})"; end }.join(', ')
     output.concat "\n\n"
   else
     output.concat "(none)\n\n"
@@ -225,7 +225,7 @@ elsif script.vars[1] =~ /^list$/i
   script_list = CharSettings['scripts']
   output.concat "--- #{XMLData.name}'s autostart scripts: "
   if (script_list.class == Array) and not script_list.empty?
-    output.concat script_list.collect { |script_info| if script_info[:args].empty?; script_info[:name]; else; "#{script_info[:name]} (args: #{script_info[:args].join(' ')})"; end }.join(', ')
+    output.concat script_list.sort_by{|v| v[:name]}.collect { |script_info| if script_info[:args].empty?; script_info[:name]; else; "#{script_info[:name]} (args: #{script_info[:args].join(' ')})"; end }.join(', ')
     output.concat "\n\n"
   else
     output.concat "(none)\n\n"
