@@ -2010,7 +2010,8 @@ module Buffer
     end
     line = nil
     loop {
-      sleep 0.05 while (@@index[thread_id] - @@offset) >= @@buffer.length if (@@index[thread_id] - @@offset) >= @@buffer.length
+      sleep 0.05 while (@@index[thread_id] - @@offset) >= @@buffer.length
+
       @@mutex.synchronize {
         @@index[thread_id] = @@offset if @@index[thread_id] < @@offset
         line = @@buffer[@@index[thread_id] - @@offset]
@@ -2120,7 +2121,9 @@ class SharedBuffer
   def gets
     thread_id = Thread.current.object_id
     @buffer_mutex.synchronize { @buffer_index[thread_id] = (@buffer_offset + @buffer.length) } if @buffer_index[thread_id].nil?
-    sleep 0.05 while (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length if (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
+
+    sleep 0.05 while (@buffer_index[thread_id] - @buffer_offset) >= @buffer.length
+
     line = nil
     @buffer_mutex.synchronize {
       @buffer_index[thread_id] = @buffer_offset if @buffer_index[thread_id] < @buffer_offset
