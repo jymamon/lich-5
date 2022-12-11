@@ -27,11 +27,6 @@ Lint/ConstantDefinitionInBlock:
     - 'lib/gtk.rb'
 
 # Offense count: 3
-Lint/EmptyExpression:
-  Exclude:
-    - 'lich.rbw'
-
-# Offense count: 3
 Lint/HashCompareByIdentity:
   Exclude:
     - 'lich.rbw'

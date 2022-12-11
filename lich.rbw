@@ -5015,19 +5015,19 @@ main_thread = Thread.new {
           begin
             File.delete(sal_filename)
           rescue
-            ()
           end
         end
+
         begin
           listener.close
         rescue
-          ()
         end
+
         begin
           $_CLIENT_.close
         rescue
-          ()
         end
+
         reconnect_if_wanted.call
         Lich.log 'info: exiting...'
         Gtk.queue { Gtk.main_quit } if defined?(Gtk)
