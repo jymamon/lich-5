@@ -201,6 +201,7 @@ class Map
             good
           }
           begin
+            # rubocop:disable Style/IdenticalConditionalBranches Review for impact first
             1.times {
               @@current_room_count = XMLData.room_count
               foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
@@ -232,13 +233,13 @@ class Map
                   @@current_room_id = room.id
                   return room
                 else
-                  redo unless @@current_room_count == XMLData.room_count
                   @@previous_room_id = @@current_room_id
                   @@current_room_id = nil
                   return nil
                 end
               end
             }
+            # rubocop:enable Style/IdenticalConditionalBranches
           ensure
             put 'set description off' if need_set_desc_off
           end
@@ -260,6 +261,7 @@ class Map
           end
         else
           @@fuzzy_room_count = XMLData.room_count
+          # rubocop:disable Style/IdenticalConditionalBranches Review for impact first
           1.times {
             foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
             if (room = @@list.find { |r|
@@ -304,6 +306,7 @@ class Map
               end
             end
           }
+          # rubocop:enable Style/IdenticalConditionalBranches
         end
       }
     end

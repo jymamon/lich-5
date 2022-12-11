@@ -262,6 +262,8 @@ Style/Documentation:
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: MaxUnannotatedPlaceholdersAllowed, AllowedMethods, AllowedPatterns, IgnoredMethods.
 # SupportedStyles: annotated, template, unannotated
+# TODO: Many (most?) of these are formatting GSL strings and annotated/template sprintf's would make significantly
+#       long lines.  Revisit during refactor.
 Style/FormatStringToken:
   EnforcedStyle: unannotated
 
@@ -269,11 +271,14 @@ Style/FormatStringToken:
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: always, always_true, never
+# TODO: Enable on per-file basis as they're reviewed. This is likely safe in 80% of cases.
 Style/FrozenStringLiteralComment:
   Enabled: false
 
 # Offense count: 461
 # Configuration parameters: AllowedVariables.
+# TODO: Fix during refactor. A small number may need to remain, but most of
+#       them appear to be fixable.
 Style/GlobalVars:
   Exclude:
     - 'lib/global_defs.rb'
@@ -307,13 +312,6 @@ Style/GuardClause:
     - 'lib/util.rb'
     - 'lib/xmlparser.rb'
     - 'lich.rbw'
-
-# Offense count: 16
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/IdenticalConditionalBranches:
-  Exclude:
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
 
 # Offense count: 6
 # This cop supports unsafe autocorrection (--autocorrect-all).
