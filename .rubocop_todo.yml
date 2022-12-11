@@ -8,15 +8,15 @@
 
 # Offense count: 12
 # This cop supports safe autocorrection (--autocorrect).
-# The correction is less readable. Probably due to other indentation rules
-# not configured optimally.  Revisit towards the end.
+# COMMENT: The correction is less readable. Probably due to other indentation rules
+#          not configured optimally.  Revisit towards the end.
 Layout/MultilineBlockLayout:
   Exclude:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
 # Offense count: 3
-# I just don't want to deal with this one right now.
+# COMMENT: I just don't want to deal with this one right now.
 Lint/HashCompareByIdentity:
   Exclude:
     - 'lich.rbw'
@@ -46,7 +46,7 @@ Lint/SuppressedException:
 # Offense count: 15
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
-# The "autofix" just prepend '_' to the parameters. Manual cleanup to actually remove them would be better.
+# COMMENT: The "autofix" just prepend '_' to the parameters. Manual cleanup to actually remove them would be better.
 Lint/UnusedBlockArgument:
   Exclude:
     - 'lib/gui-login.rb'
@@ -58,7 +58,7 @@ Lint/UnusedBlockArgument:
 # Offense count: 38
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
-# The "autofix" just prepend '_' to the parameters. Manual cleanup to actually remove them would be better.
+# COMMENT: The "autofix" just prepend '_' to the parameters. Manual cleanup to actually remove them would be better.
 Lint/UnusedMethodArgument:
   Exclude:
     - 'lib/armor.rb'
@@ -82,52 +82,62 @@ Lint/UselessTimes:
 
 # Offense count: 148
 # Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods, CountRepeatedAttributes.
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/AbcSize:
   Max: 461
 
 # Offense count: 69
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, AllowedMethods, AllowedPatterns, IgnoredMethods.
 # AllowedMethods: refine
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/BlockLength:
   Max: 745
 
 # Offense count: 133
 # Configuration parameters: CountBlocks.
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/BlockNesting:
   Max: 8
 
 # Offense count: 15
 # Configuration parameters: CountComments, CountAsOne.
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/ClassLength:
   Max: 970
 
 # Offense count: 102
 # Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods.
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/CyclomaticComplexity:
   Max: 145
 
 # Offense count: 173
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, AllowedMethods, AllowedPatterns, IgnoredMethods.
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/MethodLength:
   Max: 328
 
 # Offense count: 10
 # Configuration parameters: CountComments, CountAsOne.
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/ModuleLength:
   Max: 663
 
 # Offense count: 8
 # Configuration parameters: CountKeywordArgs.
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/ParameterLists:
   MaxOptionalParameters: 12
   Max: 16
 
 # Offense count: 98
 # Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods.
+# COMMENT: All Metrics/* to be reviewed while refactoring.
 Metrics/PerceivedComplexity:
   Max: 163
 
 # Offense count: 13
+# COMMENT: All Security/* to be reviewed while refactoring.
 Security/Eval:
   Exclude:
     - 'lib/global_defs.rb'
@@ -136,6 +146,7 @@ Security/Eval:
     - 'lich.rbw'
 
 # Offense count: 11
+# COMMENT: All Security/* to be reviewed while refactoring.
 Security/MarshalLoad:
   Exclude:
     - 'lib/gui-login.rb'
@@ -145,6 +156,7 @@ Security/MarshalLoad:
     - 'lich.rbw'
 
 # Offense count: 4
+# COMMENT: All Security/* to be reviewed while refactoring.
 Security/Open:
   Exclude:
     - 'lib/update.rb'
@@ -183,9 +195,9 @@ Style/ClassAndModuleChildren:
     - 'lib/gtk.rb'
 
 # Offense count: 831
-# A bunch of these are trigger by classes that would be static in other languages
-# but which ruby doesn't really have the concept of.  In context, these make sense
-# even if there are ways to work around the rubocop warning.
+# COMMENT:  A bunch of these are trigger by classes that would be static in other languages
+#           but which ruby doesn't really have the concept of.  In context, these make sense
+#           even if there are ways to work around the rubocop warning.
 Style/ClassVars:
   Exclude:
     - 'lib/armor.rb'
@@ -202,7 +214,7 @@ Style/ClassVars:
 
 # Offense count: 13
 # This cop supports unsafe autocorrection (--autocorrect-all).
-# TODO: Fix during refactor
+# COMMENT: Fix during refactor
 Style/CommentedKeyword:
   Exclude:
     - 'lib/gui-saved-login.rb'
@@ -212,7 +224,7 @@ Style/CommentedKeyword:
 
 # Offense count: 74
 # Configuration parameters: AllowedConstants.
-# TODO: Fix during refactor
+# COMMENT: Fix during refactor
 Style/Documentation:
   Exclude:
     - 'lib/armor.rb'
@@ -244,8 +256,8 @@ Style/Documentation:
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: MaxUnannotatedPlaceholdersAllowed, AllowedMethods, AllowedPatterns, IgnoredMethods.
 # SupportedStyles: annotated, template, unannotated
-# TODO: Many (most?) of these are formatting GSL strings and annotated/template sprintf's would make significantly
-#       long lines.  Revisit during refactor.
+# COMMENT: Many (most?) of these are formatting GSL strings and annotated/template sprintf's would make significantly
+#          long lines.  Revisit during refactor.
 Style/FormatStringToken:
   EnforcedStyle: unannotated
 
@@ -253,14 +265,14 @@ Style/FormatStringToken:
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: always, always_true, never
-# TODO: Enable on per-file basis as they're reviewed. This is likely safe in 80% of cases.
+# COMMENT: Enable on per-file basis as they're reviewed. This is likely safe in 80% of cases.
 Style/FrozenStringLiteralComment:
   Enabled: false
 
 # Offense count: 461
 # Configuration parameters: AllowedVariables.
-# TODO: Fix during refactor. A small number may need to remain, but most of
-#       them appear to be fixable.
+# COMMENT:  Fix during refactor. A small number may need to remain, but most of
+#           them appear to be fixable.
 Style/GlobalVars:
   Exclude:
     - 'lib/global_defs.rb'
@@ -277,7 +289,7 @@ Style/GlobalVars:
 # Offense count: 70
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
-# Autofix leaves 25 offenses that couldn't be autofixed. Treat this as manual.
+# COMMENT: Autofix leaves 25 offenses that couldn't be autofixed. Treat this as manual.
 Style/GuardClause:
   Exclude:
     - 'lib/eaccess.rb'
@@ -296,7 +308,7 @@ Style/GuardClause:
     - 'lich.rbw'
 
 # Offense count: 2
-# Need to understand if there are other implications here first.
+# COMMENT: Need to understand if there are other implications here first.
 Style/MixinUsage:
   Exclude:
     - 'lib/init.rb'
@@ -326,7 +338,7 @@ Style/NestedModifier:
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, MinBodyLength.
 # SupportedStyles: skip_modifier_ifs, always
-# Just enough churn that this is worth a little more review
+# COMMENT: Just enough churn that this is worth a little more review
 Style/Next:
   Exclude:
     - 'lib/eaccess.rb'
@@ -340,12 +352,14 @@ Style/Next:
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle, AllowedMethods, AllowedPatterns, IgnoredMethods.
 # SupportedStyles: predicate, comparison
+# COMMENT:  Not sure this is an improvement. Revisit.
 Style/NumericPredicate:
   Enabled: false
 
 # Offense count: 4
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: respond_to_missing?
+# COMMENT: Fixing this introduces other errors. Review.
 Style/OptionalBooleanParameter:
   Exclude:
     - 'lib/util.rb'
@@ -374,5 +388,6 @@ Style/RescueStandardError:
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns, IgnoredPatterns.
 # URISchemes: http, https
+# COMMENT: To be addressed while refactoring.
 Layout/LineLength:
   Max: 1735
