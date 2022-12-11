@@ -4067,7 +4067,8 @@ DIRMAP = {
   'e' => 'C',
   's' => 'E',
   'w' => 'G',
-}
+}.freeze
+
 SHORTDIR = {
   'out' => 'out',
   'northeast' => 'ne',
@@ -4080,7 +4081,8 @@ SHORTDIR = {
   'east' => 'e',
   'south' => 's',
   'west' => 'w',
-}
+}.freeze
+
 LONGDIR = {
   'out' => 'out',
   'ne' => 'northeast',
@@ -4093,7 +4095,8 @@ LONGDIR = {
   'e' => 'east',
   's' => 'south',
   'w' => 'west',
-}
+}.freeze
+
 MINDMAP = {
   'clear as a bell' => 'A',
   'fresh and clear' => 'B',
@@ -4103,7 +4106,8 @@ MINDMAP = {
   'numbed' => 'F',
   'must rest' => 'G',
   'saturated' => 'H',
-}
+}.freeze
+
 ICONMAP = {
   'IconKNEELING' => 'GH',
   'IconPRONE' => 'G',
@@ -4116,7 +4120,7 @@ ICONMAP = {
   'IconWEBBED' => 'C',
   'IconJOINED' => 'P',
   'IconBLEEDING' => 'O',
-}
+}.freeze
 
 XMLData = XMLParser.new
 

@@ -207,7 +207,7 @@ class XMLParser
     @dialogs[kind][name] = @dialogs[kind][id] = Time.now + (hour.to_i * 3600) + (minute.to_i * 60) + second.to_i
   end
 
-  PSM_3_DIALOG_IDS = ['Buffs', 'Active Spells', 'Debuffs', 'Cooldowns']
+  PSM_3_DIALOG_IDS = ['Buffs', 'Active Spells', 'Debuffs', 'Cooldowns'].freeze
 
   def tag_start(name, attributes)
     @active_tags.push(name)

@@ -296,6 +296,7 @@ Style/GuardClause:
     - 'lich.rbw'
 
 # Offense count: 2
+# Need to understand if there are other implications here first.
 Style/MixinUsage:
   Exclude:
     - 'lib/init.rb'
@@ -313,16 +314,6 @@ Style/MultilineBlockChain:
 Style/MultilineIfModifier:
   Exclude:
     - 'lib/global_defs.rb'
-
-# Offense count: 8
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: literals, strict
-Style/MutableConstant:
-  Exclude:
-    - 'lib/version.rb'
-    - 'lib/xmlparser.rb'
-    - 'lich.rbw'
 
 # Offense count: 2
 # Introduced as other errors were cleaned up. Possibly need to review
