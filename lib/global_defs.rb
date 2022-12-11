@@ -2015,7 +2015,7 @@ def do_client(client_string)
       if list.empty?
         respond '--- Lich: no active scripts'
       else
-        respond "--- Lich: #{list.collect { |s| s.paused? ? "#{s.name} (paused)" : s.name }.join(', ')}"
+        respond "--- Lich: #{list.sort_by{ |s| s.name.downcase }.collect { |s| s.paused? ? "#{s.name} (paused)" : s.name }.join(', ')}"
       end
     elsif cmd =~ /^force\s+[^\s]+/
       if cmd =~ /^force\s+([^\s]+)\s+(.+)$/
