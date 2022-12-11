@@ -220,6 +220,7 @@ Style/ClassVars:
 
 # Offense count: 13
 # This cop supports unsafe autocorrection (--autocorrect-all).
+# TODO: Fix during refactor
 Style/CommentedKeyword:
   Exclude:
     - 'lib/gui-saved-login.rb'
@@ -229,8 +230,33 @@ Style/CommentedKeyword:
 
 # Offense count: 74
 # Configuration parameters: AllowedConstants.
+# TODO: Fix during refactor
 Style/Documentation:
-  Enabled: false
+  Exclude:
+    - 'lib/armor.rb'
+    - 'lib/cman.rb'
+    - 'lib/eaccess.rb'
+    - 'lib/feat.rb'
+    - 'lib/front-end.rb'
+    - 'lib/gtk.rb'
+    - 'lib/lich.rb'
+    - 'lib/map_dr.rb'
+    - 'lib/map_gs.rb'
+    - 'lib/messaging.rb'
+    - 'lib/platform/win32.rb'
+    - 'lib/platform/win32/advapi32.rb'
+    - 'lib/platform/win32/kernel32.rb'
+    - 'lib/platform/win32/shell32.rb'
+    - 'lib/platform/win32/user32.rb'
+    - 'lib/platform/wine.rb'
+    - 'lib/shield.rb'
+    - 'lib/spell.rb'
+    - 'lib/stash.rb'
+    - 'lib/weapon.rb'
+    - 'lib/update.rb'
+    - 'lib/util.rb'
+    - 'lib/xmlparser.rb'
+    - 'lich.rbw'
 
 # Offense count: 107
 # This cop supports safe autocorrection (--autocorrect).
@@ -441,3 +467,4 @@ Style/StderrPuts:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 1735
+
