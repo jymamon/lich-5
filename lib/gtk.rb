@@ -1,3 +1,4 @@
+require 'English'
 if defined?(Gtk)
   Gdk.module_eval {
     define_deprecated_singleton_method(:screen_height, :warn => 'Gdk::screen_height is deprecated; use monitor methods instead') { |_self|
@@ -110,48 +111,48 @@ if defined?(Gtk)
         begin
           block.call
         rescue
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue SyntaxError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue SystemExit
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           nil
         rescue SecurityError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue ThreadError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue SystemStackError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue Exception
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue ScriptError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue LoadError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue NoMemoryError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         end
         false # don't repeat timeout
       }

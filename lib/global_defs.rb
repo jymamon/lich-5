@@ -1,6 +1,7 @@
 # global_defs carveout for lich5
 # this needs to be broken up even more - OSXLich-Doug (2022-04-13)
 
+require 'English'
 def hide_me
   Script.current.hidden = !Script.current.hidden
 end
@@ -1243,7 +1244,7 @@ def match(label, string)
   else
     while (line_in = script.gets)
       strings.each { |string|
-        return $~.to_s if line_in =~ /#{string}/
+        return $LAST_MATCH_INFO.to_s if line_in =~ /#{string}/
       }
     end
   end
@@ -1580,8 +1581,8 @@ def respond(first = '', *messages)
       end
     end
   rescue
-    puts $!
-    puts $!.backtrace.first
+    puts $ERROR_INFO
+    puts $ERROR_INFO.backtrace.first
   end
 end
 
@@ -1615,8 +1616,8 @@ def _respond(first = '', *messages)
       end
     end
   rescue
-    puts $!
-    puts $!.backtrace.first
+    puts $ERROR_INFO
+    puts $ERROR_INFO.backtrace.first
   end
 end
 
@@ -1839,7 +1840,7 @@ def fb_to_sf(line)
 
   return line
 rescue
-  $_CLIENT_.puts "--- Error: fb_to_sf: #{$!}"
+  $_CLIENT_.puts "--- Error: fb_to_sf: #{$ERROR_INFO}"
   $_CLIENT_.puts "$_SERVERSTRING_: #{$_SERVERSTRING_}"
 end
 
@@ -1893,7 +1894,7 @@ def sf_to_wiz(line)
 
   return line
 rescue
-  $_CLIENT_.puts "--- Error: sf_to_wiz: #{$!}"
+  $_CLIENT_.puts "--- Error: sf_to_wiz: #{$ERROR_INFO}"
   $_CLIENT_.puts "$_SERVERSTRING_: #{$_SERVERSTRING_}"
 end
 
@@ -2182,35 +2183,35 @@ end
 def report_errors(&block)
   block.call
 rescue
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue SyntaxError
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue SystemExit
   nil
 rescue SecurityError
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue ThreadError
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue SystemStackError
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue Exception
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue ScriptError
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue LoadError
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue NoMemoryError
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue
-  respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 end

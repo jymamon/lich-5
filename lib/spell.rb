@@ -24,6 +24,7 @@ Further modifications are to support the retirement of spell-list.xml.
 
 =end
 
+require 'English'
 module Games
   module Gemstone
     class Spell
@@ -158,8 +159,8 @@ module Games
               @@loaded = true
               return true
             rescue
-              respond "--- Lich: error: Spell.load: #{$!}"
-              Lich.log "error: Spell.load: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+              respond "--- Lich: error: Spell.load: #{$ERROR_INFO}"
+              Lich.log "error: Spell.load: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               @@loaded = false
               return false
             end
@@ -568,8 +569,8 @@ module Games
             begin
               proc { begin; $SAFE = 3; rescue; nil; end; eval(@cast_proc) }.call
             rescue
-              echo "cast: error: #{$!}"
-              respond $!.backtrace[0..2]
+              echo "cast: error: #{$ERROR_INFO}"
+              respond $ERROR_INFO.backtrace[0..2]
               return false
             end
           else

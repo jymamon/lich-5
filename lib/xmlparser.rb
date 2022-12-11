@@ -21,6 +21,7 @@ xmlparser.rb: Core lich file that defines the data extracted from SIMU's XML.
 
 =end
 
+require 'English'
 class XMLParser
   attr_reader :mana, :max_mana, :health, :max_health, :spirit, :max_spirit, :last_spirit,
               :stamina, :max_stamina, :stance_text, :stance_value, :mind_text, :mind_value,
@@ -505,8 +506,8 @@ class XMLParser
       Game._puts("#{$cmd_prefix}_flag Display Inventory Boxes 1")
     end
   rescue
-    $stdout.puts "--- error: XMLParser.tag_start: #{$!}"
-    Lich.log "error: XMLParser.tag_start: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+    $stdout.puts "--- error: XMLParser.tag_start: #{$ERROR_INFO}"
+    Lich.log "error: XMLParser.tag_start: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     sleep 0.1
     reset
   end
@@ -655,8 +656,8 @@ class XMLParser
       end
     end
   rescue
-    $stdout.puts "--- error: XMLParser.text: #{$!}"
-    Lich.log "error: XMLParser.text: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+    $stdout.puts "--- error: XMLParser.text: #{$ERROR_INFO}"
+    Lich.log "error: XMLParser.text: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     sleep 0.1
     reset
   end
@@ -694,8 +695,8 @@ class XMLParser
     @last_tag = @active_tags.pop
     @last_id = @active_ids.pop
   rescue
-    $stdout.puts "--- error: XMLParser.tag_end: #{$!}"
-    Lich.log "error: XMLParser.tag_end: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+    $stdout.puts "--- error: XMLParser.tag_end: #{$ERROR_INFO}"
+    Lich.log "error: XMLParser.tag_end: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     sleep 0.1
     reset
   end

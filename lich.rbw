@@ -36,6 +36,7 @@
 # Lich is maintained by Matt Lowe (tillmen@lichproject.org)
 # Lich version 5 and higher maintained by Elanthia Online and only supports GTK3 Ruby
 
+require 'English'
 require 'time'
 require 'socket'
 require 'rexml/document'
@@ -237,8 +238,8 @@ class UpstreamHook
         client_string = @@upstream_hooks[key].call(client_string)
       rescue
         @@upstream_hooks.delete(key)
-        respond "--- Lich: UpstreamHook: #{$!}"
-        respond $!.backtrace.first
+        respond "--- Lich: UpstreamHook: #{$ERROR_INFO}"
+        respond $ERROR_INFO.backtrace.first
       end
       return nil if client_string.nil?
     }
@@ -272,8 +273,8 @@ class DownstreamHook
         server_string = @@downstream_hooks[key].call(server_string.dup) if server_string.is_a?(String)
       rescue
         @@downstream_hooks.delete(key)
-        respond "--- Lich: DownstreamHook: #{$!}"
-        respond $!.backtrace.first
+        respond "--- Lich: DownstreamHook: #{$ERROR_INFO}"
+        respond $ERROR_INFO.backtrace.first
       end
     }
     return server_string
@@ -292,22 +293,22 @@ module Setting
   @@load = proc { |args|
     unless (script = Script.current)
       respond '--- error: Setting.load: calling script is unknown'
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       next nil
     end
     if script.instance_of?(ExecScript)
       respond "--- Lich: error: Setting.load: exec scripts can't have settings"
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       exit
     end
     if args.empty?
       respond '--- error: Setting.load: no setting specified'
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       exit
     end
     if args.any? { |a| a.class != String }
       respond '--- Lich: error: Setting.load: non-string given as setting name'
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       exit
     end
     values = []
@@ -324,8 +325,8 @@ module Setting
         begin
           values.push(Marshal.load(v))
         rescue
-          respond "--- Lich: error: Setting.load: #{$!}"
-          respond $!.backtrace[0..2]
+          respond "--- Lich: error: Setting.load: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace[0..2]
           exit
         end
       end
@@ -339,24 +340,24 @@ module Setting
   @@save = proc { |hash|
     unless (script = Script.current)
       respond '--- error: Setting.save: calling script is unknown'
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       next nil
     end
     if script.instance_of?(ExecScript)
       respond "--- Lich: error: Setting.load: exec scripts can't have settings"
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       exit
     end
     if hash.class != Hash
       respond "--- Lich: error: Setting.save: invalid arguments: use Setting.save('setting1' => 'value1', 'setting2' => 'value2')"
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       exit
     end
     next nil if hash.empty?
 
     if hash.keys.any? { |k| k.class != String }
       respond '--- Lich: error: Setting.save: non-string given as a setting name'
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       exit
     end
     if hash.length > 1
@@ -407,7 +408,7 @@ module Setting
     end
     if script.instance_of?(ExecScript)
       respond "--- Lich: error: Setting.load: exec scripts can't have settings"
-      respond $!.backtrace[0..2]
+      respond $ERROR_INFO.backtrace[0..2]
       exit
     end
     begin
@@ -488,8 +489,8 @@ module Settings
           begin
             hash = Marshal.load(hash)
           rescue
-            respond "--- Lich: error: #{$!}"
-            respond $!.backtrace[0..1]
+            respond "--- Lich: error: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace[0..1]
             exit
           end
           settings[script.name][scope] = hash
@@ -522,8 +523,8 @@ module Settings
               sleep 0.1
               retry
             rescue
-              respond "--- Lich: error: #{$!}"
-              respond $!.backtrace[0..1]
+              respond "--- Lich: error: #{$ERROR_INFO}"
+              respond $ERROR_INFO.backtrace[0..1]
               next
             end
           end
@@ -549,8 +550,8 @@ module Settings
       begin
         @@save.call
       rescue
-        Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+        Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+        respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
       end
     }
   }
@@ -623,8 +624,8 @@ module Vars
             hash.each { |k, v| @@vars[k] = v }
             md5 = Digest::MD5.hexdigest(hash.to_s)
           rescue
-            respond "--- Lich: error: #{$!}"
-            respond $!.backtrace[0..2]
+            respond "--- Lich: error: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace[0..2]
           end
         end
         @@loaded = true
@@ -653,8 +654,8 @@ module Vars
       begin
         @@save.call
       rescue
-        Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+        Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+        respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
       end
     }
   }
@@ -810,7 +811,7 @@ class Script
         script_binding = Scripting.new.script
       end
     rescue
-      respond "--- Lich: error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+      respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
       next nil
     end
     unless script_obj
@@ -831,40 +832,40 @@ class Script
           rescue SystemExit
             nil
           rescue SyntaxError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue ScriptError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue NoMemoryError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue LoadError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue SecurityError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue ThreadError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue SystemStackError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue Exception
-            if $! == JUMP
+            if $ERROR_INFO == JUMP
               retry if Script.current.get_next_label != JUMP_ERROR
               respond "--- label error: `#{Script.current.jump_label}' was not found, and no `LabelError' label was found!"
-              respond $!.backtrace.first
-              Lich.log "label error: `#{Script.current.jump_label}' was not found, and no `LabelError' label was found!\n\t#{$!.backtrace.join("\n\t")}"
+              respond $ERROR_INFO.backtrace.first
+              Lich.log "label error: `#{Script.current.jump_label}' was not found, and no `LabelError' label was found!\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               Script.current.kill
             else
-              respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-              Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+              respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+              Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             end
           rescue
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           ensure
             Script.current.kill
           end
@@ -877,43 +878,43 @@ class Script
           rescue SystemExit
             nil
           rescue SyntaxError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue ScriptError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue NoMemoryError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue LoadError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue SecurityError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             if (name = Script.current.name)
               respond "--- Lich: review this script (#{name}) to make sure it isn't malicious, and type #{$clean_lich_char}trust #{name}"
             end
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue ThreadError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue SystemStackError
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           rescue Exception
-            if $! == JUMP
+            if $ERROR_INFO == JUMP
               retry if Script.current.get_next_label != JUMP_ERROR
               respond "--- label error: `#{Script.current.jump_label}' was not found, and no `LabelError' label was found!"
-              respond $!.backtrace.first
-              Lich.log "label error: `#{Script.current.jump_label}' was not found, and no `LabelError' label was found!\n\t#{$!.backtrace.join("\n\t")}"
+              respond $ERROR_INFO.backtrace.first
+              Lich.log "label error: `#{Script.current.jump_label}' was not found, and no `LabelError' label was found!\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               Script.current.kill
             else
-              respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-              Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+              respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+              Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             end
           rescue
-            respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           ensure
             Script.current.kill
           end
@@ -952,7 +953,7 @@ class Script
           File.open("#{LICH_DIR}/logs/#{script.name}.log", 'a') { |f| f.puts data }
           true
         rescue
-          respond "--- Lich: error: Script.log: #{$!}"
+          respond "--- Lich: error: Script.log: #{$ERROR_INFO}"
           false
         end
       end
@@ -1134,7 +1135,7 @@ class Script
               begin
                 action.call
               rescue
-                echo "watchfor error: #{$!}"
+                echo "watchfor error: #{$ERROR_INFO}"
               end
             }
             script.thread_group.add(new_thread)
@@ -1297,14 +1298,14 @@ class Script
       begin
         Zlib::GzipReader.open(@file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
-        respond "--- Lich: error reading script file (#{@file_name}): #{$!}"
+        respond "--- Lich: error reading script file (#{@file_name}): #{$ERROR_INFO}"
         return
       end
     else
       begin
         File.open(@file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
-        respond "--- Lich: error reading script file (#{@file_name}): #{$!}"
+        respond "--- Lich: error reading script file (#{@file_name}): #{$ERROR_INFO}"
         return
       end
     end
@@ -1351,8 +1352,8 @@ class Script
             respond("--- Lich: #{@name} has exited.") unless @quiet
             GC.start
           rescue
-            respond "--- Lich: error: #{$!}"
-            Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}"
+            Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           end
         end
       }
@@ -1538,50 +1539,50 @@ class ExecScript < Script
         rescue SystemExit
           Script.current.kill
         rescue SyntaxError
-          respond "--- SyntaxError: #{$!}"
-          respond $!.backtrace.first
-          Lich.log "SyntaxError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- SyntaxError: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace.first
+          Lich.log "SyntaxError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         rescue ScriptError
-          respond "--- ScriptError: #{$!}"
-          respond $!.backtrace.first
-          Lich.log "ScriptError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- ScriptError: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace.first
+          Lich.log "ScriptError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         rescue NoMemoryError
-          respond "--- NoMemoryError: #{$!}"
-          respond $!.backtrace.first
-          Lich.log "NoMemoryError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- NoMemoryError: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace.first
+          Lich.log "NoMemoryError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         rescue LoadError
-          respond("--- LoadError: #{$!}")
-          respond "--- LoadError: #{$!}"
-          respond $!.backtrace.first
-          Lich.log "LoadError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond("--- LoadError: #{$ERROR_INFO}")
+          respond "--- LoadError: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace.first
+          Lich.log "LoadError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         rescue SecurityError
-          respond "--- SecurityError: #{$!}"
-          respond $!.backtrace[0..1]
-          Lich.log "SecurityError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- SecurityError: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace[0..1]
+          Lich.log "SecurityError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         rescue ThreadError
-          respond "--- ThreadError: #{$!}"
-          respond $!.backtrace.first
-          Lich.log "ThreadError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- ThreadError: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace.first
+          Lich.log "ThreadError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         rescue SystemStackError
-          respond "--- SystemStackError: #{$!}"
-          respond $!.backtrace.first
-          Lich.log "SystemStackError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- SystemStackError: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace.first
+          Lich.log "SystemStackError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         rescue Exception
-          respond "--- Exception: #{$!}"
-          respond $!.backtrace.first
-          Lich.log "Exception: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- Exception: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace.first
+          Lich.log "Exception: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         rescue
-          respond "--- Lich: error: #{$!}"
-          respond $!.backtrace.first
-          Lich.log "Error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- Lich: error: #{$ERROR_INFO}"
+          respond $ERROR_INFO.backtrace.first
+          Lich.log "Error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
         end
       else
@@ -1614,50 +1615,50 @@ class ExecScript < Script
           rescue SystemExit
             Script.current.kill
           rescue SyntaxError
-            respond "--- SyntaxError: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "SyntaxError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- SyntaxError: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "SyntaxError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           rescue ScriptError
-            respond "--- ScriptError: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "ScriptError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- ScriptError: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "ScriptError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           rescue NoMemoryError
-            respond "--- NoMemoryError: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "NoMemoryError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- NoMemoryError: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "NoMemoryError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           rescue LoadError
-            respond("--- LoadError: #{$!}")
-            respond "--- LoadError: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "LoadError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond("--- LoadError: #{$ERROR_INFO}")
+            respond "--- LoadError: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "LoadError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           rescue SecurityError
-            respond "--- SecurityError: #{$!}"
-            respond $!.backtrace[0..1]
-            Lich.log "SecurityError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- SecurityError: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace[0..1]
+            Lich.log "SecurityError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           rescue ThreadError
-            respond "--- ThreadError: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "ThreadError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- ThreadError: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "ThreadError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           rescue SystemStackError
-            respond "--- SystemStackError: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "SystemStackError: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- SystemStackError: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "SystemStackError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           rescue Exception
-            respond "--- Exception: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "Exception: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Exception: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "Exception: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           rescue
-            respond "--- Lich: error: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "Error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "Error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
           end
         else
@@ -1760,7 +1761,7 @@ class WizardScript < Script
       begin
         File.open(file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
-        respond "--- Lich: error reading script file (#{file_name}): #{$!}"
+        respond "--- Lich: error reading script file (#{file_name}): #{$ERROR_INFO}"
         return
       end
     end
@@ -2082,7 +2083,7 @@ module Buffer
 
   def self.streams=(val)
     if (val.class != Integer) or ((val & 63) == 0)
-      respond "--- Lich: error: invalid streams value\n\t#{$!.caller[0..2].join("\n\t")}"
+      respond "--- Lich: error: invalid streams value\n\t#{$ERROR_INFO.caller[0..2].join("\n\t")}"
       return nil
     end
     @@streams[Thread.current.object_id] = val
@@ -2200,8 +2201,8 @@ class SpellRanks
 
           @@loaded = true
         rescue
-          respond "--- Lich: error: SpellRanks.load: #{$!}"
-          Lich.log "error: SpellRanks.load: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- Lich: error: SpellRanks.load: #{$ERROR_INFO}"
+          Lich.log "error: SpellRanks.load: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           @@list      = []
           @@timestamp = 0
           @@loaded = true
@@ -2221,8 +2222,8 @@ class SpellRanks
           f.write(Marshal.dump([@@timestamp, @@list]))
         }
       rescue
-        respond "--- Lich: error: SpellRanks.save: #{$!}"
-        Lich.log "error: SpellRanks.save: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+        respond "--- Lich: error: SpellRanks.save: #{$ERROR_INFO}"
+        Lich.log "error: SpellRanks.save: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
       end
     else
       @@elevated_save.call
@@ -2299,9 +2300,9 @@ module Games
         begin
           @@socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, true)
         rescue
-          Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue Exception
-          Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         end
         @@socket.sync = true
 
@@ -2427,9 +2428,9 @@ module Games
                         nil
                       end
                       $_DETACHABLE_CLIENT_ = nil
-                      respond "--- Lich: error: client_thread: #{$!}"
-                      respond $!.backtrace.first
-                      Lich.log "error: client_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+                      respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
+                      respond $ERROR_INFO.backtrace.first
+                      Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
                     end
                   else
                     $_CLIENT_.write(alt_string)
@@ -2448,7 +2449,7 @@ module Games
                     REXML::Document.parse_stream($_SERVERSTRING_, XMLData)
                     # XMLData.parse($_SERVERSTRING_)
                   rescue
-                    unless $!.to_s =~ /invalid byte sequence/
+                    unless $ERROR_INFO.to_s =~ /invalid byte sequence/
                       # Fixes invalid XML with nested single quotes in it such as:
                       # From DR intro tips
                       # <link id='2' value='Ever wondered about the time you've spent in Elanthia?  Check the PLAYED verb!' cmd='played' echo='played' />
@@ -2468,9 +2469,9 @@ module Games
                         Lich.log "Invalid nested double quotes XML tags fixed to: #{$_SERVERSTRING_.inspect}"
                         retry
                       end
-                      $stdout.puts "error: server_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+                      $stdout.puts "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
                       Lich.log "Invalid XML detected - please report this: #{$_SERVERSTRING_.inspect}"
-                      Lich.log "error: server_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+                      Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
                     end
                     XMLData.reset
                   end
@@ -2485,20 +2486,20 @@ module Games
                   }
                 end
               rescue
-                $stdout.puts "error: server_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-                Lich.log "error: server_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+                $stdout.puts "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+                Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               end
             end
           rescue Exception
-            Lich.log "error: server_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-            $stdout.puts "error: server_thread: #{$!}\n\t#{$!.backtrace.slice(0..10).join("\n\t")}"
+            Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+            $stdout.puts "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.slice(0..10).join("\n\t")}"
             sleep 0.2
-            retry unless $_CLIENT_.closed? or @@socket.closed? or ($!.to_s =~ /invalid argument|A connection attempt failed|An existing connection was forcibly closed|An established connection was aborted by the software in your host machine./i)
+            retry unless $_CLIENT_.closed? or @@socket.closed? or ($ERROR_INFO.to_s =~ /invalid argument|A connection attempt failed|An existing connection was forcibly closed|An established connection was aborted by the software in your host machine./i)
           rescue
-            Lich.log "error: server_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-            $stdout.puts "error: server_thread: #{$!}\n\t#{$!.backtrace..slice(0..10).join("\n\t")}"
+            Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+            $stdout.puts "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace..slice(0..10).join("\n\t")}"
             sleep 0.2
-            retry unless $_CLIENT_.closed? or @@socket.closed? or ($!.to_s =~ /invalid argument|A connection attempt failed|An existing connection was forcibly closed|An established connection was aborted by the software in your host machine./i)
+            retry unless $_CLIENT_.closed? or @@socket.closed? or ($ERROR_INFO.to_s =~ /invalid argument|A connection attempt failed|An existing connection was forcibly closed|An established connection was aborted by the software in your host machine./i)
           end
         }
         @@thread.priority = 4
@@ -2645,7 +2646,7 @@ module Games
             Gift.load_serialized,
             Society.load_serialized = Marshal.load(string)
         rescue
-          raise $! if string == save
+          raise $ERROR_INFO if string == save
 
           string = save
           retry
@@ -3996,8 +3997,8 @@ module Games
             rescue
               @@type_data = nil
               @@sellable_data = nil
-              echo "error: GameObj.load_data: #{$!}"
-              respond $!.backtrace[0..1]
+              echo "error: GameObj.load_data: #{$ERROR_INFO}"
+              respond $ERROR_INFO.backtrace[0..1]
               false
             end
           else
@@ -4864,9 +4865,9 @@ main_thread = Thread.new {
     begin
       @launch_data = File.open(@options.sal, &:readlines).collect(&:chomp)
     rescue
-      $stdout.puts "error: failed to read launch_file: #{$!}"
+      $stdout.puts "error: failed to read launch_file: #{$ERROR_INFO}"
       Lich.log "info: launch_file: #{@options.sal}"
-      Lich.log "error: failed to read launch_file: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+      Lich.log "error: failed to read launch_file: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
       exit
     end
   end
@@ -5000,8 +5001,8 @@ main_thread = Thread.new {
       begin
         listener = TCPServer.new('127.0.0.1', nil)
       rescue
-        $stdout.puts "--- error: cannot bind listen socket to local port: #{$!}"
-        Lich.log "error: cannot bind listen socket to local port: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+        $stdout.puts "--- error: cannot bind listen socket to local port: #{$ERROR_INFO}"
+        Lich.log "error: cannot bind listen socket to local port: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         exit(1)
       end
       accept_thread = Thread.new { $_CLIENT_ = SynchronizedSocket.new(listener.accept) }
@@ -5035,8 +5036,8 @@ main_thread = Thread.new {
           spawn launcher_cmd
         end
       rescue
-        Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        Lich.msgbox(:message => "error: #{$!}", :icon => :error)
+        Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+        Lich.msgbox(:message => "error: #{$ERROR_INFO}", :icon => :error)
       end
       Lich.log 'info: waiting for client to connect...'
       300.times { sleep 0.1; break unless accept_thread.status }
@@ -5107,7 +5108,7 @@ main_thread = Thread.new {
         raise "error: timed out connecting to #{gamehost}:#{gameport}"
       end
     rescue
-      Lich.log "error: #{$!}"
+      Lich.log "error: #{$ERROR_INFO}"
       gamehost, gameport = Lich.break_game_host_port(gamehost, gameport)
       Lich.log "info: connecting to game server (#{gamehost}:#{gameport})"
       begin
@@ -5127,7 +5128,7 @@ main_thread = Thread.new {
           raise "error: timed out connecting to #{gamehost}:#{gameport}"
         end
       rescue
-        Lich.log "error: #{$!}"
+        Lich.log "error: #{$ERROR_INFO}"
         begin
           $_CLIENT_.close
         rescue
@@ -5152,7 +5153,7 @@ main_thread = Thread.new {
       begin
         listener.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
       rescue
-        Lich.log "warning: setsockopt with SO_REUSEADDR failed: #{$!}"
+        Lich.log "warning: setsockopt with SO_REUSEADDR failed: #{$ERROR_INFO}"
       end
     rescue
       sleep 1
@@ -5212,8 +5213,8 @@ main_thread = Thread.new {
         begin
           Game.open(game_host, game_port)
         rescue
-          Lich.log "error: #{$!}"
-          $stdout.puts "error: #{$!}"
+          Lich.log "error: #{$ERROR_INFO}"
+          $stdout.puts "error: #{$ERROR_INFO}"
           exit
         end
         begin
@@ -5274,7 +5275,7 @@ main_thread = Thread.new {
       # listener.shutdown
       listener.close unless listener.closed?
     rescue
-      Lich.log "warning: failed to close listener socket: #{$!}"
+      Lich.log "warning: failed to close listener socket: #{$ERROR_INFO}"
       if (error_count += 1) > 20
         Lich.log 'warning: giving up...'
       else
@@ -5418,17 +5419,17 @@ main_thread = Thread.new {
             $_IDLETIMESTAMP_ = Time.now
             do_client(client_string)
           rescue
-            respond "--- Lich: error: client_thread: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "error: client_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           end
         end
       rescue
-        respond "--- Lich: error: client_thread: #{$!}"
-        respond $!.backtrace.first
-        Lich.log "error: client_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+        respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
+        respond $ERROR_INFO.backtrace.first
+        Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         sleep 0.2
-        retry unless $_CLIENT_.closed? or Game.closed? or !Game.thread.alive? or ($!.to_s =~ /invalid argument|A connection attempt failed|An existing connection was forcibly closed/i)
+        retry unless $_CLIENT_.closed? or Game.closed? or !Game.thread.alive? or ($ERROR_INFO.to_s =~ /invalid argument|A connection attempt failed|An existing connection was forcibly closed/i)
       end
       Game.close
     }
@@ -5447,7 +5448,7 @@ main_thread = Thread.new {
           $_DETACHABLE_CLIENT_ = SynchronizedSocket.new(server.accept)
           $_DETACHABLE_CLIENT_.sync = true
         rescue
-          Lich.log "#{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          Lich.log "#{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           begin
             server.close
           rescue
@@ -5513,15 +5514,15 @@ main_thread = Thread.new {
                 $_IDLETIMESTAMP_ = Time.now
                 do_client(client_string)
               rescue
-                respond "--- Lich: error: client_thread: #{$!}"
-                respond $!.backtrace.first
-                Lich.log "error: client_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+                respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
+                respond $ERROR_INFO.backtrace.first
+                Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               end
             end
           rescue
-            respond "--- Lich: error: client_thread: #{$!}"
-            respond $!.backtrace.first
-            Lich.log "error: client_thread: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+            respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
+            respond $ERROR_INFO.backtrace.first
+            Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             begin
               $_DETACHABLE_CLIENT_.close
             rescue

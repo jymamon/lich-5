@@ -415,22 +415,6 @@ Style/RescueStandardError:
     - 'lib/xmlparser.rb'
     - 'lich.rbw'
 
-# Offense count: 422
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: RequireEnglish, EnforcedStyle.
-# SupportedStyles: use_perl_names, use_english_names, use_builtin_english_names
-Style/SpecialGlobalVars:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/gtk.rb'
-    - 'lib/init.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/spell.rb'
-    - 'lib/xmlparser.rb'
-    - 'lich.rbw'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Style/StderrPuts:

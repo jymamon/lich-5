@@ -149,6 +149,11 @@ Style/SingleLineMethods:
   Enabled: false
   AllowIfMethodIsEmpty: true
 
+Style/SpecialGlobalVars:
+  Enabled: true
+  RequireEnglish: true
+  EnforcedStyle: use_english_names
+
 Style/SymbolArray:
   Enabled: true
   EnforcedStyle: brackets

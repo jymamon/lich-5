@@ -2,6 +2,7 @@
 
 # Ugly hack to preserve the behavior of force_gui being false if there are any other options and true if
 # there are not.
+require 'English'
 if ARGV.empty?
   ARGV.push('--gui')
 else
@@ -280,7 +281,7 @@ unless File.exist?(LICH_DIR)
     elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]:\\(Users|Documents and Settings)/)
       message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
     else
-      message.concat $!
+      message.concat $ERROR_INFO
     end
     Lich.msgbox(:message => message, :icon => :error)
     exit
@@ -299,7 +300,7 @@ unless File.exist?(TEMP_DIR)
     elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]:\\(Users|Documents and Settings)/)
       message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
     else
-      message.concat $!
+      message.concat $ERROR_INFO
     end
     Lich.msgbox(:message => message, :icon => :error)
     exit
@@ -314,7 +315,7 @@ rescue
   if defined?(Win32) and (TEMP_DIR !~ /^[A-z]:\\(Users|Documents and Settings)/) and !Win32.isXP?
     message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
   else
-    message.concat $!
+    message.concat $ERROR_INFO
   end
   Lich.msgbox(:message => message, :icon => :error)
   exit
@@ -337,8 +338,8 @@ required_modules.each { |required_module|
     begin
       Dir.mkdir(required_directory)
     rescue
-      Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-      Lich.msgbox(:message => "An error occured while attempting to create directory #{required_directory}\n\n#{$!}", :icon => :error)
+      Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+      Lich.msgbox(:message => "An error occured while attempting to create directory #{required_directory}\n\n#{$ERROR_INFO}", :icon => :error)
       exit
     end
   end
@@ -354,7 +355,7 @@ if Dir.entries(TEMP_DIR).length > 20 # avoid NIL response
     begin
       File.delete("#{TEMP_DIR}/#{oldfile}")
     rescue
-      Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+      Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     end
   }
 end

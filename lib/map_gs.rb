@@ -1,3 +1,4 @@
+require 'English'
 class Map
   @@loaded                   = false
   @@load_mutex               = Mutex.new
@@ -529,9 +530,9 @@ class Map
               return true
             rescue
               if file_list.empty?
-                respond "--- Lich: error: failed to load #{filename}: #{$!}"
+                respond "--- Lich: error: failed to load #{filename}: #{$ERROR_INFO}"
               else
-                respond "--- warning: failed to load #{filename}: #{$!}"
+                respond "--- warning: failed to load #{filename}: #{$ERROR_INFO}"
               end
             end
           end
@@ -652,7 +653,7 @@ class Map
             @@loaded = true
             return true
           rescue
-            respond "--- Lich: error: failed to load #{filename}: #{$!}"
+            respond "--- Lich: error: failed to load #{filename}: #{$ERROR_INFO}"
             return false
           end
         end
@@ -674,7 +675,7 @@ class Map
             }
           }
         rescue
-          respond "--- Lich: error: #{$!}"
+          respond "--- Lich: error: #{$ERROR_INFO}"
         end
       end
       begin
@@ -682,7 +683,7 @@ class Map
         @@tags.clear
         respond '--- Map database saved'
       rescue
-        respond "--- Lich: error: #{$!}"
+        respond "--- Lich: error: #{$ERROR_INFO}"
       end
     else
       @@elevated_save.call
@@ -725,8 +726,8 @@ class Map
           }
         }
       rescue
-        respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-        Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+        respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+        Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
       end
     end
     File.open(filename, 'wb:UTF-8') { |file|
@@ -746,8 +747,8 @@ class Map
             }
           }
         rescue
-          respond "--- Lich: error: #{$!}\n\t#{$!.backtrace[0..1].join("\n\t")}"
-          Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
+          Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         end
       end
       begin
@@ -801,7 +802,7 @@ class Map
         @@tags.clear
         respond "--- map database saved to: #{filename}"
       rescue
-        respond $!
+        respond $ERROR_INFO
       end
       GC.start
     else
@@ -938,8 +939,8 @@ class Map
     end
     return previous, shortest_distances
   rescue
-    echo "Map.dijkstra: error: #{$!}"
-    respond $!.backtrace
+    echo "Map.dijkstra: error: #{$ERROR_INFO}"
+    respond $ERROR_INFO.backtrace
     nil
   end
 

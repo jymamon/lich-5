@@ -1,3 +1,4 @@
+require 'English'
 module Lich
   @@hosts_file           = nil
   @@lich_db              = nil
@@ -214,7 +215,7 @@ module Lich
             sleep 6
           end
         rescue
-          Lich.msgbox(:message => $!)
+          Lich.msgbox(:message => $ERROR_INFO)
         end
       end
     elsif defined?(Wine)
@@ -277,7 +278,7 @@ module Lich
             sleep 6
           end
         rescue
-          Lich.msgbox(:message => $!)
+          Lich.msgbox(:message => $ERROR_INFO)
         end
       end
     elsif defined?(Wine)
@@ -341,7 +342,7 @@ module Lich
             sleep 6
           end
         rescue
-          Lich.msgbox(:message => $!)
+          Lich.msgbox(:message => $ERROR_INFO)
         end
       end
     elsif defined?(Wine)
@@ -404,7 +405,7 @@ module Lich
             sleep 6
           end
         rescue
-          Lich.msgbox(:message => $!)
+          Lich.msgbox(:message => $ERROR_INFO)
         end
       end
     elsif defined?(Wine)
@@ -496,8 +497,8 @@ module Lich
           File.unlink "#{Lich.hosts_file}.bak"
         end
       rescue
-        $stdout.puts "--- error: restore_hosts: #{$!}"
-        Lich.log "error: restore_hosts: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+        $stdout.puts "--- error: restore_hosts: #{$ERROR_INFO}"
+        Lich.log "error: restore_hosts: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         exit(1)
       end
     end
