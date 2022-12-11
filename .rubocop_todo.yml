@@ -310,19 +310,6 @@ Style/MultilineBlockChain:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/MultilineIfModifier:
-  Exclude:
-    - 'lib/global_defs.rb'
-
-# Offense count: 2
-# Introduced as other errors were cleaned up. Possibly need to review
-# how certain rules work in conjuction to each other.
-Style/NestedModifier:
-  Exclude:
-#    - 'lich.rbw'
-
 # Offense count: 21
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, MinBodyLength.

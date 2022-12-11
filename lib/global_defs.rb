@@ -290,10 +290,12 @@ def selectput(string, success, failure, timeout = nil)
 
   thr = Thread.current
 
-  timethr = Thread.new {
-    timeout -= sleep('0.1'.to_f) until timeout <= 0
-    thr.raise(StandardError)
-  } if timeout
+  if timeout
+    timethr = Thread.new {
+      timeout -= sleep('0.1'.to_f) until timeout <= 0
+      thr.raise(StandardError)
+    }
+  end
 
   begin
     loop {
