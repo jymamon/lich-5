@@ -39,11 +39,6 @@ Lint/RescueException:
     - 'lib/gtk.rb'
     - 'lich.rbw'
 
-# Offense count: 9
-Lint/ReturnInVoidContext:
-  Exclude:
-    - 'lich.rbw'
-
 # Offense count: 7
 Lint/ShadowedException:
   Exclude:

@@ -1275,14 +1275,14 @@ class Script
         Zlib::GzipReader.open(@file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
         respond "--- Lich: error reading script file (#{@file_name}): #{$!}"
-        return nil
+        return
       end
     else
       begin
         File.open(@file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
         respond "--- Lich: error reading script file (#{@file_name}): #{$!}"
-        return nil
+        return
       end
     end
     @quiet = true if data[0] =~ /^[\t\s]*#?[\t\s]*(?:quiet|hush)$/i
@@ -1302,7 +1302,7 @@ class Script
     @current_label = @label_order[0]
     @thread_group = ThreadGroup.new
     @@running.push(self)
-    return self
+    return
   end
 
   def kill
@@ -1739,7 +1739,7 @@ class WizardScript < Script
         File.open(file_name) { |f| data = f.readlines.collect(&:chomp) }
       rescue
         respond "--- Lich: error reading script file (#{file_name}): #{$!}"
-        return nil
+        return
       end
     end
     @quiet = true if data[0] =~ /^[\t\s]*#?[\t\s]*(?:quiet|hush)$/i
@@ -1917,27 +1917,27 @@ class WizardScript < Script
     @current_label = @label_order[0]
     @thread_group = ThreadGroup.new
     @@running.push(self)
-    return self
+    return
   end
   # rubocop:enable Lint/MissingSuper
 end
 
 class Watchfor
   def initialize(line, theproc = nil, &block)
-    return nil unless (script = Script.current)
+    return unless (script = Script.current)
 
     if line.instance_of?(String)
       line = Regexp.new(Regexp.escape(line))
     elsif line.class != Regexp
       echo 'watchfor: no string or regexp given'
-      return nil
+      return
     end
     if block.nil?
       if theproc.respond_to? :call
         block = theproc
       else
         echo 'watchfor: no block or proc given'
-        return nil
+        return
       end
     end
     script.watchfor[line] = block
@@ -2082,7 +2082,6 @@ class SharedBuffer
     @buffer_index = {}
     @buffer_mutex = Mutex.new
     @max_size = args[:max_size] || 500
-    return self
   end
 
   def gets
