@@ -22,6 +22,8 @@ Lint/HashCompareByIdentity:
     - 'lich.rbw'
 
 # Offense count: 30
+# COMMENT: At least half of these are in large blocks that could use refactoring
+#          anyhow.  Cleanup then.
 Lint/ShadowingOuterLocalVariable:
   Exclude:
     - 'lib/global_defs.rb'
@@ -59,13 +61,6 @@ Lint/UnusedMethodArgument:
     - 'lib/shield.rb'
     - 'lib/weapon.rb'
     - 'lich.rbw'
-
-# Offense count: 4
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Lint/UselessTimes:
-  Exclude:
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
 
 # Offense count: 148
 # Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods, CountRepeatedAttributes.

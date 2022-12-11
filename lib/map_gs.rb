@@ -241,6 +241,7 @@ class Map
       }
       begin
         # rubocop:disable Style/IdenticalConditionalBranches Would semantically change logic without first refactoring
+        # rubocop:disable Lint/UselessTimes Used to allow 'redo'. Review for clearer alternates.
         1.times {
           @@current_room_count = XMLData.room_count
           foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
@@ -269,6 +270,7 @@ class Map
             end
           end
         }
+        # rubocop:enable Lint/UselessTimes
         # rubocop:enable Style/IdenticalConditionalBranches
       ensure
         put 'set description off' if need_set_desc_off
@@ -280,6 +282,7 @@ class Map
     @@fuzzy_room_mutex.synchronize {
       @@fuzzy_room_count = XMLData.room_count
       # rubocop:disable Style/IdenticalConditionalBranches Review for impact first
+      # rubocop:disable Lint/UselessTimes Used to allow 'redo'. Review for clearer alternates.
       1.times {
         foggy_exits = (XMLData.room_exits_string =~ /^Obvious (?:exits|paths): obscured by a thick fog$/)
         if (room = @@list.find { |r| r.title.include?(XMLData.room_title) and
@@ -315,6 +318,7 @@ class Map
           end
         end
       }
+      # rubocop:enable Lint/UselessTimes
       # rubocop:enable Style/IdenticalConditionalBranches
     }
   end
