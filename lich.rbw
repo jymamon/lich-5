@@ -2672,8 +2672,10 @@ module Games
           begin
             result = klass.__send__(meth, *args)
             return result
+          # rubocop:disable Lint/SuppressedException Revisit.
           rescue
           end
+          # rubocop:enable Lint/SuppressedException
         }
         respond "missing method: #{meth}"
         raise NoMethodError
@@ -5071,19 +5073,25 @@ main_thread = Thread.new {
         if sal_filename
           begin
             File.delete(sal_filename)
+          # rubocop:disable Lint/SuppressedException Revisit.
           rescue
           end
+          # rubocop:enable Lint/SuppressedException
         end
 
         begin
           listener.close
+        # rubocop:disable Lint/SuppressedException Revisit.
         rescue
         end
+        # rubocop:enable Lint/SuppressedException
 
         begin
           $_CLIENT_.close
+        # rubocop:disable Lint/SuppressedException Revisit.
         rescue
         end
+        # rubocop:enable Lint/SuppressedException
 
         reconnect_if_wanted.call
         Lich.log 'info: exiting...'
