@@ -112,7 +112,6 @@ module Games
         @active = false
         @circle = (num.to_s.length == 3 ? num.to_s[0..0] : num.to_s[0..1])
         @@list.push(self) unless @@list.find { |spell| spell.num == @num }
-        self
       end
 
       def self.after_stance=(val)

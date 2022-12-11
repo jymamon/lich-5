@@ -98,13 +98,6 @@ Lint/UselessTimes:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
 
-# Offense count: 3
-# Configuration parameters: CheckForMethodsWithNoSideEffects.
-Lint/Void:
-  Exclude:
-    - 'lib/spell.rb'
-    - 'lich.rbw'
-
 # Offense count: 148
 # Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods, CountRepeatedAttributes.
 Metrics/AbcSize:

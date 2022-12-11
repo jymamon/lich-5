@@ -159,7 +159,6 @@ class SynchronizedSocket
   def initialize(output)
     @delegate = output
     @mutex = Mutex.new
-    self
   end
 
   def puts(*args, &block)
@@ -1680,7 +1679,6 @@ class ExecScript < Script
     num = '1'; num.succ! while @@running.any? { |s| s.name == "exec#{num}" }
     @name = "exec#{num}"
     @@running.push(self)
-    self
   end
   # rubocop:enable Lint/MissingSuper
 
