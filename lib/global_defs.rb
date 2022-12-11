@@ -264,12 +264,12 @@ def timetest(*contestants)
   contestants.collect { |code| start = Time.now; 5000.times { code.call }; Time.now - start }
 end
 
-def dec2bin(n)
-  "0#{[n].pack('N').unpack1('B32').sub(/^0+(?=\d)/, '')}"
+def dec2bin(number)
+  "0#{[number].pack('N').unpack1('B32').sub(/^0+(?=\d)/, '')}"
 end
 
-def bin2dec(n)
-  [('0' * 32 + n.to_s)[-32..]].pack('B32').unpack1('N')
+def bin2dec(number)
+  [('0' * 32 + number.to_s)[-32..]].pack('B32').unpack1('N')
 end
 
 def idle?(time = 60)

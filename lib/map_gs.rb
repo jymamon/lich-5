@@ -402,8 +402,8 @@ class Map
     }
   end
 
-  def self.ids_from_uid(n)
-    return (@@uids[n].nil? ? [] : @@uids[n])
+  def self.ids_from_uid(uid)
+    return (@@uids[uid].nil? ? [] : @@uids[uid])
   end
 
   def self.uids

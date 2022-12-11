@@ -266,9 +266,7 @@ module Lich
         end
       end
 
-      def self.update_file(type, rf)
-        requested_file = rf
-
+      def self.update_file(type, requested_file)
         case type
         when 'script'
           location = SCRIPT_DIR

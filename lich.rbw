@@ -138,11 +138,11 @@ class StringProc
     Proc
   end
 
-  def call(*a)
+  def call(*anything)
     proc { begin; $SAFE = 3; rescue; nil; end; eval(@string) }.call
   end
 
-  def _dump(d = nil)
+  def _dump(data = nil)
     @string
   end
 
@@ -156,8 +156,8 @@ class StringProc
 end
 
 class SynchronizedSocket
-  def initialize(o)
-    @delegate = o
+  def initialize(output)
+    @delegate = output
     @mutex = Mutex.new
     self
   end
@@ -1361,9 +1361,9 @@ class Script
     kill
   end
 
-  def instance_variable_get(*a); nil; end
+  def instance_variable_get(*anything); nil; end
 
-  def instance_eval(*a);         nil; end
+  def instance_eval(*anything);         nil; end
 
   def labels
     $SAFE == 0 ? @labels : nil
@@ -1373,8 +1373,8 @@ class Script
     $SAFE == 0 ? @thread_group : nil
   end
 
-  def thread?(t)
-    @thread_group.list.include?(t)
+  def thread?(thread_to_check)
+    @thread_group.list.include?(thread_to_check)
   end
 
   def pause
@@ -4381,15 +4381,15 @@ module UserVars
     Vars.method_missing(arg1, arg2)
   end
 
-  def self.change(var_name, value, t = nil)
+  def self.change(var_name, value, ignored = nil)
     Vars[var_name] = value
   end
 
-  def self.add(var_name, value, t = nil)
+  def self.add(var_name, value, ignored = nil)
     Vars[var_name] = Vars[var_name].split(', ').push(value).join(', ')
   end
 
-  def self.delete(var_name, t = nil)
+  def self.delete(var_name, ignored = nil)
     Vars[var_name] = nil
   end
 

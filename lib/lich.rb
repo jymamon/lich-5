@@ -19,10 +19,10 @@ module Lich
     Vars.method_missing(arg1, arg2)
   end
 
-  def self.seek(fe)
-    if fe =~ /wizard/
+  def self.seek(frontend)
+    if frontend =~ /wizard/
       return $wiz_fe_loc
-    elsif fe =~ /stormfront/
+    elsif frontend =~ /stormfront/
       return $sf_fe_loc
     end
 
@@ -55,11 +55,11 @@ module Lich
     end
   end
 
-  def self.class_variable_get(*a); nil; end
+  def self.class_variable_get(*anything); nil; end
 
-  def self.class_eval(*a);         nil; end
+  def self.class_eval(*anything);         nil; end
 
-  def self.module_eval(*a);        nil; end
+  def self.module_eval(*anything);        nil; end
 
   def self.log(msg)
     $stderr.puts "#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}: #{msg}"
