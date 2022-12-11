@@ -2698,7 +2698,7 @@ module Games
           rnk = Skills.send(fmt[1][n])
           ary.push sprintf('  %s%s|%08s%08s', fmt[0][n], dots, Skills.to_bonus(rnk), rnk) unless rnk.zero?
         }
-        %[Minor Elemental,Major Elemental,Minor Spirit,Major Spirit,Minor Mental,Bard,Cleric,Empath,Paladin,Ranger,Sorcerer,Wizard].split(',').each { |circ|
+        %(Minor Elemental,Major Elemental,Minor Spirit,Major Spirit,Minor Mental,Bard,Cleric,Empath,Paladin,Ranger,Sorcerer,Wizard).split(',').each { |circ|
           rnk = Spells.send(circ.gsub(' ', '').downcase)
           if rnk.nonzero?
             ary.push ''
