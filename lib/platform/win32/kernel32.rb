@@ -27,7 +27,7 @@ module Win32
       return :return => r, :pProcessIds => pProcessIds.unpack(''.rjust((args[:cb] / SIZEOF_LONG),
                                                                        'L'))[0...(pBytesReturned / SIZEOF_LONG)], :pBytesReturned => pBytesReturned
     end
-  rescue
+  rescue StandardError
     module Psapi
       extend Fiddle::Importer
       dlload 'psapi'

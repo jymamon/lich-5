@@ -505,7 +505,7 @@ class XMLParser
       end
       Game._puts("#{$cmd_prefix}_flag Display Inventory Boxes 1")
     end
-  rescue
+  rescue StandardError
     $stdout.puts "--- error: XMLParser.tag_start: #{$ERROR_INFO}"
     Lich.log "error: XMLParser.tag_start: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     sleep 0.1
@@ -655,7 +655,7 @@ class XMLParser
         @room_exits_string = text_string.strip
       end
     end
-  rescue
+  rescue StandardError
     $stdout.puts "--- error: XMLParser.text: #{$ERROR_INFO}"
     Lich.log "error: XMLParser.text: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     sleep 0.1
@@ -694,7 +694,7 @@ class XMLParser
     end
     @last_tag = @active_tags.pop
     @last_id = @active_ids.pop
-  rescue
+  rescue StandardError
     $stdout.puts "--- error: XMLParser.tag_end: #{$ERROR_INFO}"
     Lich.log "error: XMLParser.tag_end: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     sleep 0.1

@@ -20,7 +20,7 @@ def gui_login(entry_data_file)
             [a[:user_id].downcase, a[:char_name]] <=> [b[:user_id].downcase, b[:char_name]]
           }
         end
-      rescue
+      rescue StandardError
         []
       end
     }

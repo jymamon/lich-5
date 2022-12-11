@@ -49,7 +49,7 @@ module Wine
         system("#{BIN} regedit #{filename}")
         sleep 0.2
         File.delete(filename)
-      rescue
+      rescue StandardError
         return false
       end
       return true

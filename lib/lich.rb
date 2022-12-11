@@ -154,7 +154,7 @@ module Lich
       ensure
         begin
           Win32.RegCloseKey(:hKey => launcher_key)
-        rescue
+        rescue StandardError
           nil
         end
       end
@@ -196,7 +196,7 @@ module Lich
         ensure
           begin
             Win32.RegCloseKey(:hKey => launcher_key)
-          rescue
+          rescue StandardError
             nil
           end
         end
@@ -214,7 +214,7 @@ module Lich
             Win32.ShellExecute(:lpFile => file, :lpParameters => params)
             sleep 6
           end
-        rescue
+        rescue StandardError
           Lich.msgbox(:message => $ERROR_INFO)
         end
       end
@@ -259,7 +259,7 @@ module Lich
         ensure
           begin
             Win32.RegCloseKey(:hKey => launcher_key)
-          rescue
+          rescue StandardError
             nil
           end
         end
@@ -277,7 +277,7 @@ module Lich
             Win32.ShellExecute(:lpFile => file, :lpParameters => params)
             sleep 6
           end
-        rescue
+        rescue StandardError
           Lich.msgbox(:message => $ERROR_INFO)
         end
       end
@@ -323,7 +323,7 @@ module Lich
         ensure
           begin
             Win32.RegCloseKey(:hKey => launcher_key)
-          rescue
+          rescue StandardError
             nil
           end
         end
@@ -341,7 +341,7 @@ module Lich
             Win32.ShellExecute(:lpFile => file, :lpParameters => params)
             sleep 6
           end
-        rescue
+        rescue StandardError
           Lich.msgbox(:message => $ERROR_INFO)
         end
       end
@@ -386,7 +386,7 @@ module Lich
         ensure
           begin
             Win32.RegCloseKey(:hKey => launcher_key)
-          rescue
+          rescue StandardError
             nil
           end
         end
@@ -404,7 +404,7 @@ module Lich
             Win32.ShellExecute(:lpFile => file, :lpParameters => params)
             sleep 6
           end
-        rescue
+        rescue StandardError
           Lich.msgbox(:message => $ERROR_INFO)
         end
       end
@@ -434,7 +434,7 @@ module Lich
       ensure
         begin
           Win32.RegCloseKey(:hKey => key)
-        rescue
+        rescue StandardError
           nil
         end
       end
@@ -473,7 +473,7 @@ module Lich
       begin
         # copy hosts to hosts.bak
         File.open("#{Lich.hosts_file}.bak", 'w') { |hb| File.open(Lich.hosts_file) { |h| hb.write(h.read) } }
-      rescue
+      rescue StandardError
         File.unlink("#{Lich.hosts_file}.bak") if File.exist?("#{Lich.hosts_file}.bak")
         return false
       end
@@ -496,7 +496,7 @@ module Lich
           }
           File.unlink "#{Lich.hosts_file}.bak"
         end
-      rescue
+      rescue StandardError
         $stdout.puts "--- error: restore_hosts: #{$ERROR_INFO}"
         Lich.log "error: restore_hosts: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         exit(1)

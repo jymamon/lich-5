@@ -545,7 +545,7 @@ class Map
               @@loaded = true
               Map.load_uids
               return true
-            rescue
+            rescue StandardError
               if file_list.empty?
                 respond "--- Lich: error: failed to load #{filename}: #{$ERROR_INFO}"
               else
@@ -671,7 +671,7 @@ class Map
             Map.load_uids
             @@loaded = true
             return true
-          rescue
+          rescue StandardError
             respond "--- Lich: error: failed to load #{filename}: #{$ERROR_INFO}"
             return false
           end
@@ -693,7 +693,7 @@ class Map
               outfile.write(infile.read)
             }
           }
-        rescue
+        rescue StandardError
           respond "--- Lich: error: #{$ERROR_INFO}"
         end
       end
@@ -701,7 +701,7 @@ class Map
         File.open(filename, 'wb') { |f| f.write(Marshal.dump(@@list)) }
         @@tags.clear
         respond '--- Map database saved'
-      rescue
+      rescue StandardError
         respond "--- Lich: error: #{$ERROR_INFO}"
       end
     else
@@ -744,7 +744,7 @@ class Map
             outfile.write(infile.read)
           }
         }
-      rescue
+      rescue StandardError
         respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
         Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
       end
@@ -765,7 +765,7 @@ class Map
               outfile.write(infile.read)
             }
           }
-        rescue
+        rescue StandardError
           respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
           Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         end
@@ -821,7 +821,7 @@ class Map
         }
         @@tags.clear
         respond "--- map database saved to: #{filename}"
-      rescue
+      rescue StandardError
         respond $ERROR_INFO
       end
       GC.start
@@ -957,7 +957,7 @@ class Map
       end
     end
     return previous, shortest_distances
-  rescue
+  rescue StandardError
     echo "Map.dijkstra: error: #{$ERROR_INFO}"
     respond $ERROR_INFO.backtrace
     nil

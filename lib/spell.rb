@@ -158,7 +158,7 @@ module Games
               @@cost_list |= @@cost_list
               @@loaded = true
               return true
-            rescue
+            rescue StandardError
               respond "--- Lich: error: Spell.load: #{$ERROR_INFO}"
               Lich.log "error: Spell.load: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               @@loaded = false
@@ -264,7 +264,7 @@ module Games
 
       def time_per(options = {})
         formula = time_per_formula(options)
-        proc { begin; $SAFE = 3; rescue; nil; end; eval(formula) }.call.to_f
+        proc { begin; $SAFE = 3; rescue StandardError; nil; end; eval(formula) }.call.to_f
       end
 
       def timeleft=(val)
@@ -567,8 +567,8 @@ module Games
             waitcastrt?
             check_energy.call
             begin
-              proc { begin; $SAFE = 3; rescue; nil; end; eval(@cast_proc) }.call
-            rescue
+              proc { begin; $SAFE = 3; rescue StandardError; nil; end; eval(@cast_proc) }.call
+            rescue StandardError
               echo "cast: error: #{$ERROR_INFO}"
               respond $ERROR_INFO.backtrace[0..2]
               return false
@@ -739,7 +739,7 @@ module Games
       def method_missing(*args)
         if @@bonus_list.include?(args[0].to_s.gsub('_', '-'))
           if @bonus[args[0].to_s.gsub('_', '-')]
-            proc { begin; $SAFE = 3; rescue; nil; end; eval(@bonus[args[0].to_s.gsub('_', '-')]) }.call.to_i
+            proc { begin; $SAFE = 3; rescue StandardError; nil; end; eval(@bonus[args[0].to_s.gsub('_', '-')]) }.call.to_i
           else
             0
           end
@@ -766,7 +766,7 @@ module Games
             formula.dup
           elsif formula
             formula.untaint if formula.tainted?
-            proc { begin; $SAFE = 3; rescue; nil; end; eval(formula) }.call.to_i
+            proc { begin; $SAFE = 3; rescue StandardError; nil; end; eval(formula) }.call.to_i
           else
             0
           end

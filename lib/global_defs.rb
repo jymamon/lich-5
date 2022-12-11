@@ -305,7 +305,7 @@ def selectput(string, success, failure, timeout = nil)
       end
       yield(response.string) if block_given?
     }
-  rescue
+  rescue StandardError
     nil
   end
 end
@@ -1575,12 +1575,12 @@ def respond(first = '', *messages)
         wait_while { !XMLData.safe_to_respond? }
         begin
           str_sent = $_DETACHABLE_CLIENT_.puts_if(str) { XMLData.safe_to_respond? }
-        rescue
+        rescue StandardError
           break
         end
       end
     end
-  rescue
+  rescue StandardError
     puts $ERROR_INFO
     puts $ERROR_INFO.backtrace.first
   end
@@ -1610,12 +1610,12 @@ def _respond(first = '', *messages)
         wait_while { !XMLData.safe_to_respond? }
         begin
           str_sent = $_DETACHABLE_CLIENT_.puts_if(str) { XMLData.safe_to_respond? }
-        rescue
+        rescue StandardError
           break
         end
       end
     end
-  rescue
+  rescue StandardError
     puts $ERROR_INFO
     puts $ERROR_INFO.backtrace.first
   end
@@ -1839,7 +1839,7 @@ def fb_to_sf(line)
   return nil if line.gsub("\r\n", '').empty?
 
   return line
-rescue
+rescue StandardError
   $_CLIENT_.puts "--- Error: fb_to_sf: #{$ERROR_INFO}"
   $_CLIENT_.puts "$_SERVERSTRING_: #{$_SERVERSTRING_}"
 end
@@ -1893,7 +1893,7 @@ def sf_to_wiz(line)
   return nil if line.gsub("\r\n", '').empty?
 
   return line
-rescue
+rescue StandardError
   $_CLIENT_.puts "--- Error: sf_to_wiz: #{$ERROR_INFO}"
   $_CLIENT_.puts "$_SERVERSTRING_: #{$_SERVERSTRING_}"
 end

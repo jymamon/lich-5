@@ -294,7 +294,7 @@ module Lich
             }
             _respond
             _respond "#{requested_file} has been updated."
-          rescue
+          rescue StandardError
             # we created a garbage file (zero bytes filename) so let's clean it up and inform.
             sleep 1
             File.delete(File.join(location, requested_file)) if File.exist?(File.join(location, requested_file))

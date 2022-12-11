@@ -144,7 +144,7 @@ class StringProc
   end
 
   def call(*anything)
-    proc { begin; $SAFE = 3; rescue; nil; end; eval(@string) }.call
+    proc { begin; $SAFE = 3; rescue StandardError; nil; end; eval(@string) }.call
   end
 
   def _dump(data = nil)
@@ -236,7 +236,7 @@ class UpstreamHook
     @@upstream_hooks.each_key { |key|
       begin
         client_string = @@upstream_hooks[key].call(client_string)
-      rescue
+      rescue StandardError
         @@upstream_hooks.delete(key)
         respond "--- Lich: UpstreamHook: #{$ERROR_INFO}"
         respond $ERROR_INFO.backtrace.first
@@ -271,7 +271,7 @@ class DownstreamHook
 
       begin
         server_string = @@downstream_hooks[key].call(server_string.dup) if server_string.is_a?(String)
-      rescue
+      rescue StandardError
         @@downstream_hooks.delete(key)
         respond "--- Lich: DownstreamHook: #{$ERROR_INFO}"
         respond $ERROR_INFO.backtrace.first
@@ -324,7 +324,7 @@ module Setting
       else
         begin
           values.push(Marshal.load(v))
-        rescue
+        rescue StandardError
           respond "--- Lich: error: Setting.load: #{$ERROR_INFO}"
           respond $ERROR_INFO.backtrace[0..2]
           exit
@@ -488,7 +488,7 @@ module Settings
         else
           begin
             hash = Marshal.load(hash)
-          rescue
+          rescue StandardError
             respond "--- Lich: error: #{$ERROR_INFO}"
             respond $ERROR_INFO.backtrace[0..1]
             exit
@@ -522,7 +522,7 @@ module Settings
             rescue SQLite3::BusyException
               sleep 0.1
               retry
-            rescue
+            rescue StandardError
               respond "--- Lich: error: #{$ERROR_INFO}"
               respond $ERROR_INFO.backtrace[0..1]
               next
@@ -549,7 +549,7 @@ module Settings
       sleep 300
       begin
         @@save.call
-      rescue
+      rescue StandardError
         Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
       end
@@ -623,7 +623,7 @@ module Vars
             hash = Marshal.load(h)
             hash.each { |k, v| @@vars[k] = v }
             md5 = Digest::MD5.hexdigest(hash.to_s)
-          rescue
+          rescue StandardError
             respond "--- Lich: error: #{$ERROR_INFO}"
             respond $ERROR_INFO.backtrace[0..2]
           end
@@ -653,7 +653,7 @@ module Vars
       sleep 300
       begin
         @@save.call
-      rescue
+      rescue StandardError
         Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
       end
@@ -793,7 +793,7 @@ class Script
       else
         if script_obj.labels.length > 1
           trusted = false
-        elsif proc { begin; $SAFE = 3; true; rescue; false; end }.call
+        elsif proc { begin; $SAFE = 3; true; rescue StandardError; false; end }.call
           begin
             trusted = Lich.db.get_first_value('SELECT name FROM trusted_scripts WHERE name=?;', script_name.encode('UTF-8'))
           rescue SQLite3::BusyException
@@ -810,7 +810,7 @@ class Script
       else
         script_binding = Scripting.new.script
       end
-    rescue
+    rescue StandardError
       respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
       next nil
     end
@@ -852,7 +852,7 @@ class Script
           rescue SystemStackError
             respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          rescue
+          rescue StandardError
             respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           # rubocop:disable Lint/RescueException Revisit.
@@ -874,7 +874,7 @@ class Script
         else
           begin
             while (script = Script.current) and script.current_label
-              proc { foo = script.labels[script.current_label]; foo.untaint; begin; $SAFE = 3; rescue; nil; end; eval(foo, script_binding, script.name, 1) }.call
+              proc { foo = script.labels[script.current_label]; foo.untaint; begin; $SAFE = 3; rescue StandardError; nil; end; eval(foo, script_binding, script.name, 1) }.call
               Script.current.get_next_label
             end
           rescue SystemExit
@@ -903,7 +903,7 @@ class Script
           rescue SystemStackError
             respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          rescue
+          rescue StandardError
             respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           # rubocop:disable Lint/RescueException Revisit.
@@ -956,7 +956,7 @@ class Script
           Dir.mkdir("#{LICH_DIR}/logs") unless File.exist?("#{LICH_DIR}/logs")
           File.open("#{LICH_DIR}/logs/#{script.name}.log", 'a') { |f| f.puts data }
           true
-        rescue
+        rescue StandardError
           respond "--- Lich: error: Script.log: #{$ERROR_INFO}"
           false
         end
@@ -1138,7 +1138,7 @@ class Script
               sleep 0.011 until Script.current
               begin
                 action.call
-              rescue
+              rescue StandardError
                 echo "watchfor error: #{$ERROR_INFO}"
               end
             }
@@ -1303,14 +1303,14 @@ class Script
     if @file_name =~ /\.gz$/i
       begin
         Zlib::GzipReader.open(@file_name) { |f| data = f.readlines.collect(&:chomp) }
-      rescue
+      rescue StandardError
         respond "--- Lich: error reading script file (#{@file_name}): #{$ERROR_INFO}"
         return
       end
     else
       begin
         File.open(@file_name) { |f| data = f.readlines.collect(&:chomp) }
-      rescue
+      rescue StandardError
         respond "--- Lich: error reading script file (#{@file_name}): #{$ERROR_INFO}"
         return
       end
@@ -1344,7 +1344,7 @@ class Script
               unless t == Thread.current
                 begin
                   t.kill
-                rescue
+                rescue StandardError
                   nil
                 end
               end
@@ -1357,7 +1357,7 @@ class Script
             @@running.delete(self)
             respond("--- Lich: #{@name} has exited.") unless @quiet
             GC.start
-          rescue
+          rescue StandardError
             respond "--- Lich: error: #{$ERROR_INFO}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           end
@@ -1580,7 +1580,7 @@ class ExecScript < Script
           respond $ERROR_INFO.backtrace.first
           Lich.log "SystemStackError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
-        rescue
+        rescue StandardError
           respond "--- Lich: error: #{$ERROR_INFO}"
           respond $ERROR_INFO.backtrace.first
           Lich.log "Error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
@@ -1658,7 +1658,7 @@ class ExecScript < Script
             respond $ERROR_INFO.backtrace.first
             Lich.log "SystemStackError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
-          rescue
+          rescue StandardError
             respond "--- Lich: error: #{$ERROR_INFO}"
             respond $ERROR_INFO.backtrace.first
             Lich.log "Error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
@@ -1767,10 +1767,10 @@ class WizardScript < Script
     data = nil
     begin
       Zlib::GzipReader.open(file_name) { |f| data = f.readlines.collect(&:chomp) }
-    rescue
+    rescue StandardError
       begin
         File.open(file_name) { |f| data = f.readlines.collect(&:chomp) }
-      rescue
+      rescue StandardError
         respond "--- Lich: error reading script file (#{file_name}): #{$ERROR_INFO}"
         return
       end
@@ -2210,7 +2210,7 @@ class SpellRanks
           }
 
           @@loaded = true
-        rescue
+        rescue StandardError
           respond "--- Lich: error: SpellRanks.load: #{$ERROR_INFO}"
           Lich.log "error: SpellRanks.load: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           @@list      = []
@@ -2231,7 +2231,7 @@ class SpellRanks
         File.open("#{DATA_DIR}/#{XMLData.game}/spell-ranks.dat", 'wb') { |f|
           f.write(Marshal.dump([@@timestamp, @@list]))
         }
-      rescue
+      rescue StandardError
         respond "--- Lich: error: SpellRanks.save: #{$ERROR_INFO}"
         Lich.log "error: SpellRanks.save: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
       end
@@ -2309,7 +2309,7 @@ module Games
         @@socket = TCPSocket.open(host, port)
         begin
           @@socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, true)
-        rescue
+        rescue StandardError
           Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         # rubocop:disable Lint/RescueException Revisit.
         rescue Exception
@@ -2433,10 +2433,10 @@ module Games
                   if $_DETACHABLE_CLIENT_
                     begin
                       $_DETACHABLE_CLIENT_.write(alt_string)
-                    rescue
+                    rescue StandardError
                       begin
                         $_DETACHABLE_CLIENT_.close
-                      rescue
+                      rescue StandardError
                         nil
                       end
                       $_DETACHABLE_CLIENT_ = nil
@@ -2460,7 +2460,7 @@ module Games
                   begin
                     REXML::Document.parse_stream($_SERVERSTRING_, XMLData)
                     # XMLData.parse($_SERVERSTRING_)
-                  rescue
+                  rescue StandardError
                     unless $ERROR_INFO.to_s =~ /invalid byte sequence/
                       # Fixes invalid XML with nested single quotes in it such as:
                       # From DR intro tips
@@ -2497,12 +2497,12 @@ module Games
                     Script.new_downstream(line) if !line =~ (/^\s\*\s[A-Z][a-z]+ (?:returns home from a hard day of adventuring\.|joins the adventure\.|(?:is off to a rough start!  (?:H|She) )?just bit the dust!|was just incinerated!|was just vaporized!|has been vaporized!|has disconnected\.)$|^ \* The death cry of [A-Z][a-z]+ echoes in your mind!$|^\r*\n*$/) && !line.empty?
                   }
                 end
-              rescue
+              rescue StandardError
                 $stdout.puts "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
                 Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               end
             end
-          rescue
+          rescue StandardError
             Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             $stdout.puts "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace..slice(0..10).join("\n\t")}"
             sleep 0.2
@@ -2536,12 +2536,12 @@ module Games
         if @@socket
           begin
             @@socket.close
-          rescue
+          rescue StandardError
             nil
           end
           begin
             @@thread.kill
-          rescue
+          rescue StandardError
             nil
           end
         end
@@ -2659,7 +2659,7 @@ module Games
             Spells.load_serialized,
             Gift.load_serialized,
             Society.load_serialized = Marshal.load(string)
-        rescue
+        rescue StandardError
           raise $ERROR_INFO if string == save
 
           string = save
@@ -2673,7 +2673,7 @@ module Games
             result = klass.__send__(meth, *args)
             return result
           # rubocop:disable Lint/SuppressedException Revisit.
-          rescue
+          rescue StandardError
           end
           # rubocop:enable Lint/SuppressedException
         }
@@ -4010,7 +4010,7 @@ module Games
                 }
               }
               true
-            rescue
+            rescue StandardError
               @@type_data = nil
               @@sellable_data = nil
               echo "error: GameObj.load_data: #{$ERROR_INFO}"
@@ -4795,7 +4795,7 @@ main_thread = Thread.new {
       entry_data = File.open(@options.entryfile, 'r') { |file|
         begin
           Marshal.load(file.read.unpack1('m'))
-        rescue
+        rescue StandardError
           []
         end
       }
@@ -4884,7 +4884,7 @@ main_thread = Thread.new {
   if @options.sal
     begin
       @launch_data = File.open(@options.sal, &:readlines).collect(&:chomp)
-    rescue
+    rescue StandardError
       $stdout.puts "error: failed to read launch_file: #{$ERROR_INFO}"
       Lich.log "info: launch_file: #{@options.sal}"
       Lich.log "error: failed to read launch_file: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
@@ -5020,7 +5020,7 @@ main_thread = Thread.new {
       end
       begin
         listener = TCPServer.new('127.0.0.1', nil)
-      rescue
+      rescue StandardError
         $stdout.puts "--- error: cannot bind listen socket to local port: #{$ERROR_INFO}"
         Lich.log "error: cannot bind listen socket to local port: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         exit(1)
@@ -5055,7 +5055,7 @@ main_thread = Thread.new {
         else # macOS and linux - does not account for WINE on linux
           spawn launcher_cmd
         end
-      rescue
+      rescue StandardError
         Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         Lich.msgbox(:message => "error: #{$ERROR_INFO}", :icon => :error)
       end
@@ -5074,7 +5074,7 @@ main_thread = Thread.new {
           begin
             File.delete(sal_filename)
           # rubocop:disable Lint/SuppressedException Revisit.
-          rescue
+          rescue StandardError
           end
           # rubocop:enable Lint/SuppressedException
         end
@@ -5082,14 +5082,14 @@ main_thread = Thread.new {
         begin
           listener.close
         # rubocop:disable Lint/SuppressedException Revisit.
-        rescue
+        rescue StandardError
         end
         # rubocop:enable Lint/SuppressedException
 
         begin
           $_CLIENT_.close
         # rubocop:disable Lint/SuppressedException Revisit.
-        rescue
+        rescue StandardError
         end
         # rubocop:enable Lint/SuppressedException
 
@@ -5104,13 +5104,13 @@ main_thread = Thread.new {
       Lich.log 'info: connected'
       begin
         listener.close
-      rescue
+      rescue StandardError
         nil
       end
       if sal_filename
         begin
           File.delete(sal_filename)
-        rescue
+        rescue StandardError
           nil
         end
       end
@@ -5128,12 +5128,12 @@ main_thread = Thread.new {
       if connect_thread.status
         begin
           connect_thread.kill
-        rescue
+        rescue StandardError
           nil
         end
         raise "error: timed out connecting to #{gamehost}:#{gameport}"
       end
-    rescue
+    rescue StandardError
       Lich.log "error: #{$ERROR_INFO}"
       gamehost, gameport = Lich.break_game_host_port(gamehost, gameport)
       Lich.log "info: connecting to game server (#{gamehost}:#{gameport})"
@@ -5148,16 +5148,16 @@ main_thread = Thread.new {
         if connect_thread.status
           begin
             connect_thread.kill
-          rescue
+          rescue StandardError
             nil
           end
           raise "error: timed out connecting to #{gamehost}:#{gameport}"
         end
-      rescue
+      rescue StandardError
         Lich.log "error: #{$ERROR_INFO}"
         begin
           $_CLIENT_.close
-        rescue
+        rescue StandardError
           nil
         end
         reconnect_if_wanted.call
@@ -5178,10 +5178,10 @@ main_thread = Thread.new {
       listener = TCPServer.new('127.0.0.1', game_port)
       begin
         listener.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
-      rescue
+      rescue StandardError
         Lich.log "warning: setsockopt with SO_REUSEADDR failed: #{$ERROR_INFO}"
       end
-    rescue
+    rescue StandardError
       sleep 1
       if (error_count += 1) >= 30
         $stdout.puts 'error: failed to bind to the proper port'
@@ -5204,7 +5204,7 @@ main_thread = Thread.new {
       sleep 120
       begin
         listener.close
-      rescue
+      rescue StandardError
         nil
       end
       $stdout.puts 'error: timed out waiting for client to connect'
@@ -5216,7 +5216,7 @@ main_thread = Thread.new {
     $_CLIENT_ = SynchronizedSocket.new(listener.accept)
     begin
       listener.close
-    rescue
+    rescue StandardError
       nil
     end
     timeout_thread.kill
@@ -5238,14 +5238,14 @@ main_thread = Thread.new {
         }
         begin
           Game.open(game_host, game_port)
-        rescue
+        rescue StandardError
           Lich.log "error: #{$ERROR_INFO}"
           $stdout.puts "error: #{$ERROR_INFO}"
           exit
         end
         begin
           timeout_thread.kill
-        rescue
+        rescue StandardError
           nil
         end
         Lich.log 'info: connection with the game host is open'
@@ -5300,7 +5300,7 @@ main_thread = Thread.new {
       # Somehow... for some ridiculous reason... Windows doesn't let us close the socket if we shut it down first...
       # listener.shutdown
       listener.close unless listener.closed?
-    rescue
+    rescue StandardError
       Lich.log "warning: failed to close listener socket: #{$ERROR_INFO}"
       if (error_count += 1) > 20
         Lich.log 'warning: giving up...'
@@ -5444,13 +5444,13 @@ main_thread = Thread.new {
           begin
             $_IDLETIMESTAMP_ = Time.now
             do_client(client_string)
-          rescue
+          rescue StandardError
             respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
             respond $ERROR_INFO.backtrace.first
             Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           end
         end
-      rescue
+      rescue StandardError
         respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
         respond $ERROR_INFO.backtrace.first
         Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
@@ -5473,16 +5473,16 @@ main_thread = Thread.new {
 
           $_DETACHABLE_CLIENT_ = SynchronizedSocket.new(server.accept)
           $_DETACHABLE_CLIENT_.sync = true
-        rescue
+        rescue StandardError
           Lich.log "#{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           begin
             server.close
-          rescue
+          rescue StandardError
             nil
           end
           begin
             $_DETACHABLE_CLIENT_.close
-          rescue
+          rescue StandardError
             nil
           end
           $_DETACHABLE_CLIENT_ = nil
@@ -5491,7 +5491,7 @@ main_thread = Thread.new {
         ensure
           begin
             server.close
-          rescue
+          rescue StandardError
             nil
           end
           Frontend.cleanup_session_file
@@ -5539,26 +5539,26 @@ main_thread = Thread.new {
               begin
                 $_IDLETIMESTAMP_ = Time.now
                 do_client(client_string)
-              rescue
+              rescue StandardError
                 respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
                 respond $ERROR_INFO.backtrace.first
                 Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               end
             end
-          rescue
+          rescue StandardError
             respond "--- Lich: error: client_thread: #{$ERROR_INFO}"
             respond $ERROR_INFO.backtrace.first
             Lich.log "error: client_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             begin
               $_DETACHABLE_CLIENT_.close
-            rescue
+            rescue StandardError
               nil
             end
             $_DETACHABLE_CLIENT_ = nil
           ensure
             begin
               $_DETACHABLE_CLIENT_.close
-            rescue
+            rescue StandardError
               nil
             end
             $_DETACHABLE_CLIENT_ = nil
@@ -5587,12 +5587,12 @@ main_thread = Thread.new {
   Game.thread.join
   begin
     client_thread.kill
-  rescue
+  rescue StandardError
     nil
   end
   begin
     detachable_client_thread.kill
-  rescue
+  rescue StandardError
     nil
   end
 

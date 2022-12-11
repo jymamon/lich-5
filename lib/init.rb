@@ -62,7 +62,7 @@ begin
   OpenSSL::PKey::RSA.new(512)
 rescue LoadError
   nil # not required for basic Lich; however, lnet and repository scripts will fail without openssl
-rescue
+rescue StandardError
   nil
 end
 
@@ -73,7 +73,7 @@ if @options.wine
 else
   begin
     $wine_bin = `which wine`.strip
-  rescue
+  rescue StandardError
     $wine_bin = nil
   end
 end
@@ -148,7 +148,7 @@ else
   else
     begin
       $wine_bin = `which wine`.strip
-    rescue
+    rescue StandardError
       $wine_bin = nil
     end
   end
@@ -274,7 +274,7 @@ HAVE_GTK = Module.const_defined?(:Gtk)
 unless File.exist?(LICH_DIR)
   begin
     Dir.mkdir(LICH_DIR)
-  rescue
+  rescue StandardError
     message = "An error occured while attempting to create directory #{LICH_DIR}\n\n"
     if !File.exist?(LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
       message.concat "This was likely because the parent directory (#{LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop}) doesn't exist."
@@ -293,7 +293,7 @@ Dir.chdir(LICH_DIR)
 unless File.exist?(TEMP_DIR)
   begin
     Dir.mkdir(TEMP_DIR)
-  rescue
+  rescue StandardError
     message = "An error occured while attempting to create directory #{TEMP_DIR}\n\n"
     if !File.exist?(TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
       message.concat "This was likely because the parent directory (#{TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop}) doesn't exist."
@@ -310,7 +310,7 @@ end
 begin
   debug_filename = "#{TEMP_DIR}/debug-#{Time.now.strftime('%Y-%m-%d-%H-%M-%S')}.log"
   $stderr = File.open(debug_filename, 'w')
-rescue
+rescue StandardError
   message = "An error occured while attempting to create file #{debug_filename}\n\n"
   if defined?(Win32) and (TEMP_DIR !~ /^[A-z]:\\(Users|Documents and Settings)/) and !Win32.isXP?
     message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
@@ -337,7 +337,7 @@ required_modules.each { |required_module|
   unless File.exist?(required_directory)
     begin
       Dir.mkdir(required_directory)
-    rescue
+    rescue StandardError
       Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
       Lich.msgbox(:message => "An error occured while attempting to create directory #{required_directory}\n\n#{$ERROR_INFO}", :icon => :error)
       exit
@@ -354,7 +354,7 @@ if Dir.entries(TEMP_DIR).length > 20 # avoid NIL response
   Dir.entries(TEMP_DIR).find_all { |fn| fn =~ /^debug-\d+-\d+-\d+-\d+-\d+-\d+\.log$/ }.sort.reverse[19..].each { |oldfile|
     begin
       File.delete("#{TEMP_DIR}/#{oldfile}")
-    rescue
+    rescue StandardError
       Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     end
   }

@@ -113,7 +113,7 @@ if defined?(Gtk)
         rescue SystemExit
           puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           nil
-        rescue
+        rescue StandardError
           respond "error in Gtk.queue: #{$ERROR_INFO}"
           puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
@@ -241,7 +241,7 @@ if defined?(Gtk)
         gtk_sleep_while_idle
       }
     }
-  rescue
+  rescue StandardError
     nil # fixme
   end
 
