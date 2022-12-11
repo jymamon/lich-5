@@ -25,12 +25,14 @@ if defined?(Gtk)
       end
     }
 
+    # rubocop:disable Lint/ConstantDefinitionInBlock Can't derive from Gtk::ComboBoxText is we don't have Gtk
     class Gtk::ComboBoxEntry < Gtk::ComboBoxText
       def initialize
         respond "'Gtk::ComboBoxEntry' is deprecated; use 'Gtk::ComboBoxText(:entry => true)' instead"
         super(:entry => true)
       end
     end
+    # rubocop:enable Lint/ConstantDefinitionInBlock
 
     Gtk::Entry.class_eval {
       # rubocop:disable Naming/AccessorMethodName Allow legacy use
@@ -77,6 +79,7 @@ if defined?(Gtk)
       # rubocop:enable Naming/AccessorMethodName
     }
 
+    # rubocop:disable Lint/ConstantDefinitionInBlock Can't derive from Gtk::Tooltip is we don't have Gtk
     class Gtk::Tooltips < Gtk::Tooltip
       def enable
         respond "'Gtk::Tooltips#enable' is deprecated; use 'Gtk::Tooltip' API instead"
@@ -90,6 +93,7 @@ if defined?(Gtk)
         return self
       end
     end
+    # rubocop:enable Lint/ConstantDefinitionInBlock
 
     Gtk::VBox.class_eval {
       define_deprecated_singleton_method(:new, :warn => "Use 'Gtk::Box.new(:vertical, spacing)'.") { |_self, homogeneous, spacing|

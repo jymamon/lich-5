@@ -19,13 +19,6 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'lich.rbw'
 
-# Offense count: 2
-# Configuration parameters: AllowedMethods.
-# AllowedMethods: enums
-Lint/ConstantDefinitionInBlock:
-  Exclude:
-    - 'lib/gtk.rb'
-
 # Offense count: 3
 Lint/HashCompareByIdentity:
   Exclude:
