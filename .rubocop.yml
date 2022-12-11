@@ -73,6 +73,14 @@ Layout/SpaceInsideParens:
   Enabled: true
   EnforcedStyle: no_space
 
+Naming/FileName:
+  Enabled: true
+  Exclude:
+    - 'lib/front-end.rb'
+    - 'lib/gui-login.rb'
+    - 'lib/gui-manual-login.rb'
+    - 'lib/gui-saved-login.rb'
+
 Naming/VariableName:
   Enabled: true
   Exclude:

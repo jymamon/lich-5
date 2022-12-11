@@ -169,17 +169,6 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 163
 
-# Offense count: 4
-# Configuration parameters: ExpectMatchingDefinition, CheckDefinitionPathHierarchy, CheckDefinitionPathHierarchyRoots, Regex, IgnoreExecutableScripts, AllowedAcronyms.
-# CheckDefinitionPathHierarchyRoots: lib, spec, test, src
-# AllowedAcronyms: CLI, DSL, ACL, API, ASCII, CPU, CSS, DNS, EOF, GUID, HTML, HTTP, HTTPS, ID, IP, JSON, LHS, QPS, RAM, RHS, RPC, SLA, SMTP, SQL, SSH, TCP, TLS, TTL, UDP, UI, UID, UUID, URI, URL, UTF8, VM, XML, XMPP, XSRF, XSS
-Naming/FileName:
-  Exclude:
-    - 'lib/front-end.rb'
-    - 'lib/gui-login.rb'
-    - 'lib/gui-manual-login.rb'
-    - 'lib/gui-saved-login.rb'
-
 # Offense count: 1
 # Configuration parameters: EnforcedStyleForLeadingUnderscores.
 # SupportedStylesForLeadingUnderscores: disallowed, required, optional
