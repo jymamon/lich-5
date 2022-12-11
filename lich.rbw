@@ -1024,7 +1024,7 @@ class Script
   end
 
   def self.current
-    if (script = @@running.find { |s| s.has_thread?(Thread.current) })
+    if (script = @@running.find { |s| s.thread?(Thread.current) })
       sleep 0.2 while script.paused? and !script.ignore_pause
       script
     else
@@ -1373,7 +1373,7 @@ class Script
     $SAFE == 0 ? @thread_group : nil
   end
 
-  def has_thread?(t)
+  def thread?(t)
     @thread_group.list.include?(t)
   end
 
