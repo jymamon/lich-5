@@ -803,7 +803,7 @@ def percentmana(num = nil)
   if XMLData.max_mana == 0
     percent = 100
   else
-    percent = ((XMLData.mana.to_f / XMLData.max_mana.to_f) * 100).to_i
+    percent = ((XMLData.mana / XMLData.max_mana.to_f) * 100).to_i
   end
   if num.nil?
     percent
@@ -826,9 +826,9 @@ end
 
 def percenthealth(num = nil)
   if num.nil?
-    ((XMLData.health.to_f / XMLData.max_health.to_f) * 100).to_i
+    ((XMLData.health / XMLData.max_health.to_f) * 100).to_i
   else
-    ((XMLData.health.to_f / XMLData.max_health.to_f) * 100).to_i >= num.to_i
+    ((XMLData.health / XMLData.max_health.to_f) * 100).to_i >= num.to_i
   end
 end
 
@@ -846,9 +846,9 @@ end
 
 def percentspirit(num = nil)
   if num.nil?
-    ((XMLData.spirit.to_f / XMLData.max_spirit.to_f) * 100).to_i
+    ((XMLData.spirit / XMLData.max_spirit.to_f) * 100).to_i
   else
-    ((XMLData.spirit.to_f / XMLData.max_spirit.to_f) * 100).to_i >= num.to_i
+    ((XMLData.spirit / XMLData.max_spirit.to_f) * 100).to_i >= num.to_i
   end
 end
 
@@ -868,7 +868,7 @@ def percentstamina(num = nil)
   if XMLData.max_stamina == 0
     percent = 100
   else
-    percent = ((XMLData.stamina.to_f / XMLData.max_stamina.to_f) * 100).to_i
+    percent = ((XMLData.stamina / XMLData.max_stamina.to_f) * 100).to_i
   end
   if num.nil?
     percent
@@ -885,7 +885,7 @@ def percentconcentration(num = nil)
   if XMLData.max_concentration == 0
     percent == 100
   else
-    percent = ((XMLData.concentration.to_f / XMLData.max_concentration.to_f) * 100).to_i
+    percent = ((XMLData.concentration / XMLData.max_concentration.to_f) * 100).to_i
   end
   if num.nil?
     percent
