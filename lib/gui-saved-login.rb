@@ -62,11 +62,11 @@ else
                   button:hover { background-color: darkgrey; } ")
 
         @play_button = Gtk::Button.new
-        char_label = Gtk::Label.new("#{login_info[:char_name]}")
+        char_label = Gtk::Label.new((login_info[:char_name]))
         char_label.set_width_chars(15)
         fe_label = Gtk::Label.new("(#{login_info[:frontend].capitalize})")
         fe_label.set_width_chars(10)
-        instance_label = Gtk::Label.new("#{realm}")
+        instance_label = Gtk::Label.new(realm)
         instance_label.set_width_chars(10)
         char_label.set_alignment(0, 0.5)
         button_row = Gtk::Paned.new(:horizontal)

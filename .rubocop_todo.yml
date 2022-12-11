@@ -377,16 +377,6 @@ Style/OptionalBooleanParameter:
   Exclude:
     - 'lib/util.rb'
 
-# Offense count: 14
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/RedundantInterpolation:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lib/global_defs.rb'
-    - 'lib/gui-saved-login.rb'
-    - 'lib/init.rb'
-    - 'lib/update.rb'
-
 # Offense count: 103
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.

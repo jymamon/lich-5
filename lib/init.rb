@@ -28,7 +28,7 @@ SCRIPT_DIR = @options.scriptdir
 TEMP_DIR = @options.tempdir
 
 # add this so that require statements can take the form 'lib/file'
-$LOAD_PATH << "#{LICH_DIR}"
+$LOAD_PATH << LICH_DIR
 
 # deprecated
 $lich_dir = "#{LICH_DIR}/"

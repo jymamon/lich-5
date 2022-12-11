@@ -92,8 +92,8 @@ module EAccess
             response = EAccess.read(conn)
             response.sub(/^C\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+[\t\n]/, '').scan(/[^\t]+\t[^\t^\n]+/).each { |code_name|
               char_code, char_name = code_name.split("\t")
-              hash = { :game_code => "#{game_code}", :game_name => "#{game_name}",
-                       :char_code => "#{char_code}", :char_name => "#{char_name}" }
+              hash = { :game_code => game_code, :game_name => game_name,
+                       :char_code => char_code, :char_name => char_name }
               login_info.push(hash)
             }
           end

@@ -36,7 +36,7 @@ module Lich
 
       def self.announce
         prep_update
-        if "#{LICH_VERSION}".chr == '5'
+        if LICH_VERSION.chr == '5'
           if Gem::Version.new(@current) < Gem::Version.new(@update_to)
             unless @new_features.empty?
               _respond ''; _respond "#{monsterbold_start}*** NEW VERSION AVAILABLE ***#{monsterbold_end}"
@@ -147,13 +147,13 @@ module Lich
         snapshot
 
         prep_update if @update_to.nil? or @update_to.empty?
-        if Gem::Version.new("#{@update_to}") <= Gem::Version.new("#{@current}")
+        if Gem::Version.new(@update_to.to_s) <= Gem::Version.new(@current.to_s)
           _respond ''; _respond "Lich version #{LICH_VERSION} is good.  Enjoy!"; _respond ''
         else
           _respond; _respond "Downloading Lich5 version #{@update_to}"; _respond
           filename = "lich5-#{@update_to}"
           File.open(File.join(TEMP_DIR, "#{filename}.tar.gz"), 'wb') { |file|
-            file.write open("#{@zipfile}").read
+            file.write open(@zipfile).read
           }
 
           Dir.mkdir(File.join(TEMP_DIR, filename))
@@ -194,7 +194,7 @@ module Lich
 
           data_update = Dir.children(File.join(TEMP_DIR, filename, 'data'))
           data_update.each { |file|
-            transition_filename = "#{file}".sub('.xml', '')
+            transition_filename = file.sub('.xml', '')
             newfilename = File.join(DATA_DIR, "#{transition_filename}-#{Time.now.to_i}.xml")
             File.open(File.join(DATA_DIR, file), 'rb') { |r| File.open(newfilename, 'wb') { |w| w.write(r.read) } }
             File.delete(File.join(DATA_DIR, file)) if File.exist?(File.join(DATA_DIR, file))

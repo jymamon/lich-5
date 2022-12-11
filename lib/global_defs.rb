@@ -467,7 +467,7 @@ def move(dir = 'none', giveup_seconds = 10, giveup_lines = 30)
       # avoid stomping the room for the entire session due to a transient failure
       dir = dir.to_s
       if dir =~ /\b#{which.join('|')}\b/
-        dir.sub!(/\b(#{which.join('|')})\b/) { "#{which[which.index($1) + 1]}" }
+        dir.sub!(/\b(#{which.join('|')})\b/) { (which[which.index($1) + 1]).to_s }
       else
         dir.sub!('door', 'second door')
       end
@@ -2101,7 +2101,7 @@ def do_client(client_string)
     elsif cmd =~ /^(?:lich5-update|l5u)\s+(.*)/i
       update_parameter = $1.dup
       require 'lib/update'
-      Lich::Util::Update.request("#{update_parameter}")
+      Lich::Util::Update.request(update_parameter)
     elsif cmd =~ /^(?:lich5-update|l5u)/i
       require 'lib/update'
       Lich::Util::Update.request('--help')
