@@ -1167,7 +1167,7 @@ class Script
   if RUBY_VERSION =~ /^2\.[012]\./
     def Script.trust(script_name)
       # FIXME: case sensitive blah blah
-      if ($SAFE == 0) and !caller.any? { |c| c =~ /eval|run/ }
+      if ($SAFE == 0) and caller.none? { |c| c =~ /eval|run/ }
         begin
           Lich.db.execute('INSERT OR REPLACE INTO trusted_scripts(name) values(?);', script_name.encode('UTF-8'))
         rescue SQLite3::BusyException
@@ -2065,8 +2065,8 @@ module Buffer
   end
 
   def self.cleanup
-    @@index.delete_if { |k, v| !Thread.list.any? { |t| t.object_id == k } }
-    @@streams.delete_if { |k, v| !Thread.list.any? { |t| t.object_id == k } }
+    @@index.delete_if { |k, v| Thread.list.none? { |t| t.object_id == k } }
+    @@streams.delete_if { |k, v| Thread.list.none? { |t| t.object_id == k } }
     return self
   end
 end
@@ -2145,7 +2145,7 @@ class SharedBuffer
   end
 
   def cleanup_threads
-    @buffer_index.delete_if { |k, v| !Thread.list.any? { |t| t.object_id == k } }
+    @buffer_index.delete_if { |k, v| Thread.list.none? { |t| t.object_id == k } }
     return self
   end
 end
@@ -4069,7 +4069,7 @@ ICONMAP = {
 XMLData = XMLParser.new
 
 reconnect_if_wanted = proc {
-  if @options.reconnect and @options.login_character and !$_CLIENTBUFFER_.any? { |cmd| cmd =~ /^(?:\[.*?\])?(?:<c>)?(?:quit|exit)/i }
+  if @options.reconnect and @options.login_character and $_CLIENTBUFFER_.none? { |cmd| cmd =~ /^(?:\[.*?\])?(?:<c>)?(?:quit|exit)/i }
     if @options.reconnect_delay
       reconnect_delay = @options.reconnect_delay.delay
       reconnect_step = @options.reconnect_delay.step

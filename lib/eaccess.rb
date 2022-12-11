@@ -25,11 +25,11 @@ module EAccess
 
   def self.verify_pem(conn)
     # return if conn.peer_cert.to_s = File.read(EAccess::PEM)
-    if !(conn.peer_cert.to_s == File.read(EAccess::PEM))
+    if conn.peer_cert.to_s == File.read(EAccess::PEM)
+      return true
+    else
       Lich.log "Exception, \nssl peer certificate did not match #{EAccess::PEM}\nwas:\n#{conn.peer_cert}"
       download_pem
-    else
-      return true
     end
     #     fail Exception, "\nssl peer certificate did not match #{EAccess::PEM}\nwas:\n#{conn.peer_cert}"
   end
