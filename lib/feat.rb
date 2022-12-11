@@ -97,9 +97,11 @@ class Feat
     'weapon_bonding' => 0,
   }
 
+  # rubocop:disable Style/MissingRespondToMissing Trying to be helpful to manual callers in the client
   def self.method_missing(arg1, arg2 = nil)
     echo "#{arg1} is not a defined Feat type.  Is it another Ability type?"
   end
+  # rubocop:enable Style/MissingRespondToMissing
 
   def self.[](name)
     Feat.send(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)

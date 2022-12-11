@@ -73,6 +73,10 @@ class NilClass
     nil
   end
 
+  def respond_to_missing?(arg1, arg2 = '')
+    return true # Questionable
+  end
+
   def split(*val)
     []
   end
@@ -186,6 +190,10 @@ class SynchronizedSocket
 
   def method_missing(method, *args, &block)
     @delegate.__send__ method, *args, &block
+  end
+
+  def respond_to_missing?(method, *args)
+    return @delegate.responds_to?(method, *args, &block)
   end
 end
 
@@ -673,6 +681,7 @@ module Vars
     @@save.call
   end
 
+  # TODO: Should arg2 default to nil here?
   def self.method_missing(arg1, arg2 = '')
     @@load.call unless @@loaded
     if arg1[-1, 1] == '='
@@ -683,6 +692,21 @@ module Vars
       end
     else
       @@vars[arg1.to_s]
+    end
+  end
+
+  # TODO: Should arg2 default to nil here?
+  def self.respond_to_missing?(arg1, arg2 = '')
+    @@load.call unless @@loaded
+
+    if arg1[-1, 1] == '='
+      if arg2.nil?
+        return @@vars.keys.include?(arg1.to_s.chop)
+      else
+        return true
+      end
+    else
+      return @@vars.keys.include?(arg1.to_s.chop)
     end
   end
 end
@@ -2225,10 +2249,12 @@ class SpellRanks
     @@list
   end
 
+  # rubocop:disable Style/MissingRespondToMissing Dubious. Delete on refactor.
   def self.method_missing(arg = nil)
     echo "error: unknown method #{arg} for class SpellRanks"
     respond caller[0..1]
   end
+  # rubocop:enable Style/MissingRespondToMissing
 
   def initialize(name)
     SpellRanks.load unless @@loaded
@@ -2636,6 +2662,13 @@ module Games
         }
         respond "missing method: #{meth}"
         raise NoMethodError
+      end
+
+      def self.respond_to_missing?(method, *args)
+        [Stats, Skills, Spellsong, Society].each { |klass|
+          return true if klass.responds_to?(meth, *args)
+        }
+        return false
       end
 
       def self.info
@@ -3532,10 +3565,12 @@ module Games
         [XMLData.injuries['rightEye']['wound'], XMLData.injuries['leftEye']['wound'], XMLData.injuries['chest']['wound'], XMLData.injuries['abdomen']['wound'], XMLData.injuries['back']['wound']].max
       end
 
+      # rubocop:disable Style/MissingRespondToMissing Trying to be helpful to manual callers in the client
       def self.method_missing(arg = nil)
         echo "Wounds: Invalid area, try one of these: arms, limbs, torso, #{XMLData.injuries.keys.join(', ')}"
         nil
       end
+      # rubocop:enable Style/MissingRespondToMissing
     end
 
     class Scars
@@ -3583,10 +3618,12 @@ module Games
         [XMLData.injuries['rightEye']['scar'], XMLData.injuries['leftEye']['scar'], XMLData.injuries['chest']['scar'], XMLData.injuries['abdomen']['scar'], XMLData.injuries['back']['scar']].max
       end
 
+      # rubocop:disable Style/MissingRespondToMissing Trying to be helpful to manual callers in the client
       def self.method_missing(arg = nil)
         echo "Scars: Invalid area, try one of these: arms, limbs, torso, #{XMLData.injuries.keys.join(', ')}"
         nil
       end
+      # rubocop:enable Style/MissingRespondToMissing
     end
 
     class GameObj
@@ -4376,6 +4413,10 @@ module UserVars
 
   def self.method_missing(arg1, arg2 = '')
     Vars.method_missing(arg1, arg2)
+  end
+
+  def self.respond_to_missing?(arg1, arg2 = '')
+    return Vars.respond_to?(arg1, arg2)
   end
 
   def self.change(var_name, value, ignored = nil)

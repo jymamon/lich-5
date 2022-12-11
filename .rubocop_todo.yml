@@ -132,7 +132,7 @@ Metrics/MethodLength:
 # Offense count: 10
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ModuleLength:
-  Max: 660
+  Max: 663
 
 # Offense count: 8
 # Configuration parameters: CountKeywordArgs.
@@ -311,28 +311,6 @@ Style/GuardClause:
     - 'lib/update.rb'
     - 'lib/util.rb'
     - 'lib/xmlparser.rb'
-    - 'lich.rbw'
-
-# Offense count: 6
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: InverseMethods, InverseBlocks.
-Style/InverseMethods:
-  Exclude:
-    - 'lib/eaccess.rb'
-    - 'lich.rbw'
-
-# Offense count: 17
-Style/MissingRespondToMissing:
-  Exclude:
-    - 'lib/armor.rb'
-    - 'lib/cman.rb'
-    - 'lib/feat.rb'
-    - 'lib/lich.rb'
-    - 'lib/map_dr.rb'
-    - 'lib/map_gs.rb'
-    - 'lib/shield.rb'
-    - 'lib/spell.rb'
-    - 'lib/weapon.rb'
     - 'lich.rbw'
 
 # Offense count: 2

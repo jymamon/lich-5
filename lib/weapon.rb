@@ -80,9 +80,11 @@ class Weapon
 
   @@cost_hash = { 'barrage' => 15, 'charge' => 14, 'clash' => 20, 'clobber' => 0, 'cripple' => 7, 'cyclone' => 20, 'dizzying_swing' => 7, 'flurry' => 15, 'fury' => 15, 'guardant_thrusts' => 15, 'overpower' => 0, 'pin_down' => 14, 'pulverize' => 20, 'pummel' => 15, 'radial_sweep' => 0, 'reactive_shot' => 0, 'reverse_strike' => 0, 'riposte' => 0, 'spin_kick' => 0, 'thrash' => 15, 'twin_hammerfists' => 7, 'volley' => 20, 'whirling_blade' => 20, 'whirlwind' => 20 }
 
+  # rubocop:disable Style/MissingRespondToMissing Trying to be helpful to manual callers in the client
   def self.method_missing(arg1, arg2 = nil)
     echo "#{arg1} is not a defined Weapon type.  Is it another Ability type?"
   end
+  # rubocop:enable Style/MissingRespondToMissing
 
   def self.[](name)
     Weapon.send(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)

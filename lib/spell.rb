@@ -734,6 +734,7 @@ module Games
         @cost.dup
       end
 
+      # rubocop:disable Style/MissingRespondToMissing Needs reviewed
       def method_missing(*args)
         if @@bonus_list.include?(args[0].to_s.gsub('_', '-'))
           if @bonus[args[0].to_s.gsub('_', '-')]
@@ -773,6 +774,7 @@ module Games
           raise NoMethodError
         end
       end
+      # rubocop:enable Style/MissingRespondToMissing
 
       def circle_name
         Spells.get_circle_name(@circle)

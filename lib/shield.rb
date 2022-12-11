@@ -265,9 +265,11 @@ class Shield
     },
   }
 
+  # rubocop:disable Style/MissingRespondToMissing Trying to be helpful to manual callers in the client
   def self.method_missing(arg1, arg2 = nil)
     echo "#{arg1} is not a defined Shield type.  Is it another Ability type?"
   end
+  # rubocop:enable Style/MissingRespondToMissing
 
   def self.[](name)
     Shield.send(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)

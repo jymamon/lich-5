@@ -39,9 +39,11 @@ class Armor
   def self.puncture_protection=(val);   @@puncture_protection = val;    end
   def self.slash_protection=(val);      @@slash_protection = val;       end
 
+  # rubocop:disable Style/MissingRespondToMissing Trying to be helpful to manual callers in the client
   def self.method_missing(arg1, arg2 = nil)
     echo "#{arg1} is not a defined Armor type.  Is it another Ability type?"
   end
+  # rubocop:enable Style/MissingRespondToMissing
 
   def self.[](name)
     Armor.send(name.to_s.gsub(/[\s-]/, '_').gsub("'", '').downcase)

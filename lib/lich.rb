@@ -19,6 +19,10 @@ module Lich
     Vars.method_missing(arg1, arg2)
   end
 
+  def self.respond_to_missing?(arg1, arg2 = '')
+    return Vars.respond_to?(arg1, arg2)
+  end
+
   def self.seek(frontend)
     if frontend =~ /wizard/
       return $wiz_fe_loc
