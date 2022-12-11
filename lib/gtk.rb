@@ -133,10 +133,12 @@ if defined?(Gtk)
           respond "error in Gtk.queue: #{$ERROR_INFO}"
           puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+        # rubocop:disable Lint/RescueException Revisit. Ordering here doesn't make sense.
         rescue Exception
           respond "error in Gtk.queue: #{$ERROR_INFO}"
           puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+        # rubocop:enable Lint/RescueException
         rescue ScriptError
           respond "error in Gtk.queue: #{$ERROR_INFO}"
           puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"

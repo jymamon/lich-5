@@ -2182,36 +2182,11 @@ end
 
 def report_errors(&block)
   block.call
-rescue
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-rescue SyntaxError
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 rescue SystemExit
   nil
-rescue SecurityError
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-rescue ThreadError
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-rescue SystemStackError
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+# rubocop:disable Lint/RescueException Revisit. Ordering here doesn't make sense.
 rescue Exception
   respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
   Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-rescue ScriptError
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-rescue LoadError
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-rescue NoMemoryError
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-rescue
-  respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
-  Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
 end
+# rubocop:enable Lint/RescueException

@@ -852,6 +852,7 @@ class Script
           rescue SystemStackError
             respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          # rubocop:disable Lint/RescueException Revisit.
           rescue Exception
             if $ERROR_INFO == JUMP
               retry if Script.current.get_next_label != JUMP_ERROR
@@ -863,6 +864,7 @@ class Script
               respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
               Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             end
+          # rubocop:enable Lint/RescueException
           rescue
             respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
@@ -901,6 +903,7 @@ class Script
           rescue SystemStackError
             respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          # rubocop:disable Lint/RescueException Revisit.
           rescue Exception
             if $ERROR_INFO == JUMP
               retry if Script.current.get_next_label != JUMP_ERROR
@@ -912,6 +915,7 @@ class Script
               respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
               Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             end
+          # rubocop:enable Lint/RescueException
           rescue
             respond "--- Lich: error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace[0..1].join("\n\t")}"
             Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
@@ -1576,11 +1580,13 @@ class ExecScript < Script
           respond $ERROR_INFO.backtrace.first
           Lich.log "SystemStackError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
+        # rubocop:disable Lint/RescueException Revisit.
         rescue Exception
           respond "--- Exception: #{$ERROR_INFO}"
           respond $ERROR_INFO.backtrace.first
           Lich.log "Exception: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Script.current.kill
+        # rubocop:enable Lint/RescueException
         rescue
           respond "--- Lich: error: #{$ERROR_INFO}"
           respond $ERROR_INFO.backtrace.first
@@ -1652,11 +1658,13 @@ class ExecScript < Script
             respond $ERROR_INFO.backtrace.first
             Lich.log "SystemStackError: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
+          # rubocop:disable Lint/RescueException Revisit.
           rescue Exception
             respond "--- Exception: #{$ERROR_INFO}"
             respond $ERROR_INFO.backtrace.first
             Lich.log "Exception: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             Script.current.kill
+          # rubocop:enable Lint/RescueException
           rescue
             respond "--- Lich: error: #{$ERROR_INFO}"
             respond $ERROR_INFO.backtrace.first
@@ -2303,9 +2311,11 @@ module Games
           @@socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, true)
         rescue
           Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+        # rubocop:disable Lint/RescueException Revisit.
         rescue Exception
           Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         end
+        # rubocop:enable Lint/RescueException
         @@socket.sync = true
 
         @@thread = Thread.new {
@@ -2492,11 +2502,13 @@ module Games
                 Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
               end
             end
+          # rubocop:disable Lint/RescueException Revisit.
           rescue Exception
             Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             $stdout.puts "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.slice(0..10).join("\n\t")}"
             sleep 0.2
             retry unless $_CLIENT_.closed? or @@socket.closed? or ($ERROR_INFO.to_s =~ /invalid argument|A connection attempt failed|An existing connection was forcibly closed|An established connection was aborted by the software in your host machine./i)
+          # rubocop:enable Lint/RescueException
           rescue
             Lich.log "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
             $stdout.puts "error: server_thread: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace..slice(0..10).join("\n\t")}"

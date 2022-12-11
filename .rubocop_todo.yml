@@ -16,23 +16,9 @@ Layout/MultilineBlockLayout:
     - 'lib/map_gs.rb'
 
 # Offense count: 3
+# I just don't want to deal with this one right now.
 Lint/HashCompareByIdentity:
   Exclude:
-    - 'lich.rbw'
-
-# Offense count: 3
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: AllowedImplicitNamespaces.
-# AllowedImplicitNamespaces: Gem
-Lint/RaiseException:
-  Exclude:
-    - 'lib/eaccess.rb'
-
-# Offense count: 8
-Lint/RescueException:
-  Exclude:
-    - 'lib/global_defs.rb'
-    - 'lib/gtk.rb'
     - 'lich.rbw'
 
 # Offense count: 7
