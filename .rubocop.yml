@@ -127,6 +127,10 @@ Style/NumericLiterals:
   # Enabled is recommended.
   Enabled: false
 
+Style/MultilineBlockChain:
+  # Enabled is recommended.
+  Enabled: false
+
 Style/PerlBackrefs:
   # Enabled is recommended.
   Enabled: false
