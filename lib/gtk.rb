@@ -110,26 +110,14 @@ if defined?(Gtk)
       GLib::Timeout.add(1) {
         begin
           block.call
+        rescue SystemExit
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          nil
         rescue
           respond "error in Gtk.queue: #{$ERROR_INFO}"
           puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-        rescue SyntaxError
-          respond "error in Gtk.queue: #{$ERROR_INFO}"
-          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-        rescue SystemExit
-          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          nil
-        rescue SecurityError
-          respond "error in Gtk.queue: #{$ERROR_INFO}"
-          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-        rescue ThreadError
-          respond "error in Gtk.queue: #{$ERROR_INFO}"
-          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-        rescue SystemStackError
+        rescue ScriptError
           respond "error in Gtk.queue: #{$ERROR_INFO}"
           puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
@@ -138,24 +126,8 @@ if defined?(Gtk)
           respond "error in Gtk.queue: #{$ERROR_INFO}"
           puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-        # rubocop:enable Lint/RescueException
-        rescue ScriptError
-          respond "error in Gtk.queue: #{$ERROR_INFO}"
-          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-        rescue LoadError
-          respond "error in Gtk.queue: #{$ERROR_INFO}"
-          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-        rescue NoMemoryError
-          respond "error in Gtk.queue: #{$ERROR_INFO}"
-          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-        rescue
-          respond "error in Gtk.queue: #{$ERROR_INFO}"
-          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         end
+        # rubocop:enable Lint/RescueException
         false # don't repeat timeout
       }
     end
