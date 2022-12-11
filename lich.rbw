@@ -1257,7 +1257,9 @@ class Script
         @vars = []
       else
         @vars = [args[:args]]
+        # rubocop:disable Lint/AmbiguousBlockAssociation Needs reviewed
         @vars.concat args[:args].scan(/[^\s"]*(?<!\\)"(?:\\"|[^"])+(?<!\\)"[^\s]*|(?:\\"|[^"\s])+/).collect { |s| s.gsub(/(?<!\\)"/, '').gsub('\\"', '"') }
+        # rubocop:enable Lint/AmbiguousBlockAssociation
       end
     elsif args[:args].instance_of?(Array)
       if args[:args].nil? || args[:args].empty?

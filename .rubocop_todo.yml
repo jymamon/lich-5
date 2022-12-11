@@ -8,16 +8,12 @@
 
 # Offense count: 12
 # This cop supports safe autocorrection (--autocorrect).
+# The correction is less readable. Probably due to other indentation rules
+# not configured optimally.  Revisit towards the end.
 Layout/MultilineBlockLayout:
   Exclude:
     - 'lib/map_dr.rb'
     - 'lib/map_gs.rb'
-
-# Offense count: 1
-# Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods.
-Lint/AmbiguousBlockAssociation:
-  Exclude:
-    - 'lich.rbw'
 
 # Offense count: 3
 Lint/HashCompareByIdentity:
