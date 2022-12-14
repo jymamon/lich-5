@@ -13,7 +13,7 @@
        version: 2.40
 
   changelog:
-                      
+
     2.40 (2022-10-06):
       remove lich update function ability
       remove ability to overwrite Lich5 version of infomon/waggle/xnarost
@@ -22,7 +22,7 @@
     2.38 (2022-04-03):
       add data folder support for .ui files
     2.37 (2022-03-13):
-      changed updatables 
+      changed updatables
     2.36 (2020-12-19):
       show the author name and time of the last map database upload when downloading it
     2.35 (2020-06-27):
@@ -35,8 +35,6 @@
 =end
 =begin
 
-                      
-                                                        
     2.32 (2017-03-04):
       change checkout-mapdb time limit to 12 hours
     2.31 (2016-04-04):
@@ -98,8 +96,6 @@
       cache file list and reuse if nothing has changed
       added download-lich command
 
-
-
 unless $SAFE == 0
   echo "this script must be trusted to work (;trust #{script.name})"
   exit
@@ -113,18 +109,18 @@ if Settings['updatable'].nil?
   Settings['updatable'] = Hash.new
   Settings['updatable'][:scripts] = Array.new
   Settings['updatable'][:scripts].push(:filename => 'repository.lic', :game => 'gs', :author => 'elanthia-online')
-  #Settings['updatable'][:scripts].push(:filename => 'lnet.lic', :game => 'gs', :author => 'elanthia-online')
+  # Settings['updatable'][:scripts].push(:filename => 'lnet.lic', :game => 'gs', :author => 'elanthia-online')
   Settings['updatable'][:scripts].push(:filename => 'alias.lic', :game => 'gs', :author => 'elanthia-online')
   Settings['updatable'][:scripts].push(:filename => 'vars.lic', :game => 'gs', :author => 'elanthia-online')
   Settings['updatable'][:scripts].push(:filename => 'go2.lic', :game => 'gs', :author => 'elanthia-online')
   Settings['updatable'][:scripts].push(:filename => 'autostart.lic', :game => 'gs', :author => 'elanthia-online')
   if XMLData.game =~ /^GS/
-    #GemstoneIV specific updatable scripts here
+    # GemstoneIV specific updatable scripts here
     Settings['updatable'][:scripts].push(:filename => 'gameobj-data.xml', :game => 'gs', :author => 'elanthia-online')
-    #Settings['updatable'][:scripts].push(:filename => 'infomon.lic', :game => 'gs', :author => 'Tillmen')
-    #Settings['updatable'][:scripts].push(:filename => 'spell-list.xml', :game => 'gs', :author => 'Tillmen')
+    # Settings['updatable'][:scripts].push(:filename => 'infomon.lic', :game => 'gs', :author => 'Tillmen')
+    # Settings['updatable'][:scripts].push(:filename => 'spell-list.xml', :game => 'gs', :author => 'Tillmen')
   elsif XMLData.game =~ /^DR/
-    #DragonRealms specific updatable scripts here
+    # DragonRealms specific updatable scripts here
   end
   Settings['updatable'][:mapdb] = Hash.new
   Settings['updatable'][:mapdb][XMLData.game] = true
@@ -283,7 +279,7 @@ connect = proc {
       respond "\n---\n--- warning: Your computer thinks the date is #{Time.now.strftime("%m-%d-%Y")}.  If this is the\n---          correct date, you need an updated version of this script.  If \n---          this is not the correct date, you need to change it.  In either\n---          case, this date makes the SSL certificate in this script invalid\n---          and will prevent the script from connecting to the server.\n---\n\n"
       sleep 3
     end
-    cert_store              = OpenSSL::X509::Store.new
+    cert_store = OpenSSL::X509::Store.new
     cert_store.add_cert(ca_cert)
     ssl_context             = OpenSSL::SSL::SSLContext.new
     ssl_context.options     = (OpenSSL::SSL::OP_NO_SSLv2 + OpenSSL::SSL::OP_NO_SSLv3)
@@ -312,6 +308,7 @@ connect = proc {
       gets.scan(/[^\t]+\t[^\t]+(?:\t|\n)/).each { |s| s = s.chomp.split("\t"); hash[s[0].downcase] = s[1] }
       return hash
     end
+
     def ssl_socket.puth(h)
       puts h.to_a.flatten.join("\t")
     end
@@ -321,7 +318,7 @@ connect = proc {
     socket.close rescue nil
     exit
   end
-  [ ssl_socket, socket ]
+  [ssl_socket, socket]
 }
 
 get_list = proc {
@@ -465,16 +462,16 @@ filter_list = proc { |list|
     if cmd_game
       games = cmd_game.split(',').collect { |g| g.downcase.strip }
     elsif XMLData.game =~ /^GS/
-      games = ['gs','any']
+      games = ['gs', 'any']
     elsif XMLData.game =~ /^DR/
-      games = ['dr','any']
+      games = ['dr', 'any']
     else
-      games = ['other','any']
+      games = ['other', 'any']
     end
     list.delete_if { |row| not games.include?(row[gi]) }
   end
   if cmd_size and (si = headers.index('size'))
-    for op,bytes in cmd_size
+    for op, bytes in cmd_size
       if op == '>'
         list.delete_if { |row| row[si].to_i <= bytes }
       elsif op == '<'
@@ -486,7 +483,7 @@ filter_list = proc { |list|
   end
   if cmd_age and (lui = headers.index('last update'))
     now = Time.now.to_i
-    for op,seconds in cmd_age
+    for op, seconds in cmd_age
       if op == '>'
         list.delete_if { |row| (now - row[lui].to_i) <= seconds }
       elsif op == '<'
@@ -499,7 +496,7 @@ filter_list = proc { |list|
     list.delete_if { |row| not authors.include?(row[ai].downcase.gsub(/[^a-z]+/, '')) }
   end
   if cmd_downloads and (di = headers.index('downloads'))
-    for op,dc in cmd_downloads
+    for op, dc in cmd_downloads
       if op == '>'
         list.delete_if { |row| row[di].to_i <= dc }
       elsif op == '<'
@@ -511,8 +508,8 @@ filter_list = proc { |list|
   end
   if cmd_rating and (rti = headers.index('rating total')) and (rci = headers.index('rating count'))
     list.delete_if { |row| row[rci].to_i.zero? }
-    for op,rate in cmd_rating
-      list.delete_if { |row| (row[rti] !~ /^[0-9]+$/) or (row[rci] !~ /^[0-9]+$/) or ( (op == '>') and ((row[rti].to_f / row[rci].to_f) <= rate) ) or ( (op == '<') and ((row[rti].to_f / row[rci].to_f) >= rate) ) or ( (op == '=') and ((row[rti].to_f / row[rci].to_f) != rate) ) }
+    for op, rate in cmd_rating
+      list.delete_if { |row| (row[rti] !~ /^[0-9]+$/) or (row[rci] !~ /^[0-9]+$/) or ((op == '>') and ((row[rti].to_f / row[rci].to_f) <= rate)) or ((op == '<') and ((row[rti].to_f / row[rci].to_f) >= rate)) or ((op == '=') and ((row[rti].to_f / row[rci].to_f) != rate)) }
     end
   end
   if cmd_tags and (ti = headers.index('tags'))
@@ -530,7 +527,7 @@ format_list = proc { |list|
   if (rti = headers.index('rating total')) and (rci = headers.index('rating count'))
     list.each_index { |ri|
       if (list[ri][rti] =~ /^[0-9]+$/) and (list[ri][rci].to_i > 0)
-#       list[ri][rti] = "#{(list[ri][rti].to_f / list[ri][rci].to_f).to_s.slice(/^[0-9]+(?:\.[0-9])?/)} (#{list[ri][rti]}/#{list[ri][rci]})"
+        #       list[ri][rti] = "#{(list[ri][rti].to_f / list[ri][rci].to_f).to_s.slice(/^[0-9]+(?:\.[0-9])?/)} (#{list[ri][rti]}/#{list[ri][rci]})"
         list[ri][rti] = "#{(list[ri][rti].to_f / list[ri][rci].to_f).to_s.slice(/^[0-9]+(?:\.[0-9])?/)} (#{list[ri][rci]})"
       else
         list[ri][rti] = String.new
@@ -548,11 +545,11 @@ format_list = proc { |list|
     end
     if i = headers.index(cmd_sort)
       if cmd_sort =~ /^(?:size|updated|age|downloads)$/
-        list.sort! { |a,b| a[i].to_i <=> b[i].to_i }
+        list.sort! { |a, b| a[i].to_i <=> b[i].to_i }
       elsif cmd_sort == 'rating'
-        list.sort! { |a,b| a[i].to_s.slice(/[0-9\.]+/).to_f <=> b[i].to_s.slice(/[0-9\.]+/).to_f }
+        list.sort! { |a, b| a[i].to_s.slice(/[0-9\.]+/).to_f <=> b[i].to_s.slice(/[0-9\.]+/).to_f }
       else
-        list.sort! { |a,b| a[i] <=> b[i] }
+        list.sort! { |a, b| a[i] <=> b[i] }
       end
     else
       echo "warning: couldn't find a header named #{cmd_sort} in the list"
@@ -563,7 +560,7 @@ format_list = proc { |list|
   end
   if lui = headers.index('last update')
     list.each_index { |ri|
-      list[ri][lui] = "#{Time.at(list[ri][lui].to_i).strftime("%Y-%m-%d %I:%M%p").downcase.gsub(/\s0/,'  ')}"
+      list[ri][lui] = "#{Time.at(list[ri][lui].to_i).strftime("%Y-%m-%d %I:%M%p").downcase.gsub(/\s0/, '  ')}"
     }
   end
   if si = headers.index('size')
@@ -590,7 +587,7 @@ format_list = proc { |list|
     if (ti = headers.index('tags'))
       list.each_index { |ri|
         if list[ri][ti].length > 20
-          list[ri][ti] = "#{list[ri][ti][0,19]}>"
+          list[ri][ti] = "#{list[ri][ti][0, 19]}>"
         end
       }
     end
@@ -619,27 +616,29 @@ format_list = proc { |list|
   column_width = Array.new
   list[0].each_index { |i|
     list.each { |r|
-      column_width[i] = [column_width[i].to_i,r[i].to_s.length].max
+      column_width[i] = [column_width[i].to_i, r[i].to_s.length].max
     }
   }
   headers = list.shift
   if cmd_limit
     if cmd_limit =~ /^([0-9]+),([0-9]+)$/
-      list = list[($1.to_i),($2.to_i)]
+      list = list[($1.to_i), ($2.to_i)]
     elsif cmd_limit =~ /^[0-9]+$/
-      list = list[0,(cmd_limit.to_i)]
+      list = list[0, (cmd_limit.to_i)]
     end
   end
   ti = headers.index('tags') || -1
   list.unshift column_width.collect { |c| ''.rjust(c, '-') }
   list.unshift headers
-  list.each { |row| row.each_index { |i|
-    if i == ti
-      row[i] = row[i].ljust(column_width[i])
-    else
-      row[i] = row[i].rjust(column_width[i])
-    end
-  } }
+  list.each { |row|
+    row.each_index { |i|
+      if i == ti
+        row[i] = row[i].ljust(column_width[i])
+      else
+        row[i] = row[i].rjust(column_width[i])
+      end
+    }
+  }
   list.collect { |row| row.join('   ') }.join("\n")
 }
 
@@ -784,7 +783,7 @@ download_mapdb = proc {
             echo "map database is up-to-date; last updated by #{response['uploaded by']} at #{Time.at(response['timestamp'].to_i)}"
           else
             echo 'map database is up-to-date'
-          end  
+          end
           failed = false
         else
           echo "error: server says: #{response['error']}"
@@ -799,7 +798,7 @@ download_mapdb = proc {
           echo "downloading map database... (uploaded by #{response['uploaded by']} at #{Time.at(response['timestamp'].to_i)})"
         else
           echo 'downloading map database...'
-        end 
+        end
         File.open(tempfilename, 'wb') { |f|
           (response['size'] / 1_000_000).times { f.write(ssl_socket.read(1_000_000)) }
           f.write(ssl_socket.read(response['size'] % 1_000_000)) unless (response['size'] % 1_000_000) == 0
@@ -942,7 +941,7 @@ download_mapdb = proc {
   end
 }
 
-download_file = proc { |file,game,version|
+download_file = proc { |file, game, version|
   begin
     ssl_socket, socket = connect.call
     request = { 'action' => 'download', 'file' => file, 'game' => game, 'supported compressions' => 'gzip', 'client' => client_version }
@@ -1039,7 +1038,6 @@ download_file = proc { |file,game,version|
   end
 }
 
-
 for var in script.vars[1..-1]
   if no_more_options
     cmd.push(var)
@@ -1117,13 +1115,13 @@ for var in script.vars[1..-1]
       if var =~ /^--size\s*(>|<|=)\s*([0-9\.]+)(k|m|g)?b?/i
         cmd_size ||= Array.new
         if $3 == 'g'
-          cmd_size.push [ $1, ($2.to_f*1073741824).to_i ]
+          cmd_size.push [$1, ($2.to_f * 1073741824).to_i]
         elsif $3 == 'm'
-          cmd_size.push [ $1, ($2.to_f*1048576).to_i ]
+          cmd_size.push [$1, ($2.to_f * 1048576).to_i]
         elsif $3 == 'k'
-          cmd_size.push [ $1, ($2.to_f*1024).to_i ]
+          cmd_size.push [$1, ($2.to_f * 1024).to_i]
         else
-          cmd_size.push [ $1, $2.to_i ]
+          cmd_size.push [$1, $2.to_i]
         end
       else
         echo 'error: --size option not complete; e.g. --size>15k'
@@ -1133,17 +1131,17 @@ for var in script.vars[1..-1]
       if var =~ /^--age\s*(>|<)\s*([0-9\.]+)(m|h|d|w|y)?$/i
         cmd_age ||= Array.new
         if $3 == 'y'
-          cmd_age.push [ $1, ($2.to_f*60*60*24*365).to_i ]
+          cmd_age.push [$1, ($2.to_f * 60 * 60 * 24 * 365).to_i]
         elsif $3 == 'w'
-          cmd_age.push [ $1, ($2.to_f*60*60*24*7).to_i ]
+          cmd_age.push [$1, ($2.to_f * 60 * 60 * 24 * 7).to_i]
         elsif $3 == 'd'
-          cmd_age.push [ $1, ($2.to_f*60*60*24).to_i ]
+          cmd_age.push [$1, ($2.to_f * 60 * 60 * 24).to_i]
         elsif $3 == 'h'
-          cmd_age.push [ $1, ($2.to_f*60*60).to_i ]
+          cmd_age.push [$1, ($2.to_f * 60 * 60).to_i]
         elsif $3 == 'm'
-          cmd_age.push [ $1, ($2.to_f*60).to_i ]
+          cmd_age.push [$1, ($2.to_f * 60).to_i]
         else
-          cmd_age.push [ $1, $2.to_i ]
+          cmd_age.push [$1, $2.to_i]
         end
       else
         echo 'error: --age option not complete; e.g. --age<24h'
@@ -1152,7 +1150,7 @@ for var in script.vars[1..-1]
     elsif var =~ /^--downloads/i
       if var =~ /^--downloads?\s*(>|<|=)\s*([0-9]+)/i
         cmd_downloads ||= Array.new
-        cmd_downloads.push [ $1, $2.to_i ]
+        cmd_downloads.push [$1, $2.to_i]
       else
         echo 'error: --downloads option not complete; e.g. --downloads>50'
         exit
@@ -1160,7 +1158,7 @@ for var in script.vars[1..-1]
     elsif var =~ /^--rating/i
       if var =~ /^--rating\s*(>|<|=)\s*([0-9\.]+)/i
         cmd_rating ||= Array.new
-        cmd_rating.push [ $1, $2.to_f ]
+        cmd_rating.push [$1, $2.to_f]
       else
         echo 'error: --rating option not complete; e.g. --rating>8.5'
         exit
@@ -1180,7 +1178,6 @@ for var in script.vars[1..-1]
     cmd.push(var)
   end
 end
-
 
 #
 # list
@@ -1207,7 +1204,7 @@ elsif cmd[0] =~ /^list-?update[sd]$/i
     exit
   end
   list.delete_if { |row|
-    if (row[fi] =~ /\.(?:ui|xml)$/i) and (LICH_VERSION.split('.').collect { |n| n.rjust(5,'0') }.join('.') >= '00004.00006.00000')
+    if (row[fi] =~ /\.(?:ui|xml)$/i) and (LICH_VERSION.split('.').collect { |n| n.rjust(5, '0') }.join('.') >= '00004.00006.00000')
       not File.exists?("#{$data_dir}#{row[fi]}") or ((File.mtime("#{$data_dir}#{row[fi]}").to_i + 15) > row[lui].to_i)
     else
       not File.exists?("#{$script_dir}#{row[fi]}") or ((File.mtime("#{$script_dir}#{row[fi]}").to_i + 15) > row[lui].to_i)
@@ -1215,7 +1212,6 @@ elsif cmd[0] =~ /^list-?update[sd]$/i
   }
   list.unshift(headers)
   respond "\n#{format_list.call(list)}\n\n"
-
 
 #
 # list-new
@@ -1241,7 +1237,6 @@ elsif cmd[0] =~ /^list-?new$/i
   list.unshift(headers)
   respond "\n#{format_list.call(list)}\n\n"
 
-
 #
 # list-tags
 #
@@ -1263,7 +1258,6 @@ elsif cmd[0] =~ /^list-?tags?$/i
   else
     respond "\ntags: #{tags.values.join(', ')}\n\n"
   end
-
 
 #
 # info
@@ -1319,7 +1313,7 @@ elsif (cmd[0] =~ /^info$/i)
     end
     output = "\n#{format_list.call(list)}\n\n"
     if response['versions']
-      sorted_versions = response['versions'].split(';').collect { |v| v.split('.') }.sort { |a,b|
+      sorted_versions = response['versions'].split(';').collect { |v| v.split('.') }.sort { |a, b|
         i = r = 0
         loop {
           if (r != 0) or not (a[i] or b[i])
@@ -1331,6 +1325,7 @@ elsif (cmd[0] =~ /^info$/i)
           else
             r = (a[i].to_i <=> b[i].to_i)
           end
+
           i += 1
         }
         r
@@ -1340,7 +1335,6 @@ elsif (cmd[0] =~ /^info$/i)
     output.concat "#{data}\n\n"
     respond output
   end
-
 
 #
 # download
@@ -1382,7 +1376,6 @@ elsif (cmd[0] =~ /^download$/i)
     end
   end
 
-
 #
 # download-updates
 #
@@ -1398,7 +1391,7 @@ elsif (cmd[0] =~ /^download-?update[ds]$/i)
   Settings['updatable'][:scripts] ||= Array.new
   Settings['updatable'][:mapdb] ||= Hash.new
   if Settings['updatable'][:lich]
-    #download_lich.call
+    # download_lich.call
   end
   if Settings['updatable'][:mapdb][XMLData.game]
     download_mapdb.call
@@ -1412,11 +1405,12 @@ elsif (cmd[0] =~ /^download-?update[ds]$/i)
       no_updates = true
       for local_info in (Settings['updatable'][:scripts])
         next if (LICH_VERSION =~ /^4\.4/) and (local_info[:filename] =~ /^(alias|vars|autostart|infomon)\.lic$/i)
-        
-        #bypass auto update of following scripts if on Lich5.
+
+        # bypass auto update of following scripts if on Lich5.
         next if (LICH_VERSION =~ /^5\./) and (local_info[:filename] =~ /^(infomon|waggle|xnarost)\.lic$/i)
+
         if remote_info = list.find { |rinfo| (rinfo[fi] == local_info[:filename]) and (rinfo[gi] == local_info[:game]) }
-          if (local_info[:filename] =~ /\.xml$/i) and (LICH_VERSION.split('.').collect { |n| n.rjust(5,'0') }.join('.') >= '00004.00006.00000')
+          if (local_info[:filename] =~ /\.xml$/i) and (LICH_VERSION.split('.').collect { |n| n.rjust(5, '0') }.join('.') >= '00004.00006.00000')
             updated = !File.exists?("#{$data_dir}#{local_info[:filename]}") || (File.mtime("#{$data_dir}#{local_info[:filename]}").to_i < remote_info[lui].to_i)
           else
             updated = !File.exists?("#{$script_dir}#{local_info[:filename]}") || (File.mtime("#{$script_dir}#{local_info[:filename]}").to_i < remote_info[lui].to_i)
@@ -1428,7 +1422,7 @@ elsif (cmd[0] =~ /^download-?update[ds]$/i)
               if remote_info[ai] != local_info[:author]
                 echo "warning: author of #{local_info[:filename]} changed from #{local_info[:author]} to #{remote_info[ai]}: downloading anyway"
               end
-              echo "downloading #{local_info[:filename].sub(/\.lic$/,'')}..."
+              echo "downloading #{local_info[:filename].sub(/\.lic$/, '')}..."
               start = Time.now.to_f
               download_file.call(local_info[:filename], local_info[:game], nil)
               sleep [(1.5 - Time.now.to_f + start), 0].max
@@ -1447,7 +1441,6 @@ elsif (cmd[0] =~ /^download-?update[ds]$/i)
     end
   end
 
-
 #
 # settings for download-updates
 #
@@ -1465,7 +1458,7 @@ elsif (cmd[0] =~ /^show-?updat(?:e|able)$/i)
   if Settings['updatable'][:scripts].empty?
     output.concat "   scripts: (none)\n"
   else
-    output.concat "   scripts: #{Settings['updatable'][:scripts].collect { |s| s[:filename].sub(/\.lic$/,'') }.join(', ')}\n"
+    output.concat "   scripts: #{Settings['updatable'][:scripts].collect { |s| s[:filename].sub(/\.lic$/, '') }.join(', ')}\n"
   end
   output.concat "\n"
   respond output
@@ -1559,7 +1552,6 @@ elsif (cmd[0] =~ /^unset-?map(?:db)?-?updat(?:e|able)$|^unset-?updat(?:e|able)-?
   Settings['updatable'][:mapdb] ||= Hash.new
   Settings['updatable'][:mapdb][XMLData.game] = false
   echo "the download-updates command will ignore updates for the #{XMLData.game} map database"
-
 
 #
 # upload
@@ -1661,7 +1653,6 @@ elsif (cmd[0] =~ /^upload$/i)
     File.delete(filename) if delete_filename
   end
 
-
 #
 # delete
 #
@@ -1730,7 +1721,6 @@ elsif (cmd[0] =~ /^delete$/i)
     end
   end
 
-
 #
 # rate
 #
@@ -1791,7 +1781,6 @@ elsif (cmd[0] =~ /^rate$/i)
     end
   end
 
-
 #
 # change password
 #
@@ -1828,7 +1817,6 @@ elsif cmd[0] =~ /^(?:new|change)-?password$/i
     ssl_socket.close rescue nil
     socket.close rescue nil
   end
-
 
 #
 # checkout-mapdb
@@ -1880,7 +1868,6 @@ elsif (cmd[0] =~ /^checkout-?map(?:db)?$/i)
     socket.close rescue nil
   end
 
-
 #
 # relase-mapdb
 #
@@ -1917,7 +1904,6 @@ elsif (cmd[0] =~ /^release-?map(?:db)?$/i)
     ssl_socket.close rescue nil
     socket.close rescue nil
   end
-
 
 #
 # approve-mapdb
@@ -1963,7 +1949,6 @@ elsif (cmd[0] =~ /^approve-?map(?:db)?$/i)
     ssl_socket.close rescue nil
     socket.close rescue nil
   end
-
 
 #
 # upload-mapdb
@@ -2045,7 +2030,7 @@ elsif (cmd[0] =~ /^upload-?map(?:db)?$/i)
         progress += chunk_size
         if ((Time.now.to_i - progress_time) > 9)
           progress_time = Time.now.to_i
-          echo "still uploading (#{((progress*100)/size).round}%, #{(((progress/1024.0)/(Time.now.to_f-start_time))*10).round/10.0} KB/s)..."
+          echo "still uploading (#{((progress * 100) / size).round}%, #{(((progress / 1024.0) / (Time.now.to_f - start_time)) * 10).round / 10.0} KB/s)..."
         end
       }
       ssl_socket.write(f.read(size % chunk_size)) unless (size % chunk_size) == 0
@@ -2130,7 +2115,6 @@ elsif (cmd[0] =~ /^upload-?map(?:db)?$/i)
     socket.close rescue nil
   end
 
-
 #
 # download-mapdb
 #
@@ -2140,7 +2124,6 @@ elsif (cmd[0] =~ /^download-?map(?:db)?$/i)
     exit
   end
   download_mapdb.call
-
 
 #
 # upload-lich
@@ -2206,7 +2189,6 @@ elsif (cmd[0] =~ /^upload-?lich$/i)
     socket.close rescue nil
   end
 
-
 #
 # download-lich
 #
@@ -2215,11 +2197,10 @@ elsif (cmd[0] =~ /^download-?lich$/i)
     echo "error: extra words on command line: #{cmd[1..-1].join(' ')}"
     exit
   end
-  #download_lich.call
+  # download_lich.call
   echo "Lich is no longer updatable via ;repository"
   echo "Please see ;lich5-update --help"
   echo "For info on updating Lich5"
-
 
 #
 # gui
@@ -2270,7 +2251,7 @@ elsif cmd[0] =~ /^gui$/i
         iter[4] = info[si].to_i
       end
       if ui
-        iter[5] = "#{Time.at(info[ui].to_i).strftime("%Y-%m-%d %I:%M%p").downcase.gsub(/\s0/,'  ')}"
+        iter[5] = "#{Time.at(info[ui].to_i).strftime("%Y-%m-%d %I:%M%p").downcase.gsub(/\s0/, '  ')}"
         iter[6] = info[ui].to_i
       end
       iter[7] = info[di].to_i if di
@@ -2312,31 +2293,31 @@ elsif cmd[0] =~ /^gui$/i
       file_ls = Gtk::ListStore.new(String, String, String, String, Integer, String, Integer, Integer, String, Integer, String, String)
       file_ls.set_sort_column_id(0, :ascending)
       file_tv = Gtk::TreeView.new(file_ls)
-      foo = Gtk::TreeViewColumn.new('Filename',    renderer, :text => 0, :background_set => 2)
+      foo = Gtk::TreeViewColumn.new('Filename', renderer, :text => 0, :background_set => 2)
       foo.sort_column_id = 0
       file_tv.append_column(foo)
-      foo = Gtk::TreeViewColumn.new('Author',      renderer, :text => 1, :background_set => 2)
+      foo = Gtk::TreeViewColumn.new('Author', renderer, :text => 1, :background_set => 2)
       foo.sort_column_id = 1
       file_tv.append_column(foo)
-      foo = Gtk::TreeViewColumn.new('Game',        renderer, :text => 2, :background_set => 2)
+      foo = Gtk::TreeViewColumn.new('Game', renderer, :text => 2, :background_set => 2)
       foo.sort_column_id = 2
       file_tv.append_column(foo)
-      foo = Gtk::TreeViewColumn.new('Size',        renderer, :text => 3, :background_set => 2)
+      foo = Gtk::TreeViewColumn.new('Size', renderer, :text => 3, :background_set => 2)
       foo.sort_column_id = 4
       file_tv.append_column(foo)
       foo = Gtk::TreeViewColumn.new('Last Update', renderer, :text => 5, :background_set => 2)
       foo.sort_column_id = 6
       file_tv.append_column(foo)
-      foo = Gtk::TreeViewColumn.new('DLs',         renderer, :text => 7, :background_set => 2)
+      foo = Gtk::TreeViewColumn.new('DLs', renderer, :text => 7, :background_set => 2)
       foo.sort_column_id = 7
       file_tv.append_column(foo)
-      foo = Gtk::TreeViewColumn.new('Rating',      renderer, :text => 8, :background_set => 2)
+      foo = Gtk::TreeViewColumn.new('Rating', renderer, :text => 8, :background_set => 2)
       foo.sort_column_id = 8
       file_tv.append_column(foo)
-      foo = Gtk::TreeViewColumn.new('Votes',       renderer, :text => 9, :background_set => 2)
+      foo = Gtk::TreeViewColumn.new('Votes', renderer, :text => 9, :background_set => 2)
       foo.sort_column_id = 9
       file_tv.append_column(foo)
-      foo = Gtk::TreeViewColumn.new('Tags',        renderer, :text => 10, :background_set => 2)
+      foo = Gtk::TreeViewColumn.new('Tags', renderer, :text => 10, :background_set => 2)
       foo.sort_column_id = 10
       file_tv.append_column(foo)
       file_tv.headers_visible = true
@@ -2355,16 +2336,16 @@ elsif cmd[0] =~ /^gui$/i
 
       window              = Gtk::Window.new
       window.title        = 'Repository'
-	  window.set_icon(@default_icon)
+      window.set_icon(@default_icon)
       window.border_width = 5
       if load_window_height and load_window_width
         window.resize(load_window_width, load_window_height)
-	    file_sw.set_min_content_height(load_window_height/3*2)
-	    comments_sw.set_min_content_height(load_window_height/3)
+        file_sw.set_min_content_height(load_window_height / 3 * 2)
+        comments_sw.set_min_content_height(load_window_height / 3)
       else
         window.resize(600, 800)
-		file_sw.set_min_content_height(535)
-	    comments_sw.set_min_content_height(265)
+        file_sw.set_min_content_height(535)
+        comments_sw.set_min_content_height(265)
       end
       if load_window_position
         window.move(load_window_position[0], load_window_position[1])
@@ -2397,82 +2378,79 @@ elsif cmd[0] =~ /^gui$/i
     Gtk.queue { window.destroy }
   end
 
-
 #
 # help
 #
 elsif cmd[0] =~ /^help$/i
-    output = "\n"
-    output.concat "usage:\n"
-    output.concat "\n"
-    output.concat "   #{$clean_lich_char}#{script.name} COMMAND OPTIONS\n"
-    output.concat "\n"
-    output.concat "commands:\n"
-    output.concat "\n"
-    output.concat "   list                      show files you can download\n"
-    output.concat "   list-updates              show files that you have and there's an update for\n"
-    output.concat "   list-new                  show files that you don't have\n"
-    output.concat "   list-tags                 show all the tags currently in use\n"
-    output.concat "   info FILENAME             show information about a file\n"
-    output.concat "   download FILENAME         download a file\n"
-    output.concat "   rate FILENAME NUMBER      rate a file\n"
-    output.concat "   upload FILENAME           upload a file to the server\n"
-    output.concat "   delete FILENAME           delete a file from the server\n"
-    output.concat "   change-password NEWPASS   change your repository password\n"
-#    output.concat "   download-lich             download the latest version of Lich\n"
-    output.concat "   download-mapdb            download the latest map database\n"
-    output.concat "   checkout-mapdb            must be done before editing the map database\n"
-    output.concat "   release-mapdb             if you checkout-mapdb and change your mind\n"
-    output.concat "   upload-mapdb              upload your changes to the map database\n"
-    output.concat "   download-updates          downloads any available updates to scriptsmapdb\n"
-    output.concat "                             if set as updatable with the set-updatable commands\n"
-    output.concat "   show-updatable            shows your current settings for download-updates\n"
-    output.concat "   set-updatable FILENAME    download updates for FILENAME (when using download-updates)\n"
-#    output.concat "   set-lich-updatable        download updates for Lich (download-updates)\n"
-    output.concat "   set-mapdb-updatable       download updates for the map database (download-updates)\n"
-    output.concat "   unset-updatable FILENAME  ignore updates to FILENAME\n"
-#    output.concat "   unset-lich-updatable      ignore updates to Lich\n"
-    output.concat "   unset-mapdb-updatable     ignore updates to the map database\n"
-    output.concat "\n"
-    output.concat "options:\n"
-    output.concat "\n"
-    output.concat "   --name=TEXT[,TEXT]        only list files whose name contain TEXT\n"
-    output.concat "   --game=CODE[,CODE]        complicated\n"
-    output.concat "   --sort=TEXT               sort list by name,age,size,downloads,rating\n"
-    output.concat "   --reverse                 show the list in reverse order\n"
-    output.concat "   --limit=NUMBER            show at most NUMBER files in the list\n"
-    output.concat "   --limit=OFFSET,NUMBER     show at most NUMBER files after skipping OFFSET files\n"
-    output.concat "   --author=TEXT             specify the author of the file for uploading or listing\n"
-    output.concat "   --password=TEXT           specify the password for the author for uploading\n"
-    output.concat "   --size>NUMBER[k|m|g]      only list files larger than NUMBER bytes (or specified unit)\n"
-    output.concat "   --size<NUMBER[k|m|g]      only list files smaller than NUMBER bytes (or specified unit)\n"
-    output.concat "   --age>NUMBER[m|h|d|w|y]   only list files updated less than NUMBER seconds (or specified unit) ago\n"
-    output.concat "   --age<NUMBER[m|h|d|w|y]   only list files updated more than NUMBER seconds (or specified unit) ago\n"
-    output.concat "   --downloads>NUMBER        only list files with more than NUMBER downloads\n"
-    output.concat "   --downloads<NUMBER        only list files with less than NUMBER downloads\n"
-    output.concat "   --downloads=NUMBER        only list files with exactly NUMBER downloads\n"
-    output.concat "   --rating>NUMBER           only list files with a rating higher than NUMBER\n"
-    output.concat "   --rating<NUMBER           only list files with a rating lower than NUMBER\n"
-    output.concat "   --rating=NUMBER           only list files with a rating equal to NUMBER\n"
-    output.concat "   --tags=TEXT[,TEXT]        only list files with the specified tags\n"
-    output.concat "   --version=<version>       download a specific version\n"
-    output.concat "   --force                   ignore md5sum checks and script requirements\n"
-      output.concat "\n"
-    output.concat "   --show-tags               show tags in the list\n"
-    output.concat "   --hide-last-update        hide last update in the list\n"
-    output.concat "   --hide-size               hide file size in the list\n"
-    output.concat "   --hide-author             hide author in the list\n"
-    output.concat "   --hide-downloads          hide downloads in the list\n"
-    output.concat "   --hide-rating             hide rating in the list\n"
-      output.concat "\n"
-    respond output
-
+  output = "\n"
+  output.concat "usage:\n"
+  output.concat "\n"
+  output.concat "   #{$clean_lich_char}#{script.name} COMMAND OPTIONS\n"
+  output.concat "\n"
+  output.concat "commands:\n"
+  output.concat "\n"
+  output.concat "   list                      show files you can download\n"
+  output.concat "   list-updates              show files that you have and there's an update for\n"
+  output.concat "   list-new                  show files that you don't have\n"
+  output.concat "   list-tags                 show all the tags currently in use\n"
+  output.concat "   info FILENAME             show information about a file\n"
+  output.concat "   download FILENAME         download a file\n"
+  output.concat "   rate FILENAME NUMBER      rate a file\n"
+  output.concat "   upload FILENAME           upload a file to the server\n"
+  output.concat "   delete FILENAME           delete a file from the server\n"
+  output.concat "   change-password NEWPASS   change your repository password\n"
+  #    output.concat "   download-lich             download the latest version of Lich\n"
+  output.concat "   download-mapdb            download the latest map database\n"
+  output.concat "   checkout-mapdb            must be done before editing the map database\n"
+  output.concat "   release-mapdb             if you checkout-mapdb and change your mind\n"
+  output.concat "   upload-mapdb              upload your changes to the map database\n"
+  output.concat "   download-updates          downloads any available updates to scriptsmapdb\n"
+  output.concat "                             if set as updatable with the set-updatable commands\n"
+  output.concat "   show-updatable            shows your current settings for download-updates\n"
+  output.concat "   set-updatable FILENAME    download updates for FILENAME (when using download-updates)\n"
+  #    output.concat "   set-lich-updatable        download updates for Lich (download-updates)\n"
+  output.concat "   set-mapdb-updatable       download updates for the map database (download-updates)\n"
+  output.concat "   unset-updatable FILENAME  ignore updates to FILENAME\n"
+  #    output.concat "   unset-lich-updatable      ignore updates to Lich\n"
+  output.concat "   unset-mapdb-updatable     ignore updates to the map database\n"
+  output.concat "\n"
+  output.concat "options:\n"
+  output.concat "\n"
+  output.concat "   --name=TEXT[,TEXT]        only list files whose name contain TEXT\n"
+  output.concat "   --game=CODE[,CODE]        complicated\n"
+  output.concat "   --sort=TEXT               sort list by name,age,size,downloads,rating\n"
+  output.concat "   --reverse                 show the list in reverse order\n"
+  output.concat "   --limit=NUMBER            show at most NUMBER files in the list\n"
+  output.concat "   --limit=OFFSET,NUMBER     show at most NUMBER files after skipping OFFSET files\n"
+  output.concat "   --author=TEXT             specify the author of the file for uploading or listing\n"
+  output.concat "   --password=TEXT           specify the password for the author for uploading\n"
+  output.concat "   --size>NUMBER[k|m|g]      only list files larger than NUMBER bytes (or specified unit)\n"
+  output.concat "   --size<NUMBER[k|m|g]      only list files smaller than NUMBER bytes (or specified unit)\n"
+  output.concat "   --age>NUMBER[m|h|d|w|y]   only list files updated less than NUMBER seconds (or specified unit) ago\n"
+  output.concat "   --age<NUMBER[m|h|d|w|y]   only list files updated more than NUMBER seconds (or specified unit) ago\n"
+  output.concat "   --downloads>NUMBER        only list files with more than NUMBER downloads\n"
+  output.concat "   --downloads<NUMBER        only list files with less than NUMBER downloads\n"
+  output.concat "   --downloads=NUMBER        only list files with exactly NUMBER downloads\n"
+  output.concat "   --rating>NUMBER           only list files with a rating higher than NUMBER\n"
+  output.concat "   --rating<NUMBER           only list files with a rating lower than NUMBER\n"
+  output.concat "   --rating=NUMBER           only list files with a rating equal to NUMBER\n"
+  output.concat "   --tags=TEXT[,TEXT]        only list files with the specified tags\n"
+  output.concat "   --version=<version>       download a specific version\n"
+  output.concat "   --force                   ignore md5sum checks and script requirements\n"
+  output.concat "\n"
+  output.concat "   --show-tags               show tags in the list\n"
+  output.concat "   --hide-last-update        hide last update in the list\n"
+  output.concat "   --hide-size               hide file size in the list\n"
+  output.concat "   --hide-author             hide author in the list\n"
+  output.concat "   --hide-downloads          hide downloads in the list\n"
+  output.concat "   --hide-rating             hide rating in the list\n"
+  output.concat "\n"
+  respond output
 
 #
 # everything else
 #
 else
   echo "error: unrecognized command.  Try #{$clean_lich_char}#{script.name} help"
-
 
 end
