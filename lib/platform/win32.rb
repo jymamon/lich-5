@@ -1,12 +1,11 @@
 # For this module, allow Win32 naming conventions to match the APIs being used underneath.
 # rubocop:disable Naming/MethodName
-# rubocop:disable Naming/VariableName
 require 'fiddle'
 require 'fiddle/import'
-require 'lib/platform/win32/advapi32.rb'
-require 'lib/platform/win32/kernel32.rb'
-require 'lib/platform/win32/shell32.rb'
-require 'lib/platform/win32/user32.rb'
+require 'lib/platform/win32/advapi32'
+require 'lib/platform/win32/kernel32'
+require 'lib/platform/win32/shell32'
+require 'lib/platform/win32/user32'
 
 module Win32
   SIZEOF_LONG = Fiddle::SIZEOF_LONG
@@ -32,7 +31,9 @@ module Win32
   KEY_WOW64_32KEY = 0x0200
   KEY_WOW64_64KEY = 0x0100
   KEY_WRITE = 0x20006
+  # rubocop:disable Naming/ConstantName Allow to match Win32 naming
   TokenElevation = 20
+  # rubocop:enable Naming/ConstantName
   TOKEN_QUERY = 8
   STILL_ACTIVE = 259
   SW_SHOWNORMAL = 1
@@ -52,11 +53,11 @@ module Win32
   REG_QWORD = 11
   REG_QWORD_LITTLE_ENDIAN = 11
 
-  def Win32.isXP?
+  def self.isXP?
     return (Win32.GetVersionEx[:dwMajorVersion] < 6)
   end
 
-  def Win32.admin?
+  def self.admin?
     if Win32.isXP?
       return true
     else
@@ -67,5 +68,4 @@ module Win32
     end
   end
 end
-# rubocop:enable Naming/VariableName
 # rubocop:enable Naming/MethodName

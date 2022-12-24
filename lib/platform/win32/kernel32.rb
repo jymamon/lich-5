@@ -17,38 +17,41 @@ module Win32
       extern 'int EnumProcesses(void*, int, void*)'
     end
 
+    # rubocop:disable Naming/MethodName Allow Win32 naming
     def Win32.EnumProcesses(args = {})
       args[:cb] ||= 400
       pProcessIds = Array.new((args[:cb] / SIZEOF_LONG), 0).pack(''.rjust((args[:cb] / SIZEOF_LONG), 'L'))
       pBytesReturned = [0].pack('L')
       r = Kernel32.EnumProcesses(pProcessIds, args[:cb], pBytesReturned)
-      pBytesReturned = pBytesReturned.unpack('L')[0]
+      pBytesReturned = pBytesReturned.unpack1('L')
       return :return => r, :pProcessIds => pProcessIds.unpack(''.rjust((args[:cb] / SIZEOF_LONG),
                                                                        'L'))[0...(pBytesReturned / SIZEOF_LONG)], :pBytesReturned => pBytesReturned
     end
-  rescue
+  rescue StandardError
     module Psapi
       extend Fiddle::Importer
       dlload 'psapi'
       extern 'int EnumProcesses(void*, int, void*)'
     end
 
+    # rubocop:disable Lint/DuplicateMethods
     def Win32.EnumProcesses(args = {})
       args[:cb] ||= 400
       pProcessIds = Array.new((args[:cb] / SIZEOF_LONG), 0).pack(''.rjust((args[:cb] / SIZEOF_LONG), 'L'))
       pBytesReturned = [0].pack('L')
       r = Psapi.EnumProcesses(pProcessIds, args[:cb], pBytesReturned)
-      pBytesReturned = pBytesReturned.unpack('L')[0]
+      pBytesReturned = pBytesReturned.unpack1('L')
       return :return => r, :pProcessIds => pProcessIds.unpack(''.rjust((args[:cb] / SIZEOF_LONG),
                                                                        'L'))[0...(pBytesReturned / SIZEOF_LONG)], :pBytesReturned => pBytesReturned
     end
+    # rubocop:enable Lint/DuplicateMethods
   end
 
-  def Win32.GetLastError
+  def self.GetLastError
     return Kernel32.GetLastError()
   end
 
-  def Win32.CreateProcess(args)
+  def self.CreateProcess(args)
     if args[:lpCommandLine]
       lpCommandLine = args[:lpCommandLine].dup
     else
@@ -63,81 +66,81 @@ module Win32
       bInheritHandles = args[:bInheritHandles].to_i
     end
 
-    if args[:lpEnvironment].class == Array
+    if args[:lpEnvironment].instance_of?(Array)
       # fixme
     end
 
     lpStartupInfo = [68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     lpStartupInfo_index = {
-        :lpDesktop => 2,
-        :lpTitle => 3,
-        :dwX => 4,
-        :dwY => 5,
-        :dwXSize => 6,
-        :dwYSize => 7,
-        :dwXCountChars => 8,
-        :dwYCountChars => 9,
-        :dwFillAttribute => 10,
-        :dwFlags => 11,
-        :wShowWindow => 12,
-        :hStdInput => 15,
-        :hStdOutput => 16,
-        :hStdError => 17
+      :lpDesktop => 2,
+      :lpTitle => 3,
+      :dwX => 4,
+      :dwY => 5,
+      :dwXSize => 6,
+      :dwYSize => 7,
+      :dwXCountChars => 8,
+      :dwYCountChars => 9,
+      :dwFillAttribute => 10,
+      :dwFlags => 11,
+      :wShowWindow => 12,
+      :hStdInput => 15,
+      :hStdOutput => 16,
+      :hStdError => 17,
     }
 
-    for sym in [:lpDesktop, :lpTitle]
+    [:lpDesktop, :lpTitle].each { |sym|
       if args[sym]
         args[sym] = "#{args[sym]}\0" unless args[sym][-1, 1] == "\0"
         lpStartupInfo[lpStartupInfo_index[sym]] = Fiddle::Pointer.to_ptr(args[sym]).to_i
       end
-    end
+    }
 
-    for sym in [:dwX, :dwY, :dwXSize, :dwYSize, :dwXCountChars, :dwYCountChars, :dwFillAttribute, :dwFlags, :wShowWindow, :hStdInput, :hStdOutput, :hStdError]
-      if args[sym]
-        lpStartupInfo[lpStartupInfo_index[sym]] = args[sym]
-      end
-    end
+    [:dwX, :dwY, :dwXSize, :dwYSize, :dwXCountChars, :dwYCountChars, :dwFillAttribute, :dwFlags, :wShowWindow, :hStdInput, :hStdOutput, :hStdError].each { |sym|
+      lpStartupInfo[lpStartupInfo_index[sym]] = args[sym] if args[sym]
+    }
 
     lpStartupInfo = lpStartupInfo.pack('LLLLLLLLLLLLSSLLLL')
-    lpProcessInformation = [0, 0, 0, 0,].pack('LLLL')
+    lpProcessInformation = [0, 0, 0, 0].pack('LLLL')
     r = Kernel32.CreateProcess(
-        args[:lpApplicationName],
-        lpCommandLine,
-        args[:lpProcessAttributes],
-        args[:lpThreadAttributes],
-        bInheritHandles,
-        args[:dwCreationFlags].to_i,
-        args[:lpEnvironment],
-        args[:lpCurrentDirectory],
-        lpStartupInfo,
-        lpProcessInformation)
+      args[:lpApplicationName],
+      lpCommandLine,
+      args[:lpProcessAttributes],
+      args[:lpThreadAttributes],
+      bInheritHandles,
+      args[:dwCreationFlags].to_i,
+      args[:lpEnvironment],
+      args[:lpCurrentDirectory],
+      lpStartupInfo,
+      lpProcessInformation
+    )
 
     lpProcessInformation = lpProcessInformation.unpack('LLLL')
-    return :return => (r > 0 ? true : false), :hProcess => lpProcessInformation[0], :hThread => lpProcessInformation[1], :dwProcessId => lpProcessInformation[2], :dwThreadId => lpProcessInformation[3]
+    return :return => (r > 0), :hProcess => lpProcessInformation[0], :hThread => lpProcessInformation[1], :dwProcessId => lpProcessInformation[2], :dwThreadId => lpProcessInformation[3]
   end
 
-  def Win32.GetCurrentProcess
+  def self.GetCurrentProcess
     return Kernel32.GetCurrentProcess
   end
 
-  def Win32.GetExitCodeProcess(args)
+  def self.GetExitCodeProcess(args)
     lpExitCode = [0].pack('L')
     r = Kernel32.GetExitCodeProcess(args[:hProcess].to_i, lpExitCode)
-    return :return => r, :lpExitCode => lpExitCode.unpack('L')[0]
+    return :return => r, :lpExitCode => lpExitCode.unpack1('L')
   end
 
-  def Win32.GetModuleFileName(args = {})
+  def self.GetModuleFileName(args = {})
     args[:nSize] ||= 256
     buffer = "\0" * args[:nSize].to_i
     r = Kernel32.GetModuleFileName(args[:hModule].to_i, buffer, args[:nSize].to_i)
     return :return => r, :lpFilename => buffer.gsub("\0", '')
   end
 
-  def Win32.GetVersionEx
+  def self.GetVersionEx
     a = [156, 0, 0, 0, 0, ("\0" * 128), 0, 0, 0, 0, 0].pack('LLLLLa128SSSCC')
     r = Kernel32.GetVersionEx(a)
     a = a.unpack('LLLLLa128SSSCC')
     # Other values available
     return :return => r, :dwOSVersionInfoSize => a[0], :dwMajorVersion => a[1], :dwMinorVersion => a[2], :dwBuildNumber => a[3], :dwPlatformId => a[4], :szCSDVersion => a[5].strip, :wServicePackMajor => a[6], :wServicePackMinor => a[7], :wSuiteMask => a[8], :wProductType => a[9]
   end
+  # rubocop:enable Naming/MethodName
 end

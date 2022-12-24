@@ -1,66 +1,74 @@
+require 'English'
 if defined?(Gtk)
-  Gdk.module_eval do
-    define_deprecated_singleton_method :screen_height, :warn => "Gdk::screen_height is deprecated; use monitor methods instead" do |_self|
+  Gdk.module_eval {
+    define_deprecated_singleton_method(:screen_height, :warn => 'Gdk::screen_height is deprecated; use monitor methods instead') { |_self|
       99999
-    end
+    }
 
-    define_deprecated_singleton_method :screen_width, :warn => "Gdk::screen_width is deprecated; use monitor methods instead" do |_self|
+    define_deprecated_singleton_method(:screen_width, :warn => 'Gdk::screen_width is deprecated; use monitor methods instead') { |_self|
       99999
-    end
-  end
+    }
+  }
 
-  Gtk::Drag.module_eval do
-    define_deprecated_const :TARGET_SAME_APP, "Gtk::TargetFlags::SAME_APP"
-    define_deprecated_const :DEST_DEFAULT_ALL, "Gtk::DestDefaults::ALL"
-  end
+  Gtk::Drag.module_eval {
+    define_deprecated_const :TARGET_SAME_APP, 'Gtk::TargetFlags::SAME_APP'
+    define_deprecated_const :DEST_DEFAULT_ALL, 'Gtk::DestDefaults::ALL'
+  }
 
-  Gtk.module_eval do
+  Gtk.module_eval {
     # Deprecation updates to keep gtk3 mostly going in gtk2
     define_deprecated_const(:ComboBoxEntry, nil)
     define_deprecated_const(:Tooltips, nil)
 
-    Gtk::ComboBox.class_eval do
+    Gtk::ComboBox.class_eval {
       def append_text(text)
         respond "'Gtk::ComboBox#append_text' is deprecated; use 'Gtk::ComboBoxText#append_text' instead"
       end
-    end
+    }
 
+    # rubocop:disable Lint/ConstantDefinitionInBlock Can't derive from Gtk::ComboBoxText is we don't have Gtk
     class Gtk::ComboBoxEntry < Gtk::ComboBoxText
-      def initialize()
+      def initialize
         respond "'Gtk::ComboBoxEntry' is deprecated; use 'Gtk::ComboBoxText(:entry => true)' instead"
         super(:entry => true)
       end
     end
+    # rubocop:enable Lint/ConstantDefinitionInBlock
 
-    Gtk::Entry.class_eval do
+    Gtk::Entry.class_eval {
+      # rubocop:disable Naming/AccessorMethodName Allow legacy use
       def set_text(text)
         if text.nil?
           respond "'Gtk::Entry#set_text' no longer accepts nil values; fix me"
-          text = ""
+          text = ''
         end
         parent.set_text(text)
         return self
       end
-    end
+      # rubocop:enable Naming/AccessorMethodName
+    }
 
-    Gtk::HBox.class_eval do
-      define_deprecated_singleton_method :new, :warn => "Use 'Gtk::Box.new(:horizontal, spacing)'." do |_self, homogeneous, spacing|
+    Gtk::HBox.class_eval {
+      define_deprecated_singleton_method(:new, :warn => "Use 'Gtk::Box.new(:horizontal, spacing)'.") { |_self, homogeneous, spacing|
         respond "'Gtk::Hbox' is deprecated; use 'Gtk::Box.new(:horizontal, spacing)'."
         box = Gtk::Box.new(:horizontal, spacing)
         box.set_homogeneous(homogeneous ? true : false)
         box
-      end
-    end
+      }
+    }
 
-    Gtk::Notebook.class_eval do
+    Gtk::Notebook.class_eval {
+      # rubocop:disable Naming/AccessorMethodName Allow legacy use
       def set_tab_border(border)
         respond "'Gtk::Notebook:set_tab_border()' is deprecated; fix me"
         # noop
         return self
       end
-    end
+      # rubocop:enable Naming/AccessorMethodName
+    }
 
-    Gtk::ToggleButton.class_eval do
+    Gtk::ToggleButton.class_eval {
+      # rubocop:disable Naming/AccessorMethodName Allow legacy use
       def set_active(active)
         if active.nil?
           respond "'Gtk::ToggleButton#set_active' no longer accepts nil values; fix me"
@@ -69,8 +77,10 @@ if defined?(Gtk)
         parent.set_active(active)
         return self
       end
-    end
+      # rubocop:enable Naming/AccessorMethodName
+    }
 
+    # rubocop:disable Lint/ConstantDefinitionInBlock Can't derive from Gtk::Tooltip is we don't have Gtk
     class Gtk::Tooltips < Gtk::Tooltip
       def enable
         respond "'Gtk::Tooltips#enable' is deprecated; use 'Gtk::Tooltip' API instead"
@@ -84,74 +94,49 @@ if defined?(Gtk)
         return self
       end
     end
+    # rubocop:enable Lint/ConstantDefinitionInBlock
 
-    Gtk::VBox.class_eval do
-      define_deprecated_singleton_method :new, :warn => "Use 'Gtk::Box.new(:vertical, spacing)'." do |_self, homogeneous, spacing|
+    Gtk::VBox.class_eval {
+      define_deprecated_singleton_method(:new, :warn => "Use 'Gtk::Box.new(:vertical, spacing)'.") { |_self, homogeneous, spacing|
         respond "'Gtk::VBox' is deprecated; use 'Gtk::Box.new(:vertical, spacing)' instead"
         box = Gtk::Box.new(:vertical, spacing)
         box.set_homogeneous(homogeneous ? true : false)
         box
-      end
-    end
+      }
+    }
 
     # Calling Gtk API in a thread other than the main thread may cause random segfaults
     def Gtk.queue(&block)
       GLib::Timeout.add(1) {
         begin
           block.call
-        rescue
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        rescue SyntaxError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
         rescue SystemExit
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
           nil
-        rescue SecurityError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        rescue ThreadError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        rescue SystemStackError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        rescue Exception
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+        rescue StandardError
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         rescue ScriptError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        rescue LoadError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        rescue NoMemoryError
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-        rescue
-          respond "error in Gtk.queue: #{$!}"
-          puts "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-          Lich.log "error in Gtk.queue: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+        # rubocop:disable Lint/RescueException Revisit. Ordering here doesn't make sense.
+        rescue Exception
+          respond "error in Gtk.queue: #{$ERROR_INFO}"
+          puts "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+          Lich.log "error in Gtk.queue: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
         end
+        # rubocop:enable Lint/RescueException
         false # don't repeat timeout
       }
     end
-  end
-  def gtk_sleep_while_idle()
+  }
+  def gtk_sleep_while_idle
     sleep 0.01
   end
 
-  unless File.exists?('logo.png')
+  unless File.exist?('logo.png')
     File.open('logo.png', 'wb') { |f|
       f.write '
       iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAA
@@ -244,7 +229,7 @@ if defined?(Gtk)
       LUJqoLCwtBuNy+7c033/xFenq6SKPR/Lm2tvaXtbW1k8BZSqXSOxQKxf0yme
       zXeXl5IolE0gJ+AjEIQuHU1NTMGGn1bQUI6gA1H330kb/Uhk0PoN+QiqMAg3
       N4e6w8W7ZsYevWrTMlJycPa+/QbYVCoCAC3gE8PxwvViCsOC0TJkxQx8XF7R
-      MIBM/8L/yL9HabuC+mvP8B+EBfr/SZ7ZMAAAAASUVORK5CYII='.unpack('m')[0]
+      MIBM/8L/yL9HabuC+mvP8B+EBfr/SZ7ZMAAAAASUVORK5CYII='.unpack1('m')
     }
   end
 
@@ -252,11 +237,11 @@ if defined?(Gtk)
     Gtk.queue {
       @default_icon = GdkPixbuf::Pixbuf.new(:file => 'logo.png')
       # Add a function to call for when GTK is idle
-      GLib::Idle.add do
+      GLib::Idle.add {
         gtk_sleep_while_idle
-      end
+      }
     }
-  rescue
+  rescue StandardError
     nil # fixme
   end
 

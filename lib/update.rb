@@ -9,37 +9,37 @@ module Lich
       require 'zlib'
 
       @current = LICH_VERSION
-      @snapshot_core_script = ["alias.lic", "autostart.lic", "go2.lic", "infomon.lic",
-                               "jinx.lic", "lnet.lic", "log.lic", "repository.lic",
-                               "vars.lic", "version.lic", "xnarost.lic"]
+      @snapshot_core_script = ['alias.lic', 'autostart.lic', 'go2.lic', 'infomon.lic',
+                               'jinx.lic', 'lnet.lic', 'log.lic', 'repository.lic',
+                               'vars.lic', 'version.lic', 'xnarost.lic']
 
       def self.request(type = '--announce')
         case type
         when /--announce|-a/
-          self.announce
+          announce
         when /--help|-h/
-          self.help # Ok, that's just wrong.
+          help # Ok, that's just wrong.
         when /--update|-u/
-          self.download_update
+          download_update
         when /--refresh/
-          _respond; _respond "This command has been removed."
+          _respond; _respond 'This command has been removed.'
         when /--revert|-r/
-          self.revert
+          revert
         when /--(?:(script|library|data))=(.*)/
-          self.update_file($1.dup, $2.dup)
+          update_file($1.dup, $2.dup)
         when /--snapshot|-s/ # this one needs to be after --script
-          self.snapshot
+          snapshot
         else
           _respond; _respond "Command '#{type}' unknown, illegitimate and ignored.  Exiting . . ."; _respond
         end
       end
 
       def self.announce
-        self.prep_update
-        if "#{LICH_VERSION}".chr == '5'
+        prep_update
+        if LICH_VERSION.chr == '5'
           if Gem::Version.new(@current) < Gem::Version.new(@update_to)
-            if !@new_features.empty?
-              _respond ''; _respond monsterbold_start() + "*** NEW VERSION AVAILABLE ***" + monsterbold_end()
+            unless @new_features.empty?
+              _respond ''; _respond "#{monsterbold_start}*** NEW VERSION AVAILABLE ***#{monsterbold_end}"
               _respond ''; _respond ''
               _respond ''; _respond @new_features
               _respond ''
@@ -87,37 +87,31 @@ module Lich
         _respond; _respond 'You may also wish to copy your entire Lich5 folder to'
         _respond 'another location for additional safety, after any'
         _respond 'additional requested updates are completed.'
-        snapshot_subdir = File.join(BACKUP_DIR, "L5-snapshot-#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}")
-        unless File.exists?(snapshot_subdir)
-          Dir.mkdir(snapshot_subdir)
-        end
+        snapshot_subdir = File.join(BACKUP_DIR, "L5-snapshot-#{Time.now.strftime('%Y-%m-%d-%H-%M-%S')}")
+        Dir.mkdir(snapshot_subdir) unless File.exist?(snapshot_subdir)
         filename = File.join(LICH_DIR, File.basename($PROGRAM_NAME))
         copyfilename = File.join(snapshot_subdir, File.basename($PROGRAM_NAME))
         File.open(filename, 'rb') { |r| File.open(copyfilename, 'wb') { |w| w.write(r.read) } }
 
-        snapshot_lib_subdir = File.join(snapshot_subdir, "lib")
-        unless File.exists?(snapshot_lib_subdir)
-          Dir.mkdir(snapshot_lib_subdir)
-        end
+        snapshot_lib_subdir = File.join(snapshot_subdir, 'lib')
+        Dir.mkdir(snapshot_lib_subdir) unless File.exist?(snapshot_lib_subdir)
         ## let's just get the directory contents and back it up
 
         snapshot_lib_files = Dir.children(LIB_DIR)
         snapshot_lib_files.each { |file|
-          File.open(File.join(LICH_DIR, "lib", file), 'rb') { |r|
+          File.open(File.join(LICH_DIR, 'lib', file), 'rb') { |r|
             File.open(File.join(snapshot_lib_subdir, file), 'wb') { |w| w.write(r.read) }
           }
         }
 
-        snapshot_script_subdir = File.join(snapshot_subdir, "scripts")
-        unless File.exists?(snapshot_script_subdir)
-          Dir.mkdir(snapshot_script_subdir)
-        end
+        snapshot_script_subdir = File.join(snapshot_subdir, 'scripts')
+        Dir.mkdir(snapshot_script_subdir) unless File.exist?(snapshot_script_subdir)
         ## here we should maintain a discrete array of script files (450K versus 10M plus)
         ## we need to find a better way without hving to maintain this list
 
         @snapshot_core_script.each { |file|
-          if File.exist?(File.join(LICH_DIR, "scripts", file))
-            File.open(File.join(LICH_DIR, "scripts", file), 'rb') { |r|
+          if File.exist?(File.join(LICH_DIR, 'scripts', file))
+            File.open(File.join(LICH_DIR, 'scripts', file), 'rb') { |r|
               File.open(File.join(snapshot_script_subdir, file), 'wb') { |w| w.write(r.read) }
             }
           else
@@ -130,11 +124,10 @@ module Lich
       end
 
       def self.prep_update
-        installed = Gem::Version.new(@current)
-        filename = "https://api.github.com/repos/elanthia-online/lich-5/releases/latest"
+        filename = 'https://api.github.com/repos/elanthia-online/lich-5/releases/latest'
         update_info = open(filename).read
 
-        JSON::parse(update_info).each { |entry|
+        JSON.parse(update_info).each { |entry|
           if entry.include? 'tag_name'
             @update_to = entry[1].sub('v', '')
           elsif entry.include? 'tarball_url'
@@ -151,20 +144,20 @@ module Lich
         _respond; _respond 'Getting reaady to update.  First we will create a'
         _respond 'snapshot in case there are problems with the update.'
 
-        self.snapshot
+        snapshot
 
-        self.prep_update if @update_to.nil? or @update_to.empty?
-        if Gem::Version.new("#{@update_to}") <= Gem::Version.new("#{@current}")
+        prep_update if @update_to.nil? or @update_to.empty?
+        if Gem::Version.new(@update_to.to_s) <= Gem::Version.new(@current.to_s)
           _respond ''; _respond "Lich version #{LICH_VERSION} is good.  Enjoy!"; _respond ''
         else
           _respond; _respond "Downloading Lich5 version #{@update_to}"; _respond
           filename = "lich5-#{@update_to}"
-          File.open(File.join(TEMP_DIR, "#{filename}.tar.gz"), "wb") do |file|
-            file.write open("#{@zipfile}").read
-          end
+          File.open(File.join(TEMP_DIR, "#{filename}.tar.gz"), 'wb') { |file|
+            file.write open(@zipfile).read
+          }
 
           Dir.mkdir(File.join(TEMP_DIR, filename))
-          Gem::Package.new("").extract_tar_gz(File.open(File.join(TEMP_DIR, "#{filename}.tar.gz"), "rb"), "#{TEMP_DIR}/#{filename}")
+          Gem::Package.new('').extract_tar_gz(File.open(File.join(TEMP_DIR, "#{filename}.tar.gz"), 'rb'), "#{TEMP_DIR}/#{filename}")
           new_target = Dir.children(File.join(TEMP_DIR, filename))
           FileUtils.cp_r(File.join(TEMP_DIR, filename, new_target[0]), TEMP_DIR)
           FileUtils.remove_dir(File.join(TEMP_DIR, filename))
@@ -186,10 +179,10 @@ module Lich
           ## We do not care about local edits from players to the Lich5 / script location
           ## for CORE scripts (those required to run Lich5 properly)
 
-          core_update = Dir.children(File.join(TEMP_DIR, filename, "scripts"))
+          core_update = Dir.children(File.join(TEMP_DIR, filename, 'scripts'))
           core_update.each { |file|
             File.delete(File.join(SCRIPT_DIR, file)) if File.exist?(File.join(SCRIPT_DIR, file))
-            File.open(File.join(TEMP_DIR, filename, "scripts", file), 'rb') { |r|
+            File.open(File.join(TEMP_DIR, filename, 'scripts', file), 'rb') { |r|
               File.open(File.join(SCRIPT_DIR, file), 'wb') { |w| w.write(r.read) }
             }
             _respond "script #{file} has been updated."
@@ -199,13 +192,13 @@ module Lich
           ## specifically gameobj-data.xml and spell-list.xml.
           ## Let's be a little more purposeful and gentle with these two files.
 
-          data_update = Dir.children(File.join(TEMP_DIR, filename, "data"))
+          data_update = Dir.children(File.join(TEMP_DIR, filename, 'data'))
           data_update.each { |file|
-            transition_filename = "#{file}".sub(".xml", '')
+            transition_filename = file.sub('.xml', '')
             newfilename = File.join(DATA_DIR, "#{transition_filename}-#{Time.now.to_i}.xml")
             File.open(File.join(DATA_DIR, file), 'rb') { |r| File.open(newfilename, 'wb') { |w| w.write(r.read) } }
             File.delete(File.join(DATA_DIR, file)) if File.exist?(File.join(DATA_DIR, file))
-            File.open(File.join(TEMP_DIR, filename, "data", file), 'rb') { |r|
+            File.open(File.join(TEMP_DIR, filename, 'data', file), 'rb') { |r|
               File.open(File.join(DATA_DIR, file), 'wb') { |w| w.write(r.read) }
             }
             _respond "data #{file} has been updated. The prior version was renamed to #{newfilename}."
@@ -216,17 +209,17 @@ module Lich
           ## took the snapshot at the beginning.
 
           lich_to_update = File.join(LICH_DIR, File.basename($PROGRAM_NAME))
-          update_to_lich = File.join(TEMP_DIR, filename, "lich.rbw")
+          update_to_lich = File.join(TEMP_DIR, filename, 'lich.rbw')
           File.open(update_to_lich, 'rb') { |r| File.open(lich_to_update, 'wb') { |w| w.write(r.read) } }
 
           ## And we clen up after ourselves
 
-          FileUtils.remove_dir(File.join(TEMP_DIR, filename))   # we know these exist because
-          FileUtils.rm(File.join(TEMP_DIR, "#{filename}.tar.gz"))       # we just processed them
+          FileUtils.remove_dir(File.join(TEMP_DIR, filename)) # we know these exist because
+          FileUtils.rm(File.join(TEMP_DIR, "#{filename}.tar.gz")) # we just processed them
 
           _respond; _respond "Lich5 has been updated to Lich5 version #{@update_to}"
-          _respond "You should exit the game, then log back in.  This will start the game"
-          _respond "with your updated Lich.  Enjoy!"
+          _respond 'You should exit the game, then log back in.  This will start the game'
+          _respond 'with your updated Lich.  Enjoy!'
         end
       end
 
@@ -236,83 +229,79 @@ module Lich
         ## that can be reinstalled with the lich5-update --update command
 
         _respond; _respond 'Reverting Lich5 to previously installed version.'
-        revert_array = Dir.glob(File.join(BACKUP_DIR, "*")).sort.reverse
+        revert_array = Dir.glob(File.join(BACKUP_DIR, '*')).sort.reverse
         restore_snapshot = revert_array[0]
         if restore_snapshot.empty? or /L5-snapshot/ !~ restore_snapshot
-          _respond "No prior Lich5 version found. Seek assistance."
+          _respond 'No prior Lich5 version found. Seek assistance.'
         else
           # delete all lib files
-          FileUtils.rm_f(Dir.glob(File.join(LIB_DIR, "*")))
+          FileUtils.rm_f(Dir.glob(File.join(LIB_DIR, '*')))
           # copy all backed up lib files
-          FileUtils.cp_r(File.join(restore_snapshot, "lib", "."), LIB_DIR)
+          FileUtils.cp_r(File.join(restore_snapshot, 'lib', '.'), LIB_DIR)
           # delete array of core scripts
           @snapshot_core_script.each { |file|
             File.delete(File.join(SCRIPT_DIR, file)) if File.exist?(File.join(SCRIPT_DIR, file))
           }
           # copy all backed up core scripts (array to save, only array files in backup)
-          FileUtils.cp_r(File.join(restore_snapshot, "scripts", "."), SCRIPT_DIR)
+          FileUtils.cp_r(File.join(restore_snapshot, 'scripts', '.'), SCRIPT_DIR)
 
           # skip gameobj-data and spell-list (non-functional logically, previous versions
           # already present and current files may contain local edits)
 
           # update lich.rbw in stream because it is active (we hope)
           lich_to_update = File.join(LICH_DIR, File.basename($PROGRAM_NAME))
-          update_to_lich = File.join(restore_snapshot, "lich.rbw")
+          update_to_lich = File.join(restore_snapshot, 'lich.rbw')
           File.open(update_to_lich, 'rb') { |r| File.open(lich_to_update, 'wb') { |w| w.write(r.read) } }
 
           # as a courtesy to the player, remind which version they were rev'd back to
           targetversion = ''
-          targetfile = File.open(File.join(LIB_DIR, "version.rb")).read
-          targetfile.each_line do |line|
-            if line =~ /LICH_VERSION\s+?=\s+?/
-              targetversion = line.sub(/LICH_VERSION\s+?=\s+?/, '').sub('"', '')
-            end
-          end
+          targetfile = File.open(File.join(LIB_DIR, 'version.rb')).read
+          targetfile.each_line { |line|
+            targetversion = line.sub(/LICH_VERSION\s+?=\s+?/, '').sub('"', '') if line =~ /LICH_VERSION\s+?=\s+?/
+          }
           _respond
           _respond "Lich5 has been reverted to Lich5 version #{targetversion}"
-          _respond "You should exit the game, then log back in.  This will start the game"
-          _respond "with your previous version of Lich.  Enjoy!"
+          _respond 'You should exit the game, then log back in.  This will start the game'
+          _respond 'with your previous version of Lich.  Enjoy!'
         end
       end
 
-      def self.update_file(type, rf)
-        requested_file = rf
-        requested_file_name = requested_file.sub(/\.(?:lic|rb|xml|ui)$/, '')
+      def self.update_file(type, requested_file)
         case type
-        when "script"
+        when 'script'
           location = SCRIPT_DIR
-          remote_repo = "https://raw.githubusercontent.com/elanthia-online/scripts/master/scripts"
-          requested_file =~ /\.lic$/ ? requested_file_ext = ".lic" : requested_file_ext = "bad extension"
-        when "library"
+          remote_repo = 'https://raw.githubusercontent.com/elanthia-online/scripts/master/scripts'
+          requested_file =~ /\.lic$/ ? requested_file_ext = '.lic' : requested_file_ext = 'bad extension'
+        when 'library'
           location = LIB_DIR
-          remote_repo = "https://raw.githubusercontent.com/elanthia-online/lich-5/master/lib"
-          requested_file =~ /\.rb$/ ? requested_file_ext = ".rb" : requested_file_ext = "bad extension"
-        when "data"
+          remote_repo = 'https://raw.githubusercontent.com/elanthia-online/lich-5/master/lib'
+          requested_file =~ /\.rb$/ ? requested_file_ext = '.rb' : requested_file_ext = 'bad extension'
+        when 'data'
           location = DATA_DIR
-          remote_repo = "https://raw.githubusercontent.com/elanthia-online/lich-5/master/data"
-          requested_file =~ /(\.(?:xml|ui))$/ ? requested_file_ext = $1.dup : requested_file_ext = "bad extension"
+          remote_repo = 'https://raw.githubusercontent.com/elanthia-online/lich-5/master/data'
+          requested_file =~ /(\.(?:xml|ui))$/ ? requested_file_ext = $1.dup : requested_file_ext = 'bad extension'
         end
-        unless requested_file_ext == "bad extension"
-          File.delete(File.join(location, requested_file)) if File.exists?(File.join(location, requested_file))
-          begin
-            File.open(File.join(location, requested_file), "wb") do |file|
-              file.write open(File.join(remote_repo, requested_file)).read
-            end
-            _respond
-            _respond "#{requested_file} has been updated."
-          rescue
-            # we created a garbage file (zero bytes filename) so let's clean it up and inform.
-            sleep 1
-            File.delete(File.join(location, requested_file)) if File.exists?(File.join(location, requested_file))
-            _respond; _respond "The filename #{requested_file} is not available via lich5-update."
-            _respond "Check the spelling of your requested file, or use ';jinx' to"
-            _respond "to download #{requested_file} from another respository."
-          end
-        else
+        if requested_file_ext == 'bad extension'
           _respond
           _respond "The requested file #{requested_file} has an incorrect extension."
           _respond "Valid extensions are '.lic' for scripts, '.rb' for library files,"
           _respond "and '.xml' or '.ui' for data files. Please correct and try again."
+        else
+          File.delete(File.join(location, requested_file)) if File.exist?(File.join(location, requested_file))
+          begin
+            File.open(File.join(location, requested_file), 'wb') { |file|
+              file.write open(File.join(remote_repo, requested_file)).read
+            }
+            _respond
+            _respond "#{requested_file} has been updated."
+          rescue StandardError
+            # we created a garbage file (zero bytes filename) so let's clean it up and inform.
+            sleep 1
+            File.delete(File.join(location, requested_file)) if File.exist?(File.join(location, requested_file))
+            _respond; _respond "The filename #{requested_file} is not available via lich5-update."
+            _respond "Check the spelling of your requested file, or use ';jinx' to"
+            _respond "to download #{requested_file} from another respository."
+          end
         end
       end
       # End module definitions

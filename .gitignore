@@ -2,7 +2,7 @@ backup/
 data/alias.db3
 data/GSIV
 data/GST
-data/entry.dat
+data/*.dat
 data/simu.pem
 logo.png
 data/lich.db3

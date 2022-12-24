@@ -2,11 +2,12 @@
 
 # Ugly hack to preserve the behavior of force_gui being false if there are any other options and true if
 # there are not.
+require 'English'
 if ARGV.empty?
-  ARGV.push("--gui")
+  ARGV.push('--gui')
 else
   # Must be first so subsequent --gui options will undo this parameter.
-  ARGV.unshift("--no-gui")    
+  ARGV.unshift('--no-gui')
 end
 
 # instance variable syntax necessarry until this can be further refactored for init to only
@@ -27,7 +28,7 @@ SCRIPT_DIR = @options.scriptdir
 TEMP_DIR = @options.tempdir
 
 # add this so that require statements can take the form 'lib/file'
-$LOAD_PATH << "#{LICH_DIR}"
+$LOAD_PATH << LICH_DIR
 
 # deprecated
 $lich_dir = "#{LICH_DIR}/"
@@ -38,7 +39,7 @@ $data_dir = "#{DATA_DIR}/"
 #
 # Report an error if Lich 4.4 data is found
 #
-if File.exists?("#{DATA_DIR}/lich.sav")
+if File.exist?("#{DATA_DIR}/lich.sav")
   Lich.log "error: Archaic Lich 4.4 configuration found: Please remove #{DATA_DIR}/lich.sav"
   Lich.msgbox "error: Archaic Lich 4.4 configuration found: Please remove #{DATA_DIR}/lich.sav"
   exit
@@ -49,7 +50,7 @@ if Gem::Version.new(RUBY_VERSION) < Gem::Version.new(REQUIRED_RUBY)
     require 'fiddle'
     Fiddle::Function.new(DL.dlopen('user32.dll')['MessageBox'], [Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT], Fiddle::TYPE_INT).call(0, 'Upgrade Ruby to version 2.6', "Lich v#{LICH_VERSION}", 16)
   else
-    puts "Upgrade Ruby to version 2.6"
+    puts 'Upgrade Ruby to version 2.6'
   end
   exit
 end
@@ -61,7 +62,7 @@ begin
   OpenSSL::PKey::RSA.new(512)
 rescue LoadError
   nil # not required for basic Lich; however, lnet and repository scripts will fail without openssl
-rescue
+rescue StandardError
   nil
 end
 
@@ -72,25 +73,23 @@ if @options.wine
 else
   begin
     $wine_bin = `which wine`.strip
-  rescue
+  rescue StandardError
     $wine_bin = nil
   end
 end
-if arg =@options.wineprefix
+if @options.wineprefix
   $wine_prefix = @options.wineprefix
 elsif ENV['WINEPREFIX']
   $wine_prefix = ENV['WINEPREFIX']
 elsif ENV['HOME']
-  $wine_prefix = ENV['HOME'] + '/.wine'
+  $wine_prefix = "#{ENV['HOME']}/.wine"
 else
   $wine_prefix = nil
 end
-if $wine_bin and File.exists?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exists?($wine_prefix) and File.directory?($wine_prefix)
-  require 'lib/platform/wine'  
-end
-#$wine_bin = nil
-#$wine_prefix = nil
-#end
+require 'lib/platform/wine' if $wine_bin and File.exist?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exist?($wine_prefix) and File.directory?($wine_prefix)
+# $wine_bin = nil
+# $wine_prefix = nil
+# end
 
 # find the FE locations for Win and for Linux | WINE
 
@@ -108,10 +107,10 @@ if (RUBY_PLATFORM =~ /mingw|win/i) && (RUBY_PLATFORM !~ /darwin/i)
     false
   end
 
-  paths.each do |path|
+  paths.each { |path|
     next unless key_exists?(path)
 
-    Registry.open(Registry::HKEY_LOCAL_MACHINE, path).each_value do |_subkey, _type, data|
+    Registry.open(Registry::HKEY_LOCAL_MACHINE, path).each_value { |_subkey, _type, data|
       dirloc = data
       if path =~ /WIZ32/
         $wiz_fe_loc = dirloc
@@ -120,26 +119,20 @@ if (RUBY_PLATFORM =~ /mingw|win/i) && (RUBY_PLATFORM !~ /darwin/i)
       else
         Lich.log("Hammer time, couldn't find me a SIMU FE on a Windows box")
       end
-    end
-  end
+    }
+  }
 elsif defined?(Wine)
-  paths = ['HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Simutronics\\STORM32\\Directory',
-           'HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Simutronics\\WIZ32\\Directory']
-## Needs improvement - iteration and such.  Quick slam test.
+  ## Needs improvement - iteration and such.  Quick slam test.
   $sf_fe_loc = Wine.registry_gets('HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Simutronics\\STORM32\\Directory') || ''
   $wiz_fe_loc_temp = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Wow6432Node\\Simutronics\\WIZ32\\Directory')
   $sf_fe_loc_temp = Wine.registry_gets('HKEY_LOCAL_MACHINE\\Software\\Wow6432Node\\Simutronics\\STORM32\\Directory')
 
-  if $wiz_fe_loc_temp
-    $wiz_fe_loc = $wiz_fe_loc_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c')
-  end
-  if $sf_fe_loc_temp
-    $sf_fe_loc = $sf_fe_loc_temp.gsub('\\', '/').gsub('C:', Wine::PREFIX + '/drive_c')
-  end
+  $wiz_fe_loc = $wiz_fe_loc_temp.gsub('\\', '/').gsub('C:', "#{Wine::PREFIX}/drive_c") if $wiz_fe_loc_temp
+  $sf_fe_loc = $sf_fe_loc_temp.gsub('\\', '/').gsub('C:', "#{Wine::PREFIX}/drive_c") if $sf_fe_loc_temp
 
-  if !File.exist?($sf_fe_loc)
-    $sf_fe_loc =~ /SIMU/ ? $sf_fe_loc = $sf_fe_loc.gsub("SIMU", "Simu") : $sf_fe_loc = $sf_fe_loc.gsub("Simu", "SIMU")
-    Lich.log("Cannot find STORM equivalent FE to launch.") if !File.exist?($sf_fe_loc)
+  unless File.exist?($sf_fe_loc)
+    $sf_fe_loc =~ /SIMU/ ? $sf_fe_loc = $sf_fe_loc.gsub('SIMU', 'Simu') : $sf_fe_loc = $sf_fe_loc.gsub('Simu', 'SIMU')
+    Lich.log('Cannot find STORM equivalent FE to launch.') unless File.exist?($sf_fe_loc)
   end
 end
 
@@ -155,7 +148,7 @@ else
   else
     begin
       $wine_bin = `which wine`.strip
-    rescue
+    rescue StandardError
       $wine_bin = nil
     end
   end
@@ -164,13 +157,11 @@ else
   elsif ENV['WINEPREFIX']
     $wine_prefix = ENV['WINEPREFIX']
   elsif ENV['HOME']
-    $wine_prefix = ENV['HOME'] + '/.wine'
+    $wine_prefix = "#{ENV['HOME']}/.wine"
   else
     $wine_prefix = nil
   end
-  if $wine_bin and File.exists?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exists?($wine_prefix) and File.directory?($wine_prefix)
-    require 'lib/platform/wine'
-  end
+  require 'lib/platform/wine' if $wine_bin and File.exist?($wine_bin) and File.file?($wine_bin) and $wine_prefix and File.exist?($wine_prefix) and File.directory?($wine_prefix)
   $wine_bin = nil
   $wine_prefix = nil
 end
@@ -200,12 +191,12 @@ required_modules = [
     :condition => lambda {
       return(
         ((RUBY_PLATFORM =~ /mingw|win/i) and (RUBY_PLATFORM !~ /darwin/i)) or
-        ENV['DISPLAY'] or 
+        ENV['DISPLAY'] or
         ((ENV['RUN_BY_CRON'].nil? or ENV['RUN_BY_CRON'] == 'false') and @options.force_gui) or
-        (!$stdout.isatty)
-        )
+        !$stdout.isatty
+      )
     },
-  }
+  },
 ]
 
 required_modules.each { |required_module|
@@ -213,23 +204,24 @@ required_modules.each { |required_module|
     if !required_module.key?(:condition) || required_module[:condition].call
       require required_module[:name]
     else
-      required_module[:result] = "Not required."
+      required_module[:result] = 'Not required.'
     end
   rescue LoadError
     if defined?(Win32)
       result = Win32.MessageBox(
-        :lpText => "Lich needs #{required_module[:name]} #{required_module[:reason]}, but it is not installed.\n\nWould you like to install #{required_module[:name]} now?", :lpCaption => "Lich v#{LICH_VERSION}", :uType => (Win32::MB_YESNO | Win32::MB_ICONQUESTION))
+        :lpText => "Lich needs #{required_module[:name]} #{required_module[:reason]}, but it is not installed.\n\nWould you like to install #{required_module[:name]} now?", :lpCaption => "Lich v#{LICH_VERSION}", :uType => (Win32::MB_YESNO | Win32::MB_ICONQUESTION)
+      )
 
       if result == Win32::IDIYES
         if gem_file
-          # fixme: using --source http://rubygems.org to avoid https because it has been failing to validate the certificate on Windows
+          # FIXME: using --source http://rubygems.org to avoid https because it has been failing to validate the certificate on Windows
           result = Win32.ShellExecuteEx(:lpVerb => gem_verb, :lpFile => gem_file, :lpParameters => "install #{required_module[:name]} --version #{required_module[:version]} #{gem_default_parameters}")
 
           if result[:return] > 0
             pid = result[:hProcess]
             # Use to indicate that the hProcess member receives the process handle. This handle is typically used to allow an application to find out when a process created with ShellExecuteEx terminates
             sleep 1 while Win32.GetExitCodeProcess(:hProcess => pid)[:lpExitCode] == Win32::STILL_ACTIVE
-            result = Win32.MessageBox(:lpText => "Install finished.  Lich will restart now.", :lpCaption => "Lich v#{LICH_VERSION}", :uType => Win32::MB_OKCANCEL)
+            result = Win32.MessageBox(:lpText => 'Install finished.  Lich will restart now.', :lpCaption => "Lich v#{LICH_VERSION}", :uType => Win32::MB_OKCANCEL)
 
           else
             # ShellExecuteEx failed: this seems to happen with an access denied error even while elevated on some random systems
@@ -242,13 +234,13 @@ required_modules.each { |required_module|
               exit
             end
 
-            result = Win32.MessageBox(:lpText => "When the installer is finished, click OK to restart Lich.", :lpCaption => "Lich v#{LICH_VERSION}", :uType => Win32::MB_OKCANCEL)
+            result = Win32.MessageBox(:lpText => 'When the installer is finished, click OK to restart Lich.', :lpCaption => "Lich v#{LICH_VERSION}", :uType => Win32::MB_OKCANCEL)
           end
 
           # Result is either the result of ShellExecute on the gem_file command or the result of
           # requesting that the used clicks OK to restart lich.
           if result == Win32::IDIOK
-            if File.exists?("#{ruby_bin_dir}\\rubyw.exe")
+            if File.exist?("#{ruby_bin_dir}\\rubyw.exe")
               Win32.ShellExecute(:lpOperation => 'open', :lpFile => "#{ruby_bin_dir}\\rubyw.exe", :lpParameters => "\"#{File.expand_path($PROGRAM_NAME)}\"")
               exit
             else
@@ -257,7 +249,7 @@ required_modules.each { |required_module|
             end
           else
             # user doesn't want to restart Lich
-            required_module[:result] = "Installed, but lich not restarted."
+            required_module[:result] = 'Installed, but lich not restarted.'
           end
 
         else
@@ -267,29 +259,29 @@ required_modules.each { |required_module|
 
       else
         # user doesn't want to install gem
-        required_module[:result] = "User declined installation."
+        required_module[:result] = 'User declined installation.'
       end
     else
-      # fixme: no module on Linux/Mac
+      # FIXME: no module on Linux/Mac
       puts "The #{required_module[:name]} gem is not installed (or failed to load), you may need to: sudo gem install #{required_module[:name]}"
-      required_module[:result] = "Install skipped. Not a Win32 platform."
+      required_module[:result] = 'Install skipped. Not a Win32 platform.'
     end
   end
 }
 
 HAVE_GTK = Module.const_defined?(:Gtk)
 
-unless File.exists?(LICH_DIR)
+unless File.exist?(LICH_DIR)
   begin
     Dir.mkdir(LICH_DIR)
-  rescue
+  rescue StandardError
     message = "An error occured while attempting to create directory #{LICH_DIR}\n\n"
-    if not File.exists?(LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
+    if !File.exist?(LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
       message.concat "This was likely because the parent directory (#{LICH_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop}) doesn't exist."
-    elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]\:\\(Users|Documents and Settings)/)
+    elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]:\\(Users|Documents and Settings)/)
       message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
     else
-      message.concat $!
+      message.concat $ERROR_INFO
     end
     Lich.msgbox(:message => message, :icon => :error)
     exit
@@ -298,17 +290,17 @@ end
 
 Dir.chdir(LICH_DIR)
 
-unless File.exists?(TEMP_DIR)
+unless File.exist?(TEMP_DIR)
   begin
     Dir.mkdir(TEMP_DIR)
-  rescue
+  rescue StandardError
     message = "An error occured while attempting to create directory #{TEMP_DIR}\n\n"
-    if not File.exists?(TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
+    if !File.exist?(TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop)
       message.concat "This was likely because the parent directory (#{TEMP_DIR.sub(/[\\\/]$/, '').slice(/^.+[\\\/]/).chop}) doesn't exist."
-    elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]\:\\(Users|Documents and Settings)/)
+    elsif defined?(Win32) and (Win32.GetVersionEx[:dwMajorVersion] >= 6) and (dir !~ /^[A-z]:\\(Users|Documents and Settings)/)
       message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
     else
-      message.concat $!
+      message.concat $ERROR_INFO
     end
     Lich.msgbox(:message => message, :icon => :error)
     exit
@@ -316,14 +308,14 @@ unless File.exists?(TEMP_DIR)
 end
 
 begin
-  debug_filename = "#{TEMP_DIR}/debug-#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}.log"
+  debug_filename = "#{TEMP_DIR}/debug-#{Time.now.strftime('%Y-%m-%d-%H-%M-%S')}.log"
   $stderr = File.open(debug_filename, 'w')
-rescue
+rescue StandardError
   message = "An error occured while attempting to create file #{debug_filename}\n\n"
-  if defined?(Win32) and (TEMP_DIR !~ /^[A-z]\:\\(Users|Documents and Settings)/) and not Win32.isXP?
+  if defined?(Win32) and (TEMP_DIR !~ /^[A-z]:\\(Users|Documents and Settings)/) and !Win32.isXP?
     message.concat "This was likely because Lich doesn't have permission to create files and folders here.  It is recommended to put Lich in your Documents folder."
   else
-    message.concat $!
+    message.concat $ERROR_INFO
   end
   Lich.msgbox(:message => message, :icon => :error)
   exit
@@ -342,12 +334,12 @@ required_modules.each { |required_module|
 }
 
 [DATA_DIR, SCRIPT_DIR, "#{SCRIPT_DIR}/custom", MAP_DIR, LOG_DIR, BACKUP_DIR].each { |required_directory|
-  unless File.exists?(required_directory)
+  unless File.exist?(required_directory)
     begin
       Dir.mkdir(required_directory)
-    rescue
-      Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
-      Lich.msgbox(:message => "An error occured while attempting to create directory #{required_directory}\n\n#{$!}", :icon => :error)
+    rescue StandardError
+      Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
+      Lich.msgbox(:message => "An error occured while attempting to create directory #{required_directory}\n\n#{$ERROR_INFO}", :icon => :error)
       exit
     end
   end
@@ -359,16 +351,16 @@ Lich.init_db("#{@options.datadir}/lich.db3")
 # only keep the last 20 debug files
 #
 if Dir.entries(TEMP_DIR).length > 20 # avoid NIL response
-  Dir.entries(TEMP_DIR).find_all { |fn| fn =~ /^debug-\d+-\d+-\d+-\d+-\d+-\d+\.log$/ }.sort.reverse[20..-1].each { |oldfile|
+  Dir.entries(TEMP_DIR).find_all { |fn| fn =~ /^debug-\d+-\d+-\d+-\d+-\d+-\d+\.log$/ }.sort.reverse[19..].each { |oldfile|
     begin
       File.delete("#{TEMP_DIR}/#{oldfile}")
-    rescue
-      Lich.log "error: #{$!}\n\t#{$!.backtrace.join("\n\t")}"
+    rescue StandardError
+      Lich.log "error: #{$ERROR_INFO}\n\t#{$ERROR_INFO.backtrace.join("\n\t")}"
     end
   }
 end
 
-if (RUBY_VERSION =~ /^2\.[012]\./)
+if RUBY_VERSION =~ /^2\.[012]\./
   begin
     did_trusted_defaults = Lich.db.get_first_value("SELECT value FROM lich_settings WHERE name='did_trusted_defaults';")
   rescue SQLite3::BusyException

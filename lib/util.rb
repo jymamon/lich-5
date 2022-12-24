@@ -19,8 +19,6 @@ Entries added here should always be accessible from Lich::Util.feature namespace
 
 =end
 
-
-
 module Lich
   module Util
     include Enumerable
@@ -36,7 +34,7 @@ module Lich
       when Symbol
         (eval caller_type).to_h.transform_keys(&:to_s).transform_keys(&:downcase).include?(val.to_s.downcase.gsub('_', ' '))
       else
-        fail "invalid lookup case #{val.class.name}"
+        raise "invalid lookup case #{val.class.name}"
       end
     end
 
@@ -49,7 +47,7 @@ module Lich
 
     def self.quiet_command_xml(command, start_pattern, end_pattern = /<prompt/, include_end = true, timeout = 5, silent = true)
       result = []
-      name = self.anon_hook
+      name = anon_hook
       filter = false
       if silent
         save_script_silent = Script.current.silent
@@ -61,7 +59,7 @@ module Lich
       Script.current.want_downstream_xml = true
 
       begin
-        Timeout::timeout(timeout, Interrupt) {
+        Timeout.timeout(timeout, Interrupt) {
           DownstreamHook.add(name, proc { |xml|
             if filter
               if xml =~ end_pattern
@@ -84,9 +82,7 @@ module Lich
           until (xml = get) =~ end_pattern
             result << xml.rstrip
           end
-          if include_end
-            result << xml.rstrip
-          end
+          result << xml.rstrip if include_end
         }
       rescue Interrupt
         nil
@@ -98,10 +94,10 @@ module Lich
       end
       return result
     end
-    
+
     def self.quiet_command(command, start_pattern, end_pattern, include_end = true, timeout = 5, silent = true)
       result = []
-      name = self.anon_hook
+      name = anon_hook
       filter = false
       if silent
         save_script_silent = Script.current.silent
@@ -113,7 +109,7 @@ module Lich
       Script.current.want_downstream_xml = false
 
       begin
-        Timeout::timeout(timeout, Interrupt) {
+        Timeout.timeout(timeout, Interrupt) {
           DownstreamHook.add(name, proc { |line|
             if filter
               if line =~ end_pattern
@@ -136,9 +132,7 @@ module Lich
           until (line = get) =~ end_pattern
             result << line.rstrip
           end
-          if include_end
-            result << line.rstrip
-          end
+          result << line.rstrip if include_end
         }
       rescue Interrupt
         nil
@@ -152,13 +146,13 @@ module Lich
     end
 
     def self.silver_count(timeout = 3)
-      silence_me unless undo_silence = silence_me
+      silence_me unless (undo_silence = silence_me)
       result = ''
-      name = self.anon_hook
+      name = anon_hook
       filter = false
 
-      start_pattern = /^\s*Name\:/
-      end_pattern = /^\s*Mana\:\s+\-?[0-9]+\s+Silver\:\s+([0-9,]+)/
+      start_pattern = /^\s*Name:/
+      end_pattern = /^\s*Mana:\s+-?[0-9]+\s+Silver:\s+([0-9,]+)/
       ttl = Time.now + timeout
       begin
         # main thread
@@ -186,15 +180,14 @@ module Lich
           line = get?
           break if line && line =~ start_pattern
           break if Time.now > ttl
+
           sleep 0.1 # prevent a tight-loop
         }
-
       ensure
         DownstreamHook.remove(name)
         silence_me if undo_silence
       end
       return result.gsub(',', '').to_i
     end
-
   end
 end

@@ -1,9 +1,9 @@
 module Wine
   BIN = $wine_bin
   PREFIX = $wine_prefix
-  def Wine.registry_gets(key)
-    hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # fixme: stupid highlights ]/
-    if File.exist?(PREFIX + '/system.reg')
+  def self.registry_gets(key)
+    hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # FIXME: stupid highlights ]/
+    if File.exist?("#{PREFIX}/system.reg")
       if hkey == 'HKEY_LOCAL_MACHINE'
         subkey = "[#{subkey.gsub('\\', '\\\\\\')}]"
         if thingie.nil? or thingie.empty?
@@ -12,7 +12,7 @@ module Wine
           thingie = "\"#{thingie}\""
         end
         lookin = result = false
-        File.open(PREFIX + '/system.reg') { |f| f.readlines }.each { |line|
+        File.open("#{PREFIX}/system.reg", &:readlines).each { |line|
           if line[0...subkey.length] == subkey
             lookin = true
           elsif line =~ /^\[/
@@ -31,9 +31,9 @@ module Wine
     end
   end
 
-  def Wine.registry_puts(key, value)
-    hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # fixme ]/
-    if File.exists?(PREFIX)
+  def self.registry_puts(key, value)
+    hkey, subkey, thingie = /(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER)\\(.+)\\([^\\]*)/.match(key).captures # FIXME: ]/
+    if File.exist?(PREFIX)
       if thingie.nil? or thingie.empty?
         thingie = '@'
       else
@@ -49,13 +49,13 @@ module Wine
         system("#{BIN} regedit #{filename}")
         sleep 0.2
         File.delete(filename)
-      rescue
+      rescue StandardError
         return false
       end
       return true
     end
   end
 end
-end
+
 $wine_bin = nil
 $wine_prefix = nil

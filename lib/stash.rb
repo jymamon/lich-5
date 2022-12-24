@@ -21,9 +21,9 @@ stash.rb: Core lich file for extending free_hands, empty_hands functions in
 module Lich
   module Stash
     def self.find_container(param)
-      GameObj.inv.find do |container|
-        container.name =~ %r[#{param}]
-      end or fail "could not find Container[name: #{param}]"
+      GameObj.inv.find { |container|
+        container.name =~ /#{param}/
+      } or raise "could not find Container[name: #{param}]"
     end
 
     def self.container(param)
@@ -36,28 +36,29 @@ module Lich
     def self.try_or_fail(seconds: 2, command: nil)
       fput(command)
       expiry = Time.now + seconds
-      wait_until do yield or Time.now > expiry end
-      fail "Error[command: #{command}, seconds: #{seconds}]" if Time.now > expiry
+      wait_until { yield or Time.now > expiry }
+      raise "Error[command: #{command}, seconds: #{seconds}]" if Time.now > expiry
     end
 
     def self.add_to_bag(bag, item)
       bag = container(bag)
-      try_or_fail(command: "_drag ##{item.id} ##{bag.id}") do
+      try_or_fail(:command => "_drag ##{item.id} ##{bag.id}") {
         20.times {
-          return true if (![GameObj.right_hand, GameObj.left_hand].map(&:id).compact.include?(item.id) and bag.contents.to_a.map(&:id).include?(item.id))
+          return true if ![GameObj.right_hand, GameObj.left_hand].map(&:id).compact.include?(item.id) and bag.contents.to_a.map(&:id).include?(item.id)
           return true if item.name =~ /^ethereal \w+$/ && ![GameObj.right_hand, GameObj.left_hand].map(&:id).compact.include?(item.id)
+
           sleep 0.1
         }
         return false
-      end
+      }
     end
 
     def self.stash_hands(right: false, left: false, both: false)
-      $fill_hands_actions ||= Array.new
-      $fill_left_hand_actions ||= Array.new
-      $fill_right_hand_actions ||= Array.new
+      $fill_hands_actions ||= []
+      $fill_left_hand_actions ||= []
+      $fill_right_hand_actions ||= []
 
-      actions = Array.new
+      actions = []
       right_hand = GameObj.right_hand
       left_hand = GameObj.left_hand
       if UserVars.lootsack.nil? or UserVars.lootsack.empty?
@@ -86,9 +87,7 @@ module Lich
             dothistimeout "remove ##{left_hand.id}", 3, /^You|^With a slight roll of your shoulder, you|^Remove what\?/
             20.times { break if GameObj.left_hand.id == left_hand.id or GameObj.right_hand.id == left_hand.id; sleep 0.1 }
 
-            if GameObj.right_hand.id == left_hand.id
-              dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/
-            end
+            dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/ if GameObj.right_hand.id == left_hand.id
           }
         else
           actions.unshift proc {
@@ -100,20 +99,18 @@ module Lich
               20.times { break if (GameObj.left_hand.id == left_hand.id) or (GameObj.right_hand.id == left_hand.id); sleep 0.1 }
             end
 
-            if GameObj.right_hand.id == left_hand.id or (GameObj.right_hand.name == left_hand.name && left_hand.name =~ /^ethereal \w+$/)
-              dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/
-            end
+            dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/ if GameObj.right_hand.id == left_hand.id or (GameObj.right_hand.name == left_hand.name && left_hand.name =~ /^ethereal \w+$/)
           }
           if lootsack
-            result = Lich::Stash::add_to_bag(lootsack, GameObj.left_hand)
+            result = Lich::Stash.add_to_bag(lootsack, GameObj.left_hand)
           else
             result = nil
           end
           if result.nil? or !result
-            for container in other_containers.call
-              result = Lich::Stash::add_to_bag(container, GameObj.left_hand)
+            other_containers.call.each { |container|
+              result = Lich::Stash.add_to_bag(container, GameObj.left_hand)
               break if result
-            end
+            }
           end
         end
       end
@@ -128,26 +125,22 @@ module Lich
             20.times { break if GameObj.left_hand.id == right_hand.id or GameObj.right_hand.id == right_hand.id; sleep 0.1 }
           end
 
-          if GameObj.left_hand.id == right_hand.id or (GameObj.left_hand.name == right_hand.name && right_hand.name =~ /^ethereal \w+$/)
-            dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/
-          end
+          dothistimeout 'swap', 3, /^You don't have anything to swap!|^You swap/ if GameObj.left_hand.id == right_hand.id or (GameObj.left_hand.name == right_hand.name && right_hand.name =~ /^ethereal \w+$/)
         }
-        if UserVars.weapon and UserVars.weaponsack and not UserVars.weapon.empty? and not UserVars.weaponsack.empty? and (right_hand.name =~ /#{Regexp.escape(UserVars.weapon.strip)}/i or right_hand.name =~ /#{Regexp.escape(UserVars.weapon).sub(' ', ' .*')}/i)
-          weaponsack = GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack.strip)}/i } || GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack).sub(' ', ' .*')}/i }
-        end
+        weaponsack = GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack.strip)}/i } || GameObj.inv.find { |obj| obj.name =~ /#{Regexp.escape(UserVars.weaponsack).sub(' ', ' .*')}/i } if UserVars.weapon and UserVars.weaponsack and !UserVars.weapon.empty? and !UserVars.weaponsack.empty? and (right_hand.name =~ /#{Regexp.escape(UserVars.weapon.strip)}/i or right_hand.name =~ /#{Regexp.escape(UserVars.weapon).sub(' ', ' .*')}/i)
         if weaponsack
-          result = Lich::Stash::add_to_bag(weaponsack, GameObj.right_hand)
+          result = Lich::Stash.add_to_bag(weaponsack, GameObj.right_hand)
         elsif lootsack
-          result = Lich::Stash::add_to_bag(lootsack, GameObj.right_hand)
+          result = Lich::Stash.add_to_bag(lootsack, GameObj.right_hand)
         else
           result = nil
         end
         sleep 0.1
         if result.nil? or !result
-          for container in other_containers.call
-            result = Lich::Stash::add_to_bag(container, GameObj.right_hand)
+          other_containers.call.each { |container|
+            result = Lich::Stash.add_to_bag(container, GameObj.right_hand)
             break if result
-          end
+          }
         end
       end
       $fill_hands_actions.push(actions) if both
@@ -157,26 +150,24 @@ module Lich
 
     def self.equip_hands(left: false, right: false, both: false)
       if both
-        for action in $fill_hands_actions.pop
+        while (action = $fill_hands_actions.pop)
           action.call
         end
       elsif left
-        for action in $fill_left_hand_actions.pop
+        while (action = $fill_left_hand_actions.pop)
           action.call
         end
       elsif right
-        for action in $fill_right_hand_actions.pop
+        while (action = $fill_right_hand_actions.pop)
           action.call
         end
-      else
-        if $fill_right_hand_actions.length > 0
-          for action in $fill_right_hand_actions.pop
-            action.call
-          end
-        elsif $fill_left_hand_actions.length > 0
-          for action in $fill_left_hand_actions.pop
-            action.call
-          end
+      elsif !$fill_right_hand_actions.empty?
+        while (action = $fill_right_hand_actions.pop)
+          action.call
+        end
+      elsif !$fill_left_hand_actions.empty?
+        while (action = $fill_left_hand_actions.pop)
+          action.call
         end
       end
     end

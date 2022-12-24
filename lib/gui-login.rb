@@ -1,38 +1,35 @@
 # Lich5 Carve out - GTK3 lich-login code stuff
 
 def gui_login(entry_data_file)
-
   @autosort_state = Lich.track_autosort_state
   @tab_layout_state = Lich.track_layout_state
   @theme_state = Lich.track_dark_mode
 
   @launch_data = nil
-  if File.exists?(entry_data_file)
+  if File.exist?(entry_data_file)
     @entry_data = File.open(entry_data_file, 'r') { |file|
       begin
         if @autosort_state == true
-        # Sort in list by instance name, account name, and then character name
-        Marshal.load(file.read.unpack('m').first).sort do |a, b|
-          [a[:game_name], a[:user_id], a[:char_name]] <=> [b[:game_name], b[:user_id], b[:char_name]]
-        end
+          # Sort in list by instance name, account name, and then character name
+          Marshal.load(file.read.unpack1('m')).sort { |a, b|
+            [a[:game_name], a[:user_id], a[:char_name]] <=> [b[:game_name], b[:user_id], b[:char_name]]
+          }
         else
-        # Sort in list by account name, and then character name (old Lich 4)
-          Marshal.load(file.read.unpack('m').first).sort do |a,b|
+          # Sort in list by account name, and then character name (old Lich 4)
+          Marshal.load(file.read.unpack1('m')).sort { |a, b|
             [a[:user_id].downcase, a[:char_name]] <=> [b[:user_id].downcase, b[:char_name]]
-          end
+          }
         end
-      rescue
-        Array.new
+      rescue StandardError
+        []
       end
     }
   else
-    @entry_data = Array.new
+    @entry_data = []
   end
   @save_entry_data = false
-  done = false
 
   Gtk.queue {
-    login_server = nil
     @window = nil
     install_tab_loaded = false
 
@@ -52,16 +49,14 @@ def gui_login(entry_data_file)
     #
     # put it together and show the window
     #
-    lightgrey = Gdk::RGBA::parse("#d3d3d3")
+    lightgrey = Gdk::RGBA.parse('#d3d3d3')
     @notebook = Gtk::Notebook.new
     @notebook.override_background_color(:normal, lightgrey) unless @theme_state == true
     @notebook.append_page(@quick_game_entry_tab, Gtk::Label.new('Saved Entry'))
     @notebook.append_page(@game_entry_tab, Gtk::Label.new('Manual Entry'))
 
     @notebook.signal_connect('switch-page') { |who, page, page_num|
-      if (page_num == 2) and not install_tab_loaded
-        refresh_button.clicked
-      end
+      refresh_button.clicked if (page_num == 2) and !install_tab_loaded
     }
 
     #    grey = Gdk::RGBA::parse("#d3d3d3")
@@ -82,7 +77,6 @@ def gui_login(entry_data_file)
     @slider_box.visible = false
 
     @notebook.set_page(1) if @entry_data.empty?
-
   }
 
   wait_until { @done }
@@ -94,9 +88,9 @@ def gui_login(entry_data_file)
   end
   @entry_data = nil
 
-  unless !@launch_data.nil?
+  if @launch_data.nil?
     Gtk.queue { Gtk.main_quit }
-    Lich.log "info: exited without selection"
+    Lich.log 'info: exited without selection'
     exit
   end
 end

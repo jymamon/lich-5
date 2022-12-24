@@ -8,43 +8,42 @@ module Win32
     extern 'int ShellExecute(int, char*, char*, char*, char*, int)'
   end
 
-  def Win32.ShellExecuteEx(args)
+  # rubocop:disable Naming/MethodName Allow Win32 naming
+  def self.ShellExecuteEx(args)
     struct = [(SIZEOF_LONG * 15), 0, 0, 0, 0, 0, 0, SW_SHOW, 0, 0, 0, 0, 0, 0, 0]
     struct_index = {
-        :cbSize => 0,
-        :fMask => 1,
-        :hwnd => 2,
-        :lpVerb => 3,
-        :lpFile => 4,
-        :lpParameters => 5,
-        :lpDirectory => 6,
-        :nShow => 7,
-        :hInstApp => 8,
-        :lpIDList => 9,
-        :lpClass => 10,
-        :hkeyClass => 11,
-        :dwHotKey => 12,
-        :hIcon => 13,
-        :hMonitor => 13,
-        :hProcess => 14
+      :cbSize => 0,
+      :fMask => 1,
+      :hwnd => 2,
+      :lpVerb => 3,
+      :lpFile => 4,
+      :lpParameters => 5,
+      :lpDirectory => 6,
+      :nShow => 7,
+      :hInstApp => 8,
+      :lpIDList => 9,
+      :lpClass => 10,
+      :hkeyClass => 11,
+      :dwHotKey => 12,
+      :hIcon => 13,
+      :hMonitor => 13,
+      :hProcess => 14,
     }
 
     args[:fMask] ||= Win32::SEE_MASK_NOCLOSEPROCESS
-    args[:lpDirectory] ||= LICH_DIR.tr("/", "\\")    
+    args[:lpDirectory] ||= LICH_DIR.tr('/', '\\')
     args[:lpVerb] ||= 'runas'
 
-    for sym in [:lpVerb, :lpFile, :lpParameters, :lpDirectory, :lpIDList, :lpClass]
+    [:lpVerb, :lpFile, :lpParameters, :lpDirectory, :lpIDList, :lpClass].each { |sym|
       if args[sym]
         args[sym] = "#{args[sym]}\0" unless args[sym][-1, 1] == "\0"
         struct[struct_index[sym]] = Fiddle::Pointer.to_ptr(args[sym]).to_i
       end
-    end
+    }
 
-    for sym in [:fMask, :hwnd, :nShow, :hkeyClass, :dwHotKey, :hIcon, :hMonitor, :hProcess]
-      if args[sym]
-        struct[struct_index[sym]] = args[sym]
-      end
-    end
+    [:fMask, :hwnd, :nShow, :hkeyClass, :dwHotKey, :hIcon, :hMonitor, :hProcess].each { |sym|
+      struct[struct_index[sym]] = args[sym] if args[sym]
+    }
 
     struct = struct.pack('LLLLLLLLLLLLLLL')
     result = Shell32.ShellExecuteEx(struct)
@@ -52,11 +51,11 @@ module Win32
     return :return => result, :hProcess => struct[struct_index[:hProcess]], :hInstApp => struct[struct_index[:hInstApp]]
   end
 
-  def Win32.ShellExecute(args)
-    args[:lpDirectory] ||= LICH_DIR.tr("/", "\\")
+  def self.ShellExecute(args)
+    args[:lpDirectory] ||= LICH_DIR.tr('/', '\\')
     args[:lpOperation] ||= 0
     args[:lpParameters] ||= 0
-    args[:lpVerb] ||= 'runas'    
+    args[:lpVerb] ||= 'runas'
     args[:nShowCmd] ||= 1
 
     return Shell32.ShellExecute(
@@ -65,6 +64,8 @@ module Win32
       args[:lpFile],
       args[:lpParameters],
       args[:lpDirectory],
-      args[:nShowCmd])
+      args[:nShowCmd]
+    )
   end
+  # rubocop:enable Naming/MethodName
 end

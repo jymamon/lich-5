@@ -1,0 +1,185 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  NewCops: disable
+  TargetRubyVersion: 2.7
+  Include:
+  - '**/*.rb*'
+#  - '**/*.lic'
+  Exclude:
+  - 'lich/*.rb'
+
+Layout/BlockAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: start_of_block
+
+Layout/CommentIndentation:
+  Enabled: true
+  AllowForAlignment: true
+
+Layout/EndAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: start_of_line
+
+Layout/EmptyLineBetweenDefs:
+  Enabled: true
+  AllowAdjacentOneLineDefs: true
+
+Layout/ExtraSpacing:
+  Enabled: true
+  AllowForAlignment: true
+
+Layout/IndentationWidth:
+  Enabled: true
+  Width: 2
+
+Layout/LeadingCommentSpace:
+  Enabled: true
+  AllowDoxygenCommentStyle: true
+  AllowGemfileRubyComment: true
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+  IndentationWidth: 2
+
+Layout/MultilineOperationIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+  IndentationWidth: 2
+
+Layout/SpaceAroundOperators:
+  Enabled: true
+  AllowForAlignment: true
+
+Layout/SpaceAroundEqualsInParameterDefault:
+  Enabled: true
+  EnforcedStyle: space
+    
+Layout/SpaceBeforeBlockBraces:
+  Enabled: true
+  EnforcedStyle: space
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: true
+  EnforcedStyle: no_space
+
+Layout/SpaceInsideBlockBraces:
+  Enabled: true
+  EnforcedStyle: space
+
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: true
+  EnforcedStyle: space
+
+Layout/SpaceInsideParens:
+  Enabled: true
+  EnforcedStyle: no_space
+
+Naming/FileName:
+  Enabled: true
+  Exclude:
+    - 'lib/front-end.rb'
+    - 'lib/gui-login.rb'
+    - 'lib/gui-manual-login.rb'
+    - 'lib/gui-saved-login.rb'
+
+Naming/VariableName:
+  Enabled: true
+  Exclude:
+    - 'lib/platform/win32/advapi32.rb'
+    - 'lib/platform/win32/kernel32.rb'
+
+Style/Alias:
+  Enabled: true
+  EnforcedStyle: prefer_alias
+
+Style/BlockComments:
+  # Enabled is recommended.
+  Enabled: false
+
+Style/BlockDelimiters:
+  Enabled: true
+  EnforcedStyle: always_braces
+
+Style/ConditionalAssignment:
+  Enabled: true
+  EnforcedStyle: assign_inside_condition
+  SingleLineConditionsOnly: true
+  IncludeTernaryExpressions: false
+
+Style/EmptyElse:
+  Enabled: false
+
+Style/EvalWithLocation:
+  # Enabled is recommended.  Revisit
+  Enabled: false
+
+Style/FormatString:
+  Enabled: true
+  EnforcedStyle: sprintf
+
+Style/HashSyntax:
+  Enabled: true
+  EnforcedStyle: hash_rockets
+  EnforcedShorthandSyntax: always
+  UseHashRocketsWithSymbolValues: true
+  PreferHashRocketsForNonAlnumEndingSymbols: true
+
+Style/NumericLiterals:
+  # Enabled is recommended.
+  Enabled: false
+
+Style/MultilineBlockChain:
+  # Enabled is recommended.
+  Enabled: false
+
+Style/PerlBackrefs:
+  # Enabled is recommended.
+  Enabled: false
+
+Style/RedundantReturn:
+  # Enabled is recommended.
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: true
+  EnforcedStyle: slashes
+  AllowInnerSlashes: true
+
+Style/Semicolon:
+  Enabled: true
+  AllowAsExpressionSeparator: true
+
+Style/SingleLineMethods:
+  # Enabled is recommended.
+  Enabled: false
+  AllowIfMethodIsEmpty: true
+
+Style/SpecialGlobalVars:
+  Enabled: true
+  RequireEnglish: true
+  EnforcedStyle: use_english_names
+
+Style/SymbolArray:
+  Enabled: true
+  EnforcedStyle: brackets
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArguments:
+  Enabled: true
+  EnforcedStyleForMultiline: no_comma
+
+Style/TrailingUnderscoreVariable:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: true
+  EnforcedStyle: brackets

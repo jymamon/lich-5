@@ -34,12 +34,12 @@ renderer = Gtk::CellRendererText.new
 treeview = Gtk::TreeView.new(liststore)
 treeview.height_request = 160
 
-col = Gtk::TreeViewColumn.new("Game", renderer, :text => 1)
+col = Gtk::TreeViewColumn.new('Game', renderer, :text => 1)
 col.set_sort_column_id(1)
 col.resizable = true
 treeview.append_column(col)
 
-col = Gtk::TreeViewColumn.new("Character", renderer, :text => 3)
+col = Gtk::TreeViewColumn.new('Character', renderer, :text => 3)
 col.set_sort_column_id(3)
 col.resizable = true
 treeview.append_column(col)
@@ -56,20 +56,18 @@ suks_option = Gtk::RadioButton.new(:label => 'suks', :member => wizard_option)
 frontend_box = Gtk::Box.new(:horizontal, 10)
 frontend_box.pack_start(wizard_option, :expand => false, :fill => false, :padding => 0)
 frontend_box.pack_start(stormfront_option, :expand => false, :fill => false, :padding => 0)
-if RUBY_PLATFORM =~ /darwin/i
-  frontend_box.pack_start(avalon_option, :expand => false, :fill => false, :padding => 0)
-end
+frontend_box.pack_start(avalon_option, :expand => false, :fill => false, :padding => 0) if RUBY_PLATFORM =~ /darwin/i
 # frontend_box.pack_start(suks_option, false, false, 0)
 
 custom_launch_option = Gtk::CheckButton.new('Custom launch command')
-@custom_launch_entry = Gtk::ComboBoxEntry.new()
-@custom_launch_entry.child.text = "(enter custom launch command)"
-@custom_launch_entry.append_text("Wizard.Exe /GGS /H127.0.0.1 /P%port% /K%key%")
-@custom_launch_entry.append_text("Stormfront.exe /GGS/Hlocalhost/P%port%/K%key%")
-@custom_launch_dir = Gtk::ComboBoxEntry.new()
-@custom_launch_dir.child.text = "(enter working directory for command)"
-@custom_launch_dir.append_text("../wizard")
-@custom_launch_dir.append_text("../StormFront")
+@custom_launch_entry = Gtk::ComboBoxEntry.new
+@custom_launch_entry.child.text = '(enter custom launch command)'
+@custom_launch_entry.append_text('Wizard.Exe /GGS /H127.0.0.1 /P%port% /K%key%')
+@custom_launch_entry.append_text('Stormfront.exe /GGS/Hlocalhost/P%port%/K%key%')
+@custom_launch_dir = Gtk::ComboBoxEntry.new
+@custom_launch_dir.child.text = '(enter working directory for command)'
+@custom_launch_dir.append_text('../wizard')
+@custom_launch_dir.append_text('../StormFront')
 
 @make_quick_option = Gtk::CheckButton.new('Save this info for quick game entry')
 
@@ -85,9 +83,9 @@ play_button_box.pack_end(play_button, :expand => false, :fill => false, :padding
 @game_entry_tab.pack_start(login_button_box, :expand => false, :fill => false, :padding => 0)
 @game_entry_tab.pack_start(sw, :expand => true, :fill => true, :padding => 3)
 @game_entry_tab.pack_start(frontend_box, :expand => false, :fill => false, :padding => 3)
-#@game_entry_tab.pack_start(custom_launch_option, :expand => false, :fill => false, :padding => 3)
-#@game_entry_tab.pack_start(@custom_launch_entry, :expand => false, :fill => false, :padding => 3)
-#@game_entry_tab.pack_start(@custom_launch_dir, :expand => false, :fill => false, :padding => 3)
+# @game_entry_tab.pack_start(custom_launch_option, :expand => false, :fill => false, :padding => 3)
+# @game_entry_tab.pack_start(@custom_launch_entry, :expand => false, :fill => false, :padding => 3)
+# @game_entry_tab.pack_start(@custom_launch_dir, :expand => false, :fill => false, :padding => 3)
 @game_entry_tab.pack_start(@make_quick_option, :expand => false, :fill => false, :padding => 3)
 @game_entry_tab.pack_start(play_button_box, :expand => false, :fill => false, :padding => 3)
 
@@ -112,13 +110,12 @@ connect_button.signal_connect('clicked') {
   iter = liststore.append
   iter[1] = 'working...'
   Gtk.queue {
-    begin
-      login_info = EAccess.auth(
-        account: user_id_entry.text || @options.account,
-        password: pass_entry.text || @options.password,
-        legacy: true
-      )
-    end
+    login_info = EAccess.auth(
+      :account => user_id_entry.text || @options.account,
+      :password => pass_entry.text || @options.password,
+      :legacy => true
+    )
+
     if login_info =~ /error/i
       @msgbox.call "\nSomething went wrong... probably invalid \nuser id and / or password.\n\nserver response: #{login_info}"
       connect_button.sensitive = true
@@ -129,22 +126,23 @@ connect_button.signal_connect('clicked') {
       liststore.clear
 
       login_info
-        .sort{ |a, b|
+        .sort { |a, b|
           if a[:game_code] != b[:game_code]
             a[:game_code] <=> b[:game_code]
           else
             a[:char_name] <=> b[:char_name]
-          end}
-      .each{ |row|
-        iter = liststore.append
-        iter[0] = row[:game_code]
-        iter[1] = row[:game_name]
-        iter[2] = row[:char_code]
-        iter[3] = row[:char_name]}
+          end
+        }
+        .each { |row|
+          iter = liststore.append
+          iter[0] = row[:game_code]
+          iter[1] = row[:game_name]
+          iter[2] = row[:char_code]
+          iter[3] = row[:char_name]
+        }
 
       disconnect_button.sensitive = true
     end
-    login_server = true
   }
 }
 
@@ -156,7 +154,6 @@ disconnect_button.signal_connect('clicked') {
   disconnect_button.sensitive = false
   play_button.sensitive = false
   liststore.clear
-  login_server = false
   connect_button.sensitive = true
   user_id_entry.sensitive = true
   pass_entry.sensitive = true
@@ -168,25 +165,23 @@ play_button.signal_connect('clicked') {
   char_name = treeview.selection.selected[3]
 
   launch_data_hash = EAccess.auth(
-    account: user_id_entry.text,
-    password: pass_entry.text,
-    character: char_name,
-    game_code: game_code
+    :account => user_id_entry.text,
+    :password => pass_entry.text,
+    :character => char_name,
+    :game_code => game_code
   )
 
   @launch_data = launch_data_hash.map { |k, v| "#{k.upcase}=#{v}" }
   if wizard_option.active?
-    @launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, "GAMEFILE=WIZARD.EXE").sub(/GAME=.+/, "GAME=WIZ") }
+    @launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, 'GAMEFILE=WIZARD.EXE').sub(/GAME=.+/, 'GAME=WIZ') }
   elsif avalon_option.active?
-    @launch_data.collect! { |line| line.sub(/GAME=.+/, "GAME=AVALON") }
+    @launch_data.collect! { |line| line.sub(/GAME=.+/, 'GAME=AVALON') }
   elsif suks_option.active?
-    @launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, "GAMEFILE=WIZARD.EXE").sub(/GAME=.+/, "GAME=SUKS") }
+    @launch_data.collect! { |line| line.sub(/GAMEFILE=.+/, 'GAMEFILE=WIZARD.EXE').sub(/GAME=.+/, 'GAME=SUKS') }
   end
   if custom_launch_option.active?
     @launch_data.push "CUSTOMLAUNCH=#{@custom_launch_entry.child.text}"
-    unless @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == "(enter working directory for command)"
-      @launch_data.push "CUSTOMLAUNCHDIR=#{@custom_launch_dir.child.text}"
-    end
+    @launch_data.push "CUSTOMLAUNCHDIR=#{@custom_launch_dir.child.text}" unless @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == '(enter working directory for command)'
   end
   if @make_quick_option.active?
     if wizard_option.active?
@@ -200,7 +195,7 @@ play_button.signal_connect('clicked') {
     end
     if custom_launch_option.active?
       custom_launch = @custom_launch_entry.child.text
-      if @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == "(enter working directory for command)"
+      if @custom_launch_dir.child.text.empty? or @custom_launch_dir.child.text == '(enter working directory for command)'
         custom_launch_dir = nil
       else
         @custom_launch_dir = @custom_launch_dir.child.text
@@ -209,7 +204,7 @@ play_button.signal_connect('clicked') {
       custom_launch = nil
       @custom_launch_dir = nil
     end
-    @entry_data.push h = { :char_name => treeview.selection.selected[3], :game_code => treeview.selection.selected[0], :game_name => treeview.selection.selected[1], :user_id => user_id_entry.text, :password => pass_entry.text, :frontend => frontend, :custom_launch => custom_launch, :custom_launch_dir => custom_launch_dir }
+    @entry_data.push << { :char_name => treeview.selection.selected[3], :game_code => treeview.selection.selected[0], :game_name => treeview.selection.selected[1], :user_id => user_id_entry.text, :password => pass_entry.text, :frontend => frontend, :custom_launch => custom_launch, :custom_launch_dir => custom_launch_dir }
     @save_entry_data = true
   end
 
